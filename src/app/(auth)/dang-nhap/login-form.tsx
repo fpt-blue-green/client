@@ -3,12 +3,14 @@
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import http from '@/lib/http';
 import { LoginBodyType, loginSchema } from '@/schema-validations/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 
 const LoginForm = () => {
+  const [loading, setLoading] = useState(false);
   const form = useForm<LoginBodyType>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -18,12 +20,20 @@ const LoginForm = () => {
   });
 
   const onSubmit = (values: LoginBodyType) => {
-    toast.error(values.email);
+    setLoading(true);
+    http
+      .post('https://dummyjson.com/auth/login', {
+        username: values.email,
+        password: values.password,
+      })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err))
+      .finally(() => setLoading(false));
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-8 border rounded-xl">
         <FormField
           control={form.control}
           name="email"
@@ -50,8 +60,8 @@ const LoginForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" size="large" fullWidth>
-          Submit
+        <Button type="submit" size="large" fullWidth loading={loading}>
+          Đăng nhập
         </Button>
       </form>
     </Form>

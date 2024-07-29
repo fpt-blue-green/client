@@ -1,3 +1,6 @@
+import { toast } from 'sonner';
+import { constants } from './utils';
+
 type CustomRequest = Omit<RequestInit, 'method'> & {
   baseUrl?: string;
 };
@@ -17,13 +20,14 @@ const request = async <Response>(
 
   const res = await fetch(fullUrl, { ...options, headers: { ...baseHeaders, ...options?.headers }, body, method });
 
-  const payload: Response = await res.json();
+  const payload: Response | any = await res.json();
   const data = {
     status: res.status,
     payload,
   };
 
   if (!res.ok) {
+    toast.error(payload.message || constants.sthWentWrong);
     throw new Error(`API request failed: ${data.status}`);
   }
   return data;
@@ -33,13 +37,13 @@ const http = {
   get: <Response>(url: string, options?: Omit<CustomRequest, 'body'>) => {
     return request<Response>('GET', url, options);
   },
-  post: <Response>(url: string, body: any, options?: Omit<CustomRequest, 'body'>) => {
+  post: <Response>(url: string, body?: any, options?: Omit<CustomRequest, 'body'>) => {
     return request<Response>('POST', url, { ...options, body });
   },
-  put: <Response>(url: string, body: any, options?: Omit<CustomRequest, 'body'>) => {
+  put: <Response>(url: string, body?: any, options?: Omit<CustomRequest, 'body'>) => {
     return request<Response>('PUT', url, { ...options, body });
   },
-  patch: <Response>(url: string, body: any, options?: Omit<CustomRequest, 'body'>) => {
+  patch: <Response>(url: string, body?: any, options?: Omit<CustomRequest, 'body'>) => {
     return request<Response>('PUT', url, { ...options, body });
   },
   delete: <Response>(url: string, options?: Omit<CustomRequest, 'body'>) => {

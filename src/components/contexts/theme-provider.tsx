@@ -8,7 +8,7 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return (
     <NextThemesProvider {...props}>
       {children}
-      <Toaster position="top-right" richColors />
+      <Toaster position="top-right" richColors toastOptions={{ duration: 3000 }} />
     </NextThemesProvider>
   );
 }
