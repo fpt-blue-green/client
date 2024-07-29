@@ -1,9 +1,12 @@
 import { toast } from 'sonner';
 import { constants } from './utils';
+import config from '@/config';
 
 type CustomRequest = Omit<RequestInit, 'method'> & {
   baseUrl?: string;
 };
+
+export const isClient = () => typeof window !== 'undefined';
 
 const request = async <Response>(
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
@@ -11,11 +14,18 @@ const request = async <Response>(
   options?: CustomRequest,
 ) => {
   const body = options?.body ? JSON.stringify(options?.body) : undefined;
-  const baseHeaders = {
+  const baseHeaders: { [key: string]: string } = {
     'Content-Type': 'application/json',
   };
 
-  const baseUrl = options?.baseUrl ?? process.env.NEXT_PUBLIC_API_ENDPOINT;
+  if (isClient()) {
+    const sessionToken = localStorage.getItem('sessionToken');
+    if (sessionToken) {
+      baseHeaders.Authorization = `Bearer ${sessionToken}`;
+    }
+  }
+
+  const baseUrl = options?.baseUrl ?? config.env.NEXT_PUBLIC_API_ENDPOINT;
   const fullUrl = url.startsWith('/') ? `${baseUrl}${url}` : url.startsWith('http') ? url : `${baseUrl}/${url}`;
 
   const res = await fetch(fullUrl, { ...options, headers: { ...baseHeaders, ...options?.headers }, body, method });
@@ -27,7 +37,9 @@ const request = async <Response>(
   };
 
   if (!res.ok) {
-    toast.error(payload.message || constants.sthWentWrong);
+    if (isClient()) {
+      toast.error(payload.message || constants.sthWentWrong);
+    }
     throw new Error(`API request failed: ${data.status}`);
   }
   return data;

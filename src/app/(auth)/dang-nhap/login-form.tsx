@@ -3,14 +3,13 @@
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import http from '@/lib/http';
+import useAuth from '@/hooks/useAuth';
 import { LoginBodyType, loginSchema } from '@/schema-validations/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 const LoginForm = () => {
-  const [loading, setLoading] = useState(false);
+  const { user, login, isLoading } = useAuth();
   const form = useForm<LoginBodyType>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -20,16 +19,10 @@ const LoginForm = () => {
   });
 
   const onSubmit = (values: LoginBodyType) => {
-    setLoading(true);
-    http
-      .post('https://dummyjson.com/auth/login', {
-        username: values.email,
-        password: values.password,
-      })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err))
-      .finally(() => setLoading(false));
+    login(values);
   };
+
+  console.log(user);
 
   return (
     <Form {...form}>
@@ -60,7 +53,7 @@ const LoginForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" size="large" fullWidth loading={loading}>
+        <Button type="submit" size="large" fullWidth loading={isLoading}>
           Đăng nhập
         </Button>
       </form>
