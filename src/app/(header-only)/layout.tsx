@@ -1,3 +1,4 @@
+import Header from '@/components/header';
 import { FC, ReactNode } from 'react';
 
 interface MainLayoutProps {
@@ -6,8 +7,9 @@ interface MainLayoutProps {
 
 const MainLayout: FC<Readonly<MainLayoutProps>> = ({ children }) => {
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <main className="w-96">{children}</main>
+    <div className="flex flex-col">
+      <Header />
+      <main className="flex-1 flex justify-center container">{children}</main>
     </div>
   );
 };
