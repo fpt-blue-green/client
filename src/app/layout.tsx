@@ -21,9 +21,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <GoogleOAuthProvider>
-            <AuthProvider>{children}</AuthProvider>
-          </GoogleOAuthProvider>
+          <AuthProvider>
+            <GoogleOAuthProvider>{children}</GoogleOAuthProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
