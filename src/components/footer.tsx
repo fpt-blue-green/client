@@ -82,7 +82,7 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-between py-8">
+        <div className="flex items-center justify-between gap-4 py-8 max-md:flex-col">
           <p className="text-sm text-muted-foreground">Copyright &copy; 2024 adfusion by BlueGreen</p>
           <div className="flex items-center gap-2">
             <Tooltip label="Facebook">

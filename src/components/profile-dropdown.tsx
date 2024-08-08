@@ -14,9 +14,9 @@ const ProfileDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="icon-large" variant="ghost">
+        <Button size="icon" variant="ghost">
           {user ? (
-            <Avatar className="size-9">
+            <Avatar className="size-7">
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
@@ -25,7 +25,7 @@ const ProfileDropdown = () => {
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent align="end">
         {user ? (
           <></>
         ) : (

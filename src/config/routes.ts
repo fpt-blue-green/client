@@ -1,5 +1,6 @@
 const routes = {
   home: '/',
+  explore: '/explore',
   login: '/login',
   influencer: {
     base: '/influencer',
