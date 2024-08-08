@@ -17,7 +17,7 @@ const MenuItem: FC<MenuItemProps> = ({ href, children }) => {
       href={href}
       className={clsx(
         'relative font-medium hover:text-foreground hover:after:w-full hover:after:left-0',
-        'after:absolute after:-bottom-1 after:rounded-full after:h-0.5 after:bg-primary after:transition-all duration-500',
+        'after:absolute after:-bottom-1 after:rounded-full after:h-0.5 after:bg-gradient after:transition-all duration-500',
         pathname === href
           ? 'after:w-full after:left-0 text-foreground'
           : 'after:w-0 after:left-1/2 text-muted-foreground',

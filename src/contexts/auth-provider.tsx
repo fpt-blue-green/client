@@ -73,7 +73,6 @@ const AuthProvider: FC<Readonly<AuthProviderProps>> = ({ children }) => {
       dispatch({ type: 'LOGIN_FULFILLED', payload: response.payload });
     } catch (error: any) {
       dispatch({ type: 'LOGIN_REJECT' });
-      throw error;
     }
   };
 

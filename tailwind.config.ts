@@ -77,6 +77,9 @@ const config = {
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
     },
+    backgroundImage: {
+      gradient: 'var(--gradient)',
+    },
   },
   plugins: [require('tailwindcss-animate')],
 } satisfies Config;
