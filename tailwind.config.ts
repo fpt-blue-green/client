@@ -80,6 +80,9 @@ const config = {
     backgroundImage: {
       gradient: 'var(--gradient)',
     },
+    aspectRatio: {
+      thumbnail: '3/4',
+    },
   },
   plugins: [require('tailwindcss-animate')],
 } satisfies Config;
