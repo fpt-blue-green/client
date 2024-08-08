@@ -67,4 +67,8 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .text-gradient {
+    @apply bg-gradient text-transparent bg-clip-text;
+  }
 }
