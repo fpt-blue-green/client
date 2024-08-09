@@ -23,7 +23,7 @@ export const GoogleLoginButton = () => {
         context="signin"
         text="signin_with"
         width={384}
-        login_uri={`${window.location.pathname}/login`}
+        login_uri={`${window?.location.pathname}/login`}
       />
     </div>
   );
