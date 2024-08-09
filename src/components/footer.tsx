@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { RiTiktokLine } from 'react-icons/ri';
 import Tooltip from '@/components/tooltip';
+import Image from 'next/image';
 
 const Footer = () => {
   return (
@@ -11,9 +12,18 @@ const Footer = () => {
       <div className="container">
         <div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-1 gap-8 text-sm">
           <div className="lg:col-span-2 md:col-span-3 max-lg:items-center max-lg:text-center flex flex-col gap-4">
-            <Link className="font-bold text-xl" href={config.routes.home}>
-              adfusion
-            </Link>
+            <div>
+              <Link href={config.routes.home} className="relative inline-block font-bold text-lg">
+                adfusion
+                <Image
+                  src="/logo.png"
+                  alt="adfusion"
+                  className="absolute -top-0.5 left-full size-6"
+                  width={200}
+                  height={200}
+                />
+              </Link>
+            </div>
             <p className="text-muted-foreground">
               AdFusion kết nối những người có ảnh hưởng với thương hiệu để cộng tác quảng cáo hiệu quả. Hợp lý hóa các
               chiến dịch của bạn và tối đa hóa ROI với chúng tôi.
@@ -82,7 +92,7 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-between gap-4 py-8 max-md:flex-col">
+        <div className="flex items-center justify-between gap-4 my-8 max-md:flex-col">
           <p className="text-sm text-muted-foreground">Copyright &copy; 2024 adfusion by BlueGreen</p>
           <div className="flex items-center gap-2">
             <Tooltip label="Facebook">
