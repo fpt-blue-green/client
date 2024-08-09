@@ -76,12 +76,14 @@ const config = {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
-    },
-    backgroundImage: {
-      gradient: 'var(--gradient)',
-    },
-    aspectRatio: {
-      thumbnail: '3/4',
+      backgroundImage: {
+        gradient: 'var(--gradient)',
+        ['bg-gradient-to-t']: 'linear-gradient(to top,var(--tw-gradient-stops))',
+        ['bg-gradient-to-b']: 'linear-gradient(to bottom,var(--tw-gradient-stops))',
+      },
+      aspectRatio: {
+        thumbnail: '3/4',
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],
