@@ -13,7 +13,7 @@ const InfluencerCard = () => {
           height={600}
           className="aspect-thumbnail object-cover transition-transform group-hover:scale-110"
         />
-        <div className="absolute left-0 top-0 right-0 bottom-0 bg-bg-gradient-to-b from-black/5 from-10% to-black"></div>
+        <div className="absolute left-0 top-0 right-0 bottom-0 bg-bg-gradient-to-b from-foreground/5 from-75% to-foreground"></div>
         <div className="absolute left-3 bottom-2 text-background">
           <h6 className="font-semibold">Influencer Name</h6>
           <span className="text-sm">Đà Nẵng, Việt Nam</span>
