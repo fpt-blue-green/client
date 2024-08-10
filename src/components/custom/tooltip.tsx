@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { Tooltip as ShadeTooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
+import { Tooltip as ShadeTooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 interface TooltipProps {
   children: ReactNode;
