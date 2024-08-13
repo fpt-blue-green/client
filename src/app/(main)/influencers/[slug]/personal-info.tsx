@@ -1,10 +1,10 @@
 import React from 'react';
 import Image from 'next/image';
-import { LuGalleryHorizontalEnd, LuInstagram, LuYoutube } from 'react-icons/lu';
+import { LuInstagram, LuYoutube } from 'react-icons/lu';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { estimateFollowers } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import GalleryModal from './gallery-modal';
 
 interface InfluencerInfoProps {
   influencer: {
@@ -25,7 +25,7 @@ interface SocialAccProps {
   followers?: number;
 }
 
-interface ImageProps {
+export interface ImageProps {
   url?: string;
 }
 
@@ -61,10 +61,9 @@ const PersonalInfo: React.FC<InfluencerInfoProps> = (props) => {
             height={380}
             className="rounded-e-lg w-full aspect-thumbnail object-cover"
           />
-          <Button className="absolute right-4 bottom-4" variant={'gradient'}>
-            <LuGalleryHorizontalEnd />
-            <span>Xem tất cả ảnh</span>
-          </Button>
+          <div className="absolute right-4 bottom-4">
+            <GalleryModal gallery={imagesGallery || []} />
+          </div>
         </div>
       </div>
       <div className="flex my-4 items-center space-x-4">
