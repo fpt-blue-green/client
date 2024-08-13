@@ -1,4 +1,3 @@
-// Hard-code data
 const person = {
   id: '1',
   imagesGallery: [

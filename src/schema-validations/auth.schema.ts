@@ -1,13 +1,13 @@
 import { z } from 'zod';
 
-const loginSchema = z
+export const loginSchema = z
   .object({
     email: z.string().min(1, 'Vui lòng nhập địa chỉ  email'), //.email('Email không hợp lệ'),
     password: z.string().min(1, 'Vui lòng nhập mật khẩu'),
   })
   .strict();
 
-const registerSchema = z
+export const registerSchema = z
   .object({
     userName: z.string().min(1, 'Vui lòng nhập tên người dùng'),
     email: z.string().min(1, 'Vui lòng nhập địa chỉ email'),
@@ -17,4 +17,3 @@ const registerSchema = z
 
 export type LoginBodyType = z.infer<typeof loginSchema>;
 export type RegisterBodyType = z.infer<typeof registerSchema>;
-export { loginSchema, registerSchema };

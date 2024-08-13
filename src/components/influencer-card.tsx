@@ -6,7 +6,7 @@ import { Skeleton } from './ui/skeleton';
 
 const InfluencerCard = () => {
   return (
-    <Link href={config.routes.influencer.details('yenphuong')} className="space-y-1.5">
+    <Link href={config.routes.influencers.details('yenphuong')} className="space-y-1.5">
       <div className="relative rounded-lg overflow-hidden group">
         <Image
           src="https://scontent.fhan5-2.fna.fbcdn.net/v/t39.30808-6/454530341_523941173319997_4319077826762337608_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeHfWjALriNSn9uF5PbBuViLKxA69Vi6aM8rEDr1WLpoz0ymNF_anj5JLNl0fE-pJn6YUTUwSNDo61IOyl9S-6Sf&_nc_ohc=zqj-SlzFHcgQ7kNvgF2Blnc&_nc_ht=scontent.fhan5-2.fna&oh=00_AYCfBS7pXZTUYju-OjYFjO-NrNe3H0TULkwPu_G4d5gLIg&oe=66BA6169"

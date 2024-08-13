@@ -2,9 +2,32 @@ import React from 'react';
 import Image from 'next/image';
 import { LuGalleryHorizontalEnd, LuInstagram, LuYoutube } from 'react-icons/lu';
 
-import { InfluencerInfoProps } from '@/types/user';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { estimateFollowers } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+
+interface InfluencerInfoProps {
+  influencer: {
+    id?: string;
+    imagesGallery?: ImageProps[];
+    avatar?: ImageProps;
+    fullName: string;
+    jobTitle?: string;
+    description?: string;
+    address?: string;
+    socialAccounts?: SocialAccProps[];
+    portfolioVideos?: string[];
+  };
+}
+
+interface SocialAccProps {
+  platformName?: string;
+  followers?: number;
+}
+
+interface ImageProps {
+  url?: string;
+}
 
 const PersonalInfo: React.FC<InfluencerInfoProps> = (props) => {
   const { fullName, address, avatar, description, imagesGallery, jobTitle, portfolioVideos, socialAccounts } =
@@ -38,10 +61,10 @@ const PersonalInfo: React.FC<InfluencerInfoProps> = (props) => {
             height={380}
             className="rounded-e-lg w-full aspect-thumbnail object-cover"
           />
-          <div className="hidden md:flex  items-center space-x-2 absolute right-6 bottom-5 bg-background p-2 rounded-md cursor-pointer border-zinc-900">
+          <Button className="absolute right-4 bottom-4" variant={'gradient'}>
             <LuGalleryHorizontalEnd />
-            <p>Show All Photos</p>
-          </div>
+            <span>Xem tất cả ảnh</span>
+          </Button>
         </div>
       </div>
       <div className="flex my-4 items-center space-x-4">
