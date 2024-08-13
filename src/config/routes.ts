@@ -5,7 +5,10 @@ const routes = {
   register: '/register',
   influencer: {
     base: '/influencer',
-    details: (slug: string) => `/influencer/${slug}`,
+  },
+  influencers: {
+    base: '/influencers',
+    details: (slug: string) => `/influencers/${slug}`,
   },
   brand: {
     base: '/brand',
