@@ -4,6 +4,8 @@ import PersonalInfo from './personal-info';
 import { Button } from '@/components/ui/button';
 import { person } from './constant';
 import Packages from './packages';
+import InfluencerList from '@/components/influencer-list';
+import Categories from './categories';
 
 const InfluencerDetails: FC = () => {
   return (
@@ -20,6 +22,8 @@ const InfluencerDetails: FC = () => {
       </div>
       <PersonalInfo item={person} />
       <Packages />
+      <InfluencerList className="mt-20 mx-6" title="Những người nổi tiếng tương tự" subtitle="" />
+      <Categories />
     </div>
   );
 };
