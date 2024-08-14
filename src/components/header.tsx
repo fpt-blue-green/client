@@ -27,7 +27,7 @@ const Header = () => {
               />
             </Link>
             <div className="flex items-center gap-4 ml-10 max-md:hidden">
-              <MenuItem href={config.routes.explore}>Khám phá</MenuItem>
+              <MenuItem href={config.routes.influencers.base}>Khám phá</MenuItem>
               <MenuItem href={config.routes.influencer.base}>Trở thành nhà sáng tạo</MenuItem>
               <MenuItem href={config.routes.brand.base}>Trở thành nhãn hàng</MenuItem>
             </div>
