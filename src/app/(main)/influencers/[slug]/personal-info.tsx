@@ -1,37 +1,38 @@
-import React from 'react';
+import { FC } from 'react';
 import Image from 'next/image';
 import { LuInstagram, LuYoutube } from 'react-icons/lu';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { estimateFollowers } from '@/lib/utils';
 import GalleryModal from './gallery-modal';
+import Link from 'next/link';
 
 interface InfluencerInfoProps {
-  influencer: {
+  item: {
     id?: string;
-    imagesGallery?: ImageProps[];
-    avatar?: ImageProps;
+    imagesGallery?: ImageModel[];
+    avatar?: ImageModel;
     fullName: string;
     jobTitle?: string;
     description?: string;
     address?: string;
-    socialAccounts?: SocialAccProps[];
+    socialAccounts?: SocialAccModel[];
     portfolioVideos?: string[];
   };
 }
 
-interface SocialAccProps {
+interface SocialAccModel {
   platformName?: string;
   followers?: number;
 }
 
-export interface ImageProps {
+export interface ImageModel {
   url?: string;
 }
 
-const PersonalInfo: React.FC<InfluencerInfoProps> = (props) => {
+const PersonalInfo: FC<InfluencerInfoProps> = (props) => {
   const { fullName, address, avatar, description, imagesGallery, jobTitle, portfolioVideos, socialAccounts } =
-    props.influencer;
+    props.item;
   return (
     <div className="container ">
       <div className="grid grid-cols-3 gap-2 ">
@@ -83,7 +84,17 @@ const PersonalInfo: React.FC<InfluencerInfoProps> = (props) => {
                 className="flex items-center gap-2 border-2 border-gray-300 rounded-sm px-2 py-1 w-max"
               >
                 {account.platformName === 'Instagram' ? <LuInstagram /> : <LuYoutube />}
-                <span className="text-blue-500 font-semibold text-xs">{estimateFollowers(account.followers!)}</span>
+                <Link
+                  target="_blank"
+                  href={
+                    account.platformName === 'Instagram'
+                      ? `https://www.instagram.com/${''}`
+                      : `https://www.youtube.com/${''}`
+                  }
+                  className="text-blue-500 font-semibold text-xs hover:underline"
+                >
+                  {estimateFollowers(account.followers!)}
+                </Link>
               </div>
             ))}
           </div>

@@ -3,10 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import Image from 'next/image';
 import { LuGalleryHorizontalEnd } from 'react-icons/lu';
-import { ImageProps } from './personal-info';
+import { ImageModel } from './personal-info';
 
 interface GalleryModalProps {
-  gallery: ImageProps[];
+  gallery: ImageModel[];
 }
 
 const GalleryModal: FC<GalleryModalProps> = ({ gallery }) => {
@@ -19,8 +19,8 @@ const GalleryModal: FC<GalleryModalProps> = ({ gallery }) => {
             <span>Xem tất cả ảnh</span>
           </Button>
         </DialogTrigger>
-        <DialogContent className=" sm:max-w-[425px] min-w-[80%] max-h-[85%] overflow-y-auto scrollbar-width hide-scrollbar">
-          <div className="flex flex-wrap justify-between p-3 mx-6">
+        <DialogContent className=" sm:max-w-[425px] min-w-[80%] max-h-[85%] overflow-y-auto hide-scrollbar">
+          <div className="grid grid-cols-3 gap-4 p-10 mx-6">
             {gallery?.map((image) => (
               <Image
                 key={image?.url}
@@ -28,7 +28,7 @@ const GalleryModal: FC<GalleryModalProps> = ({ gallery }) => {
                 alt={'image from gallery'}
                 width={380}
                 height={380}
-                className="w-[30%] h-[27vw] max-h-96 aspect-thumbnail object-cover mb-2"
+                className="w-[100%] max-h-full aspect-thumbnail object-cover "
               />
             ))}
           </div>
