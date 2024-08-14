@@ -3,7 +3,7 @@ import { LuFacebook, LuInstagram, LuMail, LuPhone, LuYoutube } from 'react-icons
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { RiTiktokLine } from 'react-icons/ri';
-import Tooltip from '@/components/tooltip';
+import Tooltip from '@/components/custom/tooltip';
 import Image from 'next/image';
 
 const Footer = () => {

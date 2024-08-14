@@ -2,6 +2,7 @@ import config from '@/config';
 import { formats } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Skeleton } from './ui/skeleton';
 
 const InfluencerCard = () => {
   return (
@@ -12,7 +13,7 @@ const InfluencerCard = () => {
           alt="Name"
           width={400}
           height={600}
-          className="aspect-thumbnail object-cover transition-transform group-hover:scale-110"
+          className="aspect-thumbnail object-cover transition-transform w-full group-hover:scale-110"
         />
         <div className="absolute left-0 top-0 right-0 bottom-0 bg-bg-gradient-to-b from-foreground/5 from-75% to-foreground"></div>
         <div className="absolute left-3 bottom-2 text-background">
@@ -24,8 +25,23 @@ const InfluencerCard = () => {
         <span className="font-medium text-muted-foreground">Platform</span>
         <span className="font-bold">{formats.price(500000)}</span>
       </div>
-      <div>Lifestyle & Fashion content creator</div>
+      <div className="text-sm">Lifestyle & Fashion content creator</div>
     </Link>
+  );
+};
+
+export const InfluencerCardSkeleton = () => {
+  return (
+    <div className="space-y-1.5">
+      <div className="relative pb-[133.33333%]">
+        <Skeleton className="absolute inset-0" />
+      </div>
+      <div className="flex justify-between">
+        <Skeleton className="h-4 w-1/4" />
+        <Skeleton className="h-4 w-1/3" />
+      </div>
+      <Skeleton className="h-4 w-full" />
+    </div>
   );
 };
 

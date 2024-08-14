@@ -63,4 +63,6 @@ const http = {
   },
 };
 
+export const fetcher = (url: string) => http.get(url).then((response) => response.payload);
+
 export default http;

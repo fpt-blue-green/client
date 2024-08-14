@@ -14,7 +14,7 @@ const Banner = () => {
         <h5 className="text-4xl font-semibold">Tìm và thuê người ảnh hưởng</h5>
         <p>Tìm kiếm những người có sức ảnh hưởng trên Instagram, TikTok, YouTube.</p>
         <Button variant="secondary" className="h-16 px-12 text-lg" asChild>
-          <Link href={config.routes.explore}>Bắt đầu tìm kiếm</Link>
+          <Link href={config.routes.influencers.base}>Bắt đầu tìm kiếm</Link>
         </Button>
       </div>
     </div>
