@@ -16,6 +16,24 @@ const Packages = () => {
             <span className="font-semibold text-xl">1 Bài đăng ảnh lên Instagram</span>
             <span className="font-semibold text-xl">{formats.price(650000)}</span>
           </div>
+          <p className="text-muted-foreground mt-4">
+            Với gói này tôi sẽ đăng 1 bức ảnh giới thiệu sản phẩm của nhãn hàng tới những khán giả của mình.
+          </p>
+          <div className="flex items-center justify-between mt-8">
+            <LuInstagram className="size-6" />
+            <Button className="text-xl py-6 px-10" variant={'gradient'}>
+              Tiếp tục
+            </Button>
+          </div>
+        </div>
+        <div className="border-muted-foreground border-2 px-6 py-4 rounded-sm">
+          <div className="flex items-center justify-between">
+            <span className="font-semibold text-xl">1 Bài đăng ảnh lên Instagram</span>
+            <span className="font-semibold text-xl">{formats.price(650000)}</span>
+          </div>
+          <p className="text-muted-foreground mt-4">
+            Với gói này tôi sẽ đăng 1 bức ảnh giới thiệu sản phẩm của nhãn hàng tới những khán giả của mình.
+          </p>
           <div className="flex items-center justify-between mt-8">
             <LuInstagram className="size-6" />
             <Button className="text-xl py-6 px-10" variant={'gradient'}>
@@ -26,22 +44,13 @@ const Packages = () => {
         <div className="border-muted-foreground border-2 px-6 py-4 rounded-sm">
           <div className="flex items-center justify-between">
             <span className="font-semibold text-xl">2 Bài đăng ảnh lên FaceBook</span>
-            <span className="font-semibold text-xl">{formats.price(1200000)}</span>
+            <span className="font-semibold text-xl">{formats.price(650000)}</span>
           </div>
+          <p className="text-muted-foreground mt-4">
+            Với gói này tôi sẽ đăng 2 bức ảnh giới thiệu sản phẩm của nhãn hàng tới những khán giả của mình.
+          </p>
           <div className="flex items-center justify-between mt-8">
             <LuFacebook className="size-6" />
-            <Button className="text-xl py-6 px-10" variant={'gradient'}>
-              Tiếp tục
-            </Button>
-          </div>
-        </div>
-        <div className="border-muted-foreground border-2 px-6 py-4 rounded-sm">
-          <div className="flex items-center justify-between">
-            <span className="font-semibold text-xl">2 Bài đăng ảnh lên Instagram</span>
-            <span className="font-semibold text-xl">{formats.price(1100000)}</span>
-          </div>
-          <div className="flex items-center justify-between mt-8">
-            <LuInstagram className="size-6" />
             <Button className="text-xl py-6 px-10" variant={'gradient'}>
               Tiếp tục
             </Button>
