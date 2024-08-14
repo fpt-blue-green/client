@@ -3,6 +3,7 @@ import { LuHeart, LuShare } from 'react-icons/lu';
 import PersonalInfo from './personal-info';
 import { Button } from '@/components/ui/button';
 import { person } from './constant';
+import Packages from './packages';
 
 const InfluencerDetails: FC = () => {
   return (
@@ -18,6 +19,7 @@ const InfluencerDetails: FC = () => {
         </Button>
       </div>
       <PersonalInfo item={person} />
+      <Packages />
     </div>
   );
 };
