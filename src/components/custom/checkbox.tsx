@@ -8,12 +8,12 @@ interface CheckboxProps extends SCheckboxProps {
   label?: string;
 }
 
-const Checkbox: FC<CheckboxProps> = ({ id, label }) => {
+const Checkbox: FC<CheckboxProps> = ({ id, label, ...props }) => {
   const checkboxId = id || 'checkbox-' + uuidv4();
 
   return (
     <div className="flex items-center gap-2">
-      <SCheckbox id={checkboxId} />
+      <SCheckbox id={checkboxId} {...props} />
       <label htmlFor={checkboxId} className="text-sm leading-none">
         {label}
       </label>
