@@ -6,13 +6,14 @@ import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger 
 import { Cross2Icon, MagnifyingGlassIcon, ReloadIcon } from '@radix-ui/react-icons';
 import { LuFilter } from 'react-icons/lu';
 import { Slider } from '@/components/ui/slider';
+import { formats } from '@/lib/utils';
+import { Toggle } from '@/components/ui/toggle';
 
 const Filter = () => {
   return (
     <div className="flex items-center justify-between">
       <Input
-        className="w"
-        startAdornment={<MagnifyingGlassIcon className="size-8 text-muted-foreground" />}
+        startAdornment={<MagnifyingGlassIcon className="size-7 text-muted-foreground" />}
         placeholder="Tìm kiếm..."
       />
       <div className="flex items-center gap-4">
@@ -49,17 +50,24 @@ const Filter = () => {
               </div>
               <div className="space-y-3">
                 <h5 className="font-medium mb-2">Danh mục</h5>
-                <Checkbox label="Ca hát & Khiêu vũ" value="1" />
-                <Checkbox label="Thời trang" value="2" />
-                <Checkbox label="Đời sống" value="3" />
-                <Checkbox label="Gaming" value="4" />
-                <Checkbox label="Thể thao" value="5" />
-                <Checkbox label="Giải trí" value="6" />
-                <Checkbox label="Gia đình" value="7" />
+                <div className="flex flex-wrap gap-4 items-center">
+                  <Toggle variant="primary">Ca hát & Khiêu vũ</Toggle>
+                  <Toggle variant="primary">Thời trang</Toggle>
+                  <Toggle variant="primary">Đời sống</Toggle>
+                  <Toggle variant="primary">Gaming</Toggle>
+                  <Toggle variant="primary">Thể thao</Toggle>
+                  <Toggle variant="primary">Giải trí</Toggle>
+                  <Toggle variant="primary">Gia đình</Toggle>
+                </div>
               </div>
               <div>
                 <h5 className="font-medium mb-2">Giá</h5>
-                <Slider defaultValue={[25, 75]} step={5} />
+                <Slider className="mt-6" defaultValue={[0, 10_000_000]} max={10_000_000} step={250_000} />
+                <div className="flex items-center gap-4 mt-6">
+                  <Input className="h-10" inputClassName="text-right" value={formats.price(250_000)} readOnly />
+                  -
+                  <Input className="h-10" inputClassName="text-right" value={formats.price(10_000_000)} readOnly />
+                </div>
               </div>
             </div>
           </SheetContent>
