@@ -62,7 +62,7 @@ const PersonalInfo: FC<InfluencerInfoProps> = (props) => {
             height={380}
             className="rounded-e-lg w-full aspect-thumbnail object-cover"
           />
-          <div className="absolute right-4 bottom-4">
+          <div className="absolute hidden md:block md:right-0 md:bottom-3 ">
             <GalleryModal gallery={imagesGallery || []} />
           </div>
         </div>

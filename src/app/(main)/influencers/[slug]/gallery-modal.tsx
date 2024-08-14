@@ -19,18 +19,20 @@ const GalleryModal: FC<GalleryModalProps> = ({ gallery }) => {
             <span>Xem tất cả ảnh</span>
           </Button>
         </DialogTrigger>
-        <DialogContent className=" sm:max-w-[425px] min-w-[80%] max-h-[85%] overflow-y-auto hide-scrollbar">
-          <div className="grid grid-cols-3 gap-4 p-10 mx-6">
-            {gallery?.map((image) => (
-              <Image
-                key={image?.url}
-                src={image?.url || ''}
-                alt={'image from gallery'}
-                width={380}
-                height={380}
-                className="w-[100%] max-h-full aspect-thumbnail object-cover "
-              />
-            ))}
+        <DialogContent className="sm:max-w-[425px] min-w-[80%] max-h-[85%] ">
+          <div className="w-full h-[70%] overflow-y-auto hide-scrollbar">
+            <div className="grid grid-cols-3 gap-4 p-10 mx-6">
+              {gallery?.map((image) => (
+                <Image
+                  key={image?.url}
+                  src={image?.url || ''}
+                  alt={'image from gallery'}
+                  width={380}
+                  height={380}
+                  className="w-[100%] max-h-full aspect-thumbnail object-cover "
+                />
+              ))}
+            </div>
           </div>
         </DialogContent>
       </Dialog>
