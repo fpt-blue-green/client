@@ -1,9 +1,25 @@
+'use client';
+
+import { FC, useState } from 'react';
 import { formats } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Skeleton } from './ui/skeleton';
+import { HeartFilledIcon, HeartIcon } from '@radix-ui/react-icons';
+import { Button } from './ui/button';
 
-const InfluencerCard = () => {
+interface InfluencerCardProps {
+  favorite?: boolean;
+}
+
+const InfluencerCard: FC<InfluencerCardProps> = ({ favorite }) => {
+  const [isFavorite, setIsFavorite] = useState(favorite);
+
+  const handleFavorite = () => {
+    setIsFavorite(!isFavorite);
+    // !TODO
+  };
+
   return (
     <Link href="" className="space-y-1.5">
       <div className="relative rounded-lg overflow-hidden group">
@@ -19,6 +35,13 @@ const InfluencerCard = () => {
           <h6 className="font-semibold">Influencer Name</h6>
           <span className="text-sm">Đà Nẵng, Việt Nam</span>
         </div>
+        {favorite !== undefined && (
+          <div className="absolute top-3 right-3">
+            <Button variant="ghost" className="h-7 p-1 rounded-full" onClick={handleFavorite}>
+              {isFavorite ? <HeartFilledIcon className="size-5 text-destructive" /> : <HeartIcon className="size-5" />}
+            </Button>
+          </div>
+        )}
       </div>
       <div className="flex items-center justify-between">
         <span className="font-medium text-muted-foreground">Platform</span>
