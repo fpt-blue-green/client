@@ -7,6 +7,7 @@ const TypingText = () => {
       <TypeAnimation
         className="text"
         sequence={[
+          1000,
           'hình ảnh sản phẩm',
           1000,
           'bài viết được tài trợ',

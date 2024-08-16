@@ -9,6 +9,7 @@ const routes = {
   },
   brand: {
     base: '/brand',
+    register: '/brand/register',
   },
 };
 
