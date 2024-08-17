@@ -9,6 +9,7 @@ import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carouse
 import { Button } from '@/components/ui/button';
 import { PlatformEnum } from '@/types/enum';
 import { RiTiktokLine } from 'react-icons/ri';
+import Tooltip from '@/components/custom/tooltip';
 
 interface InfluencerInfoProps {
   item: {
@@ -38,7 +39,7 @@ const PersonalInfo: FC<InfluencerInfoProps> = (props) => {
     props.item;
   return (
     <div>
-      <div className="flex space-x-1 justify-end mb-4">
+      <div className="hidden md:flex space-x-1 justify-end mb-4">
         <Button variant="ghost" startIcon={<LuShare />}>
           <span>Chia Sẻ</span>
         </Button>
@@ -63,12 +64,22 @@ const PersonalInfo: FC<InfluencerInfoProps> = (props) => {
       </Carousel>
       <div>
         <div className="flex my-4 items-center space-x-4">
-          <Avatar className="w-24 h-24">
-            <AvatarImage width={200} src={avatar?.url} alt="Avatar" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <div className="flex-1">
-            <h5 className="font-semibold text-2xl">
+          <div className="flex flex-col items-center">
+            <Avatar className="w-16 h-16 md:w-24 md:h-24">
+              <AvatarImage width={200} src={avatar?.url} alt="Avatar" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+            <div className="md:hidden flex">
+              <Tooltip label="Chia sẻ">
+                <Button variant="ghost" size="icon" startIcon={<LuShare size="16" />} />
+              </Tooltip>
+              <Tooltip label="Yêu thích">
+                <Button variant="ghost" size="icon" startIcon={<LuHeart size="16" />}></Button>
+              </Tooltip>
+            </div>
+          </div>
+          <div className="pl-4 md:pl-0 flex-1">
+            <h5 className="font-semibold text-xl md:text-2xl">
               {fullName} | {jobTitle}
             </h5>
             <p className="my-2 text-muted-foreground text-sm">{address}</p>
@@ -107,7 +118,7 @@ const PersonalInfo: FC<InfluencerInfoProps> = (props) => {
             </div>
           </div>
         </div>
-        <p className="text-muted-foreground text-base">{description}</p>
+        <p className="text-sm text-muted-foreground md:text-base">{description}</p>
       </div>
     </div>
   );
