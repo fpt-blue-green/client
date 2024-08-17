@@ -11,7 +11,6 @@ const InfluencerDetails: FC = () => {
       <PersonalInfo item={person} />
       <Packages />
       <InfluencerList className="mt-20 mx-6" title="Những người nổi tiếng tương tự" />
-      <Categories />
     </div>
   );
 };

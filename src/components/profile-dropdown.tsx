@@ -34,7 +34,7 @@ const ProfileDropdown = () => {
               <Link href={config.routes.login}>Đăng nhập</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href={config.routes.register}>Đăng kí</Link>
+              <Link href={''}>Đăng kí</Link>
             </DropdownMenuItem>
           </>
         )}

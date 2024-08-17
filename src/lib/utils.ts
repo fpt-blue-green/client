@@ -17,11 +17,13 @@ export const formats = {
 };
 
 export const estimateFollowers = (followers: number): string => {
-  if (followers >= 1000 && followers <= 10000) {
-    return '1k-10k followers';
+  if (followers >= 1000000000) {
+    return (followers / 1000000000).toFixed(1) + 'b';
+  } else if (followers >= 1000000) {
+    return (followers / 1000000).toFixed(1) + 'm';
+  } else if (followers >= 1000) {
+    return (followers / 1000).toFixed(1) + 'k';
+  } else {
+    return followers.toString();
   }
-  if (followers > 10000 && followers <= 20000) {
-    return '10k-20k followers';
-  }
-  return 'Out of range';
 };

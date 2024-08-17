@@ -7,6 +7,8 @@ import { LuHeart, LuShare } from 'react-icons/lu';
 import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button';
+import { PlatformEnum } from '@/types/enum';
+import { RiTiktokLine } from 'react-icons/ri';
 
 interface InfluencerInfoProps {
   item: {
@@ -23,7 +25,7 @@ interface InfluencerInfoProps {
 }
 
 interface SocialAccModel {
-  platformName?: string;
+  platform?: number;
   followers?: number;
 }
 
@@ -73,20 +75,32 @@ const PersonalInfo: FC<InfluencerInfoProps> = (props) => {
             <div className="flex items-center gap-2 ">
               {socialAccounts?.map((account) => (
                 <div
-                  key={account.platformName}
+                  key={account.platform}
                   className="flex items-center gap-2 border-2 border-gray-300 rounded-sm px-2 py-1 w-max"
                 >
-                  {account.platformName === 'Instagram' ? <LuInstagram /> : <LuYoutube />}
+                  {account.platform === PlatformEnum.Instagram ? (
+                    <LuInstagram />
+                  ) : account.platform === PlatformEnum.YouTube ? (
+                    <LuYoutube />
+                  ) : account.platform === PlatformEnum.TitTok ? (
+                    <RiTiktokLine />
+                  ) : (
+                    ''
+                  )}
                   <Link
                     target="_blank"
                     href={
-                      account.platformName === 'Instagram'
+                      account.platform === PlatformEnum.Instagram
                         ? `https://www.instagram.com/${''}`
-                        : `https://www.youtube.com/${''}`
+                        : account.platform === PlatformEnum.YouTube
+                        ? `https://www.youtube.com/${''}`
+                        : account.platform === PlatformEnum.TitTok
+                        ? `https://www.tiktok.com/${''}`
+                        : ''
                     }
                     className="text-blue-500 font-semibold text-xs hover:underline"
                   >
-                    {estimateFollowers(account.followers!)}
+                    {`${estimateFollowers(account.followers!)} Followers`}
                   </Link>
                 </div>
               ))}
