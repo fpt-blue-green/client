@@ -28,12 +28,16 @@ const person = {
   address: 'Miami, FL, United States',
   socialAccounts: [
     {
-      platformName: 'Youtube',
-      followers: 12000,
+      platform: 0,
+      followers: 56800,
     },
     {
-      platformName: 'Instagram',
-      followers: 4000,
+      platform: 1,
+      followers: 125600,
+    },
+    {
+      platform: 2,
+      followers: 30000,
     },
   ],
   description:
