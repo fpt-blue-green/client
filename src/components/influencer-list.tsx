@@ -4,7 +4,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 
 interface InfluencerListProps {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   className?: string;
 }
 
