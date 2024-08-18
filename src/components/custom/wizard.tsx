@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { FC } from 'react';
 
 interface WizardProps {
@@ -19,13 +20,9 @@ const Wizard: FC<WizardProps> = (props) => {
           <div className="relative p-4 bg-gradient mr-4 rounded-full text-2xl flex items-center justify-center">
             <div className=" rounded-full text-primary-foreground">{step.iconComponent}</div>
             <div
-              className={`
-                    absolute  h-[125%] bg-gradient -bottom-[70px]
-                    ${index === items.length - 1 ? 'w-0' : 'w-2'}
-                    `}
-              style={{
-                content: '',
-              }}
+              className={clsx(' absolute  h-[125%] bg-gradient -bottom-[70px] w-2', {
+                hidden: index === items.length - 1,
+              })}
             />
           </div>
           <p className="text-sm p-1">{step.description}</p>

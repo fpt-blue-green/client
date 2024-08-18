@@ -6,7 +6,7 @@ import { formats } from '@/lib/utils';
 const Packages = () => {
   return (
     <div className="mt-16">
-      <div className="relative flex items-center space-x-3 mb-8">
+      <div className="flex items-center space-x-3 mb-8">
         <h3 className="font-semibold text-2xl">Gói</h3>
         <HowPackagesWork />
       </div>

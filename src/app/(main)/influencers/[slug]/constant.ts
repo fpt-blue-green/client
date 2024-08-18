@@ -2,26 +2,26 @@ const person = {
   id: '1',
   imagesGallery: [
     {
-      url: 'https://d5ik1gor6xydq.cloudfront.net/sellers/22701/16261809432970748.webp',
+      url: 'https://wallpapers.com/images/hd/natural-lake-with-trees-during-winter-lo9cf1daepq9la5d.jpg',
     },
     {
-      url: 'https://d5ik1gor6xydq.cloudfront.net/sellers/107997/16972193575899336.webp',
+      url: 'https://img.freepik.com/premium-photo/amazing-nature-scenery-nice-landscape-beauty-natural-beautiful-scenery_1234738-249393.jpg?size=626&ext=jpg&ga=GA1.1.2008272138.1723420800&semt=ais_hybrid',
     },
     {
-      url: 'https://d5ik1gor6xydq.cloudfront.net/sellers/107997/16972193573476825.webp',
+      url: 'https://wallpapers.com/images/hd/natural-lake-with-trees-during-winter-lo9cf1daepq9la5d.jpg',
     },
     {
-      url: 'https://d5ik1gor6xydq.cloudfront.net/sellers/22701/16261809432970748.webp',
+      url: 'https://img.freepik.com/premium-photo/amazing-nature-scenery-nice-landscape-beauty-natural-beautiful-scenery_1234738-249393.jpg?size=626&ext=jpg&ga=GA1.1.2008272138.1723420800&semt=ais_hybrid',
     },
     {
-      url: 'https://d5ik1gor6xydq.cloudfront.net/sellers/107997/16972193575899336.webp',
+      url: 'https://img.freepik.com/premium-photo/amazing-nature-scenery-nice-landscape-beauty-natural-beautiful-scenery_1234738-249393.jpg?size=626&ext=jpg&ga=GA1.1.2008272138.1723420800&semt=ais_hybrid',
     },
     {
-      url: 'https://d5ik1gor6xydq.cloudfront.net/sellers/107997/16972193573476825.webp',
+      url: 'https://img.freepik.com/premium-photo/amazing-nature-scenery-nice-landscape-beauty-natural-beautiful-scenery_1234738-249393.jpg?size=626&ext=jpg&ga=GA1.1.2008272138.1723420800&semt=ais_hybrid',
     },
   ],
   avatar: {
-    url: 'https://d5ik1gor6xydq.cloudfront.net/sellers/22701/16261809432970748.webp',
+    url: 'https://img.freepik.com/premium-photo/amazing-nature-scenery-nice-landscape-beauty-natural-beautiful-scenery_1234738-249393.jpg?size=626&ext=jpg&ga=GA1.1.2008272138.1723420800&semt=ais_hybrid',
   },
   fullName: 'Sofia Barcenas',
   jobTitle: 'Digital Content Creator & Micro Influencer',
