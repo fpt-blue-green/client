@@ -13,7 +13,7 @@ const HowPackagesWork = () => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-xl text-center">Sẽ Thế Nào Khi Tôi Giao Dịch Một Dịch Vụ?</DialogTitle>
+          <DialogTitle className="text-xl text-center">Sẽ Thế Nào Khi Tôi Giao Dịch Một Gói?</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <Wizard items={packagePurchasingSteps} />

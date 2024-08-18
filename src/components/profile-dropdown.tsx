@@ -7,6 +7,7 @@ import { Button } from './ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import Link from 'next/link';
 import config from '@/config';
+import Register from '@/app/(header-only)/register/page';
 
 const ProfileDropdown = () => {
   const { user } = useAuth();
@@ -34,7 +35,7 @@ const ProfileDropdown = () => {
               <Link href={config.routes.login}>Đăng nhập</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href={''}>Đăng kí</Link>
+              <Register />
             </DropdownMenuItem>
           </>
         )}
