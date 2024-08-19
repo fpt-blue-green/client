@@ -4,15 +4,18 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import useAuth from '@/hooks/useAuth';
 import { LoginBodyType, loginSchema } from '@/schema-validations/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { useForm } from 'react-hook-form';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 const LoginForm = () => {
-  const { login, isLoading } = useAuth();
   const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const form = useForm<LoginBodyType>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -25,8 +28,20 @@ const LoginForm = () => {
     setShowPass(!showPass);
   };
 
-  const onSubmit = (values: LoginBodyType) => {
-    login(values);
+  const onSubmit = async (values: LoginBodyType) => {
+    setLoading(true);
+    const res = await signIn('credentials', {
+      ...values,
+      callbackUrl: '/',
+      redirect: false,
+    });
+
+    setLoading(false);
+    if (!res?.error) {
+      router.push('/');
+    } else {
+      toast.error('Đã có lỗi xảy ra');
+    }
   };
 
   return (
@@ -65,7 +80,7 @@ const LoginForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" variant="gradient" size="large" fullWidth loading={isLoading}>
+        <Button type="submit" variant="gradient" size="large" fullWidth loading={loading}>
           Đăng nhập
         </Button>
       </form>
