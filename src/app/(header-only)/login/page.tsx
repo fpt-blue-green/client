@@ -1,5 +1,7 @@
 import { GoogleLoginButton } from '@/contexts/google-oauth-provider';
 import LoginForm from './login-form';
+import Link from 'next/link';
+import config from '@/config';
 
 const Login = () => {
   return (
@@ -12,6 +14,11 @@ const Login = () => {
         <div className="border-t flex-1"></div>
       </div>
       <LoginForm />
+      <p className="mt-6 text-center">
+        <Link href={config.routes.forgot} className="text-sm text-muted-foreground hover:underline">
+          Quên mật khẩu?
+        </Link>
+      </p>
     </div>
   );
 };
