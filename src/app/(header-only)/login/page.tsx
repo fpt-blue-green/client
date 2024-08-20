@@ -1,13 +1,19 @@
+import { Metadata } from 'next';
 import LoginForm from './login-form';
 import Link from 'next/link';
 import config from '@/config';
 import GoogleLogin from './google-login';
 import FacebookLogin from './facebook-login';
 
+export const metadata: Metadata = {
+  title: 'Đăng nhập',
+  description: 'Đăng nhập vào adfusion',
+};
+
 const Login = () => {
   return (
     <div className="max-w-sm w-full mt-20">
-      <h1 className="text-center font-bold text-3xl mb-10 bg-gradient text-gradient">Chào mừng trở lại</h1>
+      <h1 className="text-center font-bold text-3xl mb-10 text-gradient">Chào mừng trở lại</h1>
       <div className="space-y-4">
         <GoogleLogin />
         <FacebookLogin />

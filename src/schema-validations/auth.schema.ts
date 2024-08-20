@@ -7,4 +7,9 @@ export const loginSchema = z
   })
   .strict();
 
+export const forgotSchema = z.object({
+  email: z.string().min(1, 'Vui lòng nhập email').email('Email không hợp lệ'),
+});
+
 export type LoginBodyType = z.infer<typeof loginSchema>;
+export type ForgotBodyType = z.infer<typeof forgotSchema>;

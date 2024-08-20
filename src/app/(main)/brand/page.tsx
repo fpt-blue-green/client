@@ -1,9 +1,15 @@
+import { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import TypingText from './typing-text';
 import Image from 'next/image';
 import Banner from '../(home)/banner';
 import Link from 'next/link';
 import config from '@/config';
+
+export const metadata: Metadata = {
+  title: 'Trở thành nhãn hàng',
+  description: 'Cách dễ dàng để tạo những hình ảnh sản phẩm, bài viết được tài trợ, lời chứng thực và video quảng cáo.',
+};
 
 const JoinAsBrand = () => {
   return (
