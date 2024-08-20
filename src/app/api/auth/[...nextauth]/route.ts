@@ -2,6 +2,7 @@ import http from '@/lib/http';
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
+import FacebookProvider from 'next-auth/providers/facebook';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -33,8 +34,12 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     GoogleProvider({
-      clientId: process.env.GOOGLE_OAUTH_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_OAUTH_SECRET as string,
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_APP_ID!,
+      clientSecret: process.env.FACEBOOK_APP_SECRET!,
     }),
   ],
   session: {
@@ -57,9 +62,17 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async signIn({ user, account }) {
-      // Gửi dữ liệu user tới backend sau khi đăng nhập bằng Google
       if (account?.provider === 'google') {
         try {
+          //TODO: Call Api
+          console.log(user);
+        } catch (error) {
+          console.error('Failed to send data to backend:', error);
+        }
+      }
+      if (account?.provider === 'facebook') {
+        try {
+          //TODO: Call Api
           console.log(user);
         } catch (error) {
           console.error('Failed to send data to backend:', error);
