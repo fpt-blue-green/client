@@ -62,7 +62,7 @@ const ProfileDropdown = () => {
               <h2 className="px-5 pt-10 font-bold text-4xl text-center">Kể Chúng Tôi Nghe Về Bạn</h2>
               <div className="flex flex-col md:flex-row gap-4 justify-center pt-10">
                 <DialogClose asChild>
-                  <Button size="large" className="py-5 px-16 h-14" variant="gradient">
+                  <Button size="large" className="py-5 px-16 h-14" variant="gradient" asChild>
                     <Link href={config.routes.influencer.base}>Người Nổi Tiếng</Link>
                   </Button>
                 </DialogClose>
