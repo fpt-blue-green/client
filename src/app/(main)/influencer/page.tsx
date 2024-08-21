@@ -1,7 +1,4 @@
-import { InputWithoutOutline } from './input-without-outline';
 import { Button } from '@/components/ui/button';
-import { InstagramLogoIcon } from '@radix-ui/react-icons';
-import { LuYoutube } from 'react-icons/lu';
 import { RiInstagramFill, RiTiktokFill, RiYoutubeFill } from 'react-icons/ri';
 import { contentTypes } from './constant';
 import InfluencerList from '@/components/influencer-list';
@@ -10,9 +7,7 @@ import HowItWork from '../(home)/how-it-work';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: {
-    absolute: 'Trở thành nhà sáng tạo | adfusion',
-  },
+  title: 'Trở thành nhà sáng tạo',
 };
 
 const JoinAsCreator = () => {
@@ -26,7 +21,7 @@ const JoinAsCreator = () => {
         </p>
         <div className="w-full md:w-[65%] flex justify-between items-center py-2 px-5 border border-foreground rounded-full shadow-lg">
           <span className="font-medium">adfusion.com/</span>
-          <InputWithoutOutline placeholder="nickname" type="text" className="pl-1 w-full" />
+          <input placeholder="nickname" className="w-full pr-1 outline-none" />
           <Button className="rounded-full p-6" size="large" variant="gradient">
             Xác Thực
           </Button>
@@ -68,7 +63,7 @@ const JoinAsCreator = () => {
         <h2 className="text-center text-2xl text-gradient font-bold">Được Yêu Thích Bởi 130,000+ Nhà Sáng Tạo</h2>
         <div className="max-w-3xl m-auto flex justify-center items-center gap-2 flex-wrap my-8">
           {contentTypes.map((item) => (
-            <div key={item} className="sm:py-3 sm:px-8 py-1 px-6 border rounded-full bg-accent">
+            <div key={item} className="sm:py-3 sm:px-8 py-1 px-6 rounded-full bg-accent">
               {item}
             </div>
           ))}
