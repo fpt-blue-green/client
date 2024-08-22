@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { FilterAction, FilterState } from './list';
 import { useDebounce, useUpdateEffect } from '@/hooks';
-import { PlatformEnum } from '@/types/enum';
+import { EPlatform } from '@/types/enum';
 
 interface FilterProps {
   isChanged: boolean;
@@ -57,7 +57,7 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
     dispatch({ type: 'RESET_FILTER' });
   };
 
-  const handleTogglePlatform = (value: PlatformEnum) => () => {
+  const handleTogglePlatform = (value: EPlatform) => () => {
     dispatch({ type: 'TOGGLE_PLATFORM', payload: value });
   };
 
@@ -121,21 +121,21 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
                 <h5 className="font-medium mb-2">Nền tảng</h5>
                 <Checkbox
                   label="Instagram"
-                  value={PlatformEnum.Instagram}
-                  checked={platforms.includes(PlatformEnum.Instagram)}
-                  onCheckedChange={handleTogglePlatform(PlatformEnum.Instagram)}
+                  value={EPlatform.Instagram}
+                  checked={platforms.includes(EPlatform.Instagram)}
+                  onCheckedChange={handleTogglePlatform(EPlatform.Instagram)}
                 />
                 <Checkbox
                   label="TikTok"
-                  value={PlatformEnum.TitTok}
-                  checked={platforms.includes(PlatformEnum.TitTok)}
-                  onCheckedChange={handleTogglePlatform(PlatformEnum.TitTok)}
+                  value={EPlatform.TitTok}
+                  checked={platforms.includes(EPlatform.TitTok)}
+                  onCheckedChange={handleTogglePlatform(EPlatform.TitTok)}
                 />
                 <Checkbox
                   label="YouTube"
-                  value={PlatformEnum.YouTube}
-                  checked={platforms.includes(PlatformEnum.YouTube)}
-                  onCheckedChange={handleTogglePlatform(PlatformEnum.YouTube)}
+                  value={EPlatform.YouTube}
+                  checked={platforms.includes(EPlatform.YouTube)}
+                  onCheckedChange={handleTogglePlatform(EPlatform.YouTube)}
                 />
               </div>
               <div className="space-y-3">

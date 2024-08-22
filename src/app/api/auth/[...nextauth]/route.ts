@@ -3,6 +3,7 @@ import NextAuth, { NextAuthOptions } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
+import config from '@/config';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -46,19 +47,14 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
   },
   pages: {
-    signIn: '/login',
+    signIn: config.routes.login,
   },
   callbacks: {
     async jwt({ token, user }) {
       return { ...token, ...user };
     },
     async session({ session, token }) {
-      session.user = {
-        id: token.id as number,
-        name: token.name as string,
-        email: token.email as string,
-        image: token.image as string,
-      };
+      session.user = token as any;
       return session;
     },
     async signIn({ user, account }) {

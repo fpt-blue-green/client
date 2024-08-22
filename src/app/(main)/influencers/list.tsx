@@ -5,11 +5,11 @@ import InfluencerCard, { InfluencerCardSkeleton } from '@/components/influencer-
 import { fetcher } from '@/lib/http';
 import useSWRImmutable from 'swr/immutable';
 import Filter from './filter';
-import { PlatformEnum } from '@/types/enum';
+import { EPlatform } from '@/types/enum';
 
 export interface FilterState {
   searchTerm: string;
-  platforms: PlatformEnum[];
+  platforms: EPlatform[];
   categories: string[];
   priceRange: [number, number];
   sortBy: string;
@@ -25,7 +25,7 @@ const initialState: FilterState = {
 
 export type FilterAction =
   | { type: 'SET_SEARCH_TERM'; payload: string }
-  | { type: 'TOGGLE_PLATFORM'; payload: PlatformEnum }
+  | { type: 'TOGGLE_PLATFORM'; payload: EPlatform }
   | { type: 'TOGGLE_CATEGORY'; payload: string }
   | { type: 'SET_PRICE_RANGE'; payload: [number, number] }
   | { type: 'SET_SORT_BY'; payload: FilterState['sortBy'] }
