@@ -1,6 +1,7 @@
 import { toast } from 'sonner';
 import { constants } from './utils';
 import config from '@/config';
+import { getServerSession } from 'next-auth';
 
 type CustomRequest = Omit<RequestInit, 'method'> & {
   baseUrl?: string;
@@ -18,11 +19,16 @@ const request = async <Response>(
     'Content-Type': 'application/json',
   };
 
-  if (isClient()) {
-    const sessionToken = localStorage.getItem('sessionToken');
-    if (sessionToken) {
-      baseHeaders.Authorization = `Bearer ${sessionToken}`;
-    }
+  // if (isClient()) {
+  //   const sessionToken = localStorage.getItem('sessionToken');
+  //   if (sessionToken) {
+  //     baseHeaders.Authorization = `Bearer ${sessionToken}`;
+  //   }
+  // }
+
+  const session = await getServerSession();
+  if (session?.user.token) {
+    baseHeaders.Authorization = `Bearer ${session?.user.token}`;
   }
 
   const baseUrl = options?.baseUrl ?? config.env.NEXT_PUBLIC_API_ENDPOINT;

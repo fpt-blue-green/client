@@ -1,10 +1,15 @@
 'use client';
 
-import useAuth from '@/hooks/useAuth';
 import { PersonIcon } from '@radix-ui/react-icons';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Avatar, AvatarFallback } from './ui/avatar';
 import { Button } from './ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu';
 import Link from 'next/link';
 import config from '@/config';
 import {
@@ -17,9 +22,11 @@ import {
   DialogTrigger,
 } from './ui/dialog';
 import Image from 'next/image';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 const ProfileDropdown = () => {
-  const { user } = useAuth();
+  const { data } = useSession<true>();
+  const user = data?.user;
 
   return (
     <DropdownMenu>
@@ -27,8 +34,11 @@ const ProfileDropdown = () => {
         <Button size="icon" variant="ghost">
           {user ? (
             <Avatar className="size-7">
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
+              {user.image ? (
+                <Image src={user.image || ''} alt="sd" width={28} height={28} />
+              ) : (
+                <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
+              )}
             </Avatar>
           ) : (
             <PersonIcon className="size-5" />
@@ -38,12 +48,13 @@ const ProfileDropdown = () => {
       <Dialog>
         <DropdownMenuContent align="end">
           {user ? (
-            <></>
+            <>
+              <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => signOut()}>Đăng xuất</DropdownMenuItem>
+            </>
           ) : (
             <>
-              <DropdownMenuItem asChild>
-                <Link href={config.routes.login}>Đăng nhập</Link>
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => signIn()}>Đăng nhập</DropdownMenuItem>
               <DialogTrigger asChild>
                 <DropdownMenuItem>Đăng kí</DropdownMenuItem>
               </DialogTrigger>

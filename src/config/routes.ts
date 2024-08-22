@@ -1,7 +1,7 @@
 const routes = {
   home: '/',
-  login: '/login',
-  forgot: '/forgot-password',
+  login: '/auth/login',
+  forgot: '/auth/forgot-password',
   influencer: {
     base: '/influencer',
   },
@@ -11,7 +11,7 @@ const routes = {
   },
   brand: {
     base: '/brand',
-    register: '/brand/register',
+    register: '/auth/brand/register',
   },
 };
 
