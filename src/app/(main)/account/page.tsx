@@ -1,5 +1,32 @@
-const Account = async () => {
-  return <div>Account</div>;
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { IdCardIcon, LockClosedIcon } from '@radix-ui/react-icons';
+import General from './general';
+import Security from './security';
+
+const Account = () => {
+  return (
+    <div className="container my-8">
+      <h1 className="text-2xl font-semibold mb-7">Tài khoản</h1>
+      <Tabs defaultValue="general">
+        <TabsList className="h-13 mb-8">
+          <TabsTrigger value="general" className="py-3 px-10">
+            <IdCardIcon className="mr-2" />
+            Chung
+          </TabsTrigger>
+          <TabsTrigger value="security" className="py-3 px-10">
+            <LockClosedIcon className="mr-2" />
+            Bảo mật
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="general">
+          <General />
+        </TabsContent>
+        <TabsContent value="security">
+          <Security />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
 };
 
 export default Account;
