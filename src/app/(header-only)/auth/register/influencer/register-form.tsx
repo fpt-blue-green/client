@@ -80,7 +80,7 @@ const RegisterAsInfluencerForm = () => {
           )}
         />
         <Button type="submit" variant="gradient" size="large" fullWidth>
-          <Link href={config.routes.register.influencerEmailVerification}>Đăng Ký</Link>
+          <Link href={config.routes.influencer.emailVerification}>Đăng Ký</Link>
         </Button>
       </form>
     </Form>
