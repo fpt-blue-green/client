@@ -21,11 +21,11 @@ export const verifyInfluencerEmailSchema = z
   })
   .strict();
 
-export const forgotPasswordSchema = z.object({
+export const forgotSchema = z.object({
   email: z.string().min(1, 'Vui lòng nhập email').email('Email không hợp lệ'),
 });
 
 export type LoginBodyType = z.infer<typeof loginSchema>;
 export type RegisterAsInfluencerType = z.infer<typeof registerAsInfluencerSchema>;
 export type VerifyInfluencerEmailType = z.infer<typeof verifyInfluencerEmailSchema>;
-export type ForgotPasswordBodyType = z.infer<typeof forgotPasswordSchema>;
+export type ForgotBodyType = z.infer<typeof forgotSchema>;
