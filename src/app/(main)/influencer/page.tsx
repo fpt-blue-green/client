@@ -1,13 +1,13 @@
 import { InputWithoutOutline } from './input-without-outline';
 import { Button } from '@/components/ui/button';
-import { InstagramLogoIcon } from '@radix-ui/react-icons';
-import { LuYoutube } from 'react-icons/lu';
 import { RiInstagramFill, RiTiktokFill, RiYoutubeFill } from 'react-icons/ri';
 import { contentTypes } from './constant';
 import InfluencerList from '@/components/influencer-list';
 import Banner from '../(home)/banner';
 import HowItWork from '../(home)/how-it-work';
 import { Metadata } from 'next';
+import Link from 'next/link';
+import config from '@/config';
 
 export const metadata: Metadata = {
   title: {
@@ -28,7 +28,7 @@ const JoinAsCreator = () => {
           <span className="font-medium">adfusion.com/</span>
           <InputWithoutOutline placeholder="nickname" type="text" className="pl-1 w-full" />
           <Button className="rounded-full p-6" size="large" variant="gradient">
-            Xác Thực
+            <Link href={config.routes.register.influencer}> Xác Thực</Link>
           </Button>
         </div>
       </div>
