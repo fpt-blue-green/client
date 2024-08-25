@@ -3,6 +3,8 @@ const routes = {
   login: '/login',
   influencer: {
     base: '/influencer',
+    register: '/auth/register/influencer',
+    emailVerification: '/auth/register/influencer/email-verification',
   },
   influencers: {
     base: '/influencers',
@@ -10,13 +12,7 @@ const routes = {
   },
   brand: {
     base: '/brand',
-    register: '/brand/register',
-  },
-  register: {
-    base: '/register',
-    influencer: '/register/influencer',
-    influencerEmailVerification: '/register/influencer/email-verification',
-    brand: '/register/brand',
+    register: '/auth/register/brand',
   },
 };
 

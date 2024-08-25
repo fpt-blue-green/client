@@ -25,7 +25,7 @@ const JoinAsCreator = () => {
           <span className="font-medium">adfusion.com/</span>
           <input placeholder="nickname" className="w-full pr-1 outline-none" />
           <Button className="rounded-full p-6" size="large" variant="gradient">
-            <Link href={config.routes.register.influencer}> Xác Thực</Link>
+            <Link href={config.routes.influencer.register}> Xác Thực</Link>
           </Button>
         </div>
       </div>
