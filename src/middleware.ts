@@ -1,26 +1,37 @@
+import { withAuth } from 'next-auth/middleware';
+import { ERole } from './types/enum';
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import routes from './config/routes';
 
-const privatePaths = ['/tai-khoan'];
-const authPaths = ['/dang-nhap', '/dang-ky'];
+const brandPaths = ['/example'];
+const influencerPaths = ['/account'];
 
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const sessionToken = request.cookies.get('token')?.value;
+export default withAuth(
+  function middleware(req) {
+    const { pathname } = req.nextUrl;
+    const token = req.nextauth.token;
+    if (influencerPaths.some((path) => pathname.startsWith(path)) && token?.role !== ERole.Influencer) {
+      console.log('Influencer route protected');
+      return NextResponse.redirect(new URL('/', req.url));
+    }
 
-  // Chưa đăng nhập thì không cho vào private paths
-  if (privatePaths.some((path) => pathname.startsWith(path)) && !sessionToken) {
-    return NextResponse.redirect(new URL('/dang-nhap', request.url));
-  }
+    if (brandPaths.some((path) => pathname.startsWith(path)) && token?.role !== ERole.Influencer) {
+      console.log('Brand route protected');
+      return NextResponse.redirect(new URL('/', req.url));
+    }
 
-  // Đăng nhập rồi thì không cho vào login/register nữa
-  if (authPaths.some((path) => pathname.startsWith(path)) && sessionToken) {
-    return NextResponse.redirect(new URL('/', request.url));
-  }
-
-  return NextResponse.next();
-}
+    return NextResponse.next();
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => !!token,
+    },
+    pages: {
+      signIn: routes.login,
+    },
+  },
+);
 
 export const config = {
-  matcher: ['/tai-khoan', '/dang-nhap', '/dang-ky'],
+  matcher: ['/account'],
 };

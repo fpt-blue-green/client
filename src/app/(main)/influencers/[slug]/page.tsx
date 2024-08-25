@@ -10,7 +10,7 @@ import { LuHeart, LuShare } from 'react-icons/lu';
 import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button';
-import { PlatformEnum } from '@/types/enum';
+import { EPlatform } from '@/types/enum';
 import { RiTiktokLine } from 'react-icons/ri';
 import Tooltip from '@/components/custom/tooltip';
 
@@ -69,11 +69,11 @@ const InfluencerDetails: FC = () => {
               <div className="flex flex-wrap items-center gap-2">
                 {person.socialAccounts?.map((account) => (
                   <div key={account.platform} className="flex items-center gap-2 border rounded-sm px-2 py-1 w-max">
-                    {account.platform === PlatformEnum.Instagram ? (
+                    {account.platform === EPlatform.Instagram ? (
                       <LuInstagram />
-                    ) : account.platform === PlatformEnum.YouTube ? (
+                    ) : account.platform === EPlatform.YouTube ? (
                       <LuYoutube />
-                    ) : account.platform === PlatformEnum.TitTok ? (
+                    ) : account.platform === EPlatform.TitTok ? (
                       <RiTiktokLine />
                     ) : (
                       ''
@@ -81,11 +81,11 @@ const InfluencerDetails: FC = () => {
                     <Link
                       target="_blank"
                       href={
-                        account.platform === PlatformEnum.Instagram
+                        account.platform === EPlatform.Instagram
                           ? `https://www.instagram.com/${''}`
-                          : account.platform === PlatformEnum.YouTube
+                          : account.platform === EPlatform.YouTube
                           ? `https://www.youtube.com/${''}`
-                          : account.platform === PlatformEnum.TitTok
+                          : account.platform === EPlatform.TitTok
                           ? `https://www.tiktok.com/${''}`
                           : ''
                       }
