@@ -2,8 +2,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { IdCardIcon, LockClosedIcon } from '@radix-ui/react-icons';
 import General from './general';
 import Security from './security';
+import { getServerSession } from 'next-auth';
 
-const Account = () => {
+const Account = async () => {
+  const session = await getServerSession();
+
   return (
     <div className="container my-8">
       <h1 className="text-2xl font-semibold mb-7">Tài khoản</h1>
@@ -18,9 +21,7 @@ const Account = () => {
             Bảo mật
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="general">
-          <General />
-        </TabsContent>
+        <TabsContent value="general">{session?.user && <General user={session.user} />}</TabsContent>
         <TabsContent value="security">
           <Security />
         </TabsContent>
