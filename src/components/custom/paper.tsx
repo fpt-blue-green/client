@@ -7,6 +7,6 @@ interface PaperProps {
 }
 
 const Paper: FC<Readonly<PaperProps>> = ({ children, className }) => {
-  return <div className={cn('p-6 bg-popover overflow-hidden rounded-lg shadow', className)}>{children}</div>;
+  return <div className={cn('p-6 border bg-popover overflow-hidden rounded-lg shadow', className)}>{children}</div>;
 };
 export default Paper;

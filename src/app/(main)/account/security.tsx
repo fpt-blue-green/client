@@ -5,7 +5,7 @@ import Paper from '@/components/custom/paper';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { ChangePasswordBodyType, changePasswordSchema } from '@/schema-validations/auth.schema';
+import { ChangePasswordBodyType, changePasswordSchema } from '@/schema-validations/influencer-account.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { useForm } from 'react-hook-form';
