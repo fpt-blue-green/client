@@ -3,20 +3,20 @@
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { ForgotBodyType, forgotSchema } from '@/schema-validations/auth.schema';
+import { ForgotPasswordBodyType, forgotPasswordSchema } from '@/schema-validations/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 const ForgotForm = () => {
-  const form = useForm<ForgotBodyType>({
-    resolver: zodResolver(forgotSchema),
+  const form = useForm<ForgotPasswordBodyType>({
+    resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
       email: '',
     },
   });
 
-  const onSubmit = (values: ForgotBodyType) => {
+  const onSubmit = (values: ForgotPasswordBodyType) => {
     console.log(values);
     toast.success('Vui lòng kiểm tra email');
   };

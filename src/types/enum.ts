@@ -9,3 +9,9 @@ export enum ERole {
   Influencer,
   Brand,
 }
+
+export enum EGender {
+  Male = 1,
+  Female,
+  Others,
+}

@@ -2,6 +2,7 @@ const routes = {
   home: '/',
   login: '/auth/login',
   forgot: '/auth/forgot-password',
+  account: '/account',
   influencer: {
     base: '/influencer',
   },

@@ -50,6 +50,9 @@ const ProfileDropdown = () => {
           {user ? (
             <>
               <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
+              <DropdownMenuItem asChild>
+                <Link href={config.routes.account}>Tài khoản</Link>
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => signOut()}>Đăng xuất</DropdownMenuItem>
             </>
           ) : (

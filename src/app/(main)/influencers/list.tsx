@@ -84,7 +84,7 @@ const List = () => {
       <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-x-6 gap-y-8">
         {isLoading
           ? Array.from({ length: 30 }).map((_, index) => <InfluencerCardSkeleton key={index} />)
-          : data.users?.map((_: any, index: number) => <InfluencerCard key={index} favorite={false} />)}
+          : data?.users?.map((_: any, index: number) => <InfluencerCard key={index} favorite={false} />)}
       </div>
     </div>
   );

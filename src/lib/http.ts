@@ -1,6 +1,7 @@
 import { toast } from 'sonner';
 import { constants } from './utils';
 import config from '@/config';
+import { getSession } from 'next-auth/react';
 import { getServerSession } from 'next-auth';
 
 type CustomRequest = Omit<RequestInit, 'method'> & {
@@ -19,14 +20,14 @@ const request = async <Response>(
     'Content-Type': 'application/json',
   };
 
-  // if (isClient()) {
-  //   const sessionToken = localStorage.getItem('sessionToken');
-  //   if (sessionToken) {
-  //     baseHeaders.Authorization = `Bearer ${sessionToken}`;
-  //   }
-  // }
+  let session;
 
-  const session = await getServerSession();
+  if (isClient()) {
+    session = await getSession();
+  } else {
+    session = await getServerSession();
+  }
+
   if (session?.user.token) {
     baseHeaders.Authorization = `Bearer ${session?.user.token}`;
   }
