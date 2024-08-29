@@ -4,6 +4,7 @@ import Credentials from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
 import config from '@/config';
+import User from '@/types/user';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -15,20 +16,17 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
-          const res = await http.post('https://dummyjson.com/auth/login', {
-            username: credentials?.email,
+          const res = await http.post<User>('Auth/login', {
+            email: credentials?.email,
             password: credentials?.password,
           });
-          const user = res.payload;
+          const user = res.data;
 
           if (user) {
-            return {
-              ...user,
-              name: user.firstName + ' ' + user.lastName,
-            };
-          } else {
-            return null;
+            return user;
           }
+
+          return null;
         } catch {
           return null;
         }
@@ -50,13 +48,6 @@ export const authOptions: NextAuthOptions = {
     signIn: config.routes.login,
   },
   callbacks: {
-    async jwt({ token, user }) {
-      return { ...token, ...user };
-    },
-    async session({ session, token }) {
-      session.user = token as any;
-      return session;
-    },
     async signIn({ user, account }) {
       if (account?.provider === 'google') {
         try {
@@ -75,6 +66,17 @@ export const authOptions: NextAuthOptions = {
         }
       }
       return true; // Trả về true để tiếp tục quá trình đăng nhập
+    },
+    async jwt({ token, user, session, trigger }) {
+      if (trigger === 'update') {
+        return { ...token, ...session.user };
+      }
+
+      return { ...token, ...user };
+    },
+    async session({ session, token }) {
+      session.user = token as any;
+      return session;
     },
   },
 };

@@ -1,9 +1,12 @@
+import { ERole } from './enum';
+
 type User = {
-  id: number;
+  id: string;
   name: string;
   email: string;
   image?: string;
-  token: string;
+  role: ERole;
+  accessToken: string;
   refreshToken: string;
 };
 
