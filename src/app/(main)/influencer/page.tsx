@@ -5,6 +5,8 @@ import InfluencerList from '@/components/influencer-list';
 import Banner from '../(home)/banner';
 import HowItWork from '../(home)/how-it-work';
 import { Metadata } from 'next';
+import Link from 'next/link';
+import config from '@/config';
 
 export const metadata: Metadata = {
   title: 'Trở thành nhà sáng tạo',
@@ -23,7 +25,7 @@ const JoinAsCreator = () => {
           <span className="font-medium">adfusion.com/</span>
           <input placeholder="nickname" className="w-full pr-1 outline-none" />
           <Button className="rounded-full p-6" size="large" variant="gradient">
-            Xác Thực
+            <Link href={config.routes.influencer.register}> Xác Thực</Link>
           </Button>
         </div>
       </div>
