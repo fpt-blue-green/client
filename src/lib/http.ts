@@ -70,10 +70,10 @@ const http = {
     return request<Response>('PUT', url, { ...options, body });
   },
   patch: <Response = any>(url: string, body?: any, options?: Omit<CustomRequest, 'body'>) => {
-    return request<Response>('PUT', url, { ...options, body });
+    return request<Response>('PATCH', url, { ...options, body });
   },
   delete: <Response = any>(url: string, options?: Omit<CustomRequest, 'body'>) => {
-    return request<Response>('PUT', url, { ...options });
+    return request<Response>('DELETE', url, { ...options });
   },
 };
 
