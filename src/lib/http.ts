@@ -44,18 +44,23 @@ const request = async <Response>(
   try {
     const res = await fetch(fullUrl, { ...options, headers: { ...baseHeaders, ...options?.headers }, body, method });
 
-    const data: CustomResponse<Response> = await res.json();
+    const data = await res.json();
 
     if (!res.ok) {
-      if (isClient()) {
-        toast.error(data.message || constants.sthWentWrong);
+      if (isClient() || res.status === 500) {
+        toast.error(constants.sthWentWrong);
       }
-
-      throw new Error(`API request failed: ${data.statusCode}`);
+      return Promise.reject(data);
     }
-    return data;
+
+    const payload: CustomResponse<Response> = {
+      statusCode: res.status,
+      data,
+    };
+
+    return payload;
   } catch (error) {
-    return Promise.reject(error);
+    return Promise.reject({ statusCode: 500, message: constants.sthWentWrong, data: error });
   }
 };
 

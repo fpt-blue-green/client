@@ -1,10 +1,9 @@
-import http from '@/lib/http';
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
 import config from '@/config';
-import User from '@/types/user';
+import { authRequest } from '@/request';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -16,17 +15,14 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
-          const res = await http.post<User>('Auth/login', {
-            email: credentials?.email,
-            password: credentials?.password,
-          });
-          const user = res.data;
-
-          if (user) {
-            return user;
+          if (!credentials) {
+            return null;
           }
 
-          return null;
+          const res = await authRequest.login(credentials);
+          const user = res.data || null;
+
+          return user;
         } catch {
           return null;
         }
@@ -77,6 +73,13 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       session.user = token as any;
       return session;
+    },
+  },
+  events: {
+    async signOut({ session }) {
+      try {
+        await authRequest.logout(session.user.refreshToken);
+      } catch {}
     },
   },
 };
