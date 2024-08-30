@@ -4,6 +4,7 @@ import { ChangePasswordBodyType } from '@/schema-validations/influencer-account.
 
 const authRequest = {
   login: (body: LoginBodyType) => http.post('/Auth/login', body),
+  refreshToken: (token: string) => http.post('/Auth/refreshToken', { token }),
   forgotPassword: (body: ChangePasswordBodyType) => http.put('/Auth/changePass', body),
   logout: (refreshToken: string) => http.post('/Auth/logout', { token: refreshToken }),
 };

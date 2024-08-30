@@ -47,7 +47,7 @@ const request = async <Response>(
     const data = await res.json();
 
     if (!res.ok) {
-      if (isClient() || res.status === 500) {
+      if (isClient() && res.status === 500) {
         toast.error(constants.sthWentWrong);
       }
       return Promise.reject(data);

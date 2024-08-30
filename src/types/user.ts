@@ -8,6 +8,7 @@ type User = {
   role: ERole;
   accessToken: string;
   refreshToken: string;
+  error?: string;
 };
 
 export default User;

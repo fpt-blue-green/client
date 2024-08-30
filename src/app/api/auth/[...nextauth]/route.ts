@@ -4,6 +4,19 @@ import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
 import config from '@/config';
 import { authRequest } from '@/request';
+import { jwtDecode } from 'jwt-decode';
+import { JWT } from 'next-auth/jwt';
+
+const refreshAccessToken = async (token: JWT) => {
+  const res = await authRequest.refreshToken(token.refreshToken);
+  const { accessToken, refreshToken } = res.data;
+
+  return {
+    ...token,
+    accessToken,
+    refreshToken,
+  };
+};
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -63,9 +76,19 @@ export const authOptions: NextAuthOptions = {
       }
       return true; // Trả về true để tiếp tục quá trình đăng nhập
     },
-    async jwt({ token, user, session, trigger }) {
-      if (trigger === 'update') {
-        return { ...token, ...session.user };
+    async jwt({ token, user }) {
+      if (token.accessToken) {
+        const decoded = jwtDecode(token.accessToken);
+        if (decoded.exp) {
+          if (decoded.exp * 1000 - Date.now() < 180_000) {
+            try {
+              const data = await refreshAccessToken(token);
+              return { ...data, user };
+            } catch {
+              return { ...token, ...user, error: 'RefreshAccessTokenError' };
+            }
+          }
+        }
       }
 
       return { ...token, ...user };
@@ -83,5 +106,6 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
+
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
