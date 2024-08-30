@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 
 const Security = () => {
   const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<ChangePasswordBodyType>({
     resolver: zodResolver(changePasswordSchema),
@@ -29,10 +30,12 @@ const Security = () => {
   };
 
   const onSubmit = async (values: ChangePasswordBodyType) => {
+    setLoading(true);
     authRequest
-      .forgotPassword(values)
-      .then((res) => toast.success(res.message))
-      .catch(() => {});
+      .changePassword(values)
+      .then(() => toast.success('Vui lòng kiểm tra email để xác nhận'))
+      .catch((err) => toast.error(err.message))
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -106,7 +109,9 @@ const Security = () => {
             )}
           />
           <div className="flex justify-end">
-            <Button type="submit">Lưu thay đổi</Button>
+            <Button type="submit" loading={loading}>
+              Lưu thay đổi
+            </Button>
           </div>
         </form>
       </Form>

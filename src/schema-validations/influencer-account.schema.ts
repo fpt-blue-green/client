@@ -28,13 +28,17 @@ export const changePasswordSchema = z
       .min(1, 'Vui lòng nhập mật khẩu mới')
       .regex(
         constants.passwordRegex,
-        'Mật khẩu ít nhất 8 kí tự bao gồm ít nhất một chữ hoa, một chữ thường, một chữ số và một kí tự số',
+        'Mật khẩu ít nhất 8 kí tự bao gồm ít nhất một chữ hoa, một chữ thường, một chữ số và một kí tự đặc biệt',
       ),
     confirmPassword: z.string().min(1, 'Vui lòng xác nhận mật khẩu mới'),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: 'Mật khẩu xác nhận không khớp',
     path: ['confirmPassword'],
+  })
+  .refine((data) => data.newPassword !== data.oldPassword, {
+    message: 'Mật khẩu mới phải khác mật khẩu cũ',
+    path: ['newPassword'],
   });
 
 export type GeneralBodyType = z.infer<typeof generalSchema>;

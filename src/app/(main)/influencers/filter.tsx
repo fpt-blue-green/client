@@ -74,7 +74,7 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
   };
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between gap-6 max-md:flex-col">
       <Input
         startAdornment={<MagnifyingGlassIcon className="size-7 text-muted-foreground" />}
         placeholder="Tìm kiếm..."
