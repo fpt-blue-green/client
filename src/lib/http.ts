@@ -8,13 +8,19 @@ type CustomRequest = Omit<RequestInit, 'method'> & {
   baseUrl?: string;
 };
 
+type CustomResponse<T> = {
+  statusCode: number;
+  message?: string;
+  data?: T;
+};
+
 export const isClient = () => typeof window !== 'undefined';
 
 const request = async <Response>(
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
   url: string,
   options?: CustomRequest,
-) => {
+): Promise<CustomResponse<Response>> => {
   const body = options?.body ? JSON.stringify(options?.body) : undefined;
   const baseHeaders: { [key: string]: string } = {
     'Content-Type': 'application/json',
@@ -28,48 +34,54 @@ const request = async <Response>(
     session = await getServerSession();
   }
 
-  if (session?.user.token) {
-    baseHeaders.Authorization = `Bearer ${session?.user.token}`;
+  if (session?.user.accessToken) {
+    baseHeaders.Authorization = `Bearer ${session?.user.accessToken}`;
   }
 
-  const baseUrl = options?.baseUrl ?? config.env.NEXT_PUBLIC_API_ENDPOINT;
+  const baseUrl = options?.baseUrl ?? config.env.API_ENDPOINT;
   const fullUrl = url.startsWith('/') ? `${baseUrl}${url}` : url.startsWith('http') ? url : `${baseUrl}/${url}`;
 
-  const res = await fetch(fullUrl, { ...options, headers: { ...baseHeaders, ...options?.headers }, body, method });
+  try {
+    const res = await fetch(fullUrl, { ...options, headers: { ...baseHeaders, ...options?.headers }, body, method });
 
-  const payload: Response | any = await res.json();
-  const data = {
-    status: res.status,
-    payload,
-  };
+    const data = await res.json();
 
-  if (!res.ok) {
-    if (isClient()) {
-      toast.error(payload.message || constants.sthWentWrong);
+    if (!res.ok) {
+      if (isClient() && res.status === 500) {
+        toast.error(constants.sthWentWrong);
+      }
+      return Promise.reject(data);
     }
-    throw new Error(`API request failed: ${data.status}`);
+
+    const payload: CustomResponse<Response> = {
+      statusCode: res.status,
+      data,
+    };
+
+    return payload;
+  } catch (error) {
+    return Promise.reject({ statusCode: 500, message: constants.sthWentWrong, data: error });
   }
-  return data;
 };
 
 const http = {
-  get: <Response>(url: string, options?: Omit<CustomRequest, 'body'>) => {
+  get: <Response = any>(url: string, options?: Omit<CustomRequest, 'body'>) => {
     return request<Response>('GET', url, options);
   },
-  post: <Response>(url: string, body?: any, options?: Omit<CustomRequest, 'body'>) => {
+  post: <Response = any>(url: string, body?: any, options?: Omit<CustomRequest, 'body'>) => {
     return request<Response>('POST', url, { ...options, body });
   },
-  put: <Response>(url: string, body?: any, options?: Omit<CustomRequest, 'body'>) => {
+  put: <Response = any>(url: string, body?: any, options?: Omit<CustomRequest, 'body'>) => {
     return request<Response>('PUT', url, { ...options, body });
   },
-  patch: <Response>(url: string, body?: any, options?: Omit<CustomRequest, 'body'>) => {
-    return request<Response>('PUT', url, { ...options, body });
+  patch: <Response = any>(url: string, body?: any, options?: Omit<CustomRequest, 'body'>) => {
+    return request<Response>('PATCH', url, { ...options, body });
   },
-  delete: <Response>(url: string, options?: Omit<CustomRequest, 'body'>) => {
-    return request<Response>('PUT', url, { ...options });
+  delete: <Response = any>(url: string, options?: Omit<CustomRequest, 'body'>) => {
+    return request<Response>('DELETE', url, { ...options });
   },
 };
 
-export const fetcher = (url: string) => http.get(url).then((response) => response.payload);
+export const fetcher = (url: string) => http.get(url).then((response) => response.data);
 
 export default http;

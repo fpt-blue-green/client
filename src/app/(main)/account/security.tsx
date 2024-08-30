@@ -9,6 +9,8 @@ import { ChangePasswordBodyType, changePasswordSchema } from '@/schema-validatio
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { useForm } from 'react-hook-form';
+import { authRequest } from '@/request';
+import { toast } from 'sonner';
 
 const Security = () => {
   const [showPass, setShowPass] = useState(false);
@@ -27,7 +29,10 @@ const Security = () => {
   };
 
   const onSubmit = async (values: ChangePasswordBodyType) => {
-    console.log(values);
+    authRequest
+      .forgotPassword(values)
+      .then((res) => toast.success(res.message))
+      .catch(() => {});
   };
 
   return (

@@ -1,9 +1,22 @@
-import http from '@/lib/http';
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
 import config from '@/config';
+import { authRequest } from '@/request';
+import { jwtDecode } from 'jwt-decode';
+import { JWT } from 'next-auth/jwt';
+
+const refreshAccessToken = async (token: JWT) => {
+  const res = await authRequest.refreshToken(token.refreshToken);
+  const { accessToken, refreshToken } = res.data;
+
+  return {
+    ...token,
+    accessToken,
+    refreshToken,
+  };
+};
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -15,20 +28,14 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
-          const res = await http.post('https://dummyjson.com/auth/login', {
-            username: credentials?.email,
-            password: credentials?.password,
-          });
-          const user = res.payload;
-
-          if (user) {
-            return {
-              ...user,
-              name: user.firstName + ' ' + user.lastName,
-            };
-          } else {
+          if (!credentials) {
             return null;
           }
+
+          const res = await authRequest.login(credentials);
+          const user = res.data || null;
+
+          return user;
         } catch {
           return null;
         }
@@ -50,13 +57,6 @@ export const authOptions: NextAuthOptions = {
     signIn: config.routes.login,
   },
   callbacks: {
-    async jwt({ token, user }) {
-      return { ...token, ...user };
-    },
-    async session({ session, token }) {
-      session.user = token as any;
-      return session;
-    },
     async signIn({ user, account }) {
       if (account?.provider === 'google') {
         try {
@@ -76,7 +76,36 @@ export const authOptions: NextAuthOptions = {
       }
       return true; // Trả về true để tiếp tục quá trình đăng nhập
     },
+    async jwt({ token, user }) {
+      if (token.accessToken) {
+        const decoded = jwtDecode(token.accessToken);
+        if (decoded.exp) {
+          if (decoded.exp * 1000 - Date.now() < 180_000) {
+            try {
+              const data = await refreshAccessToken(token);
+              return { ...data, user };
+            } catch {
+              return { ...token, ...user, error: 'RefreshAccessTokenError' };
+            }
+          }
+        }
+      }
+
+      return { ...token, ...user };
+    },
+    async session({ session, token }) {
+      session.user = token as any;
+      return session;
+    },
+  },
+  events: {
+    async signOut({ session }) {
+      try {
+        await authRequest.logout(session.user.refreshToken);
+      } catch {}
+    },
   },
 };
+
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
