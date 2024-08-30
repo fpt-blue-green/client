@@ -53,7 +53,9 @@ const ProfileDropdown = () => {
               <DropdownMenuItem asChild>
                 <Link href={config.routes.account}>Tài khoản</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => signOut()}>Đăng xuất</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => signOut({ callbackUrl: config.routes.home })}>
+                Đăng xuất
+              </DropdownMenuItem>
             </>
           ) : (
             <>

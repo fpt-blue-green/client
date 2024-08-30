@@ -15,3 +15,9 @@ export enum EGender {
   Female,
   Others,
 }
+
+export enum EVerifyAction {
+  Register = 1,
+  ChangePass,
+  ForgotPassword,
+}

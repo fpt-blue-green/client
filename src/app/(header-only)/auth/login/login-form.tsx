@@ -9,12 +9,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { useForm } from 'react-hook-form';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 
 const LoginForm = () => {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
   const router = useRouter();
   const form = useForm<LoginBodyType>({
     resolver: zodResolver(loginSchema),
@@ -30,17 +31,24 @@ const LoginForm = () => {
 
   const onSubmit = async (values: LoginBodyType) => {
     setLoading(true);
+
+    let callbackUrl = searchParams.get('callbackUrl');
+
+    if (!callbackUrl?.startsWith(window.location.origin)) {
+      callbackUrl = '/';
+    }
+
     const res = await signIn('credentials', {
       ...values,
-      callbackUrl: '/',
+      callbackUrl,
       redirect: false,
     });
 
     setLoading(false);
     if (!res?.error) {
-      router.push('/');
+      router.push(callbackUrl);
     } else {
-      toast.error('Đã có lỗi xảy ra');
+      toast.error('Email hoặc mật khẩu không đúng');
     }
   };
 
