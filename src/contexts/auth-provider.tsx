@@ -22,7 +22,6 @@ const RefreshProvider: FC<Readonly<AuthProviderProps>> = ({ children }) => {
   useEffect(() => {
     if (session?.user) {
       if (session.user.error === 'RefreshAccessTokenError') {
-        console.log('Logout');
         signOut({ callbackUrl: config.routes.login });
       }
     }

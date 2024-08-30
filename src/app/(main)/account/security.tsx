@@ -32,7 +32,7 @@ const Security = () => {
     authRequest
       .forgotPassword(values)
       .then((res) => toast.success(res.message))
-      .catch(console.log);
+      .catch(() => {});
   };
 
   return (
