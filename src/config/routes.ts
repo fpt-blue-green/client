@@ -15,6 +15,7 @@ const routes = {
   brand: {
     base: '/brand',
     register: '/auth/register/brand',
+    emailVerification: '/auth/register/brand/email-verification',
   },
 };
 
