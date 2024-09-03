@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Banner from '../(home)/banner';
 import Link from 'next/link';
 import config from '@/config';
+import { ERole } from '@/types/enum';
 
 export const metadata: Metadata = {
   title: 'Trở thành nhãn hàng',
@@ -25,7 +26,7 @@ const JoinAsBrand = () => {
           giây.
         </p>
         <Button size="large" variant="gradient" className="px-12 h-12" asChild>
-          <Link href={config.routes.brand.register}>Bắt đầu miễn phí</Link>
+          <Link href={{ pathname: config.routes.register.base, query: { role: ERole.Brand } }}>Bắt đầu miễn phí</Link>
         </Button>
       </div>
       <div className="grid lg:grid-cols-7 grid-cols-1 items-center mt-20 gap-12">

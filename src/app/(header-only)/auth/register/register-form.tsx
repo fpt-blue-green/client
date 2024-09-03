@@ -4,23 +4,27 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import config from '@/config';
-import { registerAsBrandSchema, RegisterAsBrandType } from '@/schema-validations/auth.schema';
+import { registerSchema, RegisterType } from '@/schema-validations/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
+import { useSearchParams } from 'next/navigation';
 
-interface IRegisterAsBrandFormProps {}
+interface IRegisterFormProps {}
 
-const RegisterAsBrandForm: FC<IRegisterAsBrandFormProps> = () => {
+const RegisterForm: FC<IRegisterFormProps> = () => {
   const [email, setEmail] = useState<string>('');
   const [showPass, setShowPass] = useState(false);
 
-  const form = useForm<RegisterAsBrandType>({
-    resolver: zodResolver(registerAsBrandSchema),
+  const useParams = useSearchParams();
+  const role = useParams.get('role') || 'No role';
+  console.log('role', role);
+
+  const form = useForm<RegisterType>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
-      fullName: '',
-      brandName: '',
+      displayName: '',
       email: '',
       password: '',
     },
@@ -40,23 +44,11 @@ const RegisterAsBrandForm: FC<IRegisterAsBrandFormProps> = () => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
-          name="fullName"
+          name="displayName"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Họ và tên" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="brandName"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input placeholder="Tên thương hiệu" {...field} />
+                <Input placeholder="Tên hiển thị" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -103,11 +95,11 @@ const RegisterAsBrandForm: FC<IRegisterAsBrandFormProps> = () => {
           )}
         />
         <Button type="submit" variant="gradient" size="large" fullWidth>
-          <Link href={{ pathname: config.routes.brand.emailVerification, query: { email } }}>Đăng Ký</Link>
+          <Link href={{ pathname: config.routes.register.emailVerification, query: { email } }}>Đăng Ký</Link>
         </Button>
       </form>
     </Form>
   );
 };
 
-export default RegisterAsBrandForm;
+export default RegisterForm;

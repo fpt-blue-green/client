@@ -5,8 +5,6 @@ const routes = {
   account: '/account',
   influencer: {
     base: '/influencer',
-    register: '/auth/register/influencer',
-    emailVerification: '/auth/register/influencer/email-verification',
   },
   influencers: {
     base: '/influencers',
@@ -15,8 +13,10 @@ const routes = {
   },
   brand: {
     base: '/brand',
-    register: '/auth/register/brand',
-    emailVerification: '/auth/register/brand/email-verification',
+  },
+  register: {
+    base: '/auth/register/',
+    emailVerification: '/auth/register/email-verification',
   },
 };
 

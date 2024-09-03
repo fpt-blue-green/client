@@ -21,24 +21,9 @@ export const forgotPasswordSchema = z
   })
   .strict();
 
-export const registerAsInfluencerSchema = z
+export const registerSchema = z
   .object({
-    fullName: z.string().min(1, 'Vui lòng nhập họ và tên của bạn'),
-    email: z.string().min(1, 'Vui lòng nhập email').email('Email không hợp lệ'),
-    password: z
-      .string()
-      .min(1, 'Vui lòng nhập mật khẩu')
-      .regex(
-        constants.passwordRegex,
-        'Mật khẩu ít nhất 8 kí tự bao gồm ít nhất một chữ hoa, một chữ thường, một chữ số và một kí tự đặt biệt',
-      ),
-  })
-  .strict();
-
-export const registerAsBrandSchema = z
-  .object({
-    fullName: z.string().min(1, 'Vui lòng nhập họ và tên của bạn'),
-    brandName: z.string().min(1, 'Vui lòng nhập tên thưong hiệu của bạn'),
+    displayName: z.string().min(1, 'Vui lòng nhập tên hiển thị'),
     email: z.string().min(1, 'Vui lòng nhập email').email('Email không hợp lệ'),
     password: z
       .string()
@@ -52,5 +37,4 @@ export const registerAsBrandSchema = z
 
 export type LoginBodyType = z.infer<typeof loginSchema>;
 export type ForgotPasswordBodyType = z.infer<typeof forgotPasswordSchema>;
-export type RegisterAsInfluencerType = z.infer<typeof registerAsInfluencerSchema>;
-export type RegisterAsBrandType = z.infer<typeof registerAsBrandSchema>;
+export type RegisterType = z.infer<typeof registerSchema>;
