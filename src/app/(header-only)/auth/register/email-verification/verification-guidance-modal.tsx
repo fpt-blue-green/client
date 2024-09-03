@@ -8,14 +8,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { LuHelpingHand } from 'react-icons/lu';
 
 const VerificationGuidanceModal = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <p className="text-muted-foreground text-sm cursor-pointer text-center mt-4">
-          Tôi chưa nhận được tin nhắn ở hộp thư
-        </p>
+        <Button className="w-60 py-6" type="submit" variant="gradient" fullWidth>
+          Hướng dẫn xử lí
+          <LuHelpingHand size={20} />
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -31,27 +33,23 @@ const VerificationGuidanceModal = () => {
             </p>
           </div>
           <div className="my-5 p-4 border rounded-sm">
-            <h3 className="font-semibold text-lg">2. Tìm kiếm tin nhắn từ hello@adfusion.com</h3>
+            <h3 className="font-semibold text-lg">2. Tìm kiếm tin nhắn từ adfusion.service.noreply@gmail.com</h3>
             <p className="mt-3 text-sm text-muted-foreground">
-              Tìm kiếm hòm thư cho các tin nhắn từ hello@adfusion.com.
+              Tìm kiếm hòm thư cho các tin nhắn từ adfusion.service.noreply@gmail.com.
             </p>
           </div>
           <div className="my-5 p-4 border rounded-sm">
-            <h3 className="font-semibold text-lg">3. Gửi lại tin nhắn xác thực</h3>
+            <h3 className="font-semibold text-lg">3. Liên hệ chúng tôi</h3>
             <p className="mt-3 text-sm text-muted-foreground">
-              Nếu bạn vẫn chưa thể tìm thấy tin nhắn xác thực, thử yêu cầu gửi lại bằng cách bấm vào nút bên dưới. Nếu
-              bạn vẫn gặp vấn đề,{' '}
+              Nếu bạn vẫn chưa thể tìm thấy tin nhắn xác thực, thử yêu cầu gửi lại bằng cách liên hệ với chúng tôi qua
+              thông tin liên lạc bên dưới{' '}
               <Button className="p-0 font-semibold underline" variant="link">
-                Liên hệ chúng tôi
+                Thông tin liên hệ
               </Button>
             </p>
           </div>
         </div>
-        <DialogFooter>
-          <Button className="h-12" variant="gradient" fullWidth>
-            Gửi lại tin nhắn
-          </Button>
-        </DialogFooter>
+        <DialogFooter></DialogFooter>
       </DialogContent>
     </Dialog>
   );

@@ -25,7 +25,7 @@ const JoinAsBrand = () => {
           giây.
         </p>
         <Button size="large" variant="gradient" className="px-12 h-12" asChild>
-          <Link href={config.routes.brand.register}>Bắt đầu miễn phí</Link>
+          <Link href={{ pathname: config.routes.register.brand }}>Bắt đầu miễn phí</Link>
         </Button>
       </div>
       <div className="grid lg:grid-cols-7 grid-cols-1 items-center mt-20 gap-12">

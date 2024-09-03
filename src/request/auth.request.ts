@@ -1,9 +1,10 @@
 import http from '@/lib/http';
-import { ForgotPasswordBodyType, LoginBodyType } from '@/schema-validations/auth.schema';
+import { ForgotPasswordBodyType, LoginBodyType, RegisterBodyType } from '@/schema-validations/auth.schema';
 import { ChangePasswordBodyType } from '@/schema-validations/influencer-account.schema';
 import { EVerifyAction } from '@/types/enum';
 
 const authRequest = {
+  register: (body: RegisterBodyType) => http.post('/Auth/register', body),
   login: (body: LoginBodyType) => http.post('/Auth/login', body),
   refreshToken: (token: string) => http.post('/Auth/refreshToken', { token }),
   changePassword: (body: ChangePasswordBodyType) => http.put('/Auth/changePass', body),

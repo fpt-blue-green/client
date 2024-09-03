@@ -21,9 +21,10 @@ export const forgotPasswordSchema = z
   })
   .strict();
 
-export const registerAsInfluencerSchema = z
+export const registerSchema = z
   .object({
-    fullName: z.string().min(1, 'Vui lòng nhập họ và tên của bạn'),
+    displayName: z.string().min(1, 'Vui lòng nhập tên hiển thị'),
+    role: z.number().min(1, 'Vui lòng cung cấp vai trò của bạn'),
     email: z.string().min(1, 'Vui lòng nhập email').email('Email không hợp lệ'),
     password: z
       .string()
@@ -37,4 +38,4 @@ export const registerAsInfluencerSchema = z
 
 export type LoginBodyType = z.infer<typeof loginSchema>;
 export type ForgotPasswordBodyType = z.infer<typeof forgotPasswordSchema>;
-export type RegisterAsInfluencerType = z.infer<typeof registerAsInfluencerSchema>;
+export type RegisterBodyType = z.infer<typeof registerSchema>;

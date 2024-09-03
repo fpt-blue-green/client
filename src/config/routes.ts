@@ -5,16 +5,19 @@ const routes = {
   account: '/account',
   influencer: {
     base: '/influencer',
-    register: '/auth/register/influencer',
-    emailVerification: '/auth/register/influencer/email-verification',
   },
   influencers: {
     base: '/influencers',
     details: (slug: string) => `/influencers/${slug}`,
+    editProfile: (slug: string) => `influencers/${slug}/edit`,
   },
   brand: {
     base: '/brand',
-    register: '/auth/register/brand',
+  },
+  register: {
+    brand: '/auth/register/brand',
+    influencer: '/auth/register/influencer',
+    emailVerification: '/auth/register/email-verification',
   },
 };
 

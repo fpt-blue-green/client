@@ -1,24 +1,35 @@
 'use client';
-import { useState } from 'react';
+
+import { FC, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { registerAsInfluencerSchema } from '@/schema-validations/auth.schema';
+import config from '@/config';
+import { registerSchema, RegisterBodyType } from '@/schema-validations/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { useForm } from 'react-hook-form';
-import { RegisterAsInfluencerType } from '@/schema-validations/auth.schema';
-import Link from 'next/link';
-import config from '@/config';
+import { authRequest } from '@/request';
+import { ERole } from '@/types/enum';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
-const RegisterAsInfluencerForm = () => {
+interface IRegisterFormProps {
+  role: string;
+}
+
+const RegisterForm: FC<IRegisterFormProps> = ({ role }) => {
   const [showPass, setShowPass] = useState(false);
-  const form = useForm<RegisterAsInfluencerType>({
-    resolver: zodResolver(registerAsInfluencerSchema),
+  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
+
+  const form = useForm<RegisterBodyType>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
-      fullName: '',
+      displayName: '',
       email: '',
       password: '',
+      role: role === 'influencer' ? ERole.Influencer : ERole.Brand,
     },
   });
 
@@ -26,9 +37,13 @@ const RegisterAsInfluencerForm = () => {
     setShowPass(!showPass);
   };
 
-  const onSubmit = (values: RegisterAsInfluencerType) => {
-    console.log(values);
-    alert('You clicked register!');
+  const onSubmit = (values: RegisterBodyType) => {
+    setLoading(true);
+    authRequest
+      .register(values)
+      .then(() => router.push(`${config.routes.register.emailVerification}?email=${form.getValues().email}`))
+      .catch((err) => toast.error(err.message))
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -36,11 +51,11 @@ const RegisterAsInfluencerForm = () => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
-          name="fullName"
+          name="displayName"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Họ và tên" {...field} />
+                <Input placeholder="Tên hiển thị" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -79,12 +94,12 @@ const RegisterAsInfluencerForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" variant="gradient" size="large" fullWidth>
-          <Link href={config.routes.influencer.emailVerification}>Đăng Ký</Link>
+        <Button type="submit" variant="gradient" size="large" loading={loading} fullWidth>
+          Đăng Ký
         </Button>
       </form>
     </Form>
   );
 };
 
-export default RegisterAsInfluencerForm;
+export default RegisterForm;
