@@ -1,17 +1,29 @@
-import { Button } from '@/components/ui/button';
-import { ArrowRightIcon } from '@radix-ui/react-icons';
 import VerificationGuidanceModal from './verification-guidance-modal';
+import { LuMailCheck } from 'react-icons/lu';
+import Link from 'next/link';
 
 const EmailVerification = () => {
   return (
-    <div className="max-w-lg mt-24 text-start ">
-      <h1 className="font-semibold text-3xl mb-5">Xác thực email của bạn</h1>
-      <p className="text-sm text-muted-foreground mb-4">
-        Chúng tôi đã gửi tin nhắn xác nhận đến email trandinhhieu@gmail.com. Kiểm tra hộp thư của bạn và xác thực email.
+    <div className="max-w-2xl mt-24 space-y-10 flex flex-col items-center">
+      <div className="w-20 h-20 bg-gradient rounded-full flex items-center justify-center">
+        <LuMailCheck className="text-primary-foreground" size={30} />
+      </div>
+      <div>
+        <h1 className="font-semibold text-3xl mb-5 text-center">Vui lòng xác thực email của bạn</h1>
+        <p className="px-8 text-center mt-4">
+          Bạn đăng ký gần xong rồi! Chúng tôi đã gửi một tin đến{' '}
+          <span className="font-semibold">trandinhhieu11002@gmail.com</span>
+        </p>
+      </div>
+      <p className="text-center">
+        Hãy{' '}
+        <Link className="text-muted-foreground underline" href="">
+          bấm vào đây
+        </Link>{' '}
+        để hoàn thành việc đăng ký tài khoản của bạn. Nếu gặp vấn đề với việc xác thực, bạn có lẽ cần đọc{' '}
+        <span className="font-semibold">hướng dẫn</span> bên dưới.
       </p>
-      <Button type="submit" variant="gradient" fullWidth>
-        Xem Hòm Thư <ArrowRightIcon />
-      </Button>
+      <p className="px-8 text-center mt-4">Vẫn chưa xác thực được? Đừng lo. </p>
       <VerificationGuidanceModal />
     </div>
   );
