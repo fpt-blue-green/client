@@ -33,9 +33,9 @@ const VerificationGuidanceModal = () => {
             </p>
           </div>
           <div className="my-5 p-4 border rounded-sm">
-            <h3 className="font-semibold text-lg">2. Tìm kiếm tin nhắn từ hello@adfusion.com</h3>
+            <h3 className="font-semibold text-lg">2. Tìm kiếm tin nhắn từ adfusion.service.noreply@gmail.com</h3>
             <p className="mt-3 text-sm text-muted-foreground">
-              Tìm kiếm hòm thư cho các tin nhắn từ hello@adfusion.com.
+              Tìm kiếm hòm thư cho các tin nhắn từ adfusion.service.noreply@gmail.com.
             </p>
           </div>
           <div className="my-5 p-4 border rounded-sm">

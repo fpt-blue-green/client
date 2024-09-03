@@ -16,7 +16,7 @@ const EmailVerification = () => {
       <div>
         <h1 className="font-semibold text-3xl mb-5 text-center">Vui lòng xác thực email của bạn</h1>
         <p className="px-8 text-center mt-4">
-          Bạn đăng ký gần xong rồi! Chúng tôi đã gửi một tin đến <span className="font-semibold">{email}</span>
+          Bạn đăng ký gần xong rồi! Chúng tôi đã gửi một tin nhắn đến <span className="font-semibold">{email}</span>
         </p>
       </div>
       <p className="text-center">
