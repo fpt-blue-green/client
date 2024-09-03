@@ -1,40 +1,35 @@
 'use client';
-import { FC, useEffect, useState } from 'react';
+
+import { FC, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import config from '@/config';
-import { registerSchema, RegisterType } from '@/schema-validations/auth.schema';
+import { registerSchema, RegisterBodyType } from '@/schema-validations/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
-import Link from 'next/link';
 import { useForm } from 'react-hook-form';
-import { useSearchParams } from 'next/navigation';
-import { toast } from 'sonner';
 import { authRequest } from '@/request';
+import { ERole } from '@/types/enum';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
-interface IRegisterFormProps {}
+interface IRegisterFormProps {
+  role: string;
+}
 
-const RegisterForm: FC<IRegisterFormProps> = () => {
-  const [email, setEmail] = useState<string>('');
+const RegisterForm: FC<IRegisterFormProps> = ({ role }) => {
   const [showPass, setShowPass] = useState(false);
-  const [role, setRole] = useState<string>();
-  const [loading, setIsLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
 
-  const useParams = useSearchParams();
-  const currentRole = useParams.get('role');
-
-  useEffect(() => {
-    setRole(currentRole!);
-  }, [currentRole]);
-
-  const form = useForm<RegisterType>({
+  const form = useForm<RegisterBodyType>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       displayName: '',
       email: '',
       password: '',
-      role: 0,
+      role: role === 'influencer' ? ERole.Influencer : ERole.Brand,
     },
   });
 
@@ -42,22 +37,13 @@ const RegisterForm: FC<IRegisterFormProps> = () => {
     setShowPass(!showPass);
   };
 
-  const onSubmit = async (values: RegisterType) => {
-    setIsLoading(true);
-
-    const submitForm = {
-      ...values,
-      role: +role!,
-    };
-
-    const res = await authRequest.register(submitForm);
-    console.log('res', res);
-    setIsLoading(false);
-
-    // if () {
-    // } else {
-    //   toast.error('Đã gặp sự cố trong quá trình đăng ký!');
-    // }
+  const onSubmit = (values: RegisterBodyType) => {
+    setLoading(true);
+    authRequest
+      .register(values)
+      .then(() => router.push(`${config.routes.register.emailVerification}?email=${form.getValues().email}`))
+      .catch((err) => toast.error(err.message))
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -81,14 +67,7 @@ const RegisterForm: FC<IRegisterFormProps> = () => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input
-                  placeholder="Email"
-                  {...field}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    field.onChange(e);
-                  }}
-                />
+                <Input placeholder="Email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -116,7 +95,7 @@ const RegisterForm: FC<IRegisterFormProps> = () => {
           )}
         />
         <Button type="submit" variant="gradient" size="large" loading={loading} fullWidth>
-          <Link href={{ pathname: config.routes.register.emailVerification, query: { email } }}>Đăng Ký</Link>
+          Đăng Ký
         </Button>
       </form>
     </Form>

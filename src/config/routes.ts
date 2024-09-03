@@ -15,7 +15,8 @@ const routes = {
     base: '/brand',
   },
   register: {
-    base: '/auth/register/',
+    brand: '/auth/register/brand',
+    influencer: '/auth/register/influencer',
     emailVerification: '/auth/register/email-verification',
   },
 };

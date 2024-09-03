@@ -7,7 +7,6 @@ import HowItWork from '../(home)/how-it-work';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import config from '@/config';
-import { ERole } from '@/types/enum';
 
 export const metadata: Metadata = {
   title: 'Trở thành nhà sáng tạo',
@@ -26,7 +25,7 @@ const JoinAsCreator = () => {
           <span className="font-medium">adfusion.com/</span>
           <input placeholder="nickname" className="w-full pr-1 outline-none" />
           <Button className="rounded-full p-6" size="large" variant="gradient">
-            <Link href={{ pathname: config.routes.register.base, query: { role: ERole.Influencer } }}> Xác Thực</Link>
+            <Link href={{ pathname: config.routes.register.influencer }}> Xác Thực</Link>
           </Button>
         </div>
       </div>

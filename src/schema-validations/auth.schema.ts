@@ -38,4 +38,4 @@ export const registerSchema = z
 
 export type LoginBodyType = z.infer<typeof loginSchema>;
 export type ForgotPasswordBodyType = z.infer<typeof forgotPasswordSchema>;
-export type RegisterType = z.infer<typeof registerSchema>;
+export type RegisterBodyType = z.infer<typeof registerSchema>;
