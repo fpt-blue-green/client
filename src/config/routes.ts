@@ -11,6 +11,7 @@ const routes = {
   influencers: {
     base: '/influencers',
     details: (slug: string) => `/influencers/${slug}`,
+    editProfile: (slug: string) => `influencers/${slug}/edit`,
   },
   brand: {
     base: '/brand',
