@@ -24,6 +24,7 @@ export const forgotPasswordSchema = z
 export const registerSchema = z
   .object({
     displayName: z.string().min(1, 'Vui lòng nhập tên hiển thị'),
+    role: z.number().min(1, 'Vui lòng cung cấp vai trò của bạn'),
     email: z.string().min(1, 'Vui lòng nhập email').email('Email không hợp lệ'),
     password: z
       .string()
