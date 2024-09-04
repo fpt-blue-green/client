@@ -4,14 +4,6 @@ import { z } from 'zod';
 
 export const generalSchema = z
   .object({
-    avatar: z
-      .instanceof(FileList)
-      .refine((file) => file.length === 0 || file[0].type.startsWith('image/'), {
-        message: 'Tệp tin không phải hình ảnh',
-      })
-      .refine((file) => file.length === 0 || file[0].size <= 3 * 1024 * 1024, { message: 'Kích thước tệp lớn hơn 3MB' })
-      .optional(),
-    phone: z.string().regex(constants.phoneRegex, 'Số điện thoại không đúng định dạng'),
     name: z.string().min(2, 'Vui lòng nhập tên ít nhất 2 kí tự'),
     summarize: z.string().min(1, 'Vui lòng không để trống phần tóm tắt'),
     description: z.string().max(255, 'Không nhập quá 255 kí tự').optional(),
