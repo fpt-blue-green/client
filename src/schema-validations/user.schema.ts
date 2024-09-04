@@ -1,14 +1,17 @@
 import { constants } from '@/lib/utils';
-import { EGender } from '@/types/enum';
 import { z } from 'zod';
 
-export const generalSchema = z
+export const avatarSchema = z
   .object({
-    name: z.string().min(2, 'Vui lòng nhập tên ít nhất 2 kí tự'),
-    summarize: z.string().min(1, 'Vui lòng không để trống phần tóm tắt'),
-    description: z.string().max(255, 'Không nhập quá 255 kí tự').optional(),
-    address: z.string(),
-    gender: z.nativeEnum(EGender),
+    avatar: z
+      .instanceof(FileList)
+      .refine((files) => files && files.length > 0, { message: 'Vui lòng tải ảnh lên' })
+      .refine((files) => files[0]?.type.startsWith('image/'), {
+        message: 'Tệp tin không phải hình ảnh',
+      })
+      .refine((files) => files[0]?.size <= 3 * 1024 * 1024, {
+        message: 'Kích thước tệp lớn hơn 3MB',
+      }),
   })
   .strict();
 
@@ -33,5 +36,5 @@ export const changePasswordSchema = z
     path: ['newPassword'],
   });
 
-export type GeneralBodyType = z.infer<typeof generalSchema>;
+export type AvatarBody = z.infer<typeof avatarSchema>;
 export type ChangePasswordBodyType = z.infer<typeof changePasswordSchema>;

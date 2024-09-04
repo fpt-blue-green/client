@@ -84,7 +84,7 @@ const AvatarUploader: ForwardRefRenderFunction<HTMLInputElement, AvatarUploaderP
             htmlFor={id || 'avatar-uploader'}
             className={cn(
               'absolute inset-0 flex flex-col items-center justify-center gap-2 z-10 bg-foreground/65 text-background font-medium transition-all opacity-0 invisible group-hover:opacity-100 group-hover:visible cursor-pointer select-none',
-              { 'opacity-100 visible': isDragging },
+              { 'opacity-100 visible': !image || isDragging },
             )}
           >
             <CameraIcon width={24} height={24} />

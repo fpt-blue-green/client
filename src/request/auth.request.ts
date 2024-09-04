@@ -1,6 +1,6 @@
 import http from '@/lib/http';
 import { ForgotPasswordBodyType, LoginBodyType, RegisterBodyType } from '@/schema-validations/auth.schema';
-import { ChangePasswordBodyType } from '@/schema-validations/influencer-account.schema';
+import { ChangePasswordBodyType } from '@/schema-validations/user.schema';
 import { EVerifyAction } from '@/types/enum';
 
 const authRequest = {

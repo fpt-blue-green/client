@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { GeneralBodyType, generalSchema } from '@/schema-validations/influencer-account.schema';
+import { GeneralBodyType, generalSchema } from '@/schema-validations/influencer.schema';
 import { EGender } from '@/types/enum';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSession } from 'next-auth/react';
@@ -32,7 +32,7 @@ const Step1 = () => {
 
   return (
     <div className="space-y-10">
-      <Progress value={10} className="h-3" />
+      <Progress value={100 / 6} className="h-3" />
       <h1 className="text-3xl font-semibold">Thông tin cơ bản của bạn</h1>
       <Form {...form}>
         <form className="grid md:grid-cols-2 grid-cols-1 gap-x-6 gap-y-8" onSubmit={form.handleSubmit(onSubmit)}>
