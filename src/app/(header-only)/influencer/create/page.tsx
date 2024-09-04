@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { FC } from 'react';
 import Step1 from './step1';
 import Step2 from './step2';
+import Step3 from './step3';
 
 interface CreateProps {
   searchParams?: {
@@ -18,6 +19,8 @@ const Create: FC<CreateProps> = ({ searchParams }) => {
         return <Step1 />;
       case '2':
         return <Step2 />;
+      case '3':
+        return <Step3 />;
       default:
         notFound();
     }

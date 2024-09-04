@@ -1,4 +1,3 @@
-import { constants } from '@/lib/utils';
 import { EGender } from '@/types/enum';
 import { z } from 'zod';
 
@@ -12,4 +11,13 @@ export const generalSchema = z
   })
   .strict();
 
+export const channelSchema = z
+  .object({
+    youtube: z.string(),
+    instagram: z.string(),
+    tiktok: z.string(),
+  })
+  .strict();
+
 export type GeneralBodyType = z.infer<typeof generalSchema>;
+export type ChannelBodyType = z.infer<typeof channelSchema>;

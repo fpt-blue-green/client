@@ -5,7 +5,7 @@ interface CreateLayoutProps {
 }
 
 const CreateLayout: FC<CreateLayoutProps> = ({ children }) => {
-  return <div className="w-full max-w-2xl mt-8">{children}</div>;
+  return <div className="w-full max-w-2xl my-8">{children}</div>;
 };
 
 export default CreateLayout;

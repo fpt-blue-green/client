@@ -32,7 +32,7 @@ const Step1 = () => {
 
   return (
     <div className="space-y-10">
-      <Progress value={100 / 6} className="h-3" />
+      <Progress value={100 / 7} className="h-3" />
       <h1 className="text-3xl font-semibold">Thông tin cơ bản của bạn</h1>
       <Form {...form}>
         <form className="grid md:grid-cols-2 grid-cols-1 gap-x-6 gap-y-8" onSubmit={form.handleSubmit(onSubmit)}>
@@ -113,7 +113,7 @@ const Step1 = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" size="large" variant="gradient" fullWidth className="col-span-2">
+          <Button type="submit" size="large" variant="gradient" fullWidth className="md:col-span-2">
             Tiếp tục
           </Button>
         </form>
