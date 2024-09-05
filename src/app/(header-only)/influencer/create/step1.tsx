@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { GeneralBodyType, generalSchema } from '@/schema-validations/influencer.schema';
@@ -12,6 +11,7 @@ import { EGender } from '@/types/enum';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
+import ProgressHeading from './progress-heading';
 
 const Step1 = () => {
   const { data: session } = useSession();
@@ -32,8 +32,7 @@ const Step1 = () => {
 
   return (
     <div className="space-y-10">
-      <Progress value={100 / 7} className="h-3" />
-      <h1 className="text-3xl font-semibold">Thông tin cơ bản của bạn</h1>
+      <ProgressHeading step={1} title="Thông tin cơ bản của bạn" />
       <Form {...form}>
         <form className="grid md:grid-cols-2 grid-cols-1 gap-x-6 gap-y-8" onSubmit={form.handleSubmit(onSubmit)}>
           <FormField

@@ -1,18 +1,15 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Toggle } from '@/components/ui/toggle';
-import config from '@/config';
 import { fetcher } from '@/lib/http';
 import Tag from '@/types/tag';
-import { ArrowLeftIcon } from '@radix-ui/react-icons';
-import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import useSWRImmutable from 'swr/immutable';
+import ProgressHeading from './progress-heading';
 
 const Step4 = () => {
   const [tags, setTags] = useState<string[]>([]);
@@ -36,11 +33,7 @@ const Step4 = () => {
 
   return (
     <div className="space-y-10">
-      <Progress value={(100 * 4) / 7} className="h-3" />
-      <Button variant="secondary" className="rounded-full self-start" startIcon={<ArrowLeftIcon />}>
-        <Link href={{ pathname: config.routes.influencer.create, query: { step: 3 } }}>Trở lại</Link>
-      </Button>
-      <h1 className="text-3xl font-semibold">Chọn các thẻ phù hợp với nội dung của bạn</h1>
+      <ProgressHeading step={4} title="Chọn các thẻ phù hợp với nội dung của bạn" />
       <ScrollArea className="h-[40vh]">
         <div className="grid md:grid-cols-2 grid-cols-1 gap-x-4 gap-y-6">
           {isLoading

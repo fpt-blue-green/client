@@ -3,13 +3,10 @@
 import AvatarUploader from '@/components/avatar-uploader';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { Progress } from '@/components/ui/progress';
-import config from '@/config';
 import { AvatarBody, avatarSchema } from '@/schema-validations/user.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeftIcon } from '@radix-ui/react-icons';
-import Link from 'next/link';
 import { useForm } from 'react-hook-form';
+import ProgressHeading from './progress-heading';
 
 const Step2 = () => {
   const form = useForm<AvatarBody>({
@@ -25,11 +22,7 @@ const Step2 = () => {
 
   return (
     <div className="flex flex-col items-center gap-10">
-      <Progress value={(100 * 2) / 7} className="h-3" />
-      <Button variant="secondary" className="rounded-full self-start" startIcon={<ArrowLeftIcon />}>
-        <Link href={{ pathname: config.routes.influencer.create, query: { step: 1 } }}>Trở lại</Link>
-      </Button>
-      <h1 className="text-3xl font-semibold">Ảnh đại diện</h1>
+      <ProgressHeading step={2} title="Ảnh đại diện" />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField

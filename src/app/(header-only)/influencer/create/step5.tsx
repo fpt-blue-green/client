@@ -2,12 +2,10 @@
 
 import { ChangeEvent, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import config from '@/config';
-import { ArrowLeftIcon, UploadIcon } from '@radix-ui/react-icons';
-import Link from 'next/link';
+import { UploadIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 import clsx from 'clsx';
+import ProgressHeading from './progress-heading';
 
 const Step5 = () => {
   const [images, setImages] = useState<string[]>([]);
@@ -39,11 +37,7 @@ const Step5 = () => {
 
   return (
     <div className="space-y-10">
-      <Progress value={(100 * 5) / 7} className="h-3" />
-      <Button variant="secondary" className="rounded-full self-start" startIcon={<ArrowLeftIcon />}>
-        <Link href={{ pathname: config.routes.influencer.create, query: { step: 4 } }}>Trở lại</Link>
-      </Button>
-      <h1 className="text-3xl font-semibold">Thêm 3 - 10 ảnh về bạn và nội dụng của bạn</h1>
+      <ProgressHeading step={4} title="Thêm 3 - 10 ảnh về bạn và nội dụng của bạn" />
       <div className="grid md:grid-cols-3 grid-cols-1 gap-2">
         {images.map((img, index) => (
           <Image
