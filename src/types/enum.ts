@@ -1,6 +1,6 @@
 export enum EPlatform {
+  TitTok = 1,
   Instagram,
-  TitTok,
   YouTube,
 }
 

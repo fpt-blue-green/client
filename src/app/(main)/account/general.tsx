@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import User from '@/types/user';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { GeneralBodyType, generalSchema } from '@/schema-validations/influencer-account.schema';
+import { GeneralBodyType, generalSchema } from '@/schema-validations/influencer.schema';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -24,15 +24,12 @@ const General: FC<GeneralProps> = ({ user }) => {
     resolver: zodResolver(generalSchema),
     defaultValues: {
       name: user.name,
-      phone: '',
       summarize: '',
       description: '',
       address: '',
       gender: EGender.Male,
     },
   });
-
-  const avatarRef = form.register('avatar');
 
   const onSubmit = (values: GeneralBodyType) => {
     console.log(values);
@@ -45,11 +42,11 @@ const General: FC<GeneralProps> = ({ user }) => {
           <div className="flex flex-col h-full items-center">
             <FormField
               control={form.control}
-              name="avatar"
+              name="avatar" // ! fix new hook form
               render={() => (
                 <FormItem className="flex flex-col items-center justify-center gap-4 my-auto">
                   <FormControl>
-                    <AvatarUploader {...avatarRef} defaultSrc={user.image} fallback={user.name[0]} />
+                    <AvatarUploader defaultSrc={user.image} fallback={user.name[0]} />
                   </FormControl>
                   <FormMessage />
                   <p className="text-xs text-muted-foreground text-center">
@@ -76,32 +73,6 @@ const General: FC<GeneralProps> = ({ user }) => {
                   <Label htmlFor="name">Tên</Label>
                   <FormControl>
                     <Input {...field} id="name" className="w-full" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="phone">Số điện thoại</Label>
-                  <FormControl>
-                    <Input {...field} id="phone" className="w-full" type="tel" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="summarize"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="summarize">Tóm tắt</Label>
-                  <FormControl>
-                    <Input {...field} id="summarize" className="w-full" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -140,6 +111,19 @@ const General: FC<GeneralProps> = ({ user }) => {
                         <SelectItem value={EGender.Others.toString()}>Khác</SelectItem>
                       </SelectContent>
                     </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="summarize"
+              render={({ field }) => (
+                <FormItem className="md:col-span-2">
+                  <Label htmlFor="summarize">Tóm tắt</Label>
+                  <FormControl>
+                    <Input {...field} id="summarize" className="w-full" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

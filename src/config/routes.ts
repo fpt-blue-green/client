@@ -5,6 +5,7 @@ const routes = {
   account: '/account',
   influencer: {
     base: '/influencer',
+    create: '/influencer/create',
   },
   influencers: {
     base: '/influencers',
