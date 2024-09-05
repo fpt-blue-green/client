@@ -10,7 +10,7 @@ import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 const Header = () => {
   return (
     <header>
-      <div className="container h-20">
+      <div className="container md:h-20 h-16">
         <div className="h-full flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Button className="md:hidden" variant="ghost" size="icon">

@@ -3,17 +3,31 @@
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Toggle } from '@/components/ui/toggle';
 import config from '@/config';
+import { fetcher } from '@/lib/http';
+import Tag from '@/types/tag';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { useState } from 'react';
+import { toast } from 'sonner';
+import useSWRImmutable from 'swr/immutable';
 
 const Step4 = () => {
   const [tags, setTags] = useState<string[]>([]);
+  const { data, isLoading } = useSWRImmutable<Tag[]>('/Tags', fetcher);
 
   const handleToggle = (value: string) => () => {
-    setTags(tags.includes(value) ? tags.filter((t) => t !== value) : [...tags, value]);
+    if (tags.includes(value)) {
+      setTags(tags.filter((t) => t !== value));
+    } else {
+      if (tags.length < 6) {
+        setTags([...tags, value]);
+      } else {
+        toast.error('Bạn chỉ được chọn tối đa 6 thẻ');
+      }
+    }
   };
 
   const handleSubmit = () => {
@@ -29,17 +43,19 @@ const Step4 = () => {
       <h1 className="text-3xl font-semibold">Chọn các thẻ phù hợp với nội dung của bạn</h1>
       <ScrollArea className="h-[40vh]">
         <div className="grid md:grid-cols-2 grid-cols-1 gap-x-4 gap-y-6">
-          {Array.from({ length: 40 }).map((_, index) => (
-            <Toggle
-              variant="primary"
-              size="large"
-              key={index}
-              pressed={tags.includes(index.toString())}
-              onPressedChange={handleToggle(index.toString())}
-            >
-              Thời trang
-            </Toggle>
-          ))}
+          {isLoading
+            ? Array.from({ length: 20 }).map((_, index) => <Skeleton key={index} className="h-10 w-full" />)
+            : data?.map((tag) => (
+                <Toggle
+                  variant="primary"
+                  size="large"
+                  key={tag.id}
+                  pressed={tags.includes(tag.id)}
+                  onPressedChange={handleToggle(tag.id)}
+                >
+                  {tag.name}
+                </Toggle>
+              ))}
         </div>
       </ScrollArea>
       <Button variant="gradient" size="large" fullWidth disabled={!tags.length} onClick={handleSubmit}>
