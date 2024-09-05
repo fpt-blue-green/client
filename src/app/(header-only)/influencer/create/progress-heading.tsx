@@ -17,7 +17,7 @@ const ProgressHeading: FC<ProgressHeadingProps> = ({ step, title }) => {
     <>
       <Progress value={(100 * step) / totalStep} className="h-3" />
       {step > 1 && (
-        <Button variant="secondary" className="rounded-full self-start" startIcon={<ArrowLeftIcon />}>
+        <Button variant="secondary" className="rounded-full self-start" startIcon={<ArrowLeftIcon />} asChild>
           <Link href={{ pathname: config.routes.influencer.create, query: { step: step - 1 } }}>Trở lại</Link>
         </Button>
       )}

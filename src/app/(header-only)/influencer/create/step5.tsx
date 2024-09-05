@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { UploadIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 import clsx from 'clsx';
+import { FaTrashAlt } from 'react-icons/fa';
 import ProgressHeading from './progress-heading';
 
 const Step5 = () => {
@@ -40,14 +41,13 @@ const Step5 = () => {
       <ProgressHeading step={4} title="Thêm 3 - 10 ảnh về bạn và nội dụng của bạn" />
       <div className="grid md:grid-cols-3 grid-cols-1 gap-2">
         {images.map((img, index) => (
-          <Image
-            key={index}
-            src={img}
-            alt="Cover profile"
-            width={750}
-            height={1000}
-            className="aspect-square object-cover rounded-lg border"
-          />
+          <div className="relative border rounded-lg overflow-hidden group" key={index}>
+            <Image src={img} alt="Cover profile" width={750} height={1000} className="aspect-square object-cover" />
+            <div className="absolute inset-0 flex flex-col gap-2 items-center justify-center bg-destructive-foreground/80 text-destructive font-semibold transition-all opacity-0 group-hover:opacity-100 cursor-pointer">
+              <FaTrashAlt />
+              Xóa ảnh
+            </div>
+          </div>
         ))}
         <div className={clsx(images.length ? 'col-span-1' : 'col-span-full')}>
           <div className="flex items-center justify-center size-full min-h-56 border border-dashed rounded-lg">
