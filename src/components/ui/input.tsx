@@ -9,11 +9,12 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, startAdornment, endAdornment, inputClassName, ...props }, ref) => {
+  ({ className, type, startAdornment, endAdornment, inputClassName, 'aria-invalid': ariaInvalid, ...props }, ref) => {
     return (
       <div
         className={cn(
-          'flex items-center gap-2 h-12 w-96 px-3 py-1 max-w-full rounded-md border shadow-sm border-input text-sm focus-within:ring-1 focus-within:ring-ring',
+          'flex items-center gap-2 h-12 w-96 px-3 py-1 max-w-full rounded-md border shadow-sm border-input text-sm transition-colors focus-within:ring-1 focus-within:ring-ring',
+          { 'ring-1 ring-destructive': ariaInvalid },
           className,
         )}
       >
@@ -25,6 +26,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             inputClassName,
           )}
           ref={ref}
+          aria-invalid={ariaInvalid}
           {...props}
         />
         {endAdornment}

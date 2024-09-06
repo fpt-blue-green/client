@@ -125,7 +125,7 @@ const Step6 = () => {
               <FormField
                 control={form.control}
                 name={`packages.${index}.type`}
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <FormItem className="col-span-2">
                     <FormControl>
                       <Select onValueChange={(value) => field.onChange(value)} value={field.value || ''}>

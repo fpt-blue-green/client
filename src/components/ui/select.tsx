@@ -6,7 +6,24 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 
 import { cn } from '@/lib/utils';
 
-const Select = SelectPrimitive.Root;
+interface SelectContextProps {
+  ariaDescribedby?: string;
+  ariaInvalid?: boolean;
+}
+
+const SelectContext = React.createContext<SelectContextProps>({});
+
+const useSelectContext = () => {
+  return React.useContext(SelectContext);
+};
+
+const Select: React.FC<SelectPrimitive.SelectProps> = ({ ...props }) => {
+  return (
+    <SelectContext.Provider value={{ ariaDescribedby: props['aria-describedby'], ariaInvalid: props['aria-invalid'] }}>
+      <SelectPrimitive.Root {...props} />
+    </SelectContext.Provider>
+  );
+};
 
 const SelectGroup = SelectPrimitive.Group;
 
@@ -15,21 +32,28 @@ const SelectValue = SelectPrimitive.Value;
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
-  <SelectPrimitive.Trigger
-    ref={ref}
-    className={cn(
-      'flex h-12 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
-      className,
-    )}
-    {...props}
-  >
-    {children}
-    <SelectPrimitive.Icon asChild>
-      <CaretSortIcon className="h-4 w-4 opacity-50" />
-    </SelectPrimitive.Icon>
-  </SelectPrimitive.Trigger>
-));
+>(({ className, children, ...props }, ref) => {
+  const { ariaDescribedby, ariaInvalid } = useSelectContext();
+
+  return (
+    <SelectPrimitive.Trigger
+      ref={ref}
+      className={cn(
+        'flex h-12 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
+        { 'ring-1 ring-destructive': ariaInvalid },
+        className,
+      )}
+      aria-describedby={ariaDescribedby}
+      aria-invalid={ariaInvalid}
+      {...props}
+    >
+      {children}
+      <SelectPrimitive.Icon asChild>
+        <CaretSortIcon className="h-4 w-4 opacity-50" />
+      </SelectPrimitive.Icon>
+    </SelectPrimitive.Trigger>
+  );
+});
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
 const SelectScrollUpButton = React.forwardRef<
