@@ -6,6 +6,7 @@ import Step3 from './step3';
 import Step4 from './step4';
 import Step5 from './step5';
 import Step6 from './step6';
+import Step7 from './step7';
 
 interface CreateProps {
   searchParams?: {
@@ -30,6 +31,8 @@ const Create: FC<CreateProps> = ({ searchParams }) => {
         return <Step5 />;
       case '6':
         return <Step6 />;
+      case '7':
+        return <Step7 />;
       default:
         notFound();
     }

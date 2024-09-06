@@ -36,5 +36,11 @@ export const changePasswordSchema = z
     path: ['newPassword'],
   });
 
+export const phoneSchema = z.object({
+  phone: z.string().regex(constants.phoneRegex, 'Số điện thoại không đúng định dạng'),
+  otp: z.string().regex(constants.otpRegex, 'Vui lòng nhập mã OTP'),
+});
+
 export type AvatarBody = z.infer<typeof avatarSchema>;
 export type ChangePasswordBodyType = z.infer<typeof changePasswordSchema>;
+export type PhoneBodyType = z.infer<typeof phoneSchema>;
