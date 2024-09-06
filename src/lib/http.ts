@@ -15,16 +15,22 @@ type CustomResponse<T> = {
 };
 
 export const isClient = () => typeof window !== 'undefined';
+const isBoolean = (value: string): boolean => value === 'true' || value === 'false';
+const isNumber = (value: string): boolean => !isNaN(Number(value));
 
 const request = async <Response>(
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
   url: string,
   options?: CustomRequest,
 ): Promise<CustomResponse<Response>> => {
-  const body = options?.body ? JSON.stringify(options?.body) : undefined;
-  const baseHeaders: { [key: string]: string } = {
-    'Content-Type': 'application/json',
-  };
+  const body =
+    options?.body instanceof FormData ? options.body : options?.body ? JSON.stringify(options?.body) : undefined;
+  const baseHeaders: { [key: string]: string } =
+    options?.body instanceof FormData
+      ? {}
+      : {
+          'Content-Type': 'application/json',
+        };
 
   let session;
 
@@ -44,7 +50,15 @@ const request = async <Response>(
   try {
     const res = await fetch(fullUrl, { ...options, headers: { ...baseHeaders, ...options?.headers }, body, method });
 
-    const data = await res.json();
+    let data: any = await res.text();
+
+    if (data.startsWith('{') || data.startsWith('[')) {
+      data = JSON.parse(data);
+    } else if (isBoolean(data)) {
+      data = data === 'true';
+    } else if (isNumber(data)) {
+      data = Number(data);
+    }
 
     if (!res.ok) {
       if (isClient() && res.status === 500) {
