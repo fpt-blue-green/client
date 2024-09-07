@@ -7,6 +7,7 @@ import Step4 from './step4';
 import Step5 from './step5';
 import Step6 from './step6';
 import Step7 from './step7';
+import influencerRequest from '@/request/influencer.request';
 
 interface CreateProps {
   searchParams?: {
@@ -15,30 +16,34 @@ interface CreateProps {
   };
 }
 
-const Create: FC<CreateProps> = ({ searchParams }) => {
-  if (searchParams) {
-    const { step } = searchParams;
-    switch (step) {
-      case '1':
-        return <Step1 />;
-      case '2':
-        return <Step2 />;
-      case '3':
-        return <Step3 />;
-      case '4':
-        return <Step4 />;
-      case '5':
-        return <Step5 />;
-      case '6':
-        return <Step6 />;
-      case '7':
-        return <Step7 />;
-      default:
-        notFound();
+const Create: FC<CreateProps> = async ({ searchParams }) => {
+  try {
+    if (searchParams) {
+      const { step } = searchParams;
+      switch (step) {
+        case '1':
+          return <Step1 />;
+        case '2':
+          return <Step2 />;
+        case '3':
+          const { data } = await influencerRequest.getChannels();
+          if (!data) return notFound();
+          return <Step3 channels={data} />;
+        case '4':
+          return <Step4 />;
+        case '5':
+          return <Step5 />;
+        case '6':
+          return <Step6 />;
+        case '7':
+          return <Step7 />;
+        default:
+          notFound();
+      }
     }
+  } catch {
+    return notFound();
   }
-
-  return notFound();
 };
 
 export default Create;

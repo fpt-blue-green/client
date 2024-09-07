@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 import routes from './config/routes';
 
 const brandPaths = ['/example'];
-const influencerPaths = ['/account'];
+const influencerPaths = ['/account', '/influencer/create'];
 
 export default withAuth(
   function middleware(req) {
@@ -33,5 +33,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ['/account'],
+  matcher: ['/account', '/influencer/create'],
 };

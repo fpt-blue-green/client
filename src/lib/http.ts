@@ -2,10 +2,12 @@ import { toast } from 'sonner';
 import { constants } from './utils';
 import config from '@/config';
 import { getSession } from 'next-auth/react';
-import { getServerSession } from 'next-auth';
+import { getServerSession, Session } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 type CustomRequest = Omit<RequestInit, 'method'> & {
   baseUrl?: string;
+  noToken?: boolean;
 };
 
 type CustomResponse<T> = {
@@ -26,22 +28,20 @@ const request = async <Response>(
   const body =
     options?.body instanceof FormData ? options.body : options?.body ? JSON.stringify(options?.body) : undefined;
   const baseHeaders: { [key: string]: string } =
-    options?.body instanceof FormData
-      ? {}
-      : {
-          'Content-Type': 'application/json',
-        };
+    options?.body instanceof FormData ? {} : { 'Content-Type': 'application/json' };
 
-  let session;
+  let session: Session | null;
 
-  if (isClient()) {
-    session = await getSession();
-  } else {
-    session = await getServerSession();
-  }
+  if (!options?.noToken) {
+    if (isClient()) {
+      session = await getSession();
+    } else {
+      session = await getServerSession(authOptions);
+    }
 
-  if (session?.user.accessToken) {
-    baseHeaders.Authorization = `Bearer ${session?.user.accessToken}`;
+    if (session?.user.accessToken) {
+      baseHeaders.Authorization = `Bearer ${session?.user.accessToken}`;
+    }
   }
 
   const baseUrl = options?.baseUrl ?? config.env.API_ENDPOINT;
