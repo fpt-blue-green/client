@@ -28,8 +28,6 @@ const ProfileDropdown = () => {
   const { data } = useSession<true>();
   const user = data?.user;
 
-  console.log(user);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
