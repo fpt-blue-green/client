@@ -51,7 +51,10 @@ const ProfileDropdown = () => {
             <>
               <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
               <DropdownMenuItem asChild>
-                <Link href={config.routes.account}>Tài khoản</Link>
+                <Link href={config.routes.influencers.editProfile(user.name)}>Cập nhật thông tin</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={config.routes.account}>Đổi mật khẩu</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => signOut({ callbackUrl: config.routes.home })}>
                 Đăng xuất
