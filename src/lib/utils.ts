@@ -9,6 +9,7 @@ export const constants = {
   sthWentWrong: 'Đã có lỗi xảy ra',
   passwordRegex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^.,])[A-Za-z\d@$!%*?&^.,]{8,}$/,
   phoneRegex: /(84|0[3|5|7|8|9])+([0-9]{8})\b/g,
+  otpRegex: /[0-9]{6}\b/g,
 };
 
 export const formats = {

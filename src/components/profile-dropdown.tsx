@@ -35,7 +35,13 @@ const ProfileDropdown = () => {
           {user ? (
             <Avatar className="size-7">
               {user.image ? (
-                <Image src={user.image || ''} alt="sd" width={28} height={28} />
+                <Image
+                  src={user.image || ''}
+                  alt={`Ảnh đại diện của ${user.name}`}
+                  width={200}
+                  height={200}
+                  className="object-cover"
+                />
               ) : (
                 <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
               )}

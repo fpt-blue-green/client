@@ -76,7 +76,10 @@ export const authOptions: NextAuthOptions = {
       }
       return true; // Trả về true để tiếp tục quá trình đăng nhập
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === 'update') {
+        return { ...token, ...session.user };
+      }
       if (token.accessToken) {
         const decoded = jwtDecode(token.accessToken);
         if (decoded.exp) {
