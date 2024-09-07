@@ -1,20 +1,27 @@
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeftIcon } from '@radix-ui/react-icons';
-import { FaBox, FaCircleInfo, FaNetworkWired, FaPerson, FaRegImages } from 'react-icons/fa6';
+import { ArrowLeftIcon, IdCardIcon } from '@radix-ui/react-icons';
+import { getServerSession } from 'next-auth';
+import { FaBox, FaNetworkWired, FaPerson, FaRegImages } from 'react-icons/fa6';
+import Details from './Details';
+import Link from 'next/link';
+import config from '@/config';
 
-const EditInfluencerProfile = () => {
+const EditInfluencerProfile = async () => {
+  const session = await getServerSession();
   return (
     <div className="container mt-8 mb-16">
       <Button size="medium" variant="ghost">
-        <ArrowLeftIcon />
-        Trở về trang cá nhân
+        <Link href={config.routes.home} className="flex items-center">
+          <ArrowLeftIcon />
+          Trở về trang chủ
+        </Link>
       </Button>
       <h1 className="text-2xl font-semibold mt-6 mb-12">Chỉnh Sửa Thông Tin</h1>
-      <Tabs defaultValue="general">
+      <Tabs defaultValue="details">
         <TabsList className="h-13 mb-8">
           <TabsTrigger value="details" className="py-3 px-10">
-            <FaCircleInfo className="mr-2" />
+            <IdCardIcon className="mr-2" />
             Chi tiết
           </TabsTrigger>
           <TabsTrigger value="socialMedias" className="py-3 px-10">
@@ -34,7 +41,7 @@ const EditInfluencerProfile = () => {
             Hồ sơ
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="details"></TabsContent>
+        <TabsContent value="details">{session?.user && <Details user={session.user} />}</TabsContent>
         <TabsContent value="socialMedias"></TabsContent>
         <TabsContent value="images"></TabsContent>
         <TabsContent value="packages"></TabsContent>

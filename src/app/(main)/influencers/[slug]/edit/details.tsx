@@ -19,7 +19,7 @@ interface GeneralProps {
   user: User;
 }
 
-const General: FC<GeneralProps> = ({ user }) => {
+const Details: FC<GeneralProps> = ({ user }) => {
   const form = useForm<GeneralBodyType>({
     resolver: zodResolver(generalSchema),
     defaultValues: {
@@ -151,4 +151,4 @@ const General: FC<GeneralProps> = ({ user }) => {
     </Form>
   );
 };
-export default General;
+export default Details;
