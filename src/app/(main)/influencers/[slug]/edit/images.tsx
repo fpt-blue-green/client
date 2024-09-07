@@ -2,7 +2,6 @@
 import Paper from '@/components/custom/paper';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-
 import ImageDropdown from './image-dropdown';
 import { UploadIcon } from '@radix-ui/react-icons';
 
