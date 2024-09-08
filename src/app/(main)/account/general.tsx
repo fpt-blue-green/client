@@ -5,7 +5,7 @@ import AvatarUploader from '@/components/avatar-uploader';
 import Paper from '@/components/custom/paper';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import User from '@/types/user';
+import IUser from '@/types/user';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { GeneralBodyType, generalSchema } from '@/schema-validations/influencer.schema';
@@ -16,7 +16,7 @@ import { EGender } from '@/types/enum';
 import { Textarea } from '@/components/ui/textarea';
 
 interface GeneralProps {
-  user: User;
+  user: IUser;
 }
 
 const General: FC<GeneralProps> = ({ user }) => {

@@ -9,7 +9,7 @@ import { ChannelBodyType, channelSchema } from '@/schema-validations/influencer.
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import ProgressHeading from './progress-heading';
-import { Channel } from '@/types/influencer';
+import { IChannel } from '@/types/influencer';
 import { EPlatform } from '@/types/enum';
 import influencerRequest from '@/request/influencer.request';
 import { useRouter } from 'next/navigation';
@@ -17,11 +17,11 @@ import config from '@/config';
 import { toast } from 'sonner';
 import useSWRImmutable from 'swr/immutable';
 import { fetcher } from '@/lib/http';
-import { SocialProfile } from '@/types/utilities';
+import { ISocialProfile } from '@/types/utilities';
 import { useDebounce } from '@/hooks';
 
 interface Step3Props {
-  channels: Channel[];
+  channels: IChannel[];
 }
 
 const Step3: FC<Step3Props> = ({ channels }) => {
@@ -43,21 +43,21 @@ const Step3: FC<Step3Props> = ({ channels }) => {
 
   const debounceCount = useDebounce(count, 500);
 
-  const { data: youtubeSub } = useSWRImmutable<SocialProfile>(
+  const { data: youtubeSub } = useSWRImmutable<ISocialProfile>(
     `/Utility/profile?platform=${EPlatform.YouTube}&channelId=${debounceCount.youtube}`,
     debounceCount.youtube ? fetcher : null,
   );
-  const { data: instagramFlw } = useSWRImmutable<SocialProfile>(
+  const { data: instagramFlw } = useSWRImmutable<ISocialProfile>(
     `/Utility/profile?platform=${EPlatform.Instagram}&channelId=${debounceCount.instagram}`,
     debounceCount.instagram ? fetcher : null,
   );
-  const { data: tiktokFlw } = useSWRImmutable<SocialProfile>(
+  const { data: tiktokFlw } = useSWRImmutable<ISocialProfile>(
     `/Utility/profile?platform=${EPlatform.TitTok}&channelId=${debounceCount.tiktok}`,
     debounceCount.tiktok ? fetcher : null,
   );
 
   const onSubmit = (values: ChannelBodyType) => {
-    const channelData: Channel[] = [];
+    const channelData: IChannel[] = [];
     const mapping: { [key: string]: EPlatform } = {
       youtube: EPlatform.YouTube,
       instagram: EPlatform.Instagram,

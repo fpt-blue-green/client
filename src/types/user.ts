@@ -1,6 +1,6 @@
 import { ERole } from './enum';
 
-type User = {
+interface IUser {
   id: string;
   name: string;
   email: string;
@@ -9,6 +9,6 @@ type User = {
   accessToken: string;
   refreshToken: string;
   error?: string;
-};
+}
 
-export default User;
+export default IUser;

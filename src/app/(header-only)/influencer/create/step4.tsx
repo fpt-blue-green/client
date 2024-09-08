@@ -5,7 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Toggle } from '@/components/ui/toggle';
 import { fetcher } from '@/lib/http';
-import Tag from '@/types/tag';
+import ITag from '@/types/tag';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import useSWRImmutable from 'swr/immutable';
@@ -13,7 +13,7 @@ import ProgressHeading from './progress-heading';
 
 const Step4 = () => {
   const [tags, setTags] = useState<string[]>([]);
-  const { data, isLoading } = useSWRImmutable<Tag[]>('/Tags', fetcher);
+  const { data, isLoading } = useSWRImmutable<ITag[]>('/Tags', fetcher);
 
   const handleToggle = (value: string) => () => {
     if (tags.includes(value)) {
