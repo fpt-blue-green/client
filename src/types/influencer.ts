@@ -1,4 +1,4 @@
-import { EPlatform } from './enum';
+import { EGender, EPlatform } from './enum';
 import ITag from './tag';
 import { ISocialProfile } from './utilities';
 
@@ -31,7 +31,7 @@ interface IInfluencer {
   nickName: string;
   slug: string;
   avatar: string;
-  gender: string;
+  gender: EGender;
   summarise: string;
   description?: string;
   address: string;
@@ -40,6 +40,7 @@ interface IInfluencer {
   modifiedAt: Date;
   rateAverage: number;
   averagePrice: number;
+  isPublish: boolean;
   channels: IChannel[];
   tags: ITag[];
   packages: IPackage[];

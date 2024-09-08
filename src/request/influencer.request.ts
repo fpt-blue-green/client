@@ -1,7 +1,8 @@
 import http from '@/lib/http';
-import { IChannel } from '@/types/influencer';
+import IInfluencer, { IChannel } from '@/types/influencer';
 
 const influencerRequest = {
+  me: () => http.get<IInfluencer>('/Influencer'),
   changeAvatar: (avatar: File) => {
     const formData = new FormData();
     formData.append('file', avatar);

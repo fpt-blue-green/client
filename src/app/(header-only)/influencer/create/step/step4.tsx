@@ -6,12 +6,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Toggle } from '@/components/ui/toggle';
 import { fetcher } from '@/lib/http';
 import ITag from '@/types/tag';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { toast } from 'sonner';
 import useSWRImmutable from 'swr/immutable';
-import ProgressHeading from './progress-heading';
+import DetailStepProps from './props';
 
-const Step4 = () => {
+const Step4: FC<DetailStepProps> = () => {
   const [tags, setTags] = useState<string[]>([]);
   const { data, isLoading } = useSWRImmutable<ITag[]>('/Tags', fetcher);
 
@@ -33,7 +33,6 @@ const Step4 = () => {
 
   return (
     <div className="space-y-10">
-      <ProgressHeading step={4} title="Chọn các thẻ phù hợp với nội dung của bạn" />
       <ScrollArea className="h-[40vh]">
         <div className="grid md:grid-cols-2 grid-cols-1 gap-x-4 gap-y-6">
           {isLoading

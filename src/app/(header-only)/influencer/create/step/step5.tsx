@@ -1,14 +1,14 @@
 'use client';
 
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, FC, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { UploadIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 import clsx from 'clsx';
 import { FaTrashAlt } from 'react-icons/fa';
-import ProgressHeading from './progress-heading';
+import DetailStepProps from './props';
 
-const Step5 = () => {
+const Step5: FC<DetailStepProps> = () => {
   const [images, setImages] = useState<string[]>([]);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -38,7 +38,6 @@ const Step5 = () => {
 
   return (
     <div className="space-y-10">
-      <ProgressHeading step={4} title="Thêm 3 - 10 ảnh về bạn và nội dụng của bạn" />
       <div className="grid md:grid-cols-3 grid-cols-1 gap-2">
         {images.map((img, index) => (
           <div className="relative border rounded-lg overflow-hidden group" key={index}>
