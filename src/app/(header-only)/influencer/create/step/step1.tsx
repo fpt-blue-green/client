@@ -12,21 +12,33 @@ import { EGender } from '@/types/enum';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import DetailStepProps from './props';
+import { influencerRequest } from '@/request';
+import { useRouter } from 'next/navigation';
+import config from '@/config';
+import { toast } from 'sonner';
 
-const Step1: FC<DetailStepProps> = ({ profile }) => {
+const Step1: FC<DetailStepProps> = ({ profile, mutate }) => {
+  const router = useRouter();
   const form = useForm<GeneralBodyType>({
     resolver: zodResolver(generalSchema),
     defaultValues: {
-      name: profile.fullName || '',
+      fullName: profile.fullName || '',
       address: profile.address || '',
-      summarize: profile.summarise || '',
+      summarise: profile.summarise || '',
+      slug: profile.slug || '',
       description: profile.description || '',
       gender: profile.gender || EGender.Male,
     },
   });
 
   const onSubmit = (values: GeneralBodyType) => {
-    console.log(values);
+    influencerRequest
+      .updateGeneralInfo(values)
+      .then(() => {
+        router.push(`${config.routes.influencer.create}?step=2`);
+        mutate();
+      })
+      .catch((err) => toast.error(err.message));
   };
 
   return (
@@ -34,12 +46,25 @@ const Step1: FC<DetailStepProps> = ({ profile }) => {
       <form className="grid md:grid-cols-2 grid-cols-1 gap-x-6 gap-y-8" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
-          name="name"
+          name="fullName"
           render={({ field }) => (
             <FormItem>
-              <Label htmlFor="name">Tên hiển thị</Label>
+              <Label htmlFor="fullName">Tên hiển thị</Label>
               <FormControl>
-                <Input id="name" placeholder="Tên hiển thị" className="w-full" {...field} />
+                <Input id="fullName" placeholder="Tên hiển thị" className="w-full" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="slug"
+          render={({ field }) => (
+            <FormItem>
+              <Label htmlFor="slug">Tên người dùng</Label>
+              <FormControl>
+                <Input id="slug" placeholder="Tóm tắt bản thân" className="w-full" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -85,12 +110,12 @@ const Step1: FC<DetailStepProps> = ({ profile }) => {
         />
         <FormField
           control={form.control}
-          name="summarize"
+          name="summarise"
           render={({ field }) => (
-            <FormItem>
-              <Label htmlFor="summarize">Tóm tắt bản thân</Label>
+            <FormItem className="col-span-full">
+              <Label htmlFor="summarise">Tóm tắt bản thân</Label>
               <FormControl>
-                <Input id="summarize" placeholder="Tóm tắt bản thân" className="w-full" {...field} />
+                <Input id="summarise" placeholder="Tóm tắt bản thân" className="w-full" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

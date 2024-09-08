@@ -1,8 +1,10 @@
 import http from '@/lib/http';
+import { GeneralBodyType } from '@/schema-validations/influencer.schema';
 import IInfluencer, { IChannel } from '@/types/influencer';
 
 const influencerRequest = {
   me: () => http.get<IInfluencer>('/Influencer'),
+  updateGeneralInfo: (body: GeneralBodyType) => http.put<string>('/Influencer', body),
   changeAvatar: (avatar: File) => {
     const formData = new FormData();
     formData.append('file', avatar);
