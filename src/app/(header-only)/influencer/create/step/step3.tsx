@@ -8,8 +8,6 @@ import { Label } from '@/components/ui/label';
 import { ChannelBodyType, channelSchema } from '@/schema-validations/influencer.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import ProgressHeading from '../progress-heading';
-import { IChannel } from '@/types/influencer';
 import { EPlatform } from '@/types/enum';
 import influencerRequest from '@/request/influencer.request';
 import { useRouter } from 'next/navigation';
@@ -21,7 +19,7 @@ import { ISocialProfile } from '@/types/utilities';
 import { useDebounce } from '@/hooks';
 import DetailStepProps from './props';
 
-const Step3: FC<DetailStepProps> = ({ profile }) => {
+const Step3: FC<DetailStepProps> = ({ profile, mutate }) => {
   const router = useRouter();
   const form = useForm<ChannelBodyType>({
     resolver: zodResolver(channelSchema),
@@ -54,7 +52,7 @@ const Step3: FC<DetailStepProps> = ({ profile }) => {
   );
 
   const onSubmit = (values: ChannelBodyType) => {
-    const channelData: IChannel[] = [];
+    const channelData = [];
     const mapping: { [key: string]: EPlatform } = {
       youtube: EPlatform.YouTube,
       instagram: EPlatform.Instagram,
@@ -63,16 +61,24 @@ const Step3: FC<DetailStepProps> = ({ profile }) => {
 
     for (const [key, value] of Object.entries(values)) {
       if (value) {
-        // channelData.push({
-        //   platform: mapping[key],
-        //   userName: value,
-        // });
+        channelData.push({
+          platform: mapping[key],
+          userName: value,
+        });
       }
+    }
+
+    if (channelData.length === 0) {
+      toast.error('Bạn phải thêm ít nhất 1 trang mạng xã hội');
+      return;
     }
 
     influencerRequest
       .updateChannels(channelData)
-      .then(() => router.push(`${config.routes.influencer.create}?step=4`))
+      .then(() => {
+        mutate();
+        router.push(`${config.routes.influencer.create}?step=4`);
+      })
       .catch((err) => toast.error(err.message));
   };
 

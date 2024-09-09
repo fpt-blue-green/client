@@ -1,18 +1,22 @@
 'use client';
 
+import { FC, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Toggle } from '@/components/ui/toggle';
+import config from '@/config';
 import { fetcher } from '@/lib/http';
 import ITag from '@/types/tag';
-import { FC, useState } from 'react';
 import { toast } from 'sonner';
 import useSWRImmutable from 'swr/immutable';
 import DetailStepProps from './props';
+import { influencerRequest } from '@/request';
+import { useRouter } from 'next/navigation';
 
-const Step4: FC<DetailStepProps> = () => {
-  const [tags, setTags] = useState<string[]>([]);
+const Step4: FC<DetailStepProps> = ({ profile, mutate }) => {
+  const router = useRouter();
+  const [tags, setTags] = useState<string[]>(profile.tags.map((t) => t.id));
   const { data, isLoading } = useSWRImmutable<ITag[]>('/Tags', fetcher);
 
   const handleToggle = (value: string) => () => {
@@ -28,7 +32,13 @@ const Step4: FC<DetailStepProps> = () => {
   };
 
   const handleSubmit = () => {
-    console.log(tags);
+    influencerRequest
+      .selectTags(tags)
+      .then(() => {
+        mutate();
+        router.push(`${config.routes.influencer.create}?step=5`);
+      })
+      .catch((err) => toast.error(err.message));
   };
 
   return (

@@ -1,5 +1,6 @@
 import http from '@/lib/http';
 import { GeneralBodyType } from '@/schema-validations/influencer.schema';
+import { EPlatform } from '@/types/enum';
 import IInfluencer, { IChannel } from '@/types/influencer';
 
 const influencerRequest = {
@@ -11,7 +12,9 @@ const influencerRequest = {
     return http.patch<string>('/User/avatar', formData);
   },
   getChannels: () => http.get<IChannel[]>('/Influencer/channelUsername'),
-  updateChannels: (channels: IChannel[]) => http.post('/Influencer/channels', channels),
+  updateChannels: (channels: { platform: EPlatform; userName: string }[]) =>
+    http.post('/Influencer/channels', channels),
+  selectTags: (tags: string[]) => http.post<string>('/Influencer/tags', tags),
 };
 
 export default influencerRequest;

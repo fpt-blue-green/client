@@ -6,7 +6,6 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { AvatarBody, avatarSchema } from '@/schema-validations/user.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import ProgressHeading from '../progress-heading';
 import { useSession } from 'next-auth/react';
 import influencerRequest from '@/request/influencer.request';
 import { useRouter } from 'next/navigation';
@@ -16,7 +15,7 @@ import Link from 'next/link';
 import { FC } from 'react';
 import DetailStepProps from './props';
 
-const Step2: FC<DetailStepProps> = ({ profile }) => {
+const Step2: FC<DetailStepProps> = ({ profile, mutate }) => {
   const { data: session, update } = useSession();
   const router = useRouter();
   const form = useForm<AvatarBody>({
@@ -38,6 +37,7 @@ const Step2: FC<DetailStepProps> = ({ profile }) => {
           },
         });
       }
+      mutate();
       router.push(`${config.routes.influencer.create}?step=3`);
     } catch (err: any) {
       toast.error(err.message);
@@ -69,9 +69,11 @@ const Step2: FC<DetailStepProps> = ({ profile }) => {
         <Button type="submit" variant="gradient" size="large" fullWidth>
           Tiếp tục
         </Button>
-        <Button type="button" variant="link" className="text-muted-foreground" asChild>
-          <Link href={{ pathname: config.routes.influencer.create, query: { step: 3 } }}>Bỏ qua bước này</Link>
-        </Button>
+        {profile.avatar && (
+          <Button type="button" variant="link" className="text-muted-foreground" asChild>
+            <Link href={{ pathname: config.routes.influencer.create, query: { step: 3 } }}>Bỏ qua bước này</Link>
+          </Button>
+        )}
       </form>
     </Form>
   );
