@@ -1,11 +1,13 @@
+import { constants } from '@/lib/utils';
 import { EGender, EPlatform } from '@/types/enum';
 import { z } from 'zod';
 
 export const generalSchema = z
   .object({
-    name: z.string().min(2, 'Vui lòng nhập tên ít nhất 2 kí tự'),
-    summarize: z.string().min(1, 'Vui lòng không để trống phần tóm tắt'),
+    fullName: z.string().min(2, 'Vui lòng nhập tên ít nhất 2 kí tự'),
+    summarise: z.string().min(1, 'Vui lòng không để trống phần tóm tắt'),
     description: z.string().max(255, 'Không nhập quá 255 kí tự').optional(),
+    slug: z.string().min(1, 'Vui lòng nhập tên người dùng').regex(constants.slugRegex, 'Tên người dùng không hợp lệ'),
     address: z.string(),
     gender: z.nativeEnum(EGender),
   })
@@ -20,10 +22,11 @@ export const channelSchema = z
   .strict();
 
 export const packageSchema = z.object({
+  id: z.string().optional(),
   platform: z.nativeEnum(EPlatform, { required_error: 'Chọn nền tảng' }),
   quantity: z.number({ required_error: 'Nhập số lượng' }).int('Nhập giá trị nguyên').min(1, 'Nhập giá trị lớn hơn 0'),
-  type: z.string({ required_error: 'Chọn loại nội dung' }),
-  duration: z.number().int('Nhập giá trị nguyên').min(0, 'Nhập giá trị lớn hơn 0').optional(),
+  contentType: z.number({ required_error: 'Chọn loại nột dung' }),
+  duration: z.number().int('Nhập giá trị nguyên').min(0, 'Nhập giá trị lớn hơn 0').nullable().optional(),
   timeUnit: z.enum(['s', 'm', 'h']).optional(),
   price: z
     .number({ required_error: 'Nhập giá tiền' })
@@ -41,7 +44,7 @@ export const packagesSchema = z
       const seen = new Map<string, number[]>(); // Dùng Map để lưu các vị trí của phần tử
       let hasDuplicates = false;
       data.packages.forEach((pkg, index) => {
-        const key = `${pkg.platform}-${pkg.type}`; // Tạo key để kiểm tra trùng lặp
+        const key = `${pkg.platform}-${pkg.contentType}`; // Tạo key để kiểm tra trùng lặp
 
         if (seen.has(key)) {
           // Nếu đã thấy key này, thêm vị trí (index) vào mảng
@@ -64,7 +67,7 @@ export const packagesSchema = z
     const seen = new Map<string, number[]>();
 
     data.packages.forEach((pkg, index) => {
-      const key = `${pkg.platform}-${pkg.type}`;
+      const key = `${pkg.platform}-${pkg.contentType}`;
 
       if (seen.has(key)) {
         seen.get(key)!.push(index);
@@ -80,7 +83,7 @@ export const packagesSchema = z
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: 'Nội dung bị trùng lặp.',
-            path: ['packages', i, 'type'], // Đường dẫn cụ thể đến lỗi
+            path: ['packages', i, 'contentType'], // Đường dẫn cụ thể đến lỗi
           });
         });
       }

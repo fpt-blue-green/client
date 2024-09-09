@@ -1,19 +1,24 @@
 'use client';
 
+import { FC, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Toggle } from '@/components/ui/toggle';
+import config from '@/config';
 import { fetcher } from '@/lib/http';
-import Tag from '@/types/tag';
-import { useState } from 'react';
+import ITag from '@/types/tag';
 import { toast } from 'sonner';
 import useSWRImmutable from 'swr/immutable';
-import ProgressHeading from './progress-heading';
+import DetailStepProps from './props';
+import { influencerRequest } from '@/request';
+import { useRouter } from 'next/navigation';
 
-const Step4 = () => {
-  const [tags, setTags] = useState<string[]>([]);
-  const { data, isLoading } = useSWRImmutable<Tag[]>('/Tags', fetcher);
+const Step4: FC<DetailStepProps> = ({ profile, mutate }) => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [tags, setTags] = useState<string[]>(profile.tags.map((t) => t.id));
+  const { data, isLoading } = useSWRImmutable<ITag[]>('/Tags', fetcher);
 
   const handleToggle = (value: string) => () => {
     if (tags.includes(value)) {
@@ -28,12 +33,19 @@ const Step4 = () => {
   };
 
   const handleSubmit = () => {
-    console.log(tags);
+    setLoading(true);
+    influencerRequest
+      .selectTags(tags)
+      .then(() => {
+        mutate();
+        router.push(`${config.routes.influencer.create}?step=5`);
+      })
+      .catch((err) => toast.error(err.message))
+      .finally(() => setLoading(false));
   };
 
   return (
     <div className="space-y-10">
-      <ProgressHeading step={4} title="Chọn các thẻ phù hợp với nội dung của bạn" />
       <ScrollArea className="h-[40vh]">
         <div className="grid md:grid-cols-2 grid-cols-1 gap-x-4 gap-y-6">
           {isLoading
@@ -51,7 +63,14 @@ const Step4 = () => {
               ))}
         </div>
       </ScrollArea>
-      <Button variant="gradient" size="large" fullWidth disabled={!tags.length} onClick={handleSubmit}>
+      <Button
+        variant="gradient"
+        size="large"
+        fullWidth
+        disabled={!tags.length}
+        onClick={handleSubmit}
+        loading={loading}
+      >
         Tiếp tục
       </Button>
     </div>

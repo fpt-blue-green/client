@@ -1,4 +1,3 @@
-import { toast } from 'sonner';
 import { constants } from './utils';
 import config from '@/config';
 import { getSession } from 'next-auth/react';
@@ -61,9 +60,6 @@ const request = async <Response>(
     }
 
     if (!res.ok) {
-      if (isClient() && res.status === 500) {
-        toast.error(constants.sthWentWrong);
-      }
       return Promise.reject(data);
     }
 

@@ -4,6 +4,44 @@ export enum EPlatform {
   YouTube,
 }
 
+export enum ETikTokContent {
+  Post = 1,
+  Story,
+  Live,
+}
+
+export enum EInstagramContent {
+  FeedPost = 1,
+  Reel,
+  Story,
+  Live,
+}
+
+export enum EYouTubeContent {
+  Video = 1,
+  Short,
+  Live,
+}
+
+export const ContentDisplayName = {
+  [EPlatform.TitTok]: {
+    [ETikTokContent.Post]: 'bài đăng TikTok',
+    [ETikTokContent.Story]: 'tin TikTok',
+    [ETikTokContent.Live]: 'livestream TikTok',
+  },
+  [EPlatform.Instagram]: {
+    [EInstagramContent.FeedPost]: 'bài đăng ảnh Instagram',
+    [EInstagramContent.Reel]: 'thước phim Instagram',
+    [EInstagramContent.Story]: 'tin Instagram',
+    [EInstagramContent.Live]: 'livestream Instagram',
+  },
+  [EPlatform.YouTube]: {
+    [EYouTubeContent.Video]: 'video YouTube',
+    [EYouTubeContent.Short]: 'video short YouTube',
+    [EYouTubeContent.Live]: 'livestream YouTube',
+  },
+};
+
 export enum ERole {
   Admin = 1,
   Influencer,

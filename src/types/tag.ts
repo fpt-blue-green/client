@@ -1,7 +1,7 @@
-type Tag = {
+interface ITag {
   id: string;
   name: string;
   isPremium: boolean;
-};
+}
 
-export default Tag;
+export default ITag;
