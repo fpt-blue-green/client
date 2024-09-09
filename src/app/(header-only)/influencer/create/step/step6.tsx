@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, FC } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Paper from '@/components/custom/paper';
@@ -23,6 +23,7 @@ import { functions } from '@/lib/utils';
 
 const Step6: FC<DetailStepProps> = ({ profile, mutate }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const form = useForm<PackagesBodyType>({
     resolver: zodResolver(packagesSchema),
     defaultValues: {
@@ -81,13 +82,15 @@ const Step6: FC<DetailStepProps> = ({ profile, mutate }) => {
       return { ...others, duration: finalDuration };
     });
 
+    setLoading(true);
     influencerRequest
       .updatePackages(data)
       .then(() => {
         mutate();
         router.push(`${config.routes.influencer.create}?step=7`);
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => toast.error(err.message))
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -267,7 +270,7 @@ const Step6: FC<DetailStepProps> = ({ profile, mutate }) => {
           <PlusCircledIcon className="size-6" />
           Thêm Gói
         </div>
-        <Button type="submit" size="large" variant="gradient" fullWidth className="col-span-full">
+        <Button type="submit" size="large" variant="gradient" fullWidth className="col-span-full" loading={loading}>
           Tiếp tục
         </Button>
       </form>

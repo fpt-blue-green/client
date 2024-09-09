@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 
 const Step4: FC<DetailStepProps> = ({ profile, mutate }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState<string[]>(profile.tags.map((t) => t.id));
   const { data, isLoading } = useSWRImmutable<ITag[]>('/Tags', fetcher);
 
@@ -32,13 +33,15 @@ const Step4: FC<DetailStepProps> = ({ profile, mutate }) => {
   };
 
   const handleSubmit = () => {
+    setLoading(true);
     influencerRequest
       .selectTags(tags)
       .then(() => {
         mutate();
         router.push(`${config.routes.influencer.create}?step=5`);
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => toast.error(err.message))
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -60,7 +63,14 @@ const Step4: FC<DetailStepProps> = ({ profile, mutate }) => {
               ))}
         </div>
       </ScrollArea>
-      <Button variant="gradient" size="large" fullWidth disabled={!tags.length} onClick={handleSubmit}>
+      <Button
+        variant="gradient"
+        size="large"
+        fullWidth
+        disabled={!tags.length}
+        onClick={handleSubmit}
+        loading={loading}
+      >
         Tiếp tục
       </Button>
     </div>

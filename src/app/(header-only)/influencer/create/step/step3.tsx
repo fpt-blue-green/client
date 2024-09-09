@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -21,6 +21,7 @@ import DetailStepProps from './props';
 
 const Step3: FC<DetailStepProps> = ({ profile, mutate }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const form = useForm<ChannelBodyType>({
     resolver: zodResolver(channelSchema),
     defaultValues: {
@@ -73,13 +74,15 @@ const Step3: FC<DetailStepProps> = ({ profile, mutate }) => {
       return;
     }
 
+    setLoading(true);
     influencerRequest
       .updateChannels(channelData)
       .then(() => {
         mutate();
         router.push(`${config.routes.influencer.create}?step=4`);
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => toast.error(err.message))
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -178,7 +181,7 @@ const Step3: FC<DetailStepProps> = ({ profile, mutate }) => {
             />
           </div>
         </div>
-        <Button type="submit" variant="gradient" size="large" fullWidth>
+        <Button type="submit" variant="gradient" size="large" fullWidth loading={loading}>
           Tiếp tục
         </Button>
       </form>

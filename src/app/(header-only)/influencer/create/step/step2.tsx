@@ -12,11 +12,12 @@ import { useRouter } from 'next/navigation';
 import config from '@/config';
 import { toast } from 'sonner';
 import Link from 'next/link';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import DetailStepProps from './props';
 
 const Step2: FC<DetailStepProps> = ({ profile, mutate }) => {
   const { data: session, update } = useSession();
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const form = useForm<AvatarBody>({
     resolver: zodResolver(avatarSchema),
@@ -26,6 +27,7 @@ const Step2: FC<DetailStepProps> = ({ profile, mutate }) => {
 
   const onSubmit = async (values: AvatarBody) => {
     const avatar = values.avatar[0];
+    setLoading(true);
     try {
       const res = await influencerRequest.changeAvatar(avatar);
       if (res.data) {
@@ -41,6 +43,8 @@ const Step2: FC<DetailStepProps> = ({ profile, mutate }) => {
       router.push(`${config.routes.influencer.create}?step=3`);
     } catch (err: any) {
       toast.error(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,7 +70,7 @@ const Step2: FC<DetailStepProps> = ({ profile, mutate }) => {
             )}
           />
         )}
-        <Button type="submit" variant="gradient" size="large" fullWidth>
+        <Button type="submit" variant="gradient" size="large" fullWidth loading={loading}>
           Tiếp tục
         </Button>
         {profile.avatar && (

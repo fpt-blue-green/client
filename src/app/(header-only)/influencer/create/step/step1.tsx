@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -19,6 +19,7 @@ import { toast } from 'sonner';
 
 const Step1: FC<DetailStepProps> = ({ profile, mutate }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const form = useForm<GeneralBodyType>({
     resolver: zodResolver(generalSchema),
     defaultValues: {
@@ -32,13 +33,15 @@ const Step1: FC<DetailStepProps> = ({ profile, mutate }) => {
   });
 
   const onSubmit = (values: GeneralBodyType) => {
+    setLoading(true);
     influencerRequest
       .updateGeneralInfo(values)
       .then(() => {
         router.push(`${config.routes.influencer.create}?step=2`);
         mutate();
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => toast.error(err.message))
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -134,7 +137,7 @@ const Step1: FC<DetailStepProps> = ({ profile, mutate }) => {
             </FormItem>
           )}
         />
-        <Button type="submit" size="large" variant="gradient" fullWidth className="md:col-span-2">
+        <Button type="submit" size="large" variant="gradient" fullWidth className="md:col-span-2" loading={loading}>
           Tiếp tục
         </Button>
       </form>
