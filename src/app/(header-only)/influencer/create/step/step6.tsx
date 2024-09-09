@@ -13,7 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Cross2Icon, PlusCircledIcon } from '@radix-ui/react-icons';
 import { toast } from 'sonner';
 import clsx from 'clsx';
-import { ContentDisplayName, EPlatform } from '@/types/enum';
+import { EPlatform, PlatformData } from '@/types/enum';
 import { RiInstagramFill, RiTiktokFill, RiYoutubeFill } from 'react-icons/ri';
 import DetailStepProps from './props';
 import { influencerRequest } from '@/request';
@@ -165,8 +165,8 @@ const Step6: FC<DetailStepProps> = ({ profile, mutate }) => {
                           <SelectValue placeholder="Loại" />
                         </SelectTrigger>
                         <SelectContent>
-                          {ContentDisplayName[platform] &&
-                            Object.entries(ContentDisplayName[platform]).map(([key, value]) => (
+                          {PlatformData[platform] &&
+                            Object.entries(PlatformData[platform].contentTypes).map(([key, value]) => (
                               <SelectItem key={key} value={key}>
                                 {value}
                               </SelectItem>

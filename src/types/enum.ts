@@ -1,3 +1,5 @@
+import { RiInstagramFill, RiTiktokFill, RiYoutubeFill } from 'react-icons/ri';
+
 export enum EPlatform {
   TitTok = 1,
   Instagram,
@@ -23,22 +25,37 @@ export enum EYouTubeContent {
   Live,
 }
 
-export const ContentDisplayName = {
+export const PlatformData = {
   [EPlatform.TitTok]: {
-    [ETikTokContent.Post]: 'bài đăng TikTok',
-    [ETikTokContent.Story]: 'tin TikTok',
-    [ETikTokContent.Live]: 'livestream TikTok',
+    name: 'TikTok',
+    Icon: RiTiktokFill,
+    url: 'https://www.tiktok.com/@',
+    contentTypes: {
+      [ETikTokContent.Post]: 'bài đăng TikTok',
+      [ETikTokContent.Story]: 'tin TikTok',
+      [ETikTokContent.Live]: 'livestream TikTok',
+    },
   },
   [EPlatform.Instagram]: {
-    [EInstagramContent.FeedPost]: 'bài đăng ảnh Instagram',
-    [EInstagramContent.Reel]: 'thước phim Instagram',
-    [EInstagramContent.Story]: 'tin Instagram',
-    [EInstagramContent.Live]: 'livestream Instagram',
+    name: 'Instagram',
+    Icon: RiInstagramFill,
+    url: 'https://www.instagram.com/',
+    contentTypes: {
+      [EInstagramContent.FeedPost]: 'bài đăng ảnh Instagram',
+      [EInstagramContent.Reel]: 'thước phim Instagram',
+      [EInstagramContent.Story]: 'tin Instagram',
+      [EInstagramContent.Live]: 'livestream Instagram',
+    },
   },
   [EPlatform.YouTube]: {
-    [EYouTubeContent.Video]: 'video YouTube',
-    [EYouTubeContent.Short]: 'video short YouTube',
-    [EYouTubeContent.Live]: 'livestream YouTube',
+    name: 'YouTube',
+    Icon: RiYoutubeFill,
+    url: 'https://www.youtube.com/',
+    contentTypes: {
+      [EYouTubeContent.Video]: 'video YouTube',
+      [EYouTubeContent.Short]: 'video short YouTube',
+      [EYouTubeContent.Live]: 'livestream YouTube',
+    },
   },
 };
 
