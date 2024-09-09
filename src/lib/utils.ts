@@ -18,6 +18,23 @@ export const formats = {
     const finalPrice = price - price * discount * 100;
     return finalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   },
+  bigNum: (value: number | string) => {
+    if (value === '' || value === undefined || value === null) return '';
+    const numberValue = typeof value === 'string' ? parseFloat(value) : value;
+    return numberValue.toLocaleString('vi-VN'); // Định dạng số với dấu phân cách
+  },
+};
+
+export const functions = {
+  convertSecondsToTime: (seconds: number): { value: number; unit: 'h' | 'm' | 's' } => {
+    if (seconds % 3600 === 0) {
+      return { value: seconds / 3600, unit: 'h' };
+    } else if (seconds % 60 === 0) {
+      return { value: seconds / 60, unit: 'm' };
+    } else {
+      return { value: seconds, unit: 's' };
+    }
+  },
 };
 
 export const estimateFollowers = (followers: number): string => {

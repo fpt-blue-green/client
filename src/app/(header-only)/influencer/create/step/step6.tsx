@@ -13,15 +13,30 @@ import { Textarea } from '@/components/ui/textarea';
 import { Cross2Icon, PlusCircledIcon } from '@radix-ui/react-icons';
 import { toast } from 'sonner';
 import clsx from 'clsx';
-import { EPlatform } from '@/types/enum';
+import { ContentDisplayName, EPlatform } from '@/types/enum';
 import { RiInstagramFill, RiTiktokFill, RiYoutubeFill } from 'react-icons/ri';
 import DetailStepProps from './props';
+import { influencerRequest } from '@/request';
+import { useRouter } from 'next/navigation';
+import config from '@/config';
+import { functions } from '@/lib/utils';
 
-const Step6: FC<DetailStepProps> = () => {
+const Step6: FC<DetailStepProps> = ({ profile, mutate }) => {
+  const router = useRouter();
   const form = useForm<PackagesBodyType>({
     resolver: zodResolver(packagesSchema),
     defaultValues: {
-      packages: [{ timeUnit: 's' }],
+      packages: profile.packages.map((p) => {
+        let timeUnit: 's' | 'm' | 'h' = 's';
+        let duration: number | undefined = undefined;
+        if (p.duration) {
+          const result = functions.convertSecondsToTime(p.duration);
+          timeUnit = result.unit;
+          duration = result.value;
+        }
+        p.description = p.description || undefined;
+        return { ...p, timeUnit, duration };
+      }),
     },
   });
 
@@ -58,7 +73,21 @@ const Step6: FC<DetailStepProps> = () => {
       toast.error('Bạn phải thêm ít nhất một gói');
       return;
     }
-    console.log(values);
+
+    const data: PackagesBodyType['packages'] = values.packages.map((p) => {
+      const { duration, timeUnit, ...others } = p;
+      const unit = timeUnit === 's' ? 1 : timeUnit === 'm' ? 60 : 3600;
+      const finalDuration = duration ? duration * unit : undefined;
+      return { ...others, duration: finalDuration };
+    });
+
+    influencerRequest
+      .updatePackages(data)
+      .then(() => {
+        mutate();
+        router.push(`${config.routes.influencer.create}?step=7`);
+      })
+      .catch((err) => toast.error(err.message));
   };
 
   return (
@@ -122,24 +151,30 @@ const Step6: FC<DetailStepProps> = () => {
             />
             <FormField
               control={form.control}
-              name={`packages.${index}.type`}
-              render={({ field }) => (
-                <FormItem className="col-span-2">
-                  <FormControl>
-                    <Select onValueChange={(value) => field.onChange(value)} value={field.value || ''}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Loại" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1">bài đăng ảnh Instagram</SelectItem>
-                        <SelectItem value="2">video TikTok</SelectItem>
-                        <SelectItem value="3">video YouTube Short</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              name={`packages.${index}.contentType`}
+              render={({ field }) => {
+                const platform = form.watch(`packages.${index}.platform`);
+                return (
+                  <FormItem className="col-span-2">
+                    <FormControl>
+                      <Select onValueChange={(value) => field.onChange(+value)} value={field.value?.toString() || ''}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Loại" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {ContentDisplayName[platform] &&
+                            Object.entries(ContentDisplayName[platform]).map(([key, value]) => (
+                              <SelectItem key={key} value={key}>
+                                {value}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
             <FormField
               control={form.control}

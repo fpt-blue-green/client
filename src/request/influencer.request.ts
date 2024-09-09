@@ -1,5 +1,5 @@
 import http from '@/lib/http';
-import { GeneralBodyType } from '@/schema-validations/influencer.schema';
+import { GeneralBodyType, PackagesBodyType } from '@/schema-validations/influencer.schema';
 import { EPlatform } from '@/types/enum';
 import IInfluencer, { IChannel } from '@/types/influencer';
 
@@ -15,6 +15,7 @@ const influencerRequest = {
   updateChannels: (channels: { platform: EPlatform; userName: string }[]) =>
     http.post('/Influencer/channels', channels),
   selectTags: (tags: string[]) => http.post<string>('/Influencer/tags', tags),
+  updatePackages: (packages: PackagesBodyType['packages']) => http.post('/Influencer/packages', packages),
 };
 
 export default influencerRequest;
