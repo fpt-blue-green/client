@@ -1,17 +1,14 @@
 import { FC } from 'react';
-import { person } from './constant';
 import Packages from './packages';
 import InfluencerList from '@/components/influencer-list';
 import Image from 'next/image';
-import { LuInstagram, LuYoutube } from 'react-icons/lu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { estimateFollowers } from '@/lib/utils';
 import { LuHeart, LuShare } from 'react-icons/lu';
 import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button';
-import { EPlatform, PlatformData } from '@/types/enum';
-import { RiTiktokLine } from 'react-icons/ri';
+import { PlatformData } from '@/types/enum';
 import Tooltip from '@/components/custom/tooltip';
 import { influencersRequest } from '@/request';
 import { notFound } from 'next/navigation';
@@ -97,7 +94,7 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
               <p className="mb-2 mt-1 text-muted-foreground text-sm">{influencer.address}</p>
               <div className="flex flex-wrap items-center gap-2">
                 {influencer.channels?.map((channel) => {
-                  const platform = PlatformData[3];
+                  const platform = PlatformData[channel.platform];
                   const Icon = platform.Icon;
                   return (
                     <div key={channel.id} className="flex items-center gap-2 border rounded-sm px-2 py-1 w-max">
@@ -118,7 +115,7 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
           <p className="mt-4 text-sm md:text-base">{influencer.description}</p>
         </div>
       </div>
-      <Packages />
+      <Packages data={influencer.packages} />
       <InfluencerList className="mt-20" title="Những người nổi tiếng tương tự" />
     </div>
   );

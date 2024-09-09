@@ -1,3 +1,4 @@
+import { IconType } from 'react-icons/lib';
 import { RiInstagramFill, RiTiktokFill, RiYoutubeFill } from 'react-icons/ri';
 
 export enum EPlatform {
@@ -25,7 +26,16 @@ export enum EYouTubeContent {
   Live,
 }
 
-export const PlatformData = {
+interface IPlatformDetail {
+  name: string;
+  Icon: IconType;
+  url: string;
+  contentTypes: Record<number, string>;
+}
+
+type IPlatformData = Record<EPlatform, IPlatformDetail>;
+
+export const PlatformData: IPlatformData = {
   [EPlatform.TitTok]: {
     name: 'TikTok',
     Icon: RiTiktokFill,
