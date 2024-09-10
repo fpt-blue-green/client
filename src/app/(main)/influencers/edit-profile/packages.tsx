@@ -20,7 +20,7 @@ interface IPackagesProps {
   influencer: string;
 }
 
-const Packages: FC<> = (props) => {
+const Packages: FC<IPackagesProps[]> = (props) => {
   const {} = props;
   return (
     <Paper>

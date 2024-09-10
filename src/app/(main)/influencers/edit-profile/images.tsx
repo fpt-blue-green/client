@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import ImageDropdown from './image-dropdown';
 import { UploadIcon } from '@radix-ui/react-icons';
+import { RiCloseCircleFill } from 'react-icons/ri';
 
 interface IInfluencerImagesModel {
   id: string;
@@ -18,6 +19,7 @@ interface IInfluencerImagesModel {
 const ImageGallery = () => {
   const handleUploadImage = () => {};
 
+  const handleDelete = () => {};
   return (
     <Paper>
       <div className="flex justify-between items-center mb-8">
@@ -29,11 +31,11 @@ const ImageGallery = () => {
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
         {influencerImages.map((img) => (
           <div key={img.id} className="min-w-40 min-h-40 relative">
             <Image className="w-full rounded-md" src={img.url} width={160} height={160} alt={'User Image'} />
-            <ImageDropdown url={img.url} />
+            <RiCloseCircleFill className="absolute top-2 right-2 cursor-pointer" onClick={handleDelete} />
           </div>
         ))}
       </div>
