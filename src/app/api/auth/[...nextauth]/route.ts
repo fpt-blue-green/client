@@ -4,19 +4,6 @@ import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
 import config from '@/config';
 import { authRequest } from '@/request';
-import { jwtDecode } from 'jwt-decode';
-import { JWT } from 'next-auth/jwt';
-
-const refreshAccessToken = async (token: JWT) => {
-  const res = await authRequest.refreshToken(token.refreshToken);
-  const { accessToken, refreshToken } = res.data;
-
-  return {
-    ...token,
-    accessToken,
-    refreshToken,
-  };
-};
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -79,19 +66,6 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, trigger, session }) {
       if (trigger === 'update') {
         return { ...token, ...session.user };
-      }
-      if (token.accessToken) {
-        const decoded = jwtDecode(token.accessToken);
-        if (decoded.exp) {
-          if (decoded.exp * 1000 - Date.now() < 180_000) {
-            try {
-              const data = await refreshAccessToken(token);
-              return { ...data, user };
-            } catch {
-              return { ...token, ...user, error: 'RefreshAccessTokenError' };
-            }
-          }
-        }
       }
 
       return { ...token, ...user };
