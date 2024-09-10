@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { UploadIcon } from '@radix-ui/react-icons';
 import { RiCloseCircleFill } from 'react-icons/ri';
+import { Input } from '@/components/ui/input';
+import { ChangeEvent, useRef, useState } from 'react';
 
 interface IInfluencerImagesModel {
   id: string;
@@ -12,7 +14,24 @@ interface IInfluencerImagesModel {
 }
 
 const ImageGallery = () => {
-  const handleUploadImage = () => {};
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [url, setUrl] = useState<string>('');
+
+  console.log(url);
+
+  const handleUploadImage = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleOnChangeImage = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setUrl(imageUrl);
+    }
+  };
 
   const handleDelete = () => {};
   return (
@@ -22,6 +41,13 @@ const ImageGallery = () => {
         <div className="flex justify-between items-center">
           <Button onClick={handleUploadImage} variant="gradient" className=" font-bold">
             <UploadIcon />
+            <Input
+              type="file"
+              accept="image/jpeg,image/png,image/gif"
+              className="hidden"
+              ref={fileInputRef}
+              onChange={handleOnChangeImage}
+            />
             Thêm ảnh
           </Button>
         </div>
