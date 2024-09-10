@@ -26,7 +26,7 @@ const RefreshProvider: FC<Readonly<AuthProviderProps>> = ({ children }) => {
     const decoded = jwtDecode(user.accessToken);
     if (decoded.exp) {
       // Token còn dưới 2.5 phút thì refresh
-      if (decoded.exp * 1000 - Date.now() < 860_000) {
+      if (decoded.exp * 1000 - Date.now() < 180_000) {
         try {
           const { data } = await authRequest.refreshToken(user.refreshToken);
           if (data) {

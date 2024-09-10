@@ -16,6 +16,12 @@ const influencerRequest = {
     http.post('/Influencer/channels', channels),
   selectTags: (tags: string[]) => http.post<string>('/Influencer/tags', tags),
   updatePackages: (packages: PackagesBodyType['packages']) => http.post('/Influencer/packages', packages),
+  uploadImages: (imageIds: string[], images: File[]) => {
+    const formData = new FormData();
+    imageIds.forEach((id) => formData.append('imageIds', id));
+    images.forEach((image) => formData.append('images', image));
+    return http.post<string[]>('/Influencer/images', formData);
+  },
 };
 
 export default influencerRequest;
