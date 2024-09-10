@@ -5,7 +5,7 @@ import { getServerSession } from 'next-auth';
 import { FaBox, FaNetworkWired, FaRegImages } from 'react-icons/fa6';
 import Link from 'next/link';
 import config from '@/config';
-// import ImageGallery from './images';
+import ImageGallery from './images';
 import Details from './details';
 // import Packages from './packages';
 
@@ -39,9 +39,9 @@ const EditInfluencerProfile = async () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="details">{session?.user && <Details user={session.user} />}</TabsContent>
-        {/* <TabsContent value="images">
+        <TabsContent value="images">
           <ImageGallery />
-        </TabsContent> */}
+        </TabsContent>
         <TabsContent value="socialMedias"></TabsContent>
         <TabsContent value="packages">{/* <Packages /> */}</TabsContent>
       </Tabs>
