@@ -13,9 +13,8 @@ const EditInfluencerProfile = async () => {
   const session = await getServerSession();
   return (
     <div className="container mt-8 mb-16">
-      <Button size="medium" variant="ghost">
+      <Button size="medium" variant="ghost" asChild startIcon={<ArrowLeftIcon />}>
         <Link href={config.routes.home} className="flex items-center">
-          <ArrowLeftIcon />
           Trở về trang chủ
         </Link>
       </Button>

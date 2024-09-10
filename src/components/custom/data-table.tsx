@@ -9,9 +9,10 @@ import { FaEdit } from 'react-icons/fa';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  isHideButtons?: boolean;
 }
 
-const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) => {
+const DataTable = <TData, TValue>({ columns, data, isHideButtons = false }: DataTableProps<TData, TValue>) => {
   const table = useReactTable({
     data,
     columns,
@@ -21,17 +22,19 @@ const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValu
   return (
     <div>
       <div className="flex items-center justify-between py-4">
-        <div className="flex items-center">
-          <Button variant="ghost">
-            <FaPlus /> Thêm
-          </Button>
-          <Button variant="ghost">
-            <FaEdit /> Chỉnh sửa
-          </Button>
-          <Button variant="ghost">
-            <FaTrash /> Xoá
-          </Button>
-        </div>
+        {!isHideButtons && (
+          <div className="flex items-center">
+            <Button variant="ghost">
+              <FaPlus /> Thêm
+            </Button>
+            <Button variant="ghost">
+              <FaEdit /> Chỉnh sửa
+            </Button>
+            <Button variant="ghost">
+              <FaTrash /> Xoá
+            </Button>
+          </div>
+        )}
         <Input
           placeholder="Tìm kiếm mã gói..."
           value={(table.getColumn('id')?.getFilterValue() as string) ?? ''}
