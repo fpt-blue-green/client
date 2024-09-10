@@ -79,7 +79,7 @@ const Step3: FC<DetailStepProps> = ({ profile, mutate }) => {
       .updateChannels(channelData)
       .then(() => {
         mutate();
-        router.push(`${config.routes.influencer.create}?step=4`);
+        router.push(config.routes.influencer.create(4));
       })
       .catch((err) => toast.error(err.message))
       .finally(() => setLoading(false));

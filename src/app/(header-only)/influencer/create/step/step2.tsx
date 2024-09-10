@@ -40,7 +40,7 @@ const Step2: FC<DetailStepProps> = ({ profile, mutate }) => {
         });
       }
       mutate();
-      router.push(`${config.routes.influencer.create}?step=3`);
+      router.push(config.routes.influencer.create(3));
     } catch (err: any) {
       toast.error(err.message);
     } finally {
@@ -75,7 +75,7 @@ const Step2: FC<DetailStepProps> = ({ profile, mutate }) => {
         </Button>
         {profile.avatar && (
           <Button type="button" variant="link" className="text-muted-foreground" asChild>
-            <Link href={{ pathname: config.routes.influencer.create, query: { step: 3 } }}>Bỏ qua bước này</Link>
+            <Link href={config.routes.influencer.create(3)}>Bỏ qua bước này</Link>
           </Button>
         )}
       </form>

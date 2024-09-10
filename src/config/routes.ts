@@ -5,7 +5,7 @@ const routes = {
   account: '/account',
   influencer: {
     base: '/influencer',
-    create: '/influencer/create',
+    create: (step: number) => `/influencer/create?step=${step}`,
   },
   influencers: {
     base: '/influencers',

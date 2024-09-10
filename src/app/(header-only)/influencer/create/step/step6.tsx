@@ -87,7 +87,7 @@ const Step6: FC<DetailStepProps> = ({ profile, mutate }) => {
       .updatePackages(data)
       .then(() => {
         mutate();
-        router.push(`${config.routes.influencer.create}?step=7`);
+        router.push(config.routes.influencer.create(7));
       })
       .catch((err) => toast.error(err.message))
       .finally(() => setLoading(false));
