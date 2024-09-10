@@ -8,6 +8,7 @@ import config from '@/config';
 import ImageGallery from './images';
 import Details from './details';
 import Packages from './packages';
+import SocialMedias from './social-medias';
 
 const EditInfluencerProfile = async () => {
   const session = await getServerSession();
@@ -42,7 +43,9 @@ const EditInfluencerProfile = async () => {
         <TabsContent value="images">
           <ImageGallery />
         </TabsContent>
-        <TabsContent value="socialMedias"></TabsContent>
+        <TabsContent value="socialMedias">
+          <SocialMedias />
+        </TabsContent>
         <TabsContent value="packages">
           <Packages />
         </TabsContent>
