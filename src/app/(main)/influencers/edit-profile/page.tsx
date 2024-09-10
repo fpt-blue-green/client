@@ -2,11 +2,11 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowLeftIcon, IdCardIcon } from '@radix-ui/react-icons';
 import { getServerSession } from 'next-auth';
-import { FaBox, FaNetworkWired, FaPerson, FaRegImages } from 'react-icons/fa6';
+import { FaBox, FaNetworkWired, FaRegImages } from 'react-icons/fa6';
 import Link from 'next/link';
 import config from '@/config';
 // import ImageGallery from './images';
-// import Details from './details';
+import Details from './details';
 // import Packages from './packages';
 
 const EditInfluencerProfile = async () => {
@@ -38,8 +38,10 @@ const EditInfluencerProfile = async () => {
             Các gói
           </TabsTrigger>
         </TabsList>
-        {/* <TabsContent value="details">{session?.user && <Details user={session.user} />}</TabsContent> */}
-        <TabsContent value="images">{/* <ImageGallery /> */}</TabsContent>
+        <TabsContent value="details">{session?.user && <Details user={session.user} />}</TabsContent>
+        {/* <TabsContent value="images">
+          <ImageGallery />
+        </TabsContent> */}
         <TabsContent value="socialMedias"></TabsContent>
         <TabsContent value="packages">{/* <Packages /> */}</TabsContent>
       </Tabs>
