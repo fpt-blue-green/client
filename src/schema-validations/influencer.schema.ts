@@ -35,6 +35,12 @@ export const packageSchema = z.object({
   description: z.string().optional(),
 });
 
+export const imageSchema = z.object({
+  id: z.string().optional(),
+  url: z.string().min(1, 'Vui lòng không để trống đường dẫn ảnh'),
+  description: z.string().max(255, 'Không nhập quá 255 kí tự').optional(),
+});
+
 export const packagesSchema = z
   .object({
     packages: z.array(packageSchema),
@@ -93,3 +99,4 @@ export const packagesSchema = z
 export type GeneralBodyType = z.infer<typeof generalSchema>;
 export type ChannelBodyType = z.infer<typeof channelSchema>;
 export type PackagesBodyType = z.infer<typeof packagesSchema>;
+export type ImageSchemaType = z.infer<typeof imageSchema>;
