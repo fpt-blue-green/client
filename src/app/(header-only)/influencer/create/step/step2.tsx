@@ -39,8 +39,7 @@ const Step2: FC<DetailStepProps> = ({ profile, mutate }) => {
           },
         });
       }
-      mutate();
-      router.push(config.routes.influencer.create(3));
+      mutate().then(() => router.push(config.routes.influencer.create(3)));
     } catch (err: any) {
       toast.error(err.message);
     } finally {

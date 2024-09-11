@@ -11,7 +11,7 @@ const authRequest = {
   forgotPassword: (body: ForgotPasswordBodyType) => http.put('/Auth/forgotPass', body, { noToken: true }),
   logout: (refreshToken: string) => http.post('/Auth/logout', { token: refreshToken }, { noToken: true }),
   verify: (action: EVerifyAction, token: string) =>
-    http.get(`/Auth/verify?action=${action}&token=${token}`, { noToken: true }),
+    http.post<boolean>('/Auth/verify', { action, token }, { noToken: true }),
 };
 
 export default authRequest;
