@@ -10,21 +10,14 @@ const Account = async () => {
   return (
     <div className="container my-8">
       <h1 className="text-2xl font-semibold mb-7">Tài khoản</h1>
-      <Tabs defaultValue="general">
+      <Tabs defaultValue="security">
         <TabsList className="h-13 mb-8">
-          <TabsTrigger value="general" className="py-3 px-10">
-            <IdCardIcon className="mr-2" />
-            Chung
-          </TabsTrigger>
           <TabsTrigger value="security" className="py-3 px-10">
             <LockClosedIcon className="mr-2" />
             Bảo mật
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="general">{session?.user && <General user={session.user} />}</TabsContent>
-        <TabsContent value="security">
-          <Security />
-        </TabsContent>
+        <TabsContent value="security">{session?.user && <Security />}</TabsContent>
       </Tabs>
     </div>
   );
