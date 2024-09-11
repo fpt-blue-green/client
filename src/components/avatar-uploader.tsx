@@ -88,7 +88,7 @@ const AvatarUploader: ForwardRefRenderFunction<HTMLInputElement, AvatarUploaderP
             )}
           >
             <CameraIcon width={24} height={24} />
-            <span className="text-xs">Tải ảnh lên</span>
+            <span className="text-xs">Tải ảnh mới</span>
           </label>
         </div>
       </div>
