@@ -5,10 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ChannelBodyType, channelSchema } from '@/schema-validations/influencer.schema';
+import { ChannelsBodyType, channelsSchema } from '@/schema-validations/influencer.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { EPlatform } from '@/types/enum';
+import { useFieldArray, useForm, UseFormReturn } from 'react-hook-form';
+import { EPlatform, PlatformData } from '@/types/enum';
 import influencerRequest from '@/request/influencer.request';
 import { useRouter } from 'next/navigation';
 import config from '@/config';
@@ -18,65 +18,37 @@ import { fetcher } from '@/lib/http';
 import { ISocialProfile } from '@/types/utilities';
 import { useDebounce } from '@/hooks';
 import DetailStepProps from './props';
+import Link from 'next/link';
+import { Cross2Icon } from '@radix-ui/react-icons';
 
 const Step3: FC<DetailStepProps> = ({ profile, mutate }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const form = useForm<ChannelBodyType>({
-    resolver: zodResolver(channelSchema),
+  const form = useForm<ChannelsBodyType>({
+    resolver: zodResolver(channelsSchema),
     defaultValues: {
-      youtube: profile.channels.find((c) => c.platform === EPlatform.YouTube)?.userName || '',
-      instagram: profile.channels.find((c) => c.platform === EPlatform.Instagram)?.userName || '',
-      tiktok: profile.channels.find((c) => c.platform === EPlatform.TitTok)?.userName || '',
+      channels: Object.entries(PlatformData).map(([key]) => {
+        const platform = +key as unknown as EPlatform;
+        const channel = profile.channels.find((c) => c.platform === platform);
+        return {
+          id: channel?.id,
+          platform,
+          userName: channel?.userName || '',
+          show: profile.channels.some((c) => c.platform === platform),
+        };
+      }),
     },
   });
 
-  const count = {
-    youtube: form.watch('youtube'),
-    instagram: form.watch('instagram'),
-    tiktok: form.watch('tiktok'),
-  };
+  const { fields } = useFieldArray({
+    control: form.control,
+    name: 'channels',
+  });
 
-  const debounceCount = useDebounce(count, 500);
-
-  const { data: youtubeSub } = useSWRImmutable<ISocialProfile>(
-    `/Utility/profile?platform=${EPlatform.YouTube}&channelId=${debounceCount.youtube}`,
-    debounceCount.youtube ? fetcher : null,
-  );
-  const { data: instagramFlw } = useSWRImmutable<ISocialProfile>(
-    `/Utility/profile?platform=${EPlatform.Instagram}&channelId=${debounceCount.instagram}`,
-    debounceCount.instagram ? fetcher : null,
-  );
-  const { data: tiktokFlw } = useSWRImmutable<ISocialProfile>(
-    `/Utility/profile?platform=${EPlatform.TitTok}&channelId=${debounceCount.tiktok}`,
-    debounceCount.tiktok ? fetcher : null,
-  );
-
-  const onSubmit = (values: ChannelBodyType) => {
-    const channelData = [];
-    const mapping: { [key: string]: EPlatform } = {
-      youtube: EPlatform.YouTube,
-      instagram: EPlatform.Instagram,
-      tiktok: EPlatform.TitTok,
-    };
-
-    for (const [key, value] of Object.entries(values)) {
-      if (value) {
-        channelData.push({
-          platform: mapping[key],
-          userName: value,
-        });
-      }
-    }
-
-    if (channelData.length === 0) {
-      toast.error('Bạn phải thêm ít nhất 1 trang mạng xã hội');
-      return;
-    }
-
+  const onSubmit = (values: ChannelsBodyType) => {
     setLoading(true);
     influencerRequest
-      .updateChannels(channelData)
+      .updateChannels(values.channels.filter((c) => c.show))
       .then(() => {
         mutate();
         router.push(config.routes.influencer.create(4));
@@ -85,107 +57,113 @@ const Step3: FC<DetailStepProps> = ({ profile, mutate }) => {
       .finally(() => setLoading(false));
   };
 
+  // Handle trường hợp không có channels nào được gửi đi
+  const handleError = (errors: any) => {
+    const message = errors.channels.root?.message;
+    if (message) {
+      toast.error(message);
+    }
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
-          <FormField
-            control={form.control}
-            name="youtube"
-            render={({ field }) => (
-              <FormItem className="md:col-span-2">
-                <Label htmlFor="youtube">YouTube</Label>
-                <FormControl>
-                  <Input
-                    id="youtube"
-                    className="w-full"
-                    inputClassName="-ml-2"
-                    startAdornment="https://www.youtube.com/"
-                    placeholder="example"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="space-y-2">
-            <Label className="max-md:hidden">Số người đăng ký</Label>
-            <Input
-              endAdornment={<span className="text-nowrap">người đăng ký</span>}
-              className="w-full"
-              readOnly
-              value={youtubeSub ? youtubeSub.followersCount : ''}
-            />
-          </div>
-        </div>
-        <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
-          <FormField
-            control={form.control}
-            name="instagram"
-            render={({ field }) => (
-              <FormItem className="md:col-span-2">
-                <Label htmlFor="instagram">Instagram</Label>
-                <FormControl>
-                  <Input
-                    id="instagram"
-                    className="w-full"
-                    inputClassName="-ml-2"
-                    startAdornment="https://www.instagram.com/"
-                    placeholder="example"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="space-y-2">
-            <Label className="max-md:hidden">Số người theo dõi</Label>
-            <Input
-              endAdornment={<span className="text-nowrap">người theo dõi</span>}
-              className="w-full"
-              readOnly
-              value={instagramFlw ? instagramFlw.followersCount : ''}
-            />
-          </div>
-        </div>
-        <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
-          <FormField
-            control={form.control}
-            name="tiktok"
-            render={({ field }) => (
-              <FormItem className="md:col-span-2">
-                <Label htmlFor="tiktok">TikTok</Label>
-                <FormControl>
-                  <Input
-                    id="tiktok"
-                    className="w-full"
-                    inputClassName="-ml-2"
-                    startAdornment="https://www.tiktok.com/@"
-                    placeholder="example"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="space-y-2">
-            <Label className="max-md:hidden">Số người theo dõi</Label>
-            <Input
-              endAdornment={<span className="text-nowrap">người theo dõi</span>}
-              className="w-full"
-              readOnly
-              value={tiktokFlw ? tiktokFlw.followersCount : ''}
-            />
-          </div>
-        </div>
+      <form onSubmit={form.handleSubmit(onSubmit, handleError)} className="space-y-6">
+        {fields.map((field, index) => (
+          <ChannelInput key={field.id} form={form} index={index} loading={loading} />
+        ))}
         <Button type="submit" variant="gradient" size="large" fullWidth loading={loading}>
           Tiếp tục
         </Button>
+        {profile.channels.length > 0 && (
+          <div className="text-center">
+            <Button type="button" variant="link" className="text-muted-foreground" asChild>
+              <Link href={config.routes.influencer.create(4)}>Bỏ qua bước này</Link>
+            </Button>
+          </div>
+        )}
       </form>
     </Form>
+  );
+};
+
+interface ChannelInputProps {
+  form: UseFormReturn<ChannelsBodyType, any, undefined>;
+  index: number;
+  loading: boolean;
+}
+
+const ChannelInput: FC<ChannelInputProps> = ({ form, index, loading }) => {
+  const { platform, userName, show } = form.watch(`channels.${index}`);
+  const debounceUsername = useDebounce(userName, 500);
+  const { name, url, followerText, Icon } = PlatformData[platform];
+  const { data } = useSWRImmutable<ISocialProfile>(
+    `/Utility/profile?platform=${platform}&channelId=${debounceUsername}`,
+    show && userName ? fetcher : null,
+  );
+
+  const handleShow = () => {
+    form.setValue(`channels.${index}.show`, true);
+  };
+
+  const handleHidden = () => {
+    // TODO: Call API Delete channel
+    form.setValue(`channels.${index}`, { platform, show: false, userName: '' });
+  };
+
+  return show ? (
+    <div className="grid md:grid-cols-5 grid-cols-1 gap-4 items-start">
+      <FormField
+        control={form.control}
+        name={`channels.${index}.userName`}
+        render={({ field }) => (
+          <FormItem className="md:col-span-3">
+            <Label htmlFor={name}>{name}</Label>
+            <FormControl>
+              <Input
+                id={name}
+                className="w-full"
+                inputClassName="-ml-2"
+                startAdornment={
+                  <span className="flex items-center gap-2">
+                    <Icon />
+                    {url}
+                  </span>
+                }
+                placeholder="example"
+                {...field}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <div className="flex items-end gap-4 md:col-span-2">
+        <div className="flex-1 space-y-2">
+          <Label className="max-md:hidden">Số {followerText}</Label>
+          <Input
+            endAdornment={<span className="text-nowrap">{followerText}</span>}
+            tabIndex={-1}
+            className="w-full"
+            value={data?.followersCount || ''}
+            disabled
+          />
+        </div>
+        <Button variant="ghost" className="size-12 flex-shrink-0" size="icon" onClick={handleHidden} disabled={loading}>
+          <Cross2Icon className="size-5" />
+        </Button>
+      </div>
+    </div>
+  ) : (
+    <Button
+      variant="outline"
+      size="large"
+      className="h-12"
+      fullWidth
+      startIcon={<Icon size={20} />}
+      onClick={handleShow}
+    >
+      {name}
+    </Button>
   );
 };
 

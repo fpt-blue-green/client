@@ -24,6 +24,7 @@ interface IPlatformDetail {
   name: string;
   Icon: IconType;
   url: string;
+  followerText: string;
   contentTypes: Record<number, string>;
 }
 
@@ -34,6 +35,7 @@ export const PlatformData: IPlatformData = {
     name: 'TikTok',
     Icon: RiTiktokFill,
     url: 'https://www.tiktok.com/@',
+    followerText: 'người theo dõi',
     contentTypes: {
       [EContentType.TikTokPost]: 'bài đăng TikTok',
       [EContentType.TikTokStory]: 'tin TikTok',
@@ -44,6 +46,7 @@ export const PlatformData: IPlatformData = {
     name: 'Instagram',
     Icon: RiInstagramFill,
     url: 'https://www.instagram.com/',
+    followerText: 'người theo dõi',
     contentTypes: {
       [EContentType.InstagramFeedPost]: 'bài đăng ảnh Instagram',
       [EContentType.InstagramReel]: 'thước phim Instagram',
@@ -55,6 +58,7 @@ export const PlatformData: IPlatformData = {
     name: 'YouTube',
     Icon: RiYoutubeFill,
     url: 'https://www.youtube.com/',
+    followerText: 'người đăng ký',
     contentTypes: {
       [EContentType.YouTubeVideo]: 'video YouTube',
       [EContentType.YouTubeShort]: 'video short YouTube',
