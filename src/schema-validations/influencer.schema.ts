@@ -1,5 +1,5 @@
 import { constants } from '@/lib/utils';
-import { EGender, EPlatform } from '@/types/enum';
+import { EContentType, EGender, EPlatform } from '@/types/enum';
 import { z } from 'zod';
 
 export const generalSchema = z
@@ -13,19 +13,35 @@ export const generalSchema = z
   })
   .strict();
 
-export const channelSchema = z
+const channelSchema = z
   .object({
-    youtube: z.string(),
-    instagram: z.string(),
-    tiktok: z.string(),
+    id: z.string().optional(),
+    platform: z.nativeEnum(EPlatform),
+    userName: z.string(),
+    show: z.boolean(),
   })
-  .strict();
+  .strict()
+  .refine(
+    (data) => {
+      if (data.show) {
+        return data.userName.length > 0;
+      }
+      return true;
+    },
+    { message: 'Vui lòng nhập tên người dùng', path: ['userName'] },
+  );
 
-export const packageSchema = z.object({
+export const channelsSchema = z.object({
+  channels: z
+    .array(channelSchema)
+    .refine((data) => data.filter((c) => c.show).length > 0, { message: 'Bạn phải có ít nhất 1 kênh mạng xã hội' }),
+});
+
+const packageSchema = z.object({
   id: z.string().optional(),
   platform: z.nativeEnum(EPlatform, { required_error: 'Chọn nền tảng' }),
   quantity: z.number({ required_error: 'Nhập số lượng' }).int('Nhập giá trị nguyên').min(1, 'Nhập giá trị lớn hơn 0'),
-  contentType: z.number({ required_error: 'Chọn loại nột dung' }),
+  contentType: z.nativeEnum(EContentType, { required_error: 'Chọn nội dung' }),
   duration: z.number().int('Nhập giá trị nguyên').min(0, 'Nhập giá trị lớn hơn 0').nullable().optional(),
   timeUnit: z.enum(['s', 'm', 'h']).optional(),
   price: z
@@ -92,4 +108,6 @@ export const packagesSchema = z
 
 export type GeneralBodyType = z.infer<typeof generalSchema>;
 export type ChannelBodyType = z.infer<typeof channelSchema>;
+export type ChannelsBodyType = z.infer<typeof channelsSchema>;
+export type PackageBodyType = z.infer<typeof packageSchema>;
 export type PackagesBodyType = z.infer<typeof packagesSchema>;

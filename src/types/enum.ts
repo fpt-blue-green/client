@@ -1,44 +1,69 @@
+import { IconType } from 'react-icons/lib';
+import { RiInstagramFill, RiTiktokFill, RiYoutubeFill } from 'react-icons/ri';
+
 export enum EPlatform {
   TitTok = 1,
   Instagram,
   YouTube,
 }
 
-export enum ETikTokContent {
-  Post = 1,
-  Story,
-  Live,
+export enum EContentType {
+  TikTokPost = EPlatform.TitTok * 10,
+  TikTokStory,
+  TikTokLive,
+  InstagramFeedPost = EPlatform.Instagram * 10,
+  InstagramReel,
+  InstagramStory,
+  InstagramLive,
+  YouTubeVideo = EPlatform.YouTube * 10,
+  YouTubeShort,
+  YouTubeLive,
 }
 
-export enum EInstagramContent {
-  FeedPost = 1,
-  Reel,
-  Story,
-  Live,
+interface IPlatformDetail {
+  name: string;
+  Icon: IconType;
+  url: string;
+  followerText: string;
+  contentTypes: Record<number, string>;
 }
 
-export enum EYouTubeContent {
-  Video = 1,
-  Short,
-  Live,
-}
+type IPlatformData = Record<EPlatform, IPlatformDetail>;
 
-export const ContentDisplayName = {
+export const PlatformData: IPlatformData = {
   [EPlatform.TitTok]: {
-    [ETikTokContent.Post]: 'bài đăng TikTok',
-    [ETikTokContent.Story]: 'tin TikTok',
-    [ETikTokContent.Live]: 'livestream TikTok',
+    name: 'TikTok',
+    Icon: RiTiktokFill,
+    url: 'https://www.tiktok.com/@',
+    followerText: 'người theo dõi',
+    contentTypes: {
+      [EContentType.TikTokPost]: 'bài đăng TikTok',
+      [EContentType.TikTokStory]: 'tin TikTok',
+      [EContentType.TikTokLive]: 'livestream TikTok',
+    },
   },
   [EPlatform.Instagram]: {
-    [EInstagramContent.FeedPost]: 'bài đăng ảnh Instagram',
-    [EInstagramContent.Reel]: 'thước phim Instagram',
-    [EInstagramContent.Story]: 'tin Instagram',
-    [EInstagramContent.Live]: 'livestream Instagram',
+    name: 'Instagram',
+    Icon: RiInstagramFill,
+    url: 'https://www.instagram.com/',
+    followerText: 'người theo dõi',
+    contentTypes: {
+      [EContentType.InstagramFeedPost]: 'bài đăng ảnh Instagram',
+      [EContentType.InstagramReel]: 'thước phim Instagram',
+      [EContentType.InstagramStory]: 'tin Instagram',
+      [EContentType.InstagramLive]: 'livestream Instagram',
+    },
   },
   [EPlatform.YouTube]: {
-    [EYouTubeContent.Video]: 'video YouTube',
-    [EYouTubeContent.Short]: 'video short YouTube',
-    [EYouTubeContent.Live]: 'livestream YouTube',
+    name: 'YouTube',
+    Icon: RiYoutubeFill,
+    url: 'https://www.youtube.com/',
+    followerText: 'người đăng ký',
+    contentTypes: {
+      [EContentType.YouTubeVideo]: 'video YouTube',
+      [EContentType.YouTubeShort]: 'video short YouTube',
+      [EContentType.YouTubeLive]: 'livestream YouTube',
+    },
   },
 };
 

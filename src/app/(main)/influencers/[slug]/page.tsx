@@ -1,20 +1,46 @@
 import { FC } from 'react';
-import { person } from './constant';
 import Packages from './packages';
 import InfluencerList from '@/components/influencer-list';
 import Image from 'next/image';
-import { LuInstagram, LuYoutube } from 'react-icons/lu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { estimateFollowers } from '@/lib/utils';
 import { LuHeart, LuShare } from 'react-icons/lu';
 import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button';
-import { EPlatform } from '@/types/enum';
-import { RiTiktokLine } from 'react-icons/ri';
+import { PlatformData } from '@/types/enum';
 import Tooltip from '@/components/custom/tooltip';
+import { influencersRequest } from '@/request';
+import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
+import IInfluencer from '@/types/influencer';
 
-const InfluencerDetails: FC = () => {
+const getInfluencer = async (slug: string): Promise<IInfluencer> => {
+  try {
+    const res = await influencersRequest.getInfluencerBySlug(slug);
+    if (!res.data) {
+      return notFound();
+    }
+    return res.data;
+  } catch {
+    return notFound();
+  }
+};
+
+interface InfluencerDetailsProps {
+  params: { slug: string };
+}
+
+export async function generateMetadata({ params }: InfluencerDetailsProps): Promise<Metadata> {
+  const influencer = await getInfluencer(params.slug);
+  return {
+    title: influencer.fullName,
+  };
+}
+
+const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
+  const influencer = await getInfluencer(params.slug);
+
   return (
     <div className="container mt-8 mb-16">
       <div>
@@ -28,11 +54,11 @@ const InfluencerDetails: FC = () => {
         </div>
         <Carousel opts={{ align: 'start' }} className="max-md:-mx-6 max-md:-mt-8 md:rounded-lg overflow-hidden">
           <CarouselContent>
-            {person.imagesGallery?.map((img, index) => (
+            {influencer.images.map((img, index) => (
               <CarouselItem key={index} className="lg:basis-1/3 md:basis-1/2 max-md:pl-0">
                 <Image
                   src={img.url || ''}
-                  alt="Profile pictures"
+                  alt={`Ảnh bìa trang của nhân của ${influencer.fullName}`}
                   width={800}
                   height={800}
                   className="w-full md:aspect-thumbnail aspect-square object-cover"
@@ -45,8 +71,8 @@ const InfluencerDetails: FC = () => {
           <div className="flex flex-row-reverse md:flex-row gap-4">
             <div className="flex flex-col items-center gap-4">
               <Avatar className="size-12 sm:size-16 md:size-20">
-                <AvatarImage width={200} src={person.avatar?.url} alt="Avatar" />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarImage width={200} src={influencer.avatar} alt="Avatar" />
+                <AvatarFallback>{influencer.fullName[0]}</AvatarFallback>
               </Avatar>
               <div className="md:hidden flex gap-1">
                 <Tooltip label="Yêu thích">
@@ -63,45 +89,33 @@ const InfluencerDetails: FC = () => {
             </div>
             <div className="sm:pl-4 md:pl-0 flex-1">
               <h5 className="font-semibold text-xl md:text-2xl">
-                {person.fullName} | {person.jobTitle}
+                {influencer.fullName} | {influencer.summarise}
               </h5>
-              <p className="mb-2 mt-1 text-muted-foreground text-sm">{person.address}</p>
+              <p className="mb-2 mt-1 text-muted-foreground text-sm">{influencer.address}</p>
               <div className="flex flex-wrap items-center gap-2">
-                {person.socialAccounts?.map((account) => (
-                  <div key={account.platform} className="flex items-center gap-2 border rounded-sm px-2 py-1 w-max">
-                    {account.platform === EPlatform.Instagram ? (
-                      <LuInstagram />
-                    ) : account.platform === EPlatform.YouTube ? (
-                      <LuYoutube />
-                    ) : account.platform === EPlatform.TitTok ? (
-                      <RiTiktokLine />
-                    ) : (
-                      ''
-                    )}
-                    <Link
-                      target="_blank"
-                      href={
-                        account.platform === EPlatform.Instagram
-                          ? `https://www.instagram.com/${''}`
-                          : account.platform === EPlatform.YouTube
-                          ? `https://www.youtube.com/${''}`
-                          : account.platform === EPlatform.TitTok
-                          ? `https://www.tiktok.com/${''}`
-                          : ''
-                      }
-                      className="text-blue-500 font-semibold text-xs hover:underline"
-                    >
-                      {`${estimateFollowers(account.followers!)} Followers`}
-                    </Link>
-                  </div>
-                ))}
+                {influencer.channels?.map((channel) => {
+                  const platform = PlatformData[channel.platform];
+                  const Icon = platform.Icon;
+                  return (
+                    <div key={channel.id} className="flex items-center gap-2 border rounded-sm px-2 py-1 w-max">
+                      <Icon />
+                      <Link
+                        target="_blank"
+                        href={`${platform.url}${channel.userName}`}
+                        className="text-blue-500 font-semibold text-xs hover:underline"
+                      >
+                        {`${estimateFollowers(channel.followersCount)} theo dõi`}
+                      </Link>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
-          <p className="mt-4 text-sm md:text-base">{person.description}</p>
+          <p className="mt-4 text-sm md:text-base">{influencer.description}</p>
         </div>
       </div>
-      <Packages />
+      <Packages data={influencer.packages} />
       <InfluencerList className="mt-20" title="Những người nổi tiếng tương tự" />
     </div>
   );
