@@ -14,7 +14,6 @@ import { Cross2Icon, PlusCircledIcon } from '@radix-ui/react-icons';
 import { toast } from 'sonner';
 import clsx from 'clsx';
 import { EPlatform, PlatformData } from '@/types/enum';
-import { RiInstagramFill, RiTiktokFill, RiYoutubeFill } from 'react-icons/ri';
 import DetailStepProps from './props';
 import { influencerRequest } from '@/request';
 import { useRouter } from 'next/navigation';
@@ -35,8 +34,9 @@ const Step6: FC<DetailStepProps> = ({ profile, mutate }) => {
           timeUnit = result.unit;
           duration = result.value;
         }
+        const platform = Math.floor(p.contentType / 10);
         p.description = p.description || undefined;
-        return { ...p, timeUnit, duration };
+        return { ...p, platform, timeUnit, duration };
       }),
     },
   });
@@ -104,29 +104,32 @@ const Step6: FC<DetailStepProps> = ({ profile, mutate }) => {
               render={({ field }) => (
                 <FormItem className="col-span-full">
                   <FormControl>
-                    <Select onValueChange={(value) => field.onChange(+value)} value={field.value?.toString()}>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(+value);
+                        setTimeout(
+                          () => form.resetField(`packages.${index}.contentType`, { defaultValue: +value * 10 }),
+                          500,
+                        );
+                      }}
+                      value={field.value?.toString()}
+                    >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Nền tảng" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value={EPlatform.TitTok.toString()}>
-                          <div className="flex items-center gap-2">
-                            <RiTiktokFill />
-                            TikTok
-                          </div>
-                        </SelectItem>
-                        <SelectItem value={EPlatform.Instagram.toString()}>
-                          <div className="flex items-center gap-2">
-                            <RiInstagramFill />
-                            Instagram
-                          </div>
-                        </SelectItem>
-                        <SelectItem value={EPlatform.YouTube.toString()}>
-                          <div className="flex items-center gap-2">
-                            <RiYoutubeFill />
-                            YouTube
-                          </div>
-                        </SelectItem>
+                        {Object.entries(PlatformData)
+                          .filter(([key]) =>
+                            profile.channels.some((c) => c.platform === (+key as unknown as EPlatform)),
+                          )
+                          .map(([key, { Icon, name }]) => (
+                            <SelectItem key={key} value={key}>
+                              <div className="flex items-center gap-2">
+                                <Icon />
+                                {name}
+                              </div>
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                   </FormControl>

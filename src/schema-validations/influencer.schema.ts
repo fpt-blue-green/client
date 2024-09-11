@@ -1,5 +1,5 @@
 import { constants } from '@/lib/utils';
-import { EGender, EPlatform } from '@/types/enum';
+import { EContentType, EGender, EPlatform } from '@/types/enum';
 import { z } from 'zod';
 
 export const generalSchema = z
@@ -25,7 +25,7 @@ export const packageSchema = z.object({
   id: z.string().optional(),
   platform: z.nativeEnum(EPlatform, { required_error: 'Chọn nền tảng' }),
   quantity: z.number({ required_error: 'Nhập số lượng' }).int('Nhập giá trị nguyên').min(1, 'Nhập giá trị lớn hơn 0'),
-  contentType: z.number({ required_error: 'Chọn loại nột dung' }),
+  contentType: z.nativeEnum(EContentType, { required_error: 'Chọn nội dung' }),
   duration: z.number().int('Nhập giá trị nguyên').min(0, 'Nhập giá trị lớn hơn 0').nullable().optional(),
   timeUnit: z.enum(['s', 'm', 'h']).optional(),
   price: z

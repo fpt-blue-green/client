@@ -7,23 +7,17 @@ export enum EPlatform {
   YouTube,
 }
 
-export enum ETikTokContent {
-  Post = 1,
-  Story,
-  Live,
-}
-
-export enum EInstagramContent {
-  FeedPost = 1,
-  Reel,
-  Story,
-  Live,
-}
-
-export enum EYouTubeContent {
-  Video = 1,
-  Short,
-  Live,
+export enum EContentType {
+  TikTokPost = EPlatform.TitTok * 10,
+  TikTokStory,
+  TikTokLive,
+  InstagramFeedPost = EPlatform.Instagram * 10,
+  InstagramReel,
+  InstagramStory,
+  InstagramLive,
+  YouTubeVideo = EPlatform.YouTube * 10,
+  YouTubeShort,
+  YouTubeLive,
 }
 
 interface IPlatformDetail {
@@ -41,9 +35,9 @@ export const PlatformData: IPlatformData = {
     Icon: RiTiktokFill,
     url: 'https://www.tiktok.com/@',
     contentTypes: {
-      [ETikTokContent.Post]: 'bài đăng TikTok',
-      [ETikTokContent.Story]: 'tin TikTok',
-      [ETikTokContent.Live]: 'livestream TikTok',
+      [EContentType.TikTokPost]: 'bài đăng TikTok',
+      [EContentType.TikTokStory]: 'tin TikTok',
+      [EContentType.TikTokLive]: 'livestream TikTok',
     },
   },
   [EPlatform.Instagram]: {
@@ -51,10 +45,10 @@ export const PlatformData: IPlatformData = {
     Icon: RiInstagramFill,
     url: 'https://www.instagram.com/',
     contentTypes: {
-      [EInstagramContent.FeedPost]: 'bài đăng ảnh Instagram',
-      [EInstagramContent.Reel]: 'thước phim Instagram',
-      [EInstagramContent.Story]: 'tin Instagram',
-      [EInstagramContent.Live]: 'livestream Instagram',
+      [EContentType.InstagramFeedPost]: 'bài đăng ảnh Instagram',
+      [EContentType.InstagramReel]: 'thước phim Instagram',
+      [EContentType.InstagramStory]: 'tin Instagram',
+      [EContentType.InstagramLive]: 'livestream Instagram',
     },
   },
   [EPlatform.YouTube]: {
@@ -62,9 +56,9 @@ export const PlatformData: IPlatformData = {
     Icon: RiYoutubeFill,
     url: 'https://www.youtube.com/',
     contentTypes: {
-      [EYouTubeContent.Video]: 'video YouTube',
-      [EYouTubeContent.Short]: 'video short YouTube',
-      [EYouTubeContent.Live]: 'livestream YouTube',
+      [EContentType.YouTubeVideo]: 'video YouTube',
+      [EContentType.YouTubeShort]: 'video short YouTube',
+      [EContentType.YouTubeLive]: 'livestream YouTube',
     },
   },
 };
