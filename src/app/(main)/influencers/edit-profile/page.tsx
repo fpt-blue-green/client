@@ -9,9 +9,25 @@ import ImageGallery from './images';
 import Details from './details';
 import Packages from './packages';
 import SocialMedias from './social-medias';
+import { influencerRequest } from '@/request';
+import IInfluencer from '@/types/influencer';
+
+const getInfluencer = async (): Promise<IInfluencer | undefined | null> => {
+  try {
+    const res = await influencerRequest.me();
+    if (!res.data) {
+      return null;
+    }
+    return res.data;
+  } catch {
+    return undefined;
+  }
+};
 
 const EditInfluencerProfile = async () => {
   const session = await getServerSession();
+  const influencer = await getInfluencer();
+
   return (
     <div className="container mt-8 mb-16">
       <Button size="medium" variant="ghost" asChild startIcon={<ArrowLeftIcon />}>
@@ -39,7 +55,9 @@ const EditInfluencerProfile = async () => {
             Các gói
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="details">{session?.user && <Details user={session.user} />}</TabsContent>
+        <TabsContent value="details">
+          {session?.user && <Details influencer={influencer} user={session.user} />}
+        </TabsContent>
         <TabsContent value="images">
           <ImageGallery />
         </TabsContent>
