@@ -3,7 +3,7 @@
 import { FC, useLayoutEffect, useState } from 'react';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
-import { PhoneBodyType, phoneSchema } from '@/schema-validations/user.schema';
+import { PhoneBodyType, phoneSchema } from '@/schema-validations/influencer.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

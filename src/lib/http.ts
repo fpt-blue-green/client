@@ -27,7 +27,7 @@ const request = async <Response>(
   const body =
     options?.body instanceof FormData ? options.body : options?.body ? JSON.stringify(options?.body) : undefined;
   const baseHeaders: { [key: string]: string } =
-    options?.body instanceof FormData ? {} : { 'Content-Type': 'application/json' };
+    options?.body instanceof FormData ? {} : { 'Content-Type': 'application/json; charset=utf-8' };
 
   let session: Session | null;
 

@@ -50,25 +50,23 @@ const Step2: FC<DetailStepProps> = ({ profile, mutate }) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-8 items-center">
-        {session && (
-          <FormField
-            control={form.control}
-            name="avatar"
-            render={() => (
-              <FormItem className="flex flex-col items-center justify-center gap-4 my-auto">
-                <FormControl>
-                  <AvatarUploader {...avatarRef} defaultSrc={profile.avatar} />
-                </FormControl>
-                <FormMessage />
-                <p className="text-xs text-muted-foreground text-center">
-                  Được phép *.jpeg, *.jpg, *.png, *.gif
-                  <br />
-                  kích thước tối đa 3 Mb
-                </p>
-              </FormItem>
-            )}
-          />
-        )}
+        <FormField
+          control={form.control}
+          name="avatar"
+          render={() => (
+            <FormItem className="flex flex-col items-center justify-center gap-4 my-auto">
+              <FormControl>
+                <AvatarUploader {...avatarRef} defaultSrc={profile.avatar} />
+              </FormControl>
+              <FormMessage />
+              <p className="text-xs text-muted-foreground text-center">
+                Được phép *.jpeg, *.jpg, *.png, *.gif
+                <br />
+                kích thước tối đa 3 Mb
+              </p>
+            </FormItem>
+          )}
+        />
         <Button type="submit" variant="gradient" size="large" fullWidth loading={loading}>
           Tiếp tục
         </Button>
