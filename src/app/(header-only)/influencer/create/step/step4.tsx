@@ -37,8 +37,7 @@ const Step4: FC<DetailStepProps> = ({ profile, mutate }) => {
     influencerRequest
       .selectTags(tags)
       .then(() => {
-        mutate();
-        router.push(config.routes.influencer.create(5));
+        mutate().then(() => router.push(config.routes.influencer.create(5)));
       })
       .catch((err) => toast.error(err.message))
       .finally(() => setLoading(false));

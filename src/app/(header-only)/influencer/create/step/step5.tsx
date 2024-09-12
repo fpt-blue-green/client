@@ -67,8 +67,7 @@ const Step5: FC<DetailStepProps> = ({ profile, mutate }) => {
     influencerRequest
       .uploadImages(imageIds, imageFiles)
       .then(() => {
-        router.push(config.routes.influencer.create(6));
-        mutate();
+        mutate().then(() => router.push(config.routes.influencer.create(6)));
       })
       .catch((err) => toast.error(err.message))
       .finally(() => setLoading(false));

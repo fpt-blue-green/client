@@ -29,6 +29,17 @@ const channelSchema = z
       return true;
     },
     { message: 'Vui lòng nhập tên người dùng', path: ['userName'] },
+  )
+  .refine(
+    ({ show, platform, userName }) => {
+      if (show) {
+        if (platform === EPlatform.YouTube) {
+          return userName.startsWith('@');
+        }
+      }
+      return true;
+    },
+    { message: 'Tên người dùng YouTube phải bắt đầu bằng @', path: ['userName'] },
   );
 
 export const channelsSchema = z.object({
@@ -105,6 +116,13 @@ export const packagesSchema = z
       }
     });
   });
+
+export const phoneSchema = z.object({
+  phone: z.string().regex(constants.phoneRegex, 'Số điện thoại không đúng định dạng'),
+  otp: z.string().regex(constants.otpRegex, 'Vui lòng nhập mã OTP'),
+});
+
+export type PhoneBodyType = z.infer<typeof phoneSchema>;
 
 export type GeneralBodyType = z.infer<typeof generalSchema>;
 export type ChannelBodyType = z.infer<typeof channelSchema>;
