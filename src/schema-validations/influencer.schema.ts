@@ -8,7 +8,7 @@ export const generalSchema = z
     summarise: z.string().min(1, 'Vui lòng không để trống phần tóm tắt'),
     description: z.string().max(255, 'Không nhập quá 255 kí tự').optional(),
     slug: z.string().min(1, 'Vui lòng nhập tên người dùng').regex(constants.slugRegex, 'Tên người dùng không hợp lệ'),
-    address: z.string(),
+    address: z.string().min(1, 'Vui lòng chọn địa chỉ của bạn'),
     gender: z.nativeEnum(EGender),
   })
   .strict();

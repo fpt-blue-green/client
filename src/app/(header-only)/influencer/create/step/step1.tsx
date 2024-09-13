@@ -1,6 +1,7 @@
 'use client';
 
 import { FC, useState } from 'react';
+import AddressPicker from '@/components/address-picker';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -79,7 +80,7 @@ const Step1: FC<DetailStepProps> = ({ profile, mutate }) => {
             <FormItem>
               <Label htmlFor="address">Địa chỉ</Label>
               <FormControl>
-                <Input id="address" placeholder="Địa chỉ" className="w-full" {...field} />
+                <AddressPicker id="address" placeholder="Địa chỉ" className="w-full" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
