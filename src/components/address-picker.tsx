@@ -42,6 +42,24 @@ const AddressPicker = forwardRef<HTMLInputElement, AddressPickerProps>(({ value,
     }
   };
 
+  const highlightMatch = (location: string) => {
+    if (!search) return location;
+    const matchIndex = location.toLowerCase().indexOf(search.toLowerCase());
+    if (matchIndex === -1) return location; // No match found
+
+    const beforeMatch = location.substring(0, matchIndex);
+    const matchText = location.substring(matchIndex, matchIndex + search.length);
+    const afterMatch = location.substring(matchIndex + search.length);
+
+    return (
+      <div className="flex items-center whitespace-pre">
+        {beforeMatch}
+        <span className="font-bold text-blue-600">{matchText}</span> {/* Highlight styling */}
+        {afterMatch}
+      </div>
+    );
+  };
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -64,7 +82,7 @@ const AddressPicker = forwardRef<HTMLInputElement, AddressPickerProps>(({ value,
               {data?.map((location) => (
                 <CommandItem key={location} value={location} onSelect={handleSelect}>
                   <CheckIcon className={cn('mr-2 h-4 w-4', inputValue === location ? 'opacity-100' : 'opacity-0')} />
-                  {location}
+                  {highlightMatch(location)}
                 </CommandItem>
               ))}
             </CommandGroup>
