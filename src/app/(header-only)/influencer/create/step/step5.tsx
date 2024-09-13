@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { influencerRequest } from '@/request';
 import { useRouter } from 'next/navigation';
 import config from '@/config';
+import { emitter } from '@/lib/utils';
 
 const Step5: FC<DetailStepProps> = ({ profile, mutate }) => {
   const [images, setImages] = useState<IImage[]>(profile.images);
@@ -43,23 +44,30 @@ const Step5: FC<DetailStepProps> = ({ profile, mutate }) => {
   };
 
   const handleDelete = (index: number) => () => {
-    const deletedImages = [...images];
-    const [removedImage] = deletedImages.splice(index, 1);
-    if (!removedImage.id) {
-      const deletedFiles = [...imageFiles];
-      const imagesCount = images.filter((i) => !!i.id).length;
-      deletedFiles.splice(index - imagesCount, 1);
-      setImageFiles(deletedFiles);
-    }
-    setImages(deletedImages);
+    emitter.confirm({
+      content: 'Bạn có muốn xóa ảnh nảy không? Bạn không thể hoàn tác khi thực hiện thao tác này',
+      callback: () => {
+        const deletedImages = [...images];
+        const [removedImage] = deletedImages.splice(index, 1);
+        if (!removedImage.id) {
+          const deletedFiles = [...imageFiles];
+          const imagesCount = images.filter((i) => !!i.id).length;
+          deletedFiles.splice(index - imagesCount, 1);
+          setImageFiles(deletedFiles);
+        }
+        setImages(deletedImages);
+      },
+    });
   };
 
   const handleSubmit = () => {
     if (images.length < 3) {
       toast.error('Bạn phải có ít nhất 3 ảnh');
+      return;
     }
     if (images.length > 10) {
       toast.error('Bạn chỉ được có tối đa 10 ảnh');
+      return;
     }
 
     const imageIds = images.filter((i) => !!i.id).map((i) => i.id);
