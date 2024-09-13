@@ -20,6 +20,7 @@ import { useDebounce } from '@/hooks';
 import DetailStepProps from './props';
 import Link from 'next/link';
 import { Cross2Icon } from '@radix-ui/react-icons';
+import { emitter } from '@/lib/utils';
 
 const Step3: FC<DetailStepProps> = ({ profile, mutate }) => {
   const router = useRouter();
@@ -92,7 +93,7 @@ interface ChannelInputProps {
 }
 
 const ChannelInput: FC<ChannelInputProps> = ({ form, index, loading }) => {
-  const { platform, userName, show } = form.watch(`channels.${index}`);
+  const { id, platform, userName, show } = form.watch(`channels.${index}`);
   const debounceUsername = useDebounce(userName, 500);
   const { name, url, followerText, Icon } = PlatformData[platform];
   const { data } = useSWRImmutable<ISocialProfile>(
@@ -105,8 +106,18 @@ const ChannelInput: FC<ChannelInputProps> = ({ form, index, loading }) => {
   };
 
   const handleHidden = () => {
-    // TODO: Call API Delete channel
-    form.setValue(`channels.${index}`, { platform, show: false, userName: '' });
+    emitter.confirm({
+      callback: () => {
+        if (id) {
+          influencerRequest
+            .deleteChannel(id)
+            .then(() => form.setValue(`channels.${index}`, { platform, show: false, userName: '' }))
+            .catch((err) => toast.error(err.message));
+        } else {
+          form.setValue(`channels.${index}`, { platform, show: false, userName: '' });
+        }
+      },
+    });
   };
 
   return show ? (
@@ -147,7 +158,14 @@ const ChannelInput: FC<ChannelInputProps> = ({ form, index, loading }) => {
             disabled
           />
         </div>
-        <Button variant="ghost" className="size-12 flex-shrink-0" size="icon" onClick={handleHidden} disabled={loading}>
+        <Button
+          type="button"
+          variant="ghost"
+          className="size-12 flex-shrink-0"
+          size="icon"
+          onClick={handleHidden}
+          disabled={loading}
+        >
           <Cross2Icon className="size-5" />
         </Button>
       </div>

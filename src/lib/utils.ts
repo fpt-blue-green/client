@@ -1,5 +1,7 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { EventEmitter } from 'fbemitter';
+import { ConfirmBody } from '@/components/confirm-dialog';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -35,6 +37,13 @@ export const functions = {
       return { value: seconds, unit: 's' };
     }
   },
+};
+
+// Emitter
+export const eventEmitter = new EventEmitter();
+
+export const emitter = {
+  confirm: (body: ConfirmBody) => eventEmitter.emit('confirm', body),
 };
 
 export const estimateFollowers = (followers: number): string => {
