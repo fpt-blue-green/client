@@ -56,10 +56,10 @@ const EditInfluencerProfile = async () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="details">
-          {session?.user && <Details influencer={influencer} user={session.user} />}
+          {session?.user && <Details influencer={influencer!} user={session.user} />}
         </TabsContent>
         <TabsContent value="images">
-          <ImageGallery />
+          <ImageGallery influencer={influencer!} />
         </TabsContent>
         <TabsContent value="socialMedias">
           <SocialMedias />
