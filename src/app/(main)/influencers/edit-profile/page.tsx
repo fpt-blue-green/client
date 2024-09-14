@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowLeftIcon, IdCardIcon } from '@radix-ui/react-icons';
-import { getServerSession } from 'next-auth';
 import { FaBox, FaNetworkWired, FaRegImages } from 'react-icons/fa6';
 import Link from 'next/link';
 import config from '@/config';
@@ -9,9 +8,16 @@ import ImageGallery from './images';
 import Details from './details';
 import Packages from './packages';
 import SocialMedias from './social-medias';
+import { influencerRequest } from '@/request';
+import IInfluencer from '@/types/influencer';
+
+const getInfluencer = async (): Promise<IInfluencer | undefined> => {
+  const res = await influencerRequest.me();
+  return res.data;
+};
 
 const EditInfluencerProfile = async () => {
-  const session = await getServerSession();
+  const influencer = await getInfluencer();
   return (
     <div className="container mt-8 mb-16">
       <Button size="medium" variant="ghost" asChild startIcon={<ArrowLeftIcon />}>
@@ -39,12 +45,14 @@ const EditInfluencerProfile = async () => {
             Các gói
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="details">{session?.user && <Details user={session.user} />}</TabsContent>
+        <TabsContent value="details">
+          <Details influencer={influencer!} />
+        </TabsContent>
         <TabsContent value="images">
-          <ImageGallery />
+          <ImageGallery influencer={influencer!} />
         </TabsContent>
         <TabsContent value="socialMedias">
-          <SocialMedias />
+          <SocialMedias influencer={influencer!} />
         </TabsContent>
         <TabsContent value="packages">
           <Packages />
