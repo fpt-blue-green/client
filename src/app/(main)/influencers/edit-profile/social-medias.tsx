@@ -1,24 +1,37 @@
 'use client';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import Paper from '@/components/custom/paper';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useRouter } from 'next/router';
-import { ChannelBodyType, channelSchema } from '@/schema-validations/influencer.schema';
+import { ChannelBodyType, ChannelsBodyType, channelsSchema } from '@/schema-validations/influencer.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { EPlatform } from '@/types/enum';
+import { EPlatform, PlatformData } from '@/types/enum';
+import IInfluencer from '@/types/influencer';
 
-const SocialMedias = () => {
+interface ISocialAccountsProps {
+  influencer: IInfluencer;
+}
+
+const SocialMedias: FC<ISocialAccountsProps> = ({ influencer }) => {
+  console.log('channels', influencer.channels);
   const [loading, setLoading] = useState(false);
-  const form = useForm<ChannelBodyType>({
-    resolver: zodResolver(channelSchema),
+  const form = useForm<ChannelsBodyType>({
+    resolver: zodResolver(channelsSchema),
     defaultValues: {
-      youtube: '',
-      instagram: '',
-      tiktok: '',
+      channels: Object.entries(PlatformData).map(([key]) => {
+        const platform = +key as unknown as EPlatform;
+        const channel = influencer.channels.find((c) => c.platform === platform);
+        return {
+          id: channel?.id,
+          platform,
+          userName: channel?.userName || '',
+          show: influencer.channels.some((c) => c.platform === platform),
+        };
+      }),
     },
   });
 

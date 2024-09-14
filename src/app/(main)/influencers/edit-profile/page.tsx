@@ -52,7 +52,7 @@ const EditInfluencerProfile = async () => {
           <ImageGallery influencer={influencer!} />
         </TabsContent>
         <TabsContent value="socialMedias">
-          <SocialMedias />
+          <SocialMedias influencer={influencer!} />
         </TabsContent>
         <TabsContent value="packages">
           <Packages />
