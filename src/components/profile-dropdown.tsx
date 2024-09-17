@@ -23,7 +23,7 @@ import {
 } from './ui/dialog';
 import Image from 'next/image';
 import { signIn, signOut, useSession } from 'next-auth/react';
-import useSWRImmutable from 'swr/immutable';
+import useSWR from 'swr';
 import { fetcher } from '@/lib/http';
 import IInfluencer from '@/types/influencer';
 import { ERole } from '@/types/enum';
@@ -31,10 +31,7 @@ import { ERole } from '@/types/enum';
 const ProfileDropdown = () => {
   const { data: session } = useSession<true>();
   const user = session?.user;
-  const { data: influencer } = useSWRImmutable<IInfluencer>(
-    '/Influencer',
-    user?.role === ERole.Influencer ? fetcher : null,
-  );
+  const { data: influencer } = useSWR<IInfluencer>('/Influencer', user?.role === ERole.Influencer ? fetcher : null);
 
   return (
     <DropdownMenu>
