@@ -5,7 +5,6 @@ import AvatarUploader from '@/components/avatar-uploader';
 import Paper from '@/components/custom/paper';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import IUser from '@/types/user';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { GeneralBodyType, generalSchema } from '@/schema-validations/influencer.schema';
@@ -16,16 +15,18 @@ import { EGender } from '@/types/enum';
 import { Textarea } from '@/components/ui/textarea';
 import IInfluencer from '@/types/influencer';
 import { AvatarBody, avatarSchema } from '@/schema-validations/user.schema';
-import { z } from 'zod';
 import { useSession } from 'next-auth/react';
 import { influencerRequest } from '@/request';
 import { toast } from 'sonner';
+import AddressPicker from '@/components/address-picker';
+import { KeyedMutator } from 'swr/_internal';
+
 interface GeneralProps {
-  user: IUser;
   influencer: IInfluencer;
+  mutate: KeyedMutator<IInfluencer>;
 }
 
-const Details: FC<GeneralProps> = ({ user, influencer }) => {
+const Details: FC<GeneralProps> = ({ influencer, mutate }) => {
   const { data: session, update } = useSession();
   const [loadingAvatar, setLoadingAvatar] = useState<boolean>(false);
   const [loadingDetails, setLoadingDetails] = useState<boolean>(false);
@@ -47,6 +48,7 @@ const Details: FC<GeneralProps> = ({ user, influencer }) => {
       gender: influencer.gender || EGender.Male,
     },
   });
+
   const onSubmitAvatar = async (values: AvatarBody) => {
     const avatar = values.avatar[0];
     setLoadingAvatar(true);
@@ -59,7 +61,8 @@ const Details: FC<GeneralProps> = ({ user, influencer }) => {
             ...session?.user,
             image: res.data,
           },
-        }).then(() => toast.success('Cập nhật ảnh đại diện thành công'));
+        });
+        mutate().then(() => toast.success('Cập nhật ảnh đại diện thành công'));
       }
     } catch (err: any) {
       toast.error(err.message);
@@ -73,7 +76,7 @@ const Details: FC<GeneralProps> = ({ user, influencer }) => {
     influencerRequest
       .updateGeneralInfo(values)
       .then(() => {
-        toast.success('Cập nhật thông tin cá nhân thành công');
+        mutate().then(() => toast.success('Cập nhật thông tin cá nhân thành công'));
       })
       .catch((err) => toast.error(err.message))
       .finally(() => setLoadingDetails(false));
@@ -86,7 +89,7 @@ const Details: FC<GeneralProps> = ({ user, influencer }) => {
             <div className="flex flex-col h-full items-center">
               <FormField
                 control={avatarForm.control}
-                name="avatar" // ! fix new hook form
+                name="avatar"
                 render={() => (
                   <FormItem className="flex flex-col items-center justify-center gap-4 my-auto">
                     <FormControl>
@@ -138,7 +141,7 @@ const Details: FC<GeneralProps> = ({ user, influencer }) => {
                   <FormItem>
                     <Label htmlFor="address">Địa chỉ</Label>
                     <FormControl>
-                      <Input {...field} id="address" className="w-full" />
+                      <AddressPicker {...field} id="address" className="w-full" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

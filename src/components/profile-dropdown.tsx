@@ -23,10 +23,18 @@ import {
 } from './ui/dialog';
 import Image from 'next/image';
 import { signIn, signOut, useSession } from 'next-auth/react';
+import useSWRImmutable from 'swr/immutable';
+import { fetcher } from '@/lib/http';
+import IInfluencer from '@/types/influencer';
+import { ERole } from '@/types/enum';
 
 const ProfileDropdown = () => {
-  const { data } = useSession<true>();
-  const user = data?.user;
+  const { data: session } = useSession<true>();
+  const user = session?.user;
+  const { data: influencer } = useSWRImmutable<IInfluencer>(
+    '/Influencer',
+    user?.role === ERole.Influencer ? fetcher : null,
+  );
 
   return (
     <DropdownMenu>
@@ -59,9 +67,11 @@ const ProfileDropdown = () => {
               <DropdownMenuItem asChild>
                 <Link href={config.routes.account}>Tài khoản</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href={config.routes.influencers.editProfile}>Trang cá nhân</Link>
-              </DropdownMenuItem>
+              {influencer && (
+                <DropdownMenuItem asChild>
+                  <Link href={config.routes.influencers.details(influencer.slug)}>Trang cá nhân</Link>
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem onClick={() => signOut({ callbackUrl: config.routes.home })}>
                 Đăng xuất
               </DropdownMenuItem>
