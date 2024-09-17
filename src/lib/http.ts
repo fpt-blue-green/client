@@ -7,6 +7,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 type CustomRequest = Omit<RequestInit, 'method'> & {
   baseUrl?: string;
   noToken?: boolean;
+  next?: NextFetchRequestConfig;
 };
 
 type CustomResponse<T> = {
