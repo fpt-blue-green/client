@@ -14,6 +14,10 @@ import { influencersRequest } from '@/request';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import IInfluencer from '@/types/influencer';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import config from '@/config';
+import { RiPencilLine } from 'react-icons/ri';
 
 const getInfluencer = async (slug: string): Promise<IInfluencer> => {
   try {
@@ -39,7 +43,7 @@ export async function generateMetadata({ params }: InfluencerDetailsProps): Prom
 }
 
 const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
-  const influencer = await getInfluencer(params.slug);
+  const [influencer, session] = await Promise.all([getInfluencer(params.slug), getServerSession(authOptions)]);
 
   return (
     <div className="container mt-8 mb-16">
@@ -48,9 +52,15 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
           <Button variant="ghost" startIcon={<LuShare />}>
             Chia Sẻ
           </Button>
-          <Button variant="ghost" startIcon={<LuHeart />}>
-            Yêu thích
-          </Button>
+          {session?.user.id === influencer.userId ? (
+            <Button variant="ghost" startIcon={<RiPencilLine />} asChild>
+              <Link href={config.routes.influencers.editProfile}>Chỉnh sửa</Link>
+            </Button>
+          ) : (
+            <Button variant="ghost" startIcon={<LuHeart />}>
+              Yêu thích
+            </Button>
+          )}
         </div>
         <Carousel opts={{ align: 'start' }} className="max-md:-mx-6 max-md:-mt-8 md:rounded-lg overflow-hidden">
           <CarouselContent>
