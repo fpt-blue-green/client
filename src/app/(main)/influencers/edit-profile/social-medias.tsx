@@ -18,12 +18,14 @@ import useSWRImmutable from 'swr/immutable';
 import { fetcher } from '@/lib/http';
 import { ISocialProfile } from '@/types/utilities';
 import { Cross2Icon } from '@radix-ui/react-icons';
+import { KeyedMutator } from 'swr/_internal';
 
 interface ISocialAccountsProps {
   influencer: IInfluencer;
+  mutate: KeyedMutator<IInfluencer>;
 }
 
-const SocialMedias: FC<ISocialAccountsProps> = ({ influencer }) => {
+const SocialMedias: FC<ISocialAccountsProps> = ({ influencer, mutate }) => {
   const [loading, setLoading] = useState(false);
   const form = useForm<ChannelsBodyType>({
     resolver: zodResolver(channelsSchema),
@@ -51,7 +53,7 @@ const SocialMedias: FC<ISocialAccountsProps> = ({ influencer }) => {
     influencerRequest
       .updateChannels(values.channels.filter((c) => c.show))
       .then(() => {
-        toast.success('Cập nhật thành công');
+        mutate().then(() => toast.success('Cập nhật thành công'));
       })
       .catch((err) => toast.error(err.message))
       .finally(() => setLoading(false));

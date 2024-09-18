@@ -43,7 +43,7 @@ const ProfileTabs = () => {
         <ImageGallery influencer={influencer} mutate={mutate} />
       </TabsContent>
       <TabsContent value="socialMedias">
-        <SocialMedias influencer={influencer} />
+        <SocialMedias influencer={influencer} mutate={mutate} />
       </TabsContent>
       <TabsContent value="packages">
         <Packages />
