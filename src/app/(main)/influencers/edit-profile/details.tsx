@@ -126,7 +126,7 @@ const Details: FC<GeneralProps> = ({ influencer, mutate }) => {
                 name="fullName"
                 render={({ field }) => (
                   <FormItem>
-                    <Label htmlFor="name">Tên</Label>
+                    <Label htmlFor="name">Họ và tên</Label>
                     <FormControl>
                       <Input {...field} id="name" className="w-full" />
                     </FormControl>
@@ -136,12 +136,12 @@ const Details: FC<GeneralProps> = ({ influencer, mutate }) => {
               />
               <FormField
                 control={detailsForm.control}
-                name="address"
+                name="slug"
                 render={({ field }) => (
                   <FormItem>
-                    <Label htmlFor="address">Địa chỉ</Label>
+                    <Label htmlFor="slug">Biệt danh</Label>
                     <FormControl>
-                      <AddressPicker {...field} id="address" className="w-full" />
+                      <Input {...field} id="slug" className="w-full" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -174,9 +174,22 @@ const Details: FC<GeneralProps> = ({ influencer, mutate }) => {
               />
               <FormField
                 control={detailsForm.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label htmlFor="address">Địa chỉ</Label>
+                    <FormControl>
+                      <AddressPicker {...field} id="address" className="w-full" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={detailsForm.control}
                 name="summarise"
                 render={({ field }) => (
-                  <FormItem className="md:col-span-2">
+                  <FormItem>
                     <Label htmlFor="summarize">Tóm tắt</Label>
                     <FormControl>
                       <Input {...field} id="summarize" className="w-full" />
