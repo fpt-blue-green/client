@@ -14,8 +14,7 @@ import { toast } from 'sonner';
 import clsx from 'clsx';
 import { EPlatform, PlatformData } from '@/types/enum';
 import { influencerRequest } from '@/request';
-import config from '@/config';
-import { functions } from '@/lib/utils';
+import { emitter, functions } from '@/lib/utils';
 import IInfluencer from '@/types/influencer';
 import { KeyedMutator } from 'swr/_internal';
 
@@ -68,7 +67,18 @@ const Packages: FC<IPackagesProps> = ({ influencer, mutate }) => {
   };
 
   const removePackage = (index: number) => () => {
-    remove(index);
+    const values = form.getValues() || [];
+    const packageId = values.packages[index]?.id;
+    if (influencer.packages.some((item) => item.id === packageId)) {
+      emitter.confirm({
+        content: 'Bạn sẽ xoá gói mặc định của mình đấy',
+        callback: () => {
+          remove(index);
+        },
+      });
+    } else {
+      remove(index);
+    }
   };
 
   const onSubmit = (values: PackagesBodyType) => {
@@ -258,6 +268,7 @@ const Packages: FC<IPackagesProps> = ({ influencer, mutate }) => {
                 )}
               />
               <Button
+                type="button"
                 variant="outline"
                 size="icon"
                 className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 rounded-full"
@@ -277,8 +288,15 @@ const Packages: FC<IPackagesProps> = ({ influencer, mutate }) => {
             <PlusCircledIcon className="size-6" />
             Thêm Gói
           </div>
-          <Button type="submit" size="large" variant="gradient" fullWidth className="col-span-full" loading={loading}>
-            Tiếp tục
+          <Button
+            type="submit"
+            size="large"
+            variant="gradient"
+            fullWidth
+            className="col-span-full h-12 text-md"
+            loading={loading}
+          >
+            Lưu thay đổi
           </Button>
         </form>
       </Form>
