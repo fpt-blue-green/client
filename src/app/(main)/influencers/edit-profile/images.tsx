@@ -10,12 +10,14 @@ import IInfluencer, { IImage } from '@/types/influencer';
 import { toast } from 'sonner';
 import { influencerRequest } from '@/request';
 import { emitter } from '@/lib/utils';
+import { KeyedMutator } from 'swr/_internal';
 
 interface IImageGalleryProps {
   influencer: IInfluencer;
+  mutate: KeyedMutator<IInfluencer>;
 }
 
-const ImageGallery: FC<IImageGalleryProps> = ({ influencer }) => {
+const ImageGallery: FC<IImageGalleryProps> = ({ influencer, mutate }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageGallery, setImageGallery] = useState<IImage[]>(influencer.images || []);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
@@ -83,7 +85,9 @@ const ImageGallery: FC<IImageGalleryProps> = ({ influencer }) => {
       .uploadImages(imageIds, imageFiles)
       .then(() => {
         setIsSaveButtonDisplayed(false);
-        toast.success('Bạn cập nhật thư viện ảnh thành công');
+        mutate().then(() => {
+          toast.success('Bạn cập nhật thư viện ảnh thành công');
+        });
       })
       .catch((err) => toast.error(err.message))
       .finally(() => setLoading(false));
