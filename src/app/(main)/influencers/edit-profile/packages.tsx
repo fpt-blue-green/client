@@ -1,138 +1,307 @@
 'use client';
-import { FC } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Paper from '@/components/custom/paper';
-import { EPlatform } from '@/types/enum';
-import { ColumnDef } from '@tanstack/react-table';
-import DataTable from '@/components/custom/data-table';
-import { formats } from '@/lib/utils';
-import { Checkbox } from '@/components/ui/checkbox';
-import Tooltip from '@/components/custom/tooltip';
+import { ControllerRenderProps, useFieldArray, useForm } from 'react-hook-form';
+import { PackagesBodyType, packagesSchema } from '@/schema-validations/influencer.schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Cross2Icon, PlusCircledIcon } from '@radix-ui/react-icons';
+import { toast } from 'sonner';
+import clsx from 'clsx';
+import { EPlatform, PlatformData } from '@/types/enum';
+import { influencerRequest } from '@/request';
+import { emitter, functions } from '@/lib/utils';
+import IInfluencer from '@/types/influencer';
+import { KeyedMutator } from 'swr/_internal';
 
 interface IPackagesProps {
-  id: string;
-  influencerId: string;
-  platform: EPlatform;
-  contentType: number;
-  duration: number;
-  description: string;
-  price: number;
-  quantity: number;
-  influencer: string;
+  influencer: IInfluencer;
+  mutate: KeyedMutator<IInfluencer>;
 }
 
-const Packages: FC<IPackagesProps[]> = (props) => {
-  const {} = props;
+const Packages: FC<IPackagesProps> = ({ influencer, mutate }) => {
+  const [loading, setLoading] = useState(false);
+  const form = useForm<PackagesBodyType>({
+    resolver: zodResolver(packagesSchema),
+    defaultValues: {
+      packages: influencer.packages.map((p) => {
+        let timeUnit: 's' | 'm' | 'h' = 's';
+        let duration: number | undefined = undefined;
+        if (p.duration) {
+          const result = functions.convertSecondsToTime(p.duration);
+          timeUnit = result.unit;
+          duration = result.value;
+        }
+        const platform = Math.floor(p.contentType / 10);
+        p.description = p.description || undefined;
+        return { ...p, platform, timeUnit, duration };
+      }),
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: 'packages',
+  });
+
+  const handleChange =
+    (field: ControllerRenderProps<PackagesBodyType>) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      let value = undefined;
+      if (e.target.value) {
+        if (e.target.type === 'number') {
+          // Convert value into number
+          value = +e.target.value;
+        } else {
+          value = e.target.value;
+        }
+      }
+      field.onChange(value);
+    };
+
+  const addPackage = () => {
+    append({ timeUnit: 's' });
+  };
+
+  const removePackage = (index: number) => () => {
+    const values = form.getValues() || [];
+    const packageId = values.packages[index]?.id;
+    if (influencer.packages.some((item) => item.id === packageId)) {
+      emitter.confirm({
+        content: 'Bạn sẽ xoá gói mặc định của mình đấy',
+        callback: () => {
+          remove(index);
+        },
+      });
+    } else {
+      remove(index);
+    }
+  };
+
+  const onSubmit = (values: PackagesBodyType) => {
+    if (values.packages.length === 0) {
+      toast.error('Bạn phải thêm ít nhất một gói');
+      return;
+    }
+
+    const data: PackagesBodyType['packages'] = values.packages.map((p) => {
+      const { duration, timeUnit, ...others } = p;
+      const unit = timeUnit === 's' ? 1 : timeUnit === 'm' ? 60 : 3600;
+      const finalDuration = duration ? duration * unit : undefined;
+      return { ...others, duration: finalDuration };
+    });
+
+    setLoading(true);
+    influencerRequest
+      .updatePackages(data)
+      .then(() => {
+        mutate().then(() => toast.success('Cập nhật các gói thành công'));
+      })
+      .catch((err) => toast.error(err.message))
+      .finally(() => setLoading(false));
+  };
   return (
     <Paper>
       <div>
         <h3 className="font-semibold text-xl mb-4">Quản Lý Các Gói</h3>
-        <DataTable columns={packagesColumns} data={influencerPackages} />
       </div>
+      <Form {...form}>
+        <form className="grid md:grid-cols-2 grid-cols-1 gap-6" onSubmit={form.handleSubmit(onSubmit)}>
+          {fields.map((field, index) => (
+            <Paper key={field.id} className="relative grid grid-cols-3 gap-2 p-3 border-foreground overflow-visible">
+              <FormField
+                control={form.control}
+                name={`packages.${index}.platform`}
+                render={({ field }) => (
+                  <FormItem className="col-span-full">
+                    <FormControl>
+                      <Select
+                        onValueChange={(value) => {
+                          field.onChange(+value);
+                          setTimeout(
+                            () => form.resetField(`packages.${index}.contentType`, { defaultValue: +value * 10 }),
+                            500,
+                          );
+                        }}
+                        value={field.value?.toString()}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Nền tảng" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(PlatformData)
+                            .filter(([key]) =>
+                              influencer.channels.some((c) => c.platform === (+key as unknown as EPlatform)),
+                            )
+                            .map(([key, { Icon, name }]) => (
+                              <SelectItem key={key} value={key}>
+                                <div className="flex items-center gap-2">
+                                  <Icon />
+                                  {name}
+                                </div>
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`packages.${index}.quantity`}
+                render={({ field }) => (
+                  <FormItem className="col-span-1">
+                    <FormControl>
+                      <Input
+                        type="number"
+                        className="w-full"
+                        placeholder="Số lượng"
+                        value={field.value || ''}
+                        onChange={handleChange(field)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`packages.${index}.contentType`}
+                render={({ field }) => {
+                  const platform = form.watch(`packages.${index}.platform`);
+                  return (
+                    <FormItem className="col-span-2">
+                      <FormControl>
+                        <Select onValueChange={(value) => field.onChange(+value)} value={field.value?.toString() || ''}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Loại" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {PlatformData[platform] &&
+                              Object.entries(PlatformData[platform].contentTypes).map(([key, value]) => (
+                                <SelectItem key={key} value={key}>
+                                  {value}
+                                </SelectItem>
+                              ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
+              <FormField
+                control={form.control}
+                name={`packages.${index}.duration`}
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormControl>
+                      <Input
+                        type="number"
+                        className="w-full"
+                        placeholder="Thời lượng (tùy chọn)"
+                        {...field}
+                        value={field.value || ''}
+                        onChange={handleChange(field)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`packages.${index}.timeUnit`}
+                render={({ field }) => (
+                  <FormItem className="col-span-1">
+                    <FormControl>
+                      <Select onValueChange={(value) => field.onChange(value)} value={field.value}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Đơn vị thời gian" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="s">giây</SelectItem>
+                          <SelectItem value="m">phút</SelectItem>
+                          <SelectItem value="h">giờ</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`packages.${index}.price`}
+                render={({ field }) => (
+                  <FormItem className="col-span-full">
+                    <FormControl>
+                      <Input
+                        type="number"
+                        className="w-full"
+                        placeholder="Giá"
+                        endAdornment="₫"
+                        value={field.value || ''}
+                        onChange={handleChange(field)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`packages.${index}.description`}
+                render={({ field }) => (
+                  <FormItem className="col-span-full">
+                    <FormControl>
+                      <Textarea placeholder="Mô tả (tùy chọn)" {...field} onChange={handleChange(field)} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 rounded-full"
+                onClick={removePackage(index)}
+              >
+                <Cross2Icon />
+              </Button>
+            </Paper>
+          ))}
+          <div
+            className={clsx(
+              'flex flex-col items-center justify-center gap-2 size-full min-h-64 border-2 border-foreground border-dashed rounded-lg cursor-pointer hover:opacity-60',
+              { 'col-span-full': form.getValues('packages').length === 0 },
+            )}
+            onClick={addPackage}
+          >
+            <PlusCircledIcon className="size-6" />
+            Thêm Gói
+          </div>
+          <Button
+            type="submit"
+            size="large"
+            variant="gradient"
+            fullWidth
+            className="col-span-full h-12 text-md"
+            loading={loading}
+          >
+            Lưu thay đổi
+          </Button>
+        </form>
+      </Form>
     </Paper>
   );
 };
 
 export default Packages;
-
-const influencerPackages: IPackagesProps[] = [
-  {
-    id: '001',
-    influencerId: '1',
-    platform: EPlatform.TitTok,
-    contentType: 0,
-    duration: 0,
-    description: 'Quảng bá sản phẩm của bạn thông qua 2 bài đăng trên trang cá nhân TikTok của tôi.',
-    price: 500000,
-    quantity: 2,
-    influencer: 'Lucy Truong',
-  },
-  {
-    id: '002',
-    influencerId: '1',
-    platform: EPlatform.Instagram,
-    contentType: 0,
-    duration: 0,
-    description: 'Quảng bá sản phẩm của bạn thông qua 1 bài đăng trên trang cá nhân Instagram của tôi.',
-    price: 300000,
-    quantity: 1,
-    influencer: 'Lucy Truong',
-  },
-  {
-    id: '003',
-    influencerId: '1',
-    platform: EPlatform.TitTok,
-    contentType: 0,
-    duration: 0,
-    description: 'Quảng bá sản phẩm của bạn thông qua 2 bài đăng trên trang cá nhân TikTok của tôi.',
-    price: 500000,
-    quantity: 2,
-    influencer: 'Lucy Truong',
-  },
-  {
-    id: '004',
-    influencerId: '1',
-    platform: EPlatform.Instagram,
-    contentType: 0,
-    duration: 0,
-    description: 'Quảng bá sản phẩm của bạn thông qua 1 bài đăng trên trang cá nhân Instagram của tôi.',
-    price: 300000,
-    quantity: 1,
-    influencer: 'Lucy Truong',
-  },
-];
-
-const packagesColumns: ColumnDef<IPackagesProps>[] = [
-  {
-    accessorKey: 'select',
-    header: '',
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: 'id',
-    header: 'Mã gói',
-  },
-  {
-    accessorKey: 'platform',
-    header: 'Nền tảng',
-    cell: ({ row }) => {
-      const platformNum: number = row.getValue('platform');
-      return <div>{EPlatform[platformNum]}</div>;
-    },
-  },
-  {
-    accessorKey: 'description',
-    header: 'Mô tả',
-    cell: ({ row }) => {
-      const packageDesc: string = row.getValue('description');
-      return (
-        <Tooltip label={packageDesc}>
-          <p className="max-w-24 truncate">{packageDesc}</p>
-        </Tooltip>
-      );
-    },
-  },
-  {
-    accessorKey: 'duration',
-    header: 'Thời lượng',
-  },
-  {
-    accessorKey: 'quantity',
-    header: 'Số lượng',
-  },
-  {
-    accessorKey: 'price',
-    header: 'Giá gói',
-    cell: ({ row }) => {
-      const packagePrice: number = row.getValue('price');
-      return <div>{formats.price(packagePrice)}</div>;
-    },
-  },
-];

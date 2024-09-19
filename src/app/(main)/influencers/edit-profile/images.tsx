@@ -10,12 +10,14 @@ import IInfluencer, { IImage } from '@/types/influencer';
 import { toast } from 'sonner';
 import { influencerRequest } from '@/request';
 import { emitter } from '@/lib/utils';
+import { KeyedMutator } from 'swr/_internal';
 
 interface IImageGalleryProps {
   influencer: IInfluencer;
+  mutate: KeyedMutator<IInfluencer>;
 }
 
-const ImageGallery: FC<IImageGalleryProps> = ({ influencer }) => {
+const ImageGallery: FC<IImageGalleryProps> = ({ influencer, mutate }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageGallery, setImageGallery] = useState<IImage[]>(influencer.images || []);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
@@ -29,6 +31,7 @@ const ImageGallery: FC<IImageGalleryProps> = ({ influencer }) => {
 
   useEffect(() => {
     if (imageGallery.length !== influencer.images.length) setIsSaveButtonDisplayed(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageGallery.length]);
 
   const handleOnChangeImage = (event: ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +86,9 @@ const ImageGallery: FC<IImageGalleryProps> = ({ influencer }) => {
       .uploadImages(imageIds, imageFiles)
       .then(() => {
         setIsSaveButtonDisplayed(false);
-        toast.success('Bạn cập nhật thư viện ảnh thành công');
+        mutate().then(() => {
+          toast.success('Bạn cập nhật thư viện ảnh thành công');
+        });
       })
       .catch((err) => toast.error(err.message))
       .finally(() => setLoading(false));
@@ -121,8 +126,8 @@ const ImageGallery: FC<IImageGalleryProps> = ({ influencer }) => {
             <Image
               className="w-full rounded-md object-cover aspect-square"
               src={img.url}
-              width={100}
-              height={80}
+              width={200}
+              height={200}
               alt={'User Image'}
             />
             <div className="absolute z-10 w-full h-full bg-red top-0 opacity-0 hover:opacity-100">
