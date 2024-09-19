@@ -8,4 +8,15 @@ export const basicSchema = z
   })
   .strict();
 
+export const socialSchema = z
+  .object({
+    websiteLink: z.string().optional(),
+    facebookLink: z.string().optional(),
+    tiktokLink: z.string().optional(),
+    instagramLink: z.string().optional(),
+    youtubeLink: z.string().optional(),
+  })
+  .strict();
+
 export type BasicBodyType = z.infer<typeof basicSchema>;
+export type SocialBodyType = z.infer<typeof socialSchema>;
