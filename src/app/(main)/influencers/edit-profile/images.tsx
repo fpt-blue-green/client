@@ -31,6 +31,7 @@ const ImageGallery: FC<IImageGalleryProps> = ({ influencer, mutate }) => {
 
   useEffect(() => {
     if (imageGallery.length !== influencer.images.length) setIsSaveButtonDisplayed(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageGallery.length]);
 
   const handleOnChangeImage = (event: ChangeEvent<HTMLInputElement>) => {
@@ -125,8 +126,8 @@ const ImageGallery: FC<IImageGalleryProps> = ({ influencer, mutate }) => {
             <Image
               className="w-full rounded-md object-cover aspect-square"
               src={img.url}
-              width={100}
-              height={80}
+              width={200}
+              height={200}
               alt={'User Image'}
             />
             <div className="absolute z-10 w-full h-full bg-red top-0 opacity-0 hover:opacity-100">

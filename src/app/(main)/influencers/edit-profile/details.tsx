@@ -105,8 +105,8 @@ const Details: FC<GeneralProps> = ({ influencer, mutate }) => {
                 )}
               />
             </div>
-            <div className="flex justify-end">
-              <Button type="submit" size="large" variant="gradient" loading={loadingAvatar}>
+            <div className="flex justify-end mt-8">
+              <Button type="submit" size="large" variant="gradient" className="max-md:w-full" loading={loadingAvatar}>
                 Lưu ảnh mới
               </Button>
             </div>
@@ -213,7 +213,7 @@ const Details: FC<GeneralProps> = ({ influencer, mutate }) => {
               />
             </div>
             <div className="mt-8 text-right">
-              <Button type="submit" size="large" variant="gradient" loading={loadingDetails}>
+              <Button type="submit" size="large" variant="gradient" className="max-md:w-full" loading={loadingDetails}>
                 Lưu thay đổi
               </Button>
             </div>
