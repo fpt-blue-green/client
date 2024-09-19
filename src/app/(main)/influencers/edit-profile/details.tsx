@@ -50,7 +50,7 @@ const Details: FC<GeneralProps> = ({ influencer, mutate }) => {
   });
 
   const onSubmitAvatar = async (values: AvatarBody) => {
-    const avatar = values.avatar[0];
+    const avatar = values.avatar?.[0] as File;
     setLoadingAvatar(true);
     try {
       const res = await influencerRequest.changeAvatar(avatar);

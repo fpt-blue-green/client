@@ -49,7 +49,9 @@ const Packages: FC<PackagesProps> = ({ data }) => {
                 </div>
                 <p className="mt-4 text-muted-foreground text-sm">{pack.description}</p>
                 <div className="flex items-center justify-between mt-8">
-                  <Icon className="size-6" />
+                  <div className="flex items-center justify-center size-9 text-background bg-foreground rounded-md">
+                    <Icon className="size-6" />
+                  </div>
                   <Button variant="gradient" size="large" className="text-base">
                     Tiếp tục
                   </Button>

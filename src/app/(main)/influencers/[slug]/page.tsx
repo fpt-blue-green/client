@@ -3,7 +3,7 @@ import Packages from './packages';
 import InfluencerList from '@/components/influencer-list';
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { estimateFollowers } from '@/lib/utils';
+import { formats } from '@/lib/utils';
 import { LuHeart, LuShare } from 'react-icons/lu';
 import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
@@ -104,17 +104,16 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
               <p className="mb-2 mt-1 text-muted-foreground text-sm">{influencer.address}</p>
               <div className="flex flex-wrap items-center gap-2">
                 {influencer.channels?.map((channel) => {
-                  const platform = PlatformData[channel.platform];
-                  const Icon = platform.Icon;
+                  const { Icon, url, followerText } = PlatformData[channel.platform];
                   return (
                     <div key={channel.id} className="flex items-center gap-2 border rounded-sm px-2 py-1 w-max">
                       <Icon />
                       <Link
                         target="_blank"
-                        href={`${platform.url}${channel.userName}`}
+                        href={`${url}${channel.userName}`}
                         className="text-blue-500 font-semibold text-xs hover:underline"
                       >
-                        {`${estimateFollowers(channel.followersCount)} theo dõi`}
+                        {`${formats.estimate(channel.followersCount)} ${followerText}`}
                       </Link>
                     </div>
                   );

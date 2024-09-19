@@ -26,7 +26,7 @@ const Step2: FC<DetailStepProps> = ({ profile, mutate }) => {
   const avatarRef = form.register('avatar');
 
   const onSubmit = async (values: AvatarBody) => {
-    const avatar = values.avatar[0];
+    const avatar = values.avatar?.[0] as File;
     setLoading(true);
     try {
       const res = await influencerRequest.changeAvatar(avatar);

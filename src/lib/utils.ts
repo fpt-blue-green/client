@@ -25,6 +25,17 @@ export const formats = {
     const numberValue = typeof value === 'string' ? parseFloat(value) : value;
     return numberValue.toLocaleString('vi-VN'); // Định dạng số với dấu phân cách
   },
+  estimate: (num: number): string => {
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1) + ' Tr';
+    } else if (num >= 10000) {
+      return (num / 1000).toFixed(1) + 'N';
+    } else if (num >= 1000) {
+      return num.toLocaleString('vi-VN');
+    } else {
+      return num.toString();
+    }
+  },
 };
 
 export const functions = {
@@ -44,16 +55,4 @@ export const eventEmitter = new EventEmitter();
 
 export const emitter = {
   confirm: (body: ConfirmBody) => eventEmitter.emit('confirm', body),
-};
-
-export const estimateFollowers = (followers: number): string => {
-  if (followers >= 1000000000) {
-    return (followers / 1000000000).toFixed(1) + 'b';
-  } else if (followers >= 1000000) {
-    return (followers / 1000000).toFixed(1) + 'm';
-  } else if (followers >= 1000) {
-    return (followers / 1000).toFixed(1) + 'k';
-  } else {
-    return followers.toString();
-  }
 };
