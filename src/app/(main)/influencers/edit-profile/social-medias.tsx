@@ -12,7 +12,7 @@ import { EPlatform, PlatformData } from '@/types/enum';
 import IInfluencer from '@/types/influencer';
 import { influencerRequest } from '@/request';
 import { toast } from 'sonner';
-import { emitter } from '@/lib/utils';
+import { emitter, formats } from '@/lib/utils';
 import { useDebounce } from '@/hooks';
 import useSWRImmutable from 'swr/immutable';
 import { fetcher } from '@/lib/http';
@@ -159,7 +159,7 @@ const ChannelInput: FC<ChannelInputProps> = ({ form, index, loading }) => {
             endAdornment={<span className="text-nowrap">{followerText}</span>}
             tabIndex={-1}
             className="w-full"
-            value={data?.followersCount}
+            value={data ? formats.estimate(data.followersCount) : ''}
             disabled
           />
         </div>

@@ -20,7 +20,7 @@ import { useDebounce } from '@/hooks';
 import DetailStepProps from './props';
 import Link from 'next/link';
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { emitter } from '@/lib/utils';
+import { emitter, formats } from '@/lib/utils';
 
 const Step3: FC<DetailStepProps> = ({ profile, mutate }) => {
   const router = useRouter();
@@ -154,7 +154,7 @@ const ChannelInput: FC<ChannelInputProps> = ({ form, index, loading }) => {
             endAdornment={<span className="text-nowrap">{followerText}</span>}
             tabIndex={-1}
             className="w-full"
-            value={data?.followersCount || ''}
+            value={data ? formats.estimate(data.followersCount) : ''}
             disabled
           />
         </div>

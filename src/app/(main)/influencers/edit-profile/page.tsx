@@ -5,10 +5,15 @@ import Link from 'next/link';
 import { influencerRequest } from '@/request';
 import IInfluencer from '@/types/influencer';
 import ProfileTabs from './profile-tabs';
+import { Metadata } from 'next';
 
 const getInfluencer = async (): Promise<IInfluencer | undefined> => {
   const res = await influencerRequest.me();
   return res.data;
+};
+
+export const metadata: Metadata = {
+  title: 'Chỉnh sửa thông tin cá nhân',
 };
 
 const EditInfluencerProfile = async () => {

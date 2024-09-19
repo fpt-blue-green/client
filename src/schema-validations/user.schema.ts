@@ -1,19 +1,24 @@
 import { constants } from '@/lib/utils';
 import { z } from 'zod';
 
-export const avatarSchema = z
-  .object({
-    avatar: z
-      .instanceof(FileList)
-      .refine((files) => files && files.length > 0, { message: 'Vui lòng tải ảnh lên' })
-      .refine((files) => files[0]?.type.startsWith('image/'), {
+const isBrowser = typeof window !== 'undefined';
+
+export const avatarSchema = z.object({
+  avatar: z.union([
+    z
+      .instanceof(isBrowser ? FileList : Array)
+      .refine((files) => isBrowser && files instanceof FileList && files && files.length > 0, {
+        message: 'Vui lòng tải ảnh lên',
+      })
+      .refine((files) => isBrowser && files instanceof FileList && files[0]?.type.startsWith('image/'), {
         message: 'Tệp tin không phải hình ảnh',
       })
-      .refine((files) => files[0]?.size <= 3 * 1024 * 1024, {
+      .refine((files) => isBrowser && files instanceof FileList && files[0]?.size <= 3 * 1024 * 1024, {
         message: 'Kích thước tệp lớn hơn 3MB',
       }),
-  })
-  .strict();
+    z.string().optional(),
+  ]),
+});
 
 export const changePasswordSchema = z
   .object({
