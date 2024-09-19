@@ -51,9 +51,13 @@ const Step: FC<StepProps> = ({ Element, step }) => {
 
   useLayoutEffect(() => {
     if (step > 1 && !isLoading) {
-      const checkedStep = checkStep(step, profile || defaultProfile);
-      if (checkedStep !== step) {
-        router.push(config.routes.influencer.create(checkedStep));
+      if (profile?.isPublish) {
+        router.push(config.routes.home);
+      } else {
+        const checkedStep = checkStep(step, profile || defaultProfile);
+        if (checkedStep !== step) {
+          router.push(config.routes.influencer.create(checkedStep));
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

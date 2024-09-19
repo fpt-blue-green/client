@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import { FC, ReactNode } from 'react';
 
 export const metadata: Metadata = {
-  title: 'Tạo thông tin của bạn',
-  description: 'Nhập thông tin chi tiết để các nhãn hàng có thể tìm hiểu thêm về bạn',
+  title: 'Tạo thông tin của nhãn hàng',
+  description: 'Nhập thông tin chi tiết để người dùng có thể tìm hiểu thêm về thương hiệu của bạn',
 };
 
 interface CreateLayoutProps {
