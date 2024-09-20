@@ -16,7 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import IInfluencer from '@/types/influencer';
 import { AvatarBody, avatarSchema } from '@/schema-validations/user.schema';
 import { useSession } from 'next-auth/react';
-import { influencerRequest } from '@/request';
+import { influencerRequest, userRequest } from '@/request';
 import { toast } from 'sonner';
 import AddressPicker from '@/components/address-picker';
 import { KeyedMutator } from 'swr/_internal';
@@ -53,7 +53,7 @@ const Details: FC<GeneralProps> = ({ influencer, mutate }) => {
     const avatar = values.avatar?.[0] as File;
     setLoadingAvatar(true);
     try {
-      const res = await influencerRequest.changeAvatar(avatar);
+      const res = await userRequest.changeAvatar(avatar);
       if (res.data) {
         await update({
           ...session,

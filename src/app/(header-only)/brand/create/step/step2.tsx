@@ -12,9 +12,15 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import config from '@/config';
 import { toast } from 'sonner';
+import { brandRequest, userRequest } from '@/request';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
-const Step2: FC<DetailStepProps> = ({ profile }) => {
-  const [loading] = useState(false);
+const Step2: FC<DetailStepProps> = ({ profile, mutate }) => {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { data: session, update } = useSession();
+
   const form = useForm<ImagesBodyType>({
     resolver: zodResolver(imagesSchema),
   });
@@ -23,7 +29,29 @@ const Step2: FC<DetailStepProps> = ({ profile }) => {
   const coverRef = form.register('cover');
 
   const onSubmit = (values: ImagesBodyType) => {
-    console.log(values);
+    setLoading(true);
+    const uploader: Promise<any>[] = [
+      values.avatar[0] ? userRequest.changeAvatar(values.avatar[0] as File) : Promise.resolve(),
+    ];
+    if (values.cover.length > 0) {
+      uploader.push(brandRequest.changeCover(values.cover[0] as File));
+    }
+
+    Promise.all(uploader)
+      .then(([res]) => {
+        if (res) {
+          update({
+            ...session,
+            user: {
+              ...session?.user,
+              image: res.data,
+            },
+          });
+        }
+        mutate().then(() => router.push(config.routes.brand.create(3)));
+      })
+      .catch((err) => toast.error(err.message))
+      .finally(() => setLoading(false));
   };
 
   const onError = (err: any) => {

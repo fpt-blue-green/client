@@ -7,13 +7,13 @@ import { AvatarBody, avatarSchema } from '@/schema-validations/user.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useSession } from 'next-auth/react';
-import influencerRequest from '@/request/influencer.request';
 import { useRouter } from 'next/navigation';
 import config from '@/config';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 import DetailStepProps from './props';
+import { userRequest } from '@/request';
 
 const Step2: FC<DetailStepProps> = ({ profile, mutate }) => {
   const { data: session, update } = useSession();
@@ -29,7 +29,7 @@ const Step2: FC<DetailStepProps> = ({ profile, mutate }) => {
     const avatar = values.avatar?.[0] as File;
     setLoading(true);
     try {
-      const res = await influencerRequest.changeAvatar(avatar);
+      const res = await userRequest.changeAvatar(avatar);
       if (res.data) {
         await update({
           ...session,
