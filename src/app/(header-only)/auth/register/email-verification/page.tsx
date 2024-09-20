@@ -20,11 +20,11 @@ const EmailVerification = () => {
         </p>
       </div>
       <p className="text-center">
-        Hãy{' '}
+        Hãy đến{' '}
         <Link className="text-muted-foreground underline" href="">
-          bấm vào đây
+          hòm thư
         </Link>{' '}
-        để hoàn thành việc đăng ký tài khoản của bạn. Nếu gặp vấn đề với việc xác thực, bạn có lẽ cần đọc{' '}
+        của bạn để hoàn thành việc đăng ký tài khoản. Nếu gặp vấn đề với việc xác thực, bạn có lẽ cần đọc{' '}
         <span className="font-semibold">hướng dẫn</span> bên dưới.
       </p>
       <p className="px-8 text-center mt-4">Vẫn chưa xác thực được? Đừng lo. </p>
