@@ -6,9 +6,11 @@ import { Button } from '@/components/ui/button';
 import config from '@/config';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import IBrand from '@/types/brand';
+import Step from './step';
 import DetailStepProps from './step/props';
 import Step1 from './step/step1';
-import Step from './step';
+import Step2 from './step/step2';
+import Step3 from './step/step3';
 
 interface CreateProps {
   searchParams?: { step: number };
@@ -26,7 +28,7 @@ const Create: FC<CreateProps> = ({ searchParams }) => {
             <Progress value={(100 * step) / Object.keys(stepPages).length} className="h-3" />
             {step > 1 && (
               <Button variant="secondary" className="rounded-full self-start" startIcon={<ArrowLeftIcon />} asChild>
-                <Link href={config.routes.influencer.create(step - 1)}>Trở lại</Link>
+                <Link href={config.routes.brand.create(step - 1)}>Trở lại</Link>
               </Button>
             )}
             <h1 className="text-3xl font-semibold">{page.title}</h1>
@@ -54,15 +56,16 @@ export const stepPages: {
     checkKey: 'name',
   },
   2: {
-    title: 'Ảnh đại diện',
-    description: '',
-    component: Step1,
-    checkKey: 'id',
+    title: 'Thêm ảnh đại diện và ảnh bìa cho nhãn hàng của bạn',
+    description: 'Điều này giúp cho các người sáng tạo có thể nhận diện nhãn hàng một cách dễ dàng hơn',
+    component: Step2,
+    checkKey: 'coverImg',
   },
   3: {
-    title: 'Thêm các trang mạng xã hội của bạn',
-    description: '',
-    component: Step1,
+    title: 'Thêm các phương tiện truyền thông',
+    description:
+      'Điều quan trọng là người sáng tạo có thể xem các trang mạng xã hội của bạn trước khi tạo nội dung cho bạn.',
+    component: Step3,
     checkKey: 'id',
   },
 };

@@ -14,6 +14,7 @@ const routes = {
   },
   brand: {
     base: '/brand',
+    create: (step: number) => `/brand/create?step=${step}`,
   },
   register: {
     brand: '/auth/register/brand',

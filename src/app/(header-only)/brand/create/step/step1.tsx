@@ -11,9 +11,14 @@ import { Input } from '@/components/ui/input';
 import AddressPicker from '@/components/address-picker';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { brandRequest } from '@/request';
+import { useRouter } from 'next/navigation';
+import config from '@/config';
+import { toast } from 'sonner';
 
-const Step1: FC<DetailStepProps> = ({ profile }) => {
-  const [loading] = useState(false);
+const Step1: FC<DetailStepProps> = ({ profile, mutate }) => {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const form = useForm<BasicBodyType>({
     resolver: zodResolver(basicSchema),
     defaultValues: {
@@ -24,7 +29,12 @@ const Step1: FC<DetailStepProps> = ({ profile }) => {
   });
 
   const onSubmit = (value: BasicBodyType) => {
-    console.log(value);
+    setLoading(true);
+    brandRequest
+      .updateGeneralInfo(value)
+      .then(() => mutate().then(() => router.push(config.routes.brand.create(2))))
+      .catch((err) => toast.error(err.message))
+      .finally(() => setLoading(false));
   };
 
   return (

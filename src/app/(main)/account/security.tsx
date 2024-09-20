@@ -9,7 +9,7 @@ import { ChangePasswordBodyType, changePasswordSchema } from '@/schema-validatio
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { useForm } from 'react-hook-form';
-import { authRequest } from '@/request';
+import { userRequest } from '@/request';
 import { toast } from 'sonner';
 
 const Security = () => {
@@ -31,7 +31,7 @@ const Security = () => {
 
   const onSubmit = async (values: ChangePasswordBodyType) => {
     setLoading(true);
-    authRequest
+    userRequest
       .changePassword(values)
       .then(() => toast.success('Vui lòng kiểm tra email để xác nhận'))
       .catch((err) => toast.error(err.message))
