@@ -4,6 +4,8 @@ interface IBrand {
   name: string;
   address: string;
   isPremium: boolean;
+  avatar: string;
+  coverImg?: string;
   description?: string;
   createdAt?: Date;
   modifiedAt?: Date;

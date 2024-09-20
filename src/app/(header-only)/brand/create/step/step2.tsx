@@ -2,109 +2,70 @@
 
 import { FC, useState } from 'react';
 import DetailStepProps from './props';
+import AvatarUploader from '@/components/avatar-uploader';
 import { useForm } from 'react-hook-form';
-import { SocialBodyType, socialSchema } from '@/schema-validations/brand.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import { ImagesBodyType, imagesSchema } from '@/schema-validations/brand.schema';
+import CoverUploader from '@/components/cover-uploader';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import config from '@/config';
 import { toast } from 'sonner';
 
 const Step2: FC<DetailStepProps> = ({ profile }) => {
   const [loading] = useState(false);
-  const form = useForm<SocialBodyType>({
-    resolver: zodResolver(socialSchema),
-    defaultValues: {
-      websiteLink: profile.websiteLink,
-      facebookLink: profile.facebookLink,
-      tiktokLink: profile.tiktokLink,
-      instagramLink: profile.instagramLink,
-      youtubeLink: profile.youtubeLink,
-    },
+  const form = useForm<ImagesBodyType>({
+    resolver: zodResolver(imagesSchema),
   });
 
-  const onSubmit = (values: SocialBodyType) => {
-    const data: SocialBodyType = Object.fromEntries(Object.entries(values).filter(([, value]) => !!value));
-    if (!Object.keys(data).length) {
-      toast.error('Vui lòng nhập ít nhất một đường dẫn');
-      return;
-    }
-    // TODO: Call api
-    console.log(data);
+  const avatarRef = form.register('avatar');
+  const coverRef = form.register('cover');
+
+  const onSubmit = (values: ImagesBodyType) => {
+    console.log(values);
+  };
+
+  const onError = (err: any) => {
+    toast.error(err.cover.message);
   };
 
   return (
     <Form {...form}>
-      <form className="flex flex-col gap-6" onSubmit={form.handleSubmit(onSubmit)}>
-        <FormField
-          control={form.control}
-          name="websiteLink"
-          render={({ field }) => (
-            <FormItem>
-              <Label htmlFor="websiteLink">Website</Label>
-              <FormControl>
-                <Input id="websiteLink" type="url" placeholder="Website" className="w-full" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="facebookLink"
-          render={({ field }) => (
-            <FormItem>
-              <Label htmlFor="facebookLink">Facebook</Label>
-              <FormControl>
-                <Input id="facebookLink" type="url" placeholder="Facebook" className="w-full" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="tiktokLink"
-          render={({ field }) => (
-            <FormItem>
-              <Label htmlFor="tiktokLink">TikTok</Label>
-              <FormControl>
-                <Input id="tiktokLink" type="url" placeholder="TikTok" className="w-full" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="instagramLink"
-          render={({ field }) => (
-            <FormItem>
-              <Label htmlFor="instagramLink">Instagram</Label>
-              <FormControl>
-                <Input id="instagramLink" type="url" placeholder="Instagram" className="w-full" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="youtubeLink"
-          render={({ field }) => (
-            <FormItem>
-              <Label htmlFor="youtubeLink">YouTube</Label>
-              <FormControl>
-                <Input id="youtubeLink" type="url" placeholder="YouTube" className="w-full" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button size="large" variant="gradient" fullWidth loading={loading}>
+      <form onSubmit={form.handleSubmit(onSubmit, onError)}>
+        <div className="relative">
+          <FormField
+            control={form.control}
+            name="cover"
+            render={() => (
+              <FormItem>
+                <FormControl>
+                  <CoverUploader {...coverRef} defaultSrc={profile.coverImg} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="avatar"
+            render={() => (
+              <FormItem className="absolute -bottom-1/3 left-1/2 -translate-x-1/2">
+                <FormControl>
+                  <AvatarUploader {...avatarRef} defaultSrc={profile.avatar} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <Button type="submit" variant="gradient" size="large" className="mt-32" fullWidth loading={loading}>
           Tiếp tục
         </Button>
+        {profile.avatar && (
+          <Button type="button" variant="link" className="text-muted-foreground" asChild>
+            <Link href={config.routes.brand.create(3)}>Bỏ qua bước này</Link>
+          </Button>
+        )}
       </form>
     </Form>
   );

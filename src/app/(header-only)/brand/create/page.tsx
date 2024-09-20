@@ -10,6 +10,7 @@ import Step from './step';
 import DetailStepProps from './step/props';
 import Step1 from './step/step1';
 import Step2 from './step/step2';
+import Step3 from './step/step3';
 
 interface CreateProps {
   searchParams?: { step: number };
@@ -55,16 +56,16 @@ export const stepPages: {
     checkKey: 'name',
   },
   2: {
+    title: 'Thêm ảnh đại diện và ảnh bìa cho nhãn hàng của bạn',
+    description: 'Điều này giúp cho các người sáng tạo có thể nhận diện nhãn hàng một cách dễ dàng hơn',
+    component: Step2,
+    checkKey: 'coverImg',
+  },
+  3: {
     title: 'Thêm các phương tiện truyền thông',
     description:
       'Điều quan trọng là người sáng tạo có thể xem các trang mạng xã hội của bạn trước khi tạo nội dung cho bạn.',
-    component: Step2,
-    checkKey: 'id',
-  },
-  3: {
-    title: 'Thêm các trang mạng xã hội của bạn',
-    description: '',
-    component: Step1,
+    component: Step3,
     checkKey: 'id',
   },
 };

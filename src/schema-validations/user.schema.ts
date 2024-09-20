@@ -4,20 +4,17 @@ import { z } from 'zod';
 const isBrowser = typeof window !== 'undefined';
 
 export const avatarSchema = z.object({
-  avatar: z.union([
-    z
-      .instanceof(isBrowser ? FileList : Array)
-      .refine((files) => isBrowser && files instanceof FileList && files && files.length > 0, {
-        message: 'Vui lòng tải ảnh lên',
-      })
-      .refine((files) => isBrowser && files instanceof FileList && files[0]?.type.startsWith('image/'), {
-        message: 'Tệp tin không phải hình ảnh',
-      })
-      .refine((files) => isBrowser && files instanceof FileList && files[0]?.size <= 3 * 1024 * 1024, {
-        message: 'Kích thước tệp lớn hơn 3MB',
-      }),
-    z.string().optional(),
-  ]),
+  avatar: z
+    .instanceof(isBrowser ? FileList : Array)
+    .refine((files) => isBrowser && files instanceof FileList && files && files.length > 0, {
+      message: 'Vui lòng tải ảnh lên',
+    })
+    .refine((files) => isBrowser && files instanceof FileList && files[0]?.type.startsWith('image/'), {
+      message: 'Tệp tin không phải hình ảnh',
+    })
+    .refine((files) => isBrowser && files instanceof FileList && files[0]?.size <= 3 * 1024 * 1024, {
+      message: 'Kích thước tệp lớn hơn 3MB',
+    }),
 });
 
 export const changePasswordSchema = z
