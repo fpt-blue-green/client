@@ -15,6 +15,10 @@ const routes = {
   brand: {
     base: '/brand',
   },
+  brands: {
+    base: '/brands',
+    details: (slug: string) => `/brands/${slug}`,
+  },
   register: {
     brand: '/auth/register/brand',
     influencer: '/auth/register/influencer',
