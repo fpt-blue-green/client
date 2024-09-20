@@ -10,13 +10,21 @@ import { Label } from '@/components/ui/label';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { Button } from '@/components/ui/button';
 import DetailStepProps from './props';
+import { influencerRequest } from '@/request';
+import { toast } from 'sonner';
+import { constants } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
+import config from '@/config';
 
-const Step7: FC<DetailStepProps> = () => {
+const Step7: FC<DetailStepProps> = ({ profile, mutate }) => {
+  const [loading, setLoading] = useState(false);
   const [count, setCount] = useState(0);
+  const router = useRouter();
+
   const form = useForm<PhoneBodyType>({
     resolver: zodResolver(phoneSchema),
     defaultValues: {
-      phone: '',
+      phone: profile.phone || '',
       otp: '',
     },
   });
@@ -32,15 +40,22 @@ const Step7: FC<DetailStepProps> = () => {
   }, [count]);
 
   const onSubmit = (values: PhoneBodyType) => {
-    console.log(values);
+    setLoading(true);
+    influencerRequest
+      .verifyOtp(values)
+      .then(() => mutate().then(() => router.push(config.routes.home)))
+      .catch((err) => toast.error(err.message || constants.sthWentWrong))
+      .finally(() => setLoading(false));
   };
 
   const handleSendOtp = async () => {
     const result = await form.trigger('phone');
     if (result) {
-      // TODO: Send OTP
       setCount(60);
-      console.log('Send OTP');
+      influencerRequest
+        .sendOtp(form.watch('phone'))
+        .then(() => toast.success('Đã gửi tin nhắn vào số điện thoại. Vui lòng kiểm tra OTP.'))
+        .catch((err) => toast.error(err.message || constants.sthWentWrong));
     }
   };
 
@@ -96,7 +111,7 @@ const Step7: FC<DetailStepProps> = () => {
             </FormItem>
           )}
         />
-        <Button size="large" variant="gradient" fullWidth className="col-span-full">
+        <Button size="large" variant="gradient" fullWidth className="col-span-full" loading={loading}>
           Hoàn thành
         </Button>
       </form>

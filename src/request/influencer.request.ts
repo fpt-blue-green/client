@@ -1,5 +1,10 @@
 import http from '@/lib/http';
-import { ChannelBodyType, GeneralBodyType, PackageBodyType } from '@/schema-validations/influencer.schema';
+import {
+  ChannelBodyType,
+  GeneralBodyType,
+  PackageBodyType,
+  PhoneBodyType,
+} from '@/schema-validations/influencer.schema';
 import IInfluencer from '@/types/influencer';
 
 const influencerRequest = {
@@ -15,6 +20,8 @@ const influencerRequest = {
     images.forEach((image) => formData.append('images', image));
     return http.post<string[]>('/Influencer/images', formData);
   },
+  sendOtp: (phone: PhoneBodyType['phone']) => http.post('/Influencer/phone/sendOtp', { phone }),
+  verifyOtp: (body: PhoneBodyType) => http.post('/Influencer/phone/verify', body),
 };
 
 export default influencerRequest;
