@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import config from '@/config';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaEdit } from 'react-icons/fa';
@@ -7,8 +8,8 @@ const BrandDetails = () => {
   return (
     <div className="container my-8">
       <div className="flex justify-end mb-4">
-        <Button variant="ghost" startIcon={<FaEdit />}>
-          Chỉnh sửa
+        <Button variant="ghost" startIcon={<FaEdit />} asChild>
+          <Link href={config.routes.brands.editProfile}>Chỉnh sửa</Link>
         </Button>
       </div>
       <div className="relative flex flex-col items-center mb-12">
@@ -35,7 +36,7 @@ const BrandDetails = () => {
           Phần mô tả và hình ảnh chất lượng, cùng với những kênh mạng xã hội phổ biến sẽ mang lại kết quả gấp 3 lần
           trong việc tìm kiếm và kết hợp với các nhà sáng tạo.
           <Button className="font-semibold text-md text-foreground underline" variant="link">
-            Hoàn thành hồ sơ ngay.
+            <Link href={config.routes.brands.editProfile}>Hoàn thành hồ sơ ngay.</Link>
           </Button>
         </p>
       </div>

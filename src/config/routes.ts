@@ -19,6 +19,7 @@ const routes = {
   brands: {
     base: '/brands',
     details: (slug: string) => `/brands/${slug}`,
+    editProfile: '/brands/edit-profile',
   },
   register: {
     brand: '/auth/register/brand',
