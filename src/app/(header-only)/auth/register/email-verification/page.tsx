@@ -1,7 +1,6 @@
 'use client';
 import VerificationGuidanceModal from './verification-guidance-modal';
 import { LuMailCheck } from 'react-icons/lu';
-import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
 const EmailVerification = () => {
@@ -20,12 +19,9 @@ const EmailVerification = () => {
         </p>
       </div>
       <p className="text-center">
-        Hãy{' '}
-        <Link className="text-muted-foreground underline" href="">
-          bấm vào đây
-        </Link>{' '}
-        để hoàn thành việc đăng ký tài khoản của bạn. Nếu gặp vấn đề với việc xác thực, bạn có lẽ cần đọc{' '}
-        <span className="font-semibold">hướng dẫn</span> bên dưới.
+        Hãy đến
+        <span className="font-bold ml-1">hòm thư</span> của bạn để hoàn thành việc đăng ký tài khoản. Nếu gặp vấn đề với
+        việc xác thực, bạn có lẽ cần đọc <span className="font-semibold">hướng dẫn</span> bên dưới.
       </p>
       <p className="px-8 text-center mt-4">Vẫn chưa xác thực được? Đừng lo. </p>
       <VerificationGuidanceModal />

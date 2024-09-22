@@ -16,6 +16,10 @@ const routes = {
     base: '/brand',
     create: (step: number) => `/brand/create?step=${step}`,
   },
+  brands: {
+    base: '/brands',
+    details: (slug: string) => `/brands/${slug}`,
+  },
   register: {
     brand: '/auth/register/brand',
     influencer: '/auth/register/influencer',
