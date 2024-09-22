@@ -2,15 +2,8 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import config from '@/config';
 import Link from 'next/link';
-import { influencerRequest } from '@/request';
-import IInfluencer from '@/types/influencer';
 import { Metadata } from 'next';
 import ProfileTabs from './profile-tabs';
-
-const getInfluencer = async (): Promise<IInfluencer | undefined> => {
-  const res = await influencerRequest.me();
-  return res.data;
-};
 
 export const metadata: Metadata = {
   title: 'Chỉnh sửa thông tin cá nhân',

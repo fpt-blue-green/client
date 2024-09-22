@@ -49,7 +49,12 @@ const Details: FC<IDetailsProps> = ({}) => {
                   <FormItem>
                     <Label htmlFor="address">Địa chỉ</Label>
                     <FormControl>
-                      <AddressPicker {...field} id="address" className="w-full" />
+                      <AddressPicker
+                        {...field}
+                        id="address"
+                        className="w-full"
+                        placeholder="Nhập vào 3 kí tự đầu tiên và lựa chọn từ bảng gợi ý"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
