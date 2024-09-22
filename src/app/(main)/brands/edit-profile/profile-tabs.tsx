@@ -3,6 +3,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { IdCardIcon } from '@radix-ui/react-icons';
 import { FaNetworkWired, FaRegImages } from 'react-icons/fa6';
+import Details from './details';
 
 const ProfileTabs = () => {
   // const { data: influencer, isLoading, mutate } = useSWRImmutable<IInfluencer>('/Brand', fetcher);
@@ -27,7 +28,9 @@ const ProfileTabs = () => {
           <span className="max-md:hidden ml-2">Mạng xã hội</span>
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="details">{/* <Details influencer={influencer} mutate={mutate} /> */}</TabsContent>
+      <TabsContent value="details">
+        <Details />
+      </TabsContent>
       <TabsContent value="images">{/* <ImageGallery influencer={influencer} mutate={mutate} /> */}</TabsContent>
       <TabsContent value="socialMedias">{/* <SocialMedias influencer={influencer} mutate={mutate} /> */}</TabsContent>
     </Tabs>
