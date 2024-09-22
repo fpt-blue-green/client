@@ -8,7 +8,7 @@ import {
 import IInfluencer from '@/types/influencer';
 
 const influencerRequest = {
-  me: () => http.get<IInfluencer>('/Influencer'),
+  me: (noCache?: boolean) => http.get<IInfluencer>('/Influencer', { cache: noCache ? 'no-cache' : 'default' }),
   updateGeneralInfo: (body: GeneralBodyType) => http.put<string>('/Influencer', body),
   updateChannels: (channels: ChannelBodyType[]) => http.post('/Influencer/channels', channels),
   deleteChannel: (id: string) => http.delete(`/Influencer/channels/${id}`),
