@@ -90,9 +90,11 @@ const Step2: FC<DetailStepProps> = ({ profile, mutate }) => {
           Tiếp tục
         </Button>
         {profile.avatar && (
-          <Button type="button" variant="link" className="text-muted-foreground" asChild>
-            <Link href={config.routes.brand.create(3)}>Bỏ qua bước này</Link>
-          </Button>
+          <div className="flex justify-center mt-8">
+            <Button type="button" variant="link" className="text-muted-foreground" asChild>
+              <Link href={config.routes.brand.create(3)}>Bỏ qua bước này</Link>
+            </Button>
+          </div>
         )}
       </form>
     </Form>
