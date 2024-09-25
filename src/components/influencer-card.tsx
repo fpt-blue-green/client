@@ -1,55 +1,102 @@
 'use client';
 
-import { FC, useState } from 'react';
+import { FC, MouseEvent, useState } from 'react';
 import config from '@/config';
 import { formats } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Skeleton } from './ui/skeleton';
-import { HeartFilledIcon, HeartIcon } from '@radix-ui/react-icons';
+import { HeartFilledIcon, HeartIcon, StarFilledIcon } from '@radix-ui/react-icons';
 import { Button } from './ui/button';
+import IInfluencer from '@/types/influencer';
+import { PlatformData } from '@/types/enum';
+
+const mockInfluencer: IInfluencer = {
+  id: 'fakeId',
+  address: 'Đà Nẵng, Việt Nam',
+  avatar: '/assets/img/influencer.jpg',
+  averagePrice: 480000,
+  channels: [
+    {
+      id: 'fakeId',
+      followersCount: 400,
+      platform: 1,
+      userName: 'string',
+    },
+  ],
+  fullName: 'Fake Influencer',
+  gender: 1,
+  images: [{ id: 'fakeId', url: '/assets/img/influencer.jpg' }],
+  isPublish: true,
+  nickName: 'fakeId',
+  packages: [],
+  phone: '',
+  rateAverage: 3,
+  slug: 'string',
+  summarise: 'Thời trang và phong cách sống',
+  userId: '',
+  tags: [],
+};
 
 interface InfluencerCardProps {
+  data: IInfluencer;
   favorite?: boolean;
 }
 
-const InfluencerCard: FC<InfluencerCardProps> = ({ favorite }) => {
+const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer, favorite }) => {
   const [isFavorite, setIsFavorite] = useState(favorite);
 
-  const handleFavorite = () => {
+  const handleFavorite = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
     setIsFavorite(!isFavorite);
     // !TODO
   };
 
   return (
-    <Link href={config.routes.influencers.details('SofiaBarcenas')} className="space-y-1.5">
-      <div className="relative rounded-lg overflow-hidden group">
-        <Image
-          src="/assets/img/influencer.jpg"
-          alt="Name"
-          width={400}
-          height={600}
-          className="aspect-thumbnail object-cover transition-transform w-full group-hover:scale-110"
-        />
-        <div className="absolute left-0 top-0 right-0 bottom-0 bg-bg-gradient-to-b from-foreground/5 from-75% to-foreground"></div>
-        <div className="absolute left-3 bottom-2 text-background">
-          <h6 className="font-semibold">Influencer Name</h6>
-          <span className="text-sm">Đà Nẵng, Việt Nam</span>
+    <div className="relative">
+      {favorite !== undefined && (
+        <div className="absolute top-3 right-3 z-10">
+          <Button variant="secondary" className="h-7 p-1 rounded-full" onClick={handleFavorite}>
+            {isFavorite ? <HeartFilledIcon className="size-5 text-destructive" /> : <HeartIcon className="size-5" />}
+          </Button>
         </div>
-        {favorite !== undefined && (
-          <div className="absolute top-3 right-3">
-            <Button variant="ghost" className="h-7 p-1 rounded-full" onClick={handleFavorite}>
-              {isFavorite ? <HeartFilledIcon className="size-5 text-destructive" /> : <HeartIcon className="size-5" />}
-            </Button>
+      )}
+      <Link href={config.routes.influencers.details(data.slug)} className="space-y-1.5 text-sm">
+        <div className="relative rounded-lg overflow-hidden group">
+          <Image
+            src={data.images[0].url}
+            alt={`Ảnh đại diện của ${data.fullName}`}
+            width={400}
+            height={600}
+            className="aspect-thumbnail object-cover transition-transform w-full group-hover:scale-110"
+          />
+          <div className="absolute left-0 top-0 right-0 bottom-0 bg-bg-gradient-to-b from-black/5 from-75% to-black"></div>
+          <div className="absolute left-3 bottom-2 text-white">
+            <div className="flex items-center gap-1">
+              <h6 className="font-semibold text-sm">{data.fullName}</h6>
+              {data.rateAverage > 0 && (
+                <>
+                  <StarFilledIcon className="text-yellow-400" />
+                  <span>{data.rateAverage.toFixed(1)}</span>
+                </>
+              )}
+            </div>
+            <span className="text-xs">{data.address}</span>
           </div>
-        )}
-      </div>
-      <div className="flex items-center justify-between">
-        <span className="font-medium text-muted-foreground">Platform</span>
-        <span className="font-bold">{formats.price(500000)}</span>
-      </div>
-      <div className="text-sm">Lifestyle & Fashion content creator</div>
-    </Link>
+        </div>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1 text-sm">
+            {data.channels.map((c, index) => {
+              const { Icon } = PlatformData[c.platform];
+              return <Icon key={index} />;
+            })}
+          </div>
+          <span className="font-bold">{formats.price(data.averagePrice)}</span>
+        </div>
+        <div className="text-xs">{data.summarise}</div>
+      </Link>
+    </div>
   );
 };
 

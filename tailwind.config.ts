@@ -85,6 +85,10 @@ const config = {
       aspectRatio: {
         thumbnail: '3/4',
       },
+      zIndex: {
+        1: '1',
+        5: '5',
+      },
     },
   },
 } satisfies Config;
