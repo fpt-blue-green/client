@@ -12,11 +12,11 @@ export const basicSchema = z
 
 export const socialSchema = z
   .object({
-    websiteLink: z.string().optional(),
-    facebookLink: z.string().optional(),
-    tiktokLink: z.string().optional(),
-    instagramLink: z.string().optional(),
-    youtubeLink: z.string().optional(),
+    websiteUrl: z.string().url('Vui lòng nhập một URL hợp lệ').optional(),
+    facebookUrl: z.string().url('Vui lòng nhập một URL hợp lệ').optional(),
+    tiktokUrl: z.string().url('Vui lòng nhập một URL hợp lệ').optional(),
+    instagramUrl: z.string().url('Vui lòng nhập một URL hợp lệ').optional(),
+    youtubeUrl: z.string().url('Vui lòng nhập một URL hợp lệ').optional(),
   })
   .strict();
 
