@@ -27,11 +27,13 @@ import useSWR from 'swr';
 import { fetcher } from '@/lib/http';
 import IInfluencer from '@/types/influencer';
 import { ERole } from '@/types/enum';
+import IBrand from '@/types/brand';
 
 const ProfileDropdown = () => {
   const { data: session } = useSession<true>();
   const user = session?.user;
   const { data: influencer } = useSWR<IInfluencer>('/Influencer', user?.role === ERole.Influencer ? fetcher : null);
+  const { data: brand } = useSWR<IBrand>('/Brand', user?.role === ERole.Brand ? fetcher : null);
 
   return (
     <DropdownMenu>
@@ -67,6 +69,11 @@ const ProfileDropdown = () => {
               {influencer && (
                 <DropdownMenuItem asChild>
                   <Link href={config.routes.influencers.details(influencer.slug)}>Trang cá nhân</Link>
+                </DropdownMenuItem>
+              )}
+              {brand && (
+                <DropdownMenuItem asChild>
+                  <Link href={config.routes.brands.details(brand.id)}>Trang cá nhân</Link>
                 </DropdownMenuItem>
               )}
               <DropdownMenuItem onClick={() => signOut({ callbackUrl: config.routes.home })}>

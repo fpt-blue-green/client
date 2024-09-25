@@ -9,11 +9,11 @@ interface IBrand {
   description?: string;
   createdAt?: Date;
   modifiedAt?: Date;
-  websiteLink?: string;
-  facebookLink?: string;
-  tiktokLink?: string;
-  instagramLink?: string;
-  youtubeLink?: string;
+  websiteUrl?: string;
+  facebookUrl?: string;
+  tiktokUrl?: string;
+  instagramUrl?: string;
+  youtubeUrl?: string;
 }
 
 export default IBrand;

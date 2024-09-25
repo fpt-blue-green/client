@@ -1,5 +1,5 @@
 import http from '@/lib/http';
-import { BasicBodyType } from '@/schema-validations/brand.schema';
+import { BasicBodyType, SocialBodyType } from '@/schema-validations/brand.schema';
 import IBrand from '@/types/brand';
 
 const brandRequest = {
@@ -8,8 +8,9 @@ const brandRequest = {
   changeCover: (coverImg: File) => {
     const formData = new FormData();
     formData.append('file', coverImg);
-    return http.patch<string>('/Brand/upload/banner', formData);
+    return http.patch<string>('/Brand/CoverImg', formData);
   },
+  addSocialLink: (body: SocialBodyType) => http.put('/Brand/social', body),
 };
 
 export default brandRequest;

@@ -1,8 +1,8 @@
 'use client';
 
-import { FC, useState } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
 import DetailStepProps from './props';
-import { useForm } from 'react-hook-form';
+import { ControllerRenderProps, useForm } from 'react-hook-form';
 import { SocialBodyType, socialSchema } from '@/schema-validations/brand.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
@@ -10,17 +10,22 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { brandRequest } from '@/request';
+import { useRouter } from 'next/navigation';
+import config from '@/config';
+import { constants } from '@/lib/utils';
 
-const Step3: FC<DetailStepProps> = ({ profile }) => {
-  const [loading] = useState(false);
+const Step3: FC<DetailStepProps> = ({ profile, mutate }) => {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const form = useForm<SocialBodyType>({
     resolver: zodResolver(socialSchema),
     defaultValues: {
-      websiteLink: profile.websiteLink,
-      facebookLink: profile.facebookLink,
-      tiktokLink: profile.tiktokLink,
-      instagramLink: profile.instagramLink,
-      youtubeLink: profile.youtubeLink,
+      websiteUrl: profile.websiteUrl || undefined,
+      facebookUrl: profile.facebookUrl || undefined,
+      tiktokUrl: profile.tiktokUrl || undefined,
+      instagramUrl: profile.instagramUrl || undefined,
+      youtubeUrl: profile.youtubeUrl || undefined,
     },
   });
 
@@ -30,21 +35,38 @@ const Step3: FC<DetailStepProps> = ({ profile }) => {
       toast.error('Vui lòng nhập ít nhất một đường dẫn');
       return;
     }
-    // TODO: Call api
-    console.log(data);
+
+    setLoading(true);
+    brandRequest
+      .addSocialLink(values)
+      .then(() => mutate().then(() => router.push(config.routes.brands.details(profile.id))))
+      .catch((err) => toast.error(err.message || constants.sthWentWrong));
+  };
+
+  const handleChange = (field: ControllerRenderProps<SocialBodyType>) => (e: ChangeEvent<HTMLInputElement>) => {
+    let value = undefined;
+    if (e.target.value) value = e.target.value;
+    field.onChange(value);
   };
 
   return (
     <Form {...form}>
-      <form className="flex flex-col gap-6" onSubmit={form.handleSubmit(onSubmit)}>
+      <form className="flex flex-col gap-6" onSubmit={form.handleSubmit(onSubmit)} noValidate>
         <FormField
           control={form.control}
-          name="websiteLink"
+          name="websiteUrl"
           render={({ field }) => (
             <FormItem>
-              <Label htmlFor="websiteLink">Website</Label>
+              <Label htmlFor="websiteUrl">Website</Label>
               <FormControl>
-                <Input id="websiteLink" type="url" placeholder="Website" className="w-full" {...field} />
+                <Input
+                  id="websiteUrl"
+                  type="url"
+                  placeholder="Website"
+                  className="w-full"
+                  {...field}
+                  onChange={handleChange(field)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -52,12 +74,19 @@ const Step3: FC<DetailStepProps> = ({ profile }) => {
         />
         <FormField
           control={form.control}
-          name="facebookLink"
+          name="facebookUrl"
           render={({ field }) => (
             <FormItem>
-              <Label htmlFor="facebookLink">Facebook</Label>
+              <Label htmlFor="facebookUrl">Facebook</Label>
               <FormControl>
-                <Input id="facebookLink" type="url" placeholder="Facebook" className="w-full" {...field} />
+                <Input
+                  id="facebookUrl"
+                  type="url"
+                  placeholder="Facebook"
+                  className="w-full"
+                  {...field}
+                  onChange={handleChange(field)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -65,12 +94,19 @@ const Step3: FC<DetailStepProps> = ({ profile }) => {
         />
         <FormField
           control={form.control}
-          name="tiktokLink"
+          name="tiktokUrl"
           render={({ field }) => (
             <FormItem>
-              <Label htmlFor="tiktokLink">TikTok</Label>
+              <Label htmlFor="tiktokUrl">TikTok</Label>
               <FormControl>
-                <Input id="tiktokLink" type="url" placeholder="TikTok" className="w-full" {...field} />
+                <Input
+                  id="tiktokUrl"
+                  type="url"
+                  placeholder="TikTok"
+                  className="w-full"
+                  {...field}
+                  onChange={handleChange(field)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -78,12 +114,19 @@ const Step3: FC<DetailStepProps> = ({ profile }) => {
         />
         <FormField
           control={form.control}
-          name="instagramLink"
+          name="instagramUrl"
           render={({ field }) => (
             <FormItem>
-              <Label htmlFor="instagramLink">Instagram</Label>
+              <Label htmlFor="instagramUrl">Instagram</Label>
               <FormControl>
-                <Input id="instagramLink" type="url" placeholder="Instagram" className="w-full" {...field} />
+                <Input
+                  id="instagramUrl"
+                  type="url"
+                  placeholder="Instagram"
+                  className="w-full"
+                  {...field}
+                  onChange={handleChange(field)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -91,12 +134,19 @@ const Step3: FC<DetailStepProps> = ({ profile }) => {
         />
         <FormField
           control={form.control}
-          name="youtubeLink"
+          name="youtubeUrl"
           render={({ field }) => (
             <FormItem>
-              <Label htmlFor="youtubeLink">YouTube</Label>
+              <Label htmlFor="youtubeUrl">YouTube</Label>
               <FormControl>
-                <Input id="youtubeLink" type="url" placeholder="YouTube" className="w-full" {...field} />
+                <Input
+                  id="youtubeUrl"
+                  type="url"
+                  placeholder="YouTube"
+                  className="w-full"
+                  {...field}
+                  onChange={handleChange(field)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
