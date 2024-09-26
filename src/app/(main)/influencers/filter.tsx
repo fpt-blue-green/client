@@ -14,7 +14,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { ChevronDownIcon, ChevronUpIcon, Cross2Icon, MagnifyingGlassIcon, ReloadIcon } from '@radix-ui/react-icons';
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  Cross2Icon,
+  MagnifyingGlassIcon,
+  ReloadIcon,
+  StarFilledIcon,
+} from '@radix-ui/react-icons';
 import { LuFilter } from 'react-icons/lu';
 import { Slider } from '@/components/ui/slider';
 import { formats } from '@/lib/utils';
@@ -40,7 +47,7 @@ interface FilterProps {
 }
 
 const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
-  const { searchTerm, platforms, tags: categories, priceRange, sortBy, isAscending } = data;
+  const { searchTerm, platforms, tags: categories, priceRange, rating, sortBy, isAscending } = data;
   const [sortOpen, setSortOpen] = useState(false);
   const [search, setSearch] = useState(searchTerm);
   const debouncedSearch = useDebounce(search, 500);
@@ -60,6 +67,7 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
 
   const handleReset = () => {
     dispatch({ type: 'RESET_FILTER' });
+    setPrice([0, 10_000_000]);
   };
 
   const handleTogglePlatform = (value: EPlatform) => () => {
@@ -72,6 +80,10 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
 
   const handleRangeChange = (value: [number, number]) => {
     setPrice(value);
+  };
+
+  const handleRatingChange = (value: string) => {
+    dispatch({ type: 'SET_RATING', payload: +value });
   };
 
   const handleSortChange = (value: string) => {
@@ -173,6 +185,52 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
                   <Input className="h-10" inputClassName="text-right" value={formats.price(price[1])} readOnly />
                 </div>
               </div>
+              <div>
+                <h5 className="font-medium mb-2">Đánh giá</h5>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button size="large" variant="ghost" className="px-3" fullWidth>
+                      {rating ? (
+                        <span className="flex items-center gap-1">
+                          {rating} <StarFilledIcon className="text-yellow-400" /> trở lên
+                        </span>
+                      ) : (
+                        'Mặc định'
+                      )}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-52">
+                    <DropdownMenuRadioGroup value={rating.toString()} onValueChange={handleRatingChange}>
+                      <DropdownMenuRadioItem value="0">Mặc định</DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="5">
+                        <span className="flex items-center gap-1">
+                          5 <StarFilledIcon className="text-yellow-400" /> trở lên
+                        </span>
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="4">
+                        <span className="flex items-center gap-1">
+                          4 <StarFilledIcon className="text-yellow-400" /> trở lên
+                        </span>
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="3">
+                        <span className="flex items-center gap-1">
+                          3 <StarFilledIcon className="text-yellow-400" /> trở lên
+                        </span>
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="2">
+                        <span className="flex items-center gap-1">
+                          2 <StarFilledIcon className="text-yellow-400" /> trở lên
+                        </span>
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="1">
+                        <span className="flex items-center gap-1">
+                          1 <StarFilledIcon className="text-yellow-400" /> trở lên
+                        </span>
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
           </SheetContent>
         </Sheet>
@@ -184,15 +242,16 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
               className="px-3"
               endIcon={sortOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
             >
-              Sắp xếp theo: Nổi bật
+              Sắp xếp theo: {sortItems.find((i) => i.value === (isAscending ? sortBy : `-${sortBy}`))?.text}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuRadioGroup value={isAscending ? sortBy : `-${sortBy}`} onValueChange={handleSortChange}>
-              <DropdownMenuRadioItem value="">Nổi bật</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="AveragePrice">Giá từ thấp đến cao</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="-AveragePrice">Giá từ cao đến thấp</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="-RateAverage">Đánh giá tốt nhất</DropdownMenuRadioItem>
+              {sortItems.map((item) => (
+                <DropdownMenuRadioItem key={item.value} value={item.value}>
+                  {item.text}
+                </DropdownMenuRadioItem>
+              ))}
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -200,5 +259,24 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
     </div>
   );
 };
+
+const sortItems = [
+  {
+    value: '',
+    text: 'Nổi bật',
+  },
+  {
+    value: 'AveragePrice',
+    text: 'Giá từ thấp đến cao',
+  },
+  {
+    value: '-AveragePrice',
+    text: 'Giá từ cao đến thấp',
+  },
+  {
+    value: '-RateAverage',
+    text: 'Đánh giá tốt nhất',
+  },
+];
 
 export default Filter;
