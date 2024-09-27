@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useReducer } from 'react';
+import { useLayoutEffect, useMemo, useReducer, useState } from 'react';
 import InfluencerCard, { InfluencerCardSkeleton } from '@/components/influencer-card';
 import { fetcher } from '@/lib/http';
 import useSWRImmutable from 'swr/immutable';
@@ -8,6 +8,7 @@ import Filter from './filter';
 import { EPlatform } from '@/types/enum';
 import IInfluencer from '@/types/influencer';
 import Pagination from '@/components/custom/pagination';
+import NoData from '@/components/custom/no-data';
 
 export interface FilterState {
   page: number;
@@ -23,7 +24,7 @@ export interface FilterState {
 
 const initialState: FilterState = {
   page: 1,
-  pageSize: 4,
+  pageSize: 24,
   searchTerm: '',
   platforms: [],
   tags: [],
@@ -48,10 +49,11 @@ const filterReducer = (state: FilterState, action: FilterAction) => {
     case 'SET_PAGE':
       return { ...state, page: action.payload };
     case 'SET_SEARCH_TERM':
-      return { ...state, searchTerm: action.payload };
+      return { ...state, page: 1, searchTerm: action.payload };
     case 'TOGGLE_PLATFORM':
       return {
         ...state,
+        page: 1,
         platforms: state.platforms.includes(action.payload)
           ? state.platforms.filter((p) => p !== action.payload)
           : [...state.platforms, action.payload],
@@ -59,14 +61,15 @@ const filterReducer = (state: FilterState, action: FilterAction) => {
     case 'TOGGLE_TAG':
       return {
         ...state,
+        page: 1,
         tags: state.tags.includes(action.payload)
           ? state.tags.filter((c) => c !== action.payload)
           : [...state.tags, action.payload],
       };
     case 'SET_PRICE_RANGE':
-      return { ...state, priceRange: action.payload };
+      return { ...state, page: 1, priceRange: action.payload };
     case 'SET_RATING':
-      return { ...state, rating: action.payload };
+      return { ...state, page: 1, rating: action.payload };
     case 'SET_SORT_BY':
       const isAscending = !action.payload.startsWith('-');
       return { ...state, sortBy: action.payload.substring(isAscending ? 0 : 1), isAscending };
@@ -107,6 +110,13 @@ const List = () => {
     return '/Influencers?' + searchParams.toString();
   }, [filter]);
   const { data, isLoading } = useSWRImmutable<{ totalCount: number; influencers: IInfluencer[] }>(url, fetcher);
+  const [pageCount, setPageCount] = useState(0);
+
+  useLayoutEffect(() => {
+    if (!isLoading) {
+      setPageCount(data ? Math.ceil(data.totalCount / filter.pageSize) : 0);
+    }
+  }, [data, isLoading, filter.pageSize]);
 
   const isOptionsChange =
     filter.platforms.length !== initialState.platforms.length ||
@@ -126,16 +136,23 @@ const List = () => {
         <Filter data={filter} dispatch={dispatch} isChanged={isOptionsChange} />
       </div>
       <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-x-6 gap-y-8">
-        {isLoading
-          ? Array.from({ length: 30 }).map((_, index) => <InfluencerCardSkeleton key={index} />)
-          : data?.influencers.map((i) => <InfluencerCard key={i.id} data={i} favorite={false} />)}
+        {isLoading ? (
+          Array.from({ length: filter.pageSize }).map((_, index) => <InfluencerCardSkeleton key={index} />)
+        ) : data && data.influencers.length > 0 ? (
+          data.influencers.map((i) => <InfluencerCard key={i.id} data={i} favorite={false} />)
+        ) : (
+          <NoData description="Không tìm thấy người sáng tạo" className="col-span-full" />
+        )}
       </div>
-      <Pagination
-        className="mt-8"
-        count={Math.ceil((data?.totalCount || 0) / filter.pageSize)}
-        page={filter.page}
-        onPageChange={handlePageChange}
-      />
+      {pageCount > 1 && (
+        <Pagination
+          className="mt-8"
+          count={pageCount}
+          page={filter.page}
+          boundaryCount={2}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   );
 };
