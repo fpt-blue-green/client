@@ -22,7 +22,7 @@ const EditInfluencerProfile = async () => {
   return (
     <div className="container mt-8 mb-16">
       {influencer && (
-        <Button size="medium" variant="ghost" asChild startIcon={<ArrowLeftIcon />}>
+        <Button size="medium" variant="secondary" asChild startIcon={<ArrowLeftIcon />}>
           <Link href={config.routes.influencers.details(influencer.slug)} className="flex items-center">
             Trở về trang cá nhân
           </Link>
