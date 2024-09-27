@@ -10,6 +10,7 @@ import { useDebounce } from '@/hooks';
 import { CheckIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import { LuLoader2 } from 'react-icons/lu';
+import NoData from './custom/no-data';
 
 interface AddressPickerProps extends InputProps {
   value: string;
@@ -22,7 +23,7 @@ const AddressPicker = forwardRef<HTMLInputElement, AddressPickerProps>(({ value,
   const debouncedSearch = useDebounce(search, 200);
   const { data, isLoading } = useSWRImmutable<string[]>(
     `/Utility/location?keyName=${debouncedSearch}`,
-    debouncedSearch ? fetcher : null,
+    debouncedSearch.length >= 3 ? fetcher : null,
   );
 
   const handleSelect = (location: string) => {
@@ -67,7 +68,11 @@ const AddressPicker = forwardRef<HTMLInputElement, AddressPickerProps>(({ value,
       </PopoverTrigger>
       <PopoverContent style={{ width: 'calc(var(--radix-popover-trigger-width)' }} sideOffset={16}>
         <Command>
-          <CommandInput placeholder="Tìm kiếm địa chỉ..." value={search} onValueChange={handleSearch} />
+          <CommandInput
+            placeholder="Tìm kiếm địa chỉ (Nhập ít nhất 3 ký tự)"
+            value={search}
+            onValueChange={handleSearch}
+          />
           <CommandList>
             <CommandEmpty>
               {isLoading ? (
@@ -75,7 +80,7 @@ const AddressPicker = forwardRef<HTMLInputElement, AddressPickerProps>(({ value,
                   Đang tải <LuLoader2 className="animate-spin" />
                 </span>
               ) : (
-                'Không tìm thấy địa chỉ'
+                <NoData description="Không tìm thấy địa chỉ" />
               )}
             </CommandEmpty>
             <CommandGroup>

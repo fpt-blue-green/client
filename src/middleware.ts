@@ -3,8 +3,8 @@ import { ERole } from './types/enum';
 import { NextResponse } from 'next/server';
 import routes from './config/routes';
 
-const brandPaths = ['/account', '/brand/create'];
-const influencerPaths = ['/account', '/influencer/create'];
+const brandPaths = [routes.account, routes.brand.base];
+const influencerPaths = [routes.account, '/influencer/create'];
 
 export default withAuth(
   function middleware(req) {
@@ -14,7 +14,10 @@ export default withAuth(
       return NextResponse.next();
     }
 
-    if (brandPaths.some((path) => pathname.startsWith(path)) && token?.role === ERole.Brand) {
+    if (
+      brandPaths.some((path) => pathname.startsWith(path)) &&
+      (token?.role === ERole.Brand || pathname === routes.brand.base)
+    ) {
       return NextResponse.next();
     }
 
@@ -31,5 +34,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ['/account', '/influencer/create', '/brand/create'],
+  matcher: ['/account', '/influencer/create', '/brand/:path*'],
 };

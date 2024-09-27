@@ -15,6 +15,7 @@ const routes = {
   brand: {
     base: '/brand',
     create: (step: number) => `/brand/create?step=${step}`,
+    campaigns: '/brand/campaigns',
   },
   brands: {
     base: '/brands',

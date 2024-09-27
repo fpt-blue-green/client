@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { Button } from './ui/button';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import { useSession } from 'next-auth/react';
+import { ERole } from '@/types/enum';
 
 const Header = () => {
   const { data: session } = useSession();
@@ -38,6 +39,9 @@ const Header = () => {
                   <MenuItem href={config.routes.influencer.base}>Trở thành nhà sáng tạo</MenuItem>
                   <MenuItem href={config.routes.brand.base}>Trở thành nhãn hàng</MenuItem>
                 </>
+              )}
+              {session && session.user.role === ERole.Brand && (
+                <MenuItem href={config.routes.brand.campaigns}>Chiến dịch của tôi</MenuItem>
               )}
             </div>
           </div>
