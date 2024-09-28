@@ -13,6 +13,7 @@ export const constants = {
   phoneRegex: /(84|0[3|5|7|8|9])+([0-9]{8})\b/g,
   otpRegex: /[0-9]{6}\b/g,
   slugRegex: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+  yesterday: new Date(new Date().setDate(new Date().getDate() - 1)),
 };
 
 export const formats = {
@@ -35,6 +36,15 @@ export const formats = {
     } else {
       return num.toString();
     }
+  },
+  date: (date: Date, options?: Intl.DateTimeFormatOptions): string => {
+    const formattedDate = new Intl.DateTimeFormat('vi-VN', {
+      year: options?.year || 'numeric',
+      month: options?.month || '2-digit',
+      day: options?.day || '2-digit',
+      ...options,
+    }).format(date);
+    return formattedDate;
   },
 };
 

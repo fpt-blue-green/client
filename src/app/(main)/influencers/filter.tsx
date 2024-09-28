@@ -102,7 +102,6 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
         <Sheet>
           <SheetTrigger asChild>
             <Button
-              size="large"
               endIcon={
                 <Badge dot invisible={!isChanged}>
                   <LuFilter />
@@ -236,12 +235,7 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
         </Sheet>
         <DropdownMenu open={sortOpen} onOpenChange={setSortOpen}>
           <DropdownMenuTrigger asChild>
-            <Button
-              size="large"
-              variant="ghost"
-              className="px-3"
-              endIcon={sortOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
-            >
+            <Button variant="ghost" className="px-3" endIcon={sortOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}>
               Sắp xếp theo: {sortItems.find((i) => i.value === (isAscending ? sortBy : `-${sortBy}`))?.text}
             </Button>
           </DropdownMenuTrigger>

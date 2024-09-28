@@ -3,6 +3,7 @@ import { PluginAPI } from 'tailwindcss/types/config';
 
 const config = {
   darkMode: ['class'],
+  plugins: [require('tailwindcss-animate')],
   content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}'],
   prefix: '',
   theme: {
