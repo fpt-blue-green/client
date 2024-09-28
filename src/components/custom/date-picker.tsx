@@ -50,9 +50,10 @@ const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
 
     return (
       <Popover>
-        <PopoverTrigger className={props.className}>
+        <PopoverTrigger asChild>
           <Input
             {...props}
+            type="text"
             placeholder={placeholder}
             inputClassName="text-left"
             ref={ref}
