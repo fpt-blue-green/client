@@ -10,13 +10,9 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import AddressPicker from '@/components/address-picker';
 import { brandDetailsSchema, DetailsBodyType } from '@/schema-validations/brand.schema';
+import BrandDetailsProps from './props';
 
-interface IDetailsProps {
-  // brand: IBrand;
-  // mutate: KeyedMutator<IBrand>;
-}
-
-const Details: FC<IDetailsProps> = ({}) => {
+const Details: FC<BrandDetailsProps> = ({ brand, mutate }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const detailsForm = useForm<DetailsBodyType>({
@@ -75,7 +71,7 @@ const Details: FC<IDetailsProps> = ({}) => {
               />
             </div>
             <div className="mt-8 text-right">
-              <Button type="submit" size="large" variant="gradient" className="max-md:w-full" loading={isLoading}>
+              <Button type="submit" size="large" variant="gradient" className="font-bold h-12" loading={isLoading}>
                 Lưu thay đổi
               </Button>
             </div>

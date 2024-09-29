@@ -14,6 +14,7 @@ const getInfluencer = async (): Promise<IInfluencer | undefined> => {
 
 export const metadata: Metadata = {
   title: 'Chỉnh sửa thông tin cá nhân',
+  description: 'Nhập thông tin chi tiết để nhãn hàng có thể tìm hiểu thêm về bạn',
 };
 
 const EditInfluencerProfile = async () => {

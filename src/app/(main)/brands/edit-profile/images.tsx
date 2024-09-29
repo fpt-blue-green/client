@@ -14,13 +14,9 @@ import { toast } from 'sonner';
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { RiEditFill } from 'react-icons/ri';
+import BrandDetailsProps from './props';
 
-interface IImagesProps {
-  // brand: IBrand;
-  // mutate: KeyedMutator<IBrand>;
-}
-
-const Images: FC<IImagesProps> = () => {
+const Images: FC<BrandDetailsProps> = ({ brand, mutate }) => {
   const { data: session, update } = useSession();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [backgroundImage, setBackgroundImage] = useState();
