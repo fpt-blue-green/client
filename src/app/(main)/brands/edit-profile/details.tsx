@@ -9,7 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import AddressPicker from '@/components/address-picker';
-import { BasicBodyType, basicSchema, brandDetailsSchema, DetailsBodyType } from '@/schema-validations/brand.schema';
+import { BasicBodyType, basicSchema } from '@/schema-validations/brand.schema';
 import BrandDetailsProps from './props';
 import { brandRequest } from '@/request';
 import { toast } from 'sonner';
@@ -64,7 +64,7 @@ const Details: FC<BrandDetailsProps> = ({ brand, mutate }) => {
                 control={detailsForm.control}
                 name="description"
                 render={({ field }) => (
-                  <FormItem className="md:col-span-2">
+                  <FormItem>
                     <Label htmlFor="description">Mô tả</Label>
                     <FormControl>
                       <Textarea {...field} id="description" className="w-full" rows={4} />
@@ -75,7 +75,7 @@ const Details: FC<BrandDetailsProps> = ({ brand, mutate }) => {
               />
             </div>
             <div className="mt-8 text-right">
-              <Button type="submit" size="large" variant="gradient" className="font-bold h-12" loading={isLoading}>
+              <Button type="submit" size="large" variant="gradient" loading={isLoading}>
                 Lưu thay đổi
               </Button>
             </div>

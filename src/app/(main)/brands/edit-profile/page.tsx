@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 const EditInfluencerProfile = async () => {
   return (
     <div className="container mt-8 mb-16">
-      <Button size="medium" variant="secondary" asChild startIcon={<ArrowLeftIcon />}>
+      <Button variant="secondary" asChild startIcon={<ArrowLeftIcon />}>
         <Link href={config.routes.brands.details('Willson')} className="flex items-center">
           Trở về trang cá nhân
         </Link>

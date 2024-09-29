@@ -21,11 +21,11 @@ const Step3: FC<DetailStepProps> = ({ profile, mutate }) => {
   const form = useForm<SocialBodyType>({
     resolver: zodResolver(socialSchema),
     defaultValues: {
-      websiteUrl: profile.websiteUrl || undefined,
-      facebookUrl: profile.facebookUrl || undefined,
-      tiktokUrl: profile.tiktokUrl || undefined,
-      instagramUrl: profile.instagramUrl || undefined,
-      youtubeUrl: profile.youtubeUrl || undefined,
+      websiteUrl: profile.websiteUrl || null,
+      facebookUrl: profile.facebookUrl || null,
+      tiktokUrl: profile.tiktokUrl || null,
+      instagramUrl: profile.instagramUrl || null,
+      youtubeUrl: profile.youtubeUrl || null,
     },
   });
 
@@ -44,9 +44,8 @@ const Step3: FC<DetailStepProps> = ({ profile, mutate }) => {
   };
 
   const handleChange = (field: ControllerRenderProps<SocialBodyType>) => (e: ChangeEvent<HTMLInputElement>) => {
-    let value = undefined;
-    if (e.target.value) value = e.target.value;
-    field.onChange(value);
+    const value = e.target.value;
+    field.onChange(value || null);
   };
 
   return (
@@ -65,6 +64,7 @@ const Step3: FC<DetailStepProps> = ({ profile, mutate }) => {
                   placeholder="Website"
                   className="w-full"
                   {...field}
+                  value={field.value || ''}
                   onChange={handleChange(field)}
                 />
               </FormControl>
@@ -85,6 +85,7 @@ const Step3: FC<DetailStepProps> = ({ profile, mutate }) => {
                   placeholder="Facebook"
                   className="w-full"
                   {...field}
+                  value={field.value || ''}
                   onChange={handleChange(field)}
                 />
               </FormControl>
@@ -105,6 +106,7 @@ const Step3: FC<DetailStepProps> = ({ profile, mutate }) => {
                   placeholder="TikTok"
                   className="w-full"
                   {...field}
+                  value={field.value || ''}
                   onChange={handleChange(field)}
                 />
               </FormControl>
@@ -125,6 +127,7 @@ const Step3: FC<DetailStepProps> = ({ profile, mutate }) => {
                   placeholder="Instagram"
                   className="w-full"
                   {...field}
+                  value={field.value || ''}
                   onChange={handleChange(field)}
                 />
               </FormControl>
@@ -145,6 +148,7 @@ const Step3: FC<DetailStepProps> = ({ profile, mutate }) => {
                   placeholder="YouTube"
                   className="w-full"
                   {...field}
+                  value={field.value || ''}
                   onChange={handleChange(field)}
                 />
               </FormControl>
