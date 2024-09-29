@@ -28,23 +28,17 @@ const SocialMedias: FC<BrandDetailsProps> = ({ brand, mutate }) => {
   });
 
   const onSubmit = (values: SocialBodyType) => {
-    // const data: SocialBodyType = Object.fromEntries(Object.entries(values).filter(([, value]) => !!value));
-    // if (!Object.keys(data).length) {
-    //   toast.error('Vui lòng nhập ít nhất một đường dẫn');
-    //   return;
-    // }
-    // setLoading(true);
-    // brandRequest
-    //   .addSocialLink(values)
-    //   .then(() => mutate().then(() => toast.success('Cập nhật tài khoản mạng xã hội thành công.')))
-    //   .catch((err) => toast.error(err.message || constants.sthWentWrong));
+    const isOneItemAtLeast = Object.entries(values).filter(([, value]) => !!value).length > 0;
+    if (!isOneItemAtLeast) {
+      toast.error('Vui lòng nhập ít nhất một đường dẫn');
+      return;
+    }
+    setLoading(true);
     console.log('values', values);
-  };
-
-  const handleChange = (field: ControllerRenderProps<SocialBodyType>) => (e: ChangeEvent<HTMLInputElement>) => {
-    let value = undefined;
-    if (e.target.value) value = e.target.value;
-    field.onChange(value);
+    brandRequest
+      .addSocialLink(values)
+      .then(() => mutate().then(() => toast.success('Cập nhật tài khoản mạng xã hội thành công.')))
+      .catch((err) => toast.error(err.message || constants.sthWentWrong));
   };
 
   return (
@@ -66,7 +60,6 @@ const SocialMedias: FC<BrandDetailsProps> = ({ brand, mutate }) => {
                     placeholder="Nhập đường dẫn trang web"
                     className="w-full"
                     {...field}
-                    onChange={handleChange(field)}
                   />
                 </FormControl>
                 <FormMessage />
@@ -88,7 +81,6 @@ const SocialMedias: FC<BrandDetailsProps> = ({ brand, mutate }) => {
                     placeholder="Nhập đường dẫn Facebook"
                     className="w-full"
                     {...field}
-                    onChange={handleChange(field)}
                   />
                 </FormControl>
                 <FormMessage />
@@ -104,14 +96,7 @@ const SocialMedias: FC<BrandDetailsProps> = ({ brand, mutate }) => {
                   TikTok
                 </Label>
                 <FormControl>
-                  <Input
-                    id="tiktokUrl"
-                    type="url"
-                    placeholder="Nhập đường dẫn TikTok"
-                    className="w-full"
-                    {...field}
-                    onChange={handleChange(field)}
-                  />
+                  <Input id="tiktokUrl" type="url" placeholder="Nhập đường dẫn TikTok" className="w-full" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -132,7 +117,6 @@ const SocialMedias: FC<BrandDetailsProps> = ({ brand, mutate }) => {
                     placeholder="Nhập đường dẫn Instagram"
                     className="w-full"
                     {...field}
-                    onChange={handleChange(field)}
                   />
                 </FormControl>
                 <FormMessage />
@@ -154,7 +138,6 @@ const SocialMedias: FC<BrandDetailsProps> = ({ brand, mutate }) => {
                     placeholder="Nhập đường dẫn YouTube"
                     className="w-full"
                     {...field}
-                    onChange={handleChange(field)}
                   />
                 </FormControl>
                 <FormMessage />

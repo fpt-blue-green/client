@@ -9,28 +9,32 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import AddressPicker from '@/components/address-picker';
-import { brandDetailsSchema, DetailsBodyType } from '@/schema-validations/brand.schema';
+import { BasicBodyType, basicSchema, brandDetailsSchema, DetailsBodyType } from '@/schema-validations/brand.schema';
 import BrandDetailsProps from './props';
+import { brandRequest } from '@/request';
+import { toast } from 'sonner';
 
 const Details: FC<BrandDetailsProps> = ({ brand, mutate }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const detailsForm = useForm<DetailsBodyType>({
-    resolver: zodResolver(brandDetailsSchema),
+  const detailsForm = useForm<BasicBodyType>({
+    resolver: zodResolver(basicSchema),
     defaultValues: {
-      address: '',
-      description: '',
+      name: brand.name || undefined,
+      address: brand.address || undefined,
+      description: brand.description || undefined,
     },
   });
 
-  const onSubmit = (values: DetailsBodyType) => {
+  const onSubmit = (values: BasicBodyType) => {
     setIsLoading(true);
-    // Api call
-    //     .then(() => {
-    //       mutate().then(() => toast.success('Cập nhật thông tin chi tiết thành công'));
-    //     })
-    //     .catch((err) => toast.error(err.message))
-    //     .finally(() => setIsLoading(false));
+    brandRequest
+      .updateGeneralInfo(values)
+      .then(() => {
+        mutate().then(() => toast.success('Cập nhật thông tin chi tiết thành công'));
+      })
+      .catch((err) => toast.error(err.message))
+      .finally(() => setIsLoading(false));
   };
   return (
     <div className="flex flex-col gap-4">
