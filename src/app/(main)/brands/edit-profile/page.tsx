@@ -6,13 +6,14 @@ import { Metadata } from 'next';
 import ProfileTabs from './profile-tabs';
 
 export const metadata: Metadata = {
-  title: 'Chỉnh sửa thông tin cá nhân',
+  title: 'Tạo thông tin của nhãn hàng',
+  description: 'Nhập thông tin chi tiết để người dùng có thể tìm hiểu thêm về thương hiệu của bạn',
 };
 
 const EditInfluencerProfile = async () => {
   return (
     <div className="container mt-8 mb-16">
-      <Button size="medium" variant="secondary" asChild startIcon={<ArrowLeftIcon />}>
+      <Button variant="secondary" asChild startIcon={<ArrowLeftIcon />}>
         <Link href={config.routes.brands.details('Willson')} className="flex items-center">
           Trở về trang cá nhân
         </Link>

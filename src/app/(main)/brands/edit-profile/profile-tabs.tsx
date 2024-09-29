@@ -4,11 +4,32 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { IdCardIcon } from '@radix-ui/react-icons';
 import { FaNetworkWired, FaRegImages } from 'react-icons/fa6';
 import Details from './details';
-import SocialMedias from './social-medias';
 import Images from './images';
+import SocialMedias from './social-medias';
+import IBrand from '@/types/brand';
+import useSWRImmutable from 'swr/immutable';
+import { fetcher } from '@/lib/http';
+
+const initBrand: IBrand = {
+  id: '',
+  userId: '',
+  name: '',
+  address: '',
+  isPremium: false,
+  avatar: '',
+  coverImg: '',
+  description: '',
+  createdAt: new Date(),
+  modifiedAt: new Date(),
+  websiteUrl: '',
+  facebookUrl: '',
+  tiktokUrl: '',
+  instagramUrl: '',
+  youtubeUrl: '',
+};
 
 const ProfileTabs = () => {
-  // const { data: influencer, isLoading, mutate } = useSWRImmutable<IInfluencer>('/Brand', fetcher);
+  const { data: brand, isLoading, mutate } = useSWRImmutable<IBrand>('/Brand', fetcher);
 
   return (
     // <div className="flex flex-col gap-8">
@@ -31,12 +52,14 @@ const ProfileTabs = () => {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="details">
-        <Details />
+        <Details brand={brand || initBrand} mutate={mutate} />
       </TabsContent>
       <TabsContent value="images">
-        <Images />
+        <Images brand={brand || initBrand} mutate={mutate} />
       </TabsContent>
-      <TabsContent value="socialMedias">{/* <SocialMedias /> */}</TabsContent>
+      <TabsContent value="socialMedias">
+        <SocialMedias brand={brand || initBrand} mutate={mutate} />
+      </TabsContent>
     </Tabs>
   );
 };

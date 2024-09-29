@@ -12,11 +12,11 @@ export const basicSchema = z
 
 export const socialSchema = z
   .object({
-    websiteUrl: z.string().url('Vui lòng nhập một URL hợp lệ').optional(),
-    facebookUrl: z.string().url('Vui lòng nhập một URL hợp lệ').optional(),
-    tiktokUrl: z.string().url('Vui lòng nhập một URL hợp lệ').optional(),
-    instagramUrl: z.string().url('Vui lòng nhập một URL hợp lệ').optional(),
-    youtubeUrl: z.string().url('Vui lòng nhập một URL hợp lệ').optional(),
+    websiteUrl: z.string().url('Vui lòng nhập một URL hợp lệ').nullable().optional(),
+    facebookUrl: z.string().url('Vui lòng nhập một URL hợp lệ').nullable().optional(),
+    tiktokUrl: z.string().url('Vui lòng nhập một URL hợp lệ').nullable().optional(),
+    instagramUrl: z.string().url('Vui lòng nhập một URL hợp lệ').nullable().optional(),
+    youtubeUrl: z.string().url('Vui lòng nhập một URL hợp lệ').nullable().optional(),
   })
   .strict();
 
@@ -34,14 +34,6 @@ export const imagesSchema = z
     { path: ['cover'], message: 'Vui lòng tải lên ảnh bìa hoặc ảnh đại diện' },
   );
 
-export const brandDetailsSchema = z
-  .object({
-    address: z.string().min(1, 'Vui lòng chọn địa chỉ của bạn'),
-    description: z.string().max(255, 'Không nhập quá 255 kí tự').optional(),
-  })
-  .strict();
-
 export type BasicBodyType = z.infer<typeof basicSchema>;
 export type SocialBodyType = z.infer<typeof socialSchema>;
 export type ImagesBodyType = z.infer<typeof imagesSchema>;
-export type DetailsBodyType = z.infer<typeof brandDetailsSchema>;
