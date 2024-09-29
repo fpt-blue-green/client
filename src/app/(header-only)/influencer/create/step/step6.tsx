@@ -19,6 +19,7 @@ import { influencerRequest } from '@/request';
 import { useRouter } from 'next/navigation';
 import config from '@/config';
 import { functions } from '@/lib/utils';
+import PriceInput from '@/components/custom/price-input';
 
 const Step6: FC<DetailStepProps> = ({ profile, mutate }) => {
   const router = useRouter();
@@ -227,14 +228,7 @@ const Step6: FC<DetailStepProps> = ({ profile, mutate }) => {
               render={({ field }) => (
                 <FormItem className="col-span-full">
                   <FormControl>
-                    <Input
-                      type="number"
-                      className="w-full"
-                      placeholder="Giá"
-                      endAdornment="₫"
-                      value={field.value || ''}
-                      onChange={handleChange(field)}
-                    />
+                    <PriceInput placeholder="Giá" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

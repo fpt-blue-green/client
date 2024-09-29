@@ -18,7 +18,7 @@ import { AvatarBody, avatarSchema } from '@/schema-validations/user.schema';
 import { useSession } from 'next-auth/react';
 import { influencerRequest, userRequest } from '@/request';
 import { toast } from 'sonner';
-import AddressPicker from '@/components/address-picker';
+import AddressPicker from '@/components/custom/address-picker';
 import { KeyedMutator } from 'swr/_internal';
 
 interface GeneralProps {

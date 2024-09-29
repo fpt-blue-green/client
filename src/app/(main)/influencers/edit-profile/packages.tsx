@@ -17,6 +17,7 @@ import { influencerRequest } from '@/request';
 import { emitter, functions } from '@/lib/utils';
 import IInfluencer from '@/types/influencer';
 import { KeyedMutator } from 'swr/_internal';
+import PriceInput from '@/components/custom/price-input';
 
 interface IPackagesProps {
   influencer: IInfluencer;
@@ -242,14 +243,7 @@ const Packages: FC<IPackagesProps> = ({ influencer, mutate }) => {
                 render={({ field }) => (
                   <FormItem className="col-span-full">
                     <FormControl>
-                      <Input
-                        type="number"
-                        className="w-full"
-                        placeholder="Giá"
-                        endAdornment="₫"
-                        value={field.value || ''}
-                        onChange={handleChange(field)}
-                      />
+                      <PriceInput fullWidth placeholder="Giá" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

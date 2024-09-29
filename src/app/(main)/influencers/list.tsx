@@ -8,7 +8,7 @@ import Filter from './filter';
 import { EPlatform } from '@/types/enum';
 import IInfluencer from '@/types/influencer';
 import Pagination from '@/components/custom/pagination';
-import NoData from '@/components/custom/no-data';
+import NoData from '@/components/no-data';
 
 export interface FilterState {
   page: number;

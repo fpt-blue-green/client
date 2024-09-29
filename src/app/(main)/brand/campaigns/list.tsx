@@ -1,6 +1,6 @@
 'use client';
 
-import NoData from '@/components/custom/no-data';
+import NoData from '@/components/no-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import { fetcher } from '@/lib/http';
 import ICampaign from '@/types/campaign';

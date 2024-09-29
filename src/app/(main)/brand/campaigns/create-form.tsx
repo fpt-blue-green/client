@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form';
 import { BasicBodyType, basicSchema } from '@/schema-validations/campaign.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import PriceInput from '@/components/custom/price-input';
 
 const CreateForm = () => {
   const form = useForm<BasicBodyType>({
@@ -107,14 +108,7 @@ const CreateForm = () => {
                   Ngân sách
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    id="budget"
-                    type="number"
-                    className="md:col-span-3"
-                    fullWidth
-                    {...field}
-                    onChange={(e) => field.onChange(+e.target.value)}
-                  />
+                  <PriceInput id="budget" type="number" className="md:col-span-3" fullWidth {...field} />
                 </FormControl>
                 <FormMessage className="md:col-start-2 col-span-full" />
               </FormItem>
