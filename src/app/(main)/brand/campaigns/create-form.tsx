@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import DatePicker from '@/components/custom/date-picker';
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import Tooltip from '@/components/custom/tooltip';
 import { useForm } from 'react-hook-form';
@@ -12,21 +11,32 @@ import { BasicBodyType, basicSchema } from '@/schema-validations/campaign.schema
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import PriceInput from '@/components/custom/price-input';
+import DateRangePicker from '@/components/custom/date-range-picker';
+import { useState } from 'react';
+import { campaignsRequest } from '@/request';
+import { toast } from 'sonner';
+import { constants } from '@/lib/utils';
 
 const CreateForm = () => {
+  const [loading, setLoading] = useState(false);
   const form = useForm<BasicBodyType>({
     resolver: zodResolver(basicSchema),
     defaultValues: {
       name: '',
       title: '',
       description: '',
+      dates: [undefined, undefined],
       budget: 0,
     },
   });
 
-  const onSubmit = () => {
-    // Handle form submission
-    console.log(form.getValues());
+  const onSubmit = (values: BasicBodyType) => {
+    setLoading(true);
+    campaignsRequest
+      .createCampaign(values)
+      .then(() => {})
+      .catch((err) => toast.error(err?.message || constants.sthWentWrong))
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -116,37 +126,15 @@ const CreateForm = () => {
           />
           <FormField
             control={form.control}
-            name="startDate"
+            name="dates"
             render={({ field }) => (
               <FormItem>
-                <FormLabel htmlFor="startDate" className="md:text-right">
-                  Ngày bắt đầu
+                <FormLabel htmlFor="dates" className="md:text-right">
+                  Thời gian
                 </FormLabel>
                 <FormControl>
-                  <DatePicker
-                    id="startDate"
-                    className="md:col-span-3"
-                    selected={field.value}
-                    onChange={field.onChange}
-                    fullWidth
-                    disablePast
-                  />
-                </FormControl>
-                <FormMessage className="md:col-start-2 col-span-full" />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="endDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="endDate" className="md:text-right">
-                  Ngày kết thúc
-                </FormLabel>
-                <FormControl>
-                  <DatePicker
-                    id="endDate"
+                  <DateRangePicker
+                    id="dates"
                     className="md:col-span-3"
                     selected={field.value}
                     onChange={field.onChange}
@@ -160,7 +148,7 @@ const CreateForm = () => {
           />
         </div>
         <DialogFooter>
-          <Button type="submit" variant="gradient">
+          <Button type="submit" variant="gradient" loading={loading}>
             OK
           </Button>
         </DialogFooter>
