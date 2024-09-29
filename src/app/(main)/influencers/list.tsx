@@ -8,7 +8,7 @@ import Filter from './filter';
 import { EPlatform } from '@/types/enum';
 import IInfluencer from '@/types/influencer';
 import Pagination from '@/components/custom/pagination';
-import NoData from '@/components/custom/no-data';
+import NoData from '@/components/no-data';
 
 export interface FilterState {
   page: number;
@@ -130,9 +130,9 @@ const List = () => {
   };
 
   return (
-    <div>
-      <h1 className="text-2xl font-semibold mb-7">Influencers</h1>
-      <div className="mb-7">
+    <div className="space-y-7">
+      <h1 className="text-2xl font-semibold">Influencers</h1>
+      <div>
         <Filter data={filter} dispatch={dispatch} isChanged={isOptionsChange} />
       </div>
       <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-x-6 gap-y-8">
@@ -145,13 +145,7 @@ const List = () => {
         )}
       </div>
       {pageCount > 1 && (
-        <Pagination
-          className="mt-8"
-          count={pageCount}
-          page={filter.page}
-          boundaryCount={2}
-          onPageChange={handlePageChange}
-        />
+        <Pagination count={pageCount} page={filter.page} boundaryCount={2} onPageChange={handlePageChange} />
       )}
     </div>
   );

@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import AddressPicker from '@/components/address-picker';
+import AddressPicker from '@/components/custom/address-picker';
 import { BasicBodyType, basicSchema } from '@/schema-validations/brand.schema';
 import BrandDetailsProps from './props';
 import { brandRequest } from '@/request';

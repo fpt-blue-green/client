@@ -39,6 +39,7 @@ import { EPlatform } from '@/types/enum';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/http';
 import ITag from '@/types/tag';
+import PriceInput from '@/components/custom/price-input';
 
 interface FilterProps {
   isChanged: boolean;
@@ -102,7 +103,6 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
         <Sheet>
           <SheetTrigger asChild>
             <Button
-              size="large"
               endIcon={
                 <Badge dot invisible={!isChanged}>
                   <LuFilter />
@@ -180,9 +180,9 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
                   step={250_000}
                 />
                 <div className="flex items-center gap-4 mt-6">
-                  <Input className="h-10" inputClassName="text-right" value={formats.price(price[0])} readOnly />
+                  <PriceInput value={price[0]} onChange={(v) => handleRangeChange([v, price[1]])} />
                   -
-                  <Input className="h-10" inputClassName="text-right" value={formats.price(price[1])} readOnly />
+                  <PriceInput value={price[1]} onChange={(v) => handleRangeChange([price[0], v])} />
                 </div>
               </div>
               <div>
@@ -236,12 +236,7 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
         </Sheet>
         <DropdownMenu open={sortOpen} onOpenChange={setSortOpen}>
           <DropdownMenuTrigger asChild>
-            <Button
-              size="large"
-              variant="ghost"
-              className="px-3"
-              endIcon={sortOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
-            >
+            <Button variant="ghost" className="px-3" endIcon={sortOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}>
               Sắp xếp theo: {sortItems.find((i) => i.value === (isAscending ? sortBy : `-${sortBy}`))?.text}
             </Button>
           </DropdownMenuTrigger>
