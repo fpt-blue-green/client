@@ -18,6 +18,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import config from '@/config';
 import { RiPencilLine } from 'react-icons/ri';
+import ImagesCarousel from './images-carousel';
 
 const getInfluencer = async (slug: string): Promise<IInfluencer> => {
   try {
@@ -62,21 +63,7 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
             </Button>
           )}
         </div>
-        <Carousel opts={{ align: 'start' }} className="max-md:-mx-6 max-md:-mt-8 md:rounded-lg overflow-hidden">
-          <CarouselContent>
-            {influencer.images.map((img, index) => (
-              <CarouselItem key={index} className="lg:basis-1/3 md:basis-1/2 max-md:pl-0">
-                <Image
-                  src={img.url || ''}
-                  alt={`Ảnh bìa trang của nhân của ${influencer.fullName}`}
-                  width={800}
-                  height={800}
-                  className="w-full md:aspect-thumbnail aspect-square object-cover"
-                />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
+        <ImagesCarousel influencer={influencer} />
         <div className="mt-5">
           <div className="flex flex-row-reverse md:flex-row gap-4">
             <div className="flex flex-col items-center gap-4">
