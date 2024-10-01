@@ -1,6 +1,13 @@
 'use client';
 
-import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import {
+  Carousel,
+  CarouselApi,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -23,7 +30,7 @@ const ImagesCarousel = () => {
 
   return (
     <div className="flex flex-col gap-4 h-full">
-      <Carousel className="relative max-md:-mx-5" setApi={setApi} onSlidesChange={handleSlidesChange}>
+      <Carousel className="relative max-md:-mx-5 max-md:-mt-8" setApi={setApi} onSlidesChange={handleSlidesChange}>
         <CarouselContent>
           {Array.from({ length: 10 }).map((_, index) => (
             <CarouselItem key={index}>
@@ -37,6 +44,8 @@ const ImagesCarousel = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
+        <CarouselPrevious className="left-2 opacity-50 disabled:hidden max-md:hidden" />
+        <CarouselNext className="right-2 opacity-50 disabled:hidden max-md:hidden" />
         <div className="absolute bottom-3 right-3 bg-black/60 text-white text-sm rounded-md py-1 px-2 tracking-wider">{`${
           current + 1
         }/${10}`}</div>
@@ -50,8 +59,8 @@ const ImagesCarousel = () => {
                 alt="Ảnh bìa trang của nhân của"
                 width={800}
                 height={800}
-                className={cn('w-full aspect-square object-cover rounded-lg transition-opacity', {
-                  'opacity-50': index !== current,
+                className={cn('w-full aspect-square object-cover rounded-lg transition-opacity opacity-50', {
+                  'opacity-100 border-2 border-foreground': index === current,
                 })}
               />
             </CarouselItem>
