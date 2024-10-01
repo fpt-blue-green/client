@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
 const List = () => {
-  const { data, isLoading } = useSWRImmutable<ICampaign[]>('/Campaigns/brand', fetcher);
+  const { data, isLoading } = useSWRImmutable<ICampaign[]>('/Brand/campaigns', fetcher);
 
   return (
     <div className="space-y-7">

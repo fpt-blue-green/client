@@ -64,7 +64,7 @@ const AddressPicker = forwardRef<HTMLInputElement, AddressPickerProps>(({ value,
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Input {...props} type="text" inputClassName="text-left" ref={ref} readOnly value={value || inputValue} />
+        <Input {...props} type="text" ref={ref} readOnly value={value || inputValue} />
       </PopoverTrigger>
       <PopoverContent style={{ width: 'calc(var(--radix-popover-trigger-width)' }} sideOffset={16}>
         <Command>

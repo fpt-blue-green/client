@@ -55,7 +55,6 @@ const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
             {...props}
             type="text"
             placeholder={placeholder}
-            inputClassName="text-left"
             ref={ref}
             value={selected ? formats.date(selected) : inputValue}
             readOnly
