@@ -3,7 +3,7 @@ import { Badge as SBadge, BadgeProps as SBadgeProps } from '../ui/badge';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
-const badgeVariants = cva('absolute h-5 px-1.5 transition-all', {
+const badgeVariants = cva('absolute transition-all', {
   variants: {
     position: {
       'top-right': 'top-0 right-0 translate-x-3/4 -translate-y-3/4',
@@ -16,14 +16,24 @@ const badgeVariants = cva('absolute h-5 px-1.5 transition-all', {
 
 interface BadgeProps extends SBadgeProps, VariantProps<typeof badgeVariants> {
   children: ReactNode;
-  label?: number;
+  label?: string | number;
   invisible?: boolean;
   max?: number;
+  size?: 'large' | 'medium' | 'small';
   dot?: boolean;
 }
 
-const Badge: FC<BadgeProps> = ({ children, label, max, dot, position = 'top-right', invisible, ...props }) => {
-  const content = !dot && label && (max && label > max ? `${max}+` : label);
+const Badge: FC<BadgeProps> = ({
+  children,
+  label,
+  max,
+  dot,
+  position = 'top-right',
+  invisible,
+  className,
+  ...props
+}) => {
+  const content = !dot && label && typeof label === 'number' ? (max && label > max ? `${max}+` : label) : label;
 
   return (
     <div className="relative inline-block">
@@ -34,7 +44,7 @@ const Badge: FC<BadgeProps> = ({ children, label, max, dot, position = 'top-righ
             badgeVariants({ position }),
             { 'size-2 p-0': dot },
             invisible ? 'scale-0' : 'scale-100',
-            props.className,
+            className,
           )}
           {...props}
         >

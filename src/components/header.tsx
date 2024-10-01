@@ -10,13 +10,25 @@ import { Button } from './ui/button';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import { useSession } from 'next-auth/react';
 import { ERole } from '@/types/enum';
+import { useLayoutEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 const Header = () => {
   const { data: session } = useSession();
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
+
+  useLayoutEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY >= 40);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <header>
-      <div className="container md:h-20 h-16">
+    <header className="fixed top-0 left-0 right-0 z-40 bg-background/80 backdrop-blur-[6px]">
+      <div className={cn('container md:h-20 h-16 transition-all', { 'md:h-16': isScrolled })}>
         <div className="h-full flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Button className="md:hidden" variant="ghost" size="icon">
