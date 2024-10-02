@@ -1,12 +1,10 @@
 import { FC } from 'react';
 import Packages from './packages';
 import InfluencerList from '@/components/influencer-list';
-import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { formats } from '@/lib/utils';
 import { LuHeart, LuShare } from 'react-icons/lu';
 import Link from 'next/link';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button';
 import { PlatformData } from '@/types/enum';
 import Tooltip from '@/components/custom/tooltip';
@@ -19,6 +17,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import config from '@/config';
 import { RiPencilLine } from 'react-icons/ri';
 import ImagesCarousel from './images-carousel';
+import Comments from './comments';
 
 const getInfluencer = async (slug: string): Promise<IInfluencer> => {
   try {
@@ -112,6 +111,7 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
         </div>
       </div>
       <Packages data={influencer.packages} />
+      <Comments influencerId={influencer.id} />
       <InfluencerList className="mt-20" title="Những người nổi tiếng tương tự" />
     </div>
   );

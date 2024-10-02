@@ -36,8 +36,8 @@ interface IInfluencer {
   description?: string;
   address: string;
   phone: string;
-  createdAt?: Date;
-  modifiedAt?: Date;
+  createdAt?: string;
+  modifiedAt?: string;
   rateAverage: number;
   averagePrice: number;
   isPublish: boolean;
