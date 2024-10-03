@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import HowPackagesWork from './how-packages-work-modal';
 import { formats } from '@/lib/utils';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FC, useState } from 'react';
@@ -16,11 +15,7 @@ const Packages: FC<PackagesProps> = ({ data }) => {
   const [tab, setTab] = useState('all');
 
   return (
-    <div className="mt-16">
-      <div className="flex items-center space-x-3 mb-5">
-        <h3 className="font-semibold text-2xl">Gói</h3>
-        <HowPackagesWork />
-      </div>
+    <div>
       <Tabs defaultValue="all" value={tab} onValueChange={setTab}>
         <TabsList className="h-11 mb-8">
           <TabsTrigger value="all" className="py-2 px-5">
@@ -35,7 +30,7 @@ const Packages: FC<PackagesProps> = ({ data }) => {
             ))}
         </TabsList>
       </Tabs>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="flex flex-col gap-6">
         {data
           .filter((pack) => tab === 'all' || pack.platform === +tab)
           .map((pack) => {
@@ -44,17 +39,15 @@ const Packages: FC<PackagesProps> = ({ data }) => {
             return (
               <div className="border border-foreground px-5 py-4 rounded-sm" key={pack.id}>
                 <div className="flex items-center justify-between gap-4">
-                  <span className="font-semibold text-lg">{`${pack.quantity} ${contentTypes[pack.contentType]}`}</span>
-                  <span className="font-semibold text-lg">{formats.price(pack.price)}</span>
+                  <span className="font-semibold">{`${pack.quantity} ${contentTypes[pack.contentType]}`}</span>
+                  <span className="font-semibold">{formats.price(pack.price)}</span>
                 </div>
                 <p className="mt-4 text-muted-foreground text-sm">{pack.description}</p>
                 <div className="flex items-center justify-between mt-8">
                   <div className="flex items-center justify-center size-9 text-background bg-foreground rounded-md">
                     <Icon className="size-6" />
                   </div>
-                  <Button variant="gradient" size="large" className="text-base">
-                    Tiếp tục
-                  </Button>
+                  <Button variant="foreground">Tiếp tục</Button>
                 </div>
               </div>
             );
@@ -62,10 +55,8 @@ const Packages: FC<PackagesProps> = ({ data }) => {
       </div>
       <div className="border border-foreground px-5 py-4 rounded-sm max-w-3xl mt-6">
         <div className="flex items-center justify-between space-x-2">
-          <h4 className="font-semibold text-lg">Có yêu cầu nào chưa được đề xuất không?</h4>
-          <Button variant="gradient" size="large" className="text-base">
-            Gửi Đề Xuất
-          </Button>
+          <h4 className="font-semibold">Có yêu cầu nào chưa được đề xuất không?</h4>
+          <Button variant="foreground">Gửi Đề Xuất</Button>
         </div>
       </div>
     </div>

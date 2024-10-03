@@ -1,13 +1,5 @@
 import { FC } from 'react';
-import Packages from './packages';
-import InfluencerList from '@/components/influencer-list';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { formats } from '@/lib/utils';
-import { LuHeart, LuShare } from 'react-icons/lu';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { PlatformData } from '@/types/enum';
-import Tooltip from '@/components/custom/tooltip';
 import { influencersRequest } from '@/request';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
@@ -15,9 +7,21 @@ import IInfluencer from '@/types/influencer';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import config from '@/config';
-import { RiPencilLine } from 'react-icons/ri';
 import ImagesCarousel from './images-carousel';
+import Breadcrumbs, { IBreadcrumbItem } from '@/components/custom/breadcrumbs';
+import { Button } from '@/components/ui/button';
+import { RiHome4Fill } from 'react-icons/ri';
+import Link from 'next/link';
+import { LuHeart, LuPencil, LuShare } from 'react-icons/lu';
+import Rating from '@/components/custom/rating';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { PlatformData } from '@/types/enum';
+import { formats } from '@/lib/utils';
+import HowPackagesWork from './how-packages-work-modal';
+import Packages from './packages';
 import Comments from './comments';
+import InfluencerList from '@/components/influencer-list';
+import Tooltip from '@/components/custom/tooltip';
 
 const getInfluencer = async (slug: string): Promise<IInfluencer> => {
   try {
@@ -45,74 +49,114 @@ export async function generateMetadata({ params }: InfluencerDetailsProps): Prom
 const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
   const [influencer, session] = await Promise.all([getInfluencer(params.slug), getServerSession(authOptions)]);
 
+  const breadcrumbItems: IBreadcrumbItem[] = [
+    {
+      label: 'Trang chủ',
+      href: config.routes.home,
+      icon: <RiHome4Fill />,
+    },
+    {
+      label: 'Người sáng tạo',
+      href: config.routes.influencers.base,
+    },
+    {
+      label: influencer.fullName,
+    },
+  ];
+
   return (
     <div className="container mt-8 mb-16">
-      <div>
-        <div className="hidden md:flex space-x-1 justify-end mb-4">
-          <Button variant="ghost" startIcon={<LuShare />}>
-            Chia Sẻ
-          </Button>
-          {session?.user.id === influencer.userId ? (
-            <Button variant="ghost" startIcon={<RiPencilLine />} asChild>
-              <Link href={config.routes.influencers.editProfile}>Chỉnh sửa</Link>
+      <div className="relative grid md:grid-cols-2 gap-6">
+        <Breadcrumbs items={breadcrumbItems} className="col-span-full" />
+        <div className="md:sticky top-20 h-fit max-md:order-first">
+          <ImagesCarousel influencer={influencer} />
+        </div>
+        <div className="py-4 space-y-6">
+          <div className="flex items-center gap-4">
+            <Avatar className="size-16 md:size-20">
+              <AvatarImage src={influencer.avatar} alt={`Ảnh đại diện của ${influencer.fullName}`} />
+              <AvatarFallback>{influencer.fullName[0]}</AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <div className="flex items-center justify-between gap-4">
+                <h1 className="text-xl md:text-2xl font-bold mb-2">{influencer.fullName}</h1>
+                {influencer.userId === session?.user.id && (
+                  <>
+                    <Tooltip label="Chỉnh sửa">
+                      <Button variant="ghost" size="icon" className="md:hidden" asChild>
+                        <Link href={config.routes.influencers.editProfile}>
+                          <LuPencil />
+                        </Link>
+                      </Button>
+                    </Tooltip>
+                    <Button variant="ghost" startIcon={<LuPencil />} className="max-md:hidden" asChild>
+                      <Link href={config.routes.influencers.editProfile}>Chỉnh sửa</Link>
+                    </Button>
+                  </>
+                )}
+              </div>
+              <h3>{influencer.summarise}</h3>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Rating defaultValue={influencer.rateAverage} readOnly />
+            <span className="text-sm text-muted-foreground">
+              {influencer.rateAverage > 0 ? '432 đánh giá' : 'Chưa có đánh giá'}
+            </span>
+            <Button variant="link" asChild className="text-foreground">
+              <Link href="#reviews">Thêm đánh giá</Link>
             </Button>
-          ) : (
+          </div>
+          <p className="text-muted-foreground text-sm">{influencer.description}</p>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" startIcon={<LuShare />}>
+              Chia Sẻ
+            </Button>
             <Button variant="ghost" startIcon={<LuHeart />}>
               Yêu thích
             </Button>
-          )}
-        </div>
-        <ImagesCarousel influencer={influencer} />
-        <div className="mt-5">
-          <div className="flex flex-row-reverse md:flex-row gap-4">
-            <div className="flex flex-col items-center gap-4">
-              <Avatar className="size-12 sm:size-16 md:size-20">
-                <AvatarImage width={200} src={influencer.avatar} alt="Avatar" />
-                <AvatarFallback>{influencer.fullName[0]}</AvatarFallback>
-              </Avatar>
-              <div className="md:hidden flex gap-1">
-                <Tooltip label="Yêu thích">
-                  <Button variant="ghost" size="icon">
-                    <LuHeart size="16" />
-                  </Button>
-                </Tooltip>
-                <Tooltip label="Chia sẻ">
-                  <Button variant="ghost" size="icon">
-                    <LuShare size="16" />
-                  </Button>
-                </Tooltip>
-              </div>
-            </div>
-            <div className="sm:pl-4 md:pl-0 flex-1">
-              <h5 className="font-semibold text-xl md:text-2xl">
-                {influencer.fullName} | {influencer.summarise}
-              </h5>
-              <p className="mb-2 mt-1 text-muted-foreground text-sm">{influencer.address}</p>
-              <div className="flex flex-wrap items-center gap-2">
-                {influencer.channels?.map((channel) => {
-                  const { Icon, url, followerText } = PlatformData[channel.platform];
-                  return (
-                    <div key={channel.id} className="flex items-center gap-2 border rounded-sm px-2 py-1 w-max">
-                      <Icon />
-                      <Link
-                        target="_blank"
-                        href={`${url}${channel.userName}`}
-                        className="text-blue-500 font-semibold text-xs hover:underline"
-                      >
-                        {`${formats.estimate(channel.followersCount)} ${followerText}`}
-                      </Link>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
           </div>
-          <p className="mt-4 text-sm md:text-base">{influencer.description}</p>
+          <Accordion type="multiple" defaultValue={['social']}>
+            <AccordionItem value="social">
+              <AccordionTrigger className="text-xl font-semibold">Mạng xã hội</AccordionTrigger>
+              <AccordionContent className="md:px-4 md:text-base">
+                <ul className="space-y-2">
+                  {influencer.channels.map((channel) => {
+                    const { Icon, url, followerText, name } = PlatformData[channel.platform];
+                    return (
+                      <li key={channel.id} className="flex items-center gap-1">
+                        <Icon />
+                        <span className="font-semibold">{`${name}: `}</span>
+                        <Link href={url + channel.userName} target="_blank" className="text-blue-400 hover:underline">
+                          {channel.userName}
+                        </Link>
+                        <span>{`(${formats.estimate(channel.followersCount)} ${followerText})`}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="packages">
+              <AccordionTrigger className="text-xl font-semibold">
+                <div>
+                  Gói <HowPackagesWork />
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="md:px-4 md:text-base">
+                <Packages data={influencer.packages} />
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="reviews" id="reviews">
+              <AccordionTrigger className="text-xl font-semibold">Đánh giá</AccordionTrigger>
+              <AccordionContent className="md:px-4 md:text-base">
+                <Comments influencer={influencer} />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </div>
-      <Packages data={influencer.packages} />
-      <Comments influencerId={influencer.id} />
-      <InfluencerList className="mt-20" title="Những người nổi tiếng tương tự" />
+      <InfluencerList className="mt-16" title={`Những người tương tự với ${influencer.fullName}`} />
     </div>
   );
 };

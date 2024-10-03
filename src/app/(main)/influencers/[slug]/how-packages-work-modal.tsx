@@ -1,3 +1,5 @@
+'use client';
+
 import Wizard from '@/components/custom/wizard';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -7,11 +9,17 @@ const HowPackagesWork = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="text-muted-foreground" variant="link" startIcon={<LuBadgeInfo />}>
-          Hoạt động như thế nào?
+        <Button
+          className="text-muted-foreground"
+          variant="link"
+          startIcon={<LuBadgeInfo />}
+          asChild
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div>Hoạt động như thế nào?</div>
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent onClick={(e) => e.stopPropagation()}>
         <DialogHeader>
           <DialogTitle className="text-xl text-center">Sẽ Thế Nào Khi Tôi Giao Dịch Một Gói?</DialogTitle>
           <DialogDescription></DialogDescription>
