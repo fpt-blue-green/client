@@ -99,7 +99,7 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Rating defaultValue={influencer.rateAverage} readOnly />
+            <Rating defaultValue={influencer.rateAverage} precision={0.25} readOnly />
             <span className="text-sm text-muted-foreground">
               {influencer.rateAverage > 0 ? '432 đánh giá' : 'Chưa có đánh giá'}
             </span>
@@ -116,7 +116,7 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
               Yêu thích
             </Button>
           </div>
-          <Accordion type="multiple" defaultValue={['social']}>
+          <Accordion type="multiple" defaultValue={['social', 'packages', 'reviews']}>
             <AccordionItem value="social">
               <AccordionTrigger className="text-xl font-semibold">Mạng xã hội</AccordionTrigger>
               <AccordionContent className="md:px-4 md:text-base">
@@ -150,7 +150,7 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
             <AccordionItem value="reviews" id="reviews">
               <AccordionTrigger className="text-xl font-semibold">Đánh giá</AccordionTrigger>
               <AccordionContent className="md:px-4 md:text-base">
-                <Comments influencer={influencer} />
+                <Comments influencer={influencer} user={session?.user} />
               </AccordionContent>
             </AccordionItem>
           </Accordion>

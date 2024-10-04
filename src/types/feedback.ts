@@ -1,6 +1,6 @@
 import IUser from './user';
 
-interface IComment {
+interface IFeedback {
   id: string;
   influencerId: string;
   rating: number;
@@ -10,4 +10,4 @@ interface IComment {
   user: IUser;
 }
 
-export default IComment;
+export default IFeedback;
