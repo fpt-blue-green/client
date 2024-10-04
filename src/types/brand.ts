@@ -7,8 +7,8 @@ interface IBrand {
   avatar: string;
   coverImg?: string;
   description?: string;
-  createdAt?: Date;
-  modifiedAt?: Date;
+  createdAt?: string;
+  modifiedAt?: string;
   websiteUrl?: string;
   facebookUrl?: string;
   tiktokUrl?: string;

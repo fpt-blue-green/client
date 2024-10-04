@@ -122,10 +122,15 @@ export const phoneSchema = z.object({
   otp: z.string().regex(constants.otpRegex, 'Vui lòng nhập mã OTP'),
 });
 
-export type PhoneBodyType = z.infer<typeof phoneSchema>;
+export const reviewSchema = z.object({
+  rating: z.number({ required_error: 'Vui lòng đánh giá sao' }).min(1, 'Vui lòng đánh giá sao').max(5),
+  content: z.string().optional(),
+});
 
 export type GeneralBodyType = z.infer<typeof generalSchema>;
 export type ChannelBodyType = z.infer<typeof channelSchema>;
 export type ChannelsBodyType = z.infer<typeof channelsSchema>;
 export type PackageBodyType = z.infer<typeof packageSchema>;
 export type PackagesBodyType = z.infer<typeof packagesSchema>;
+export type PhoneBodyType = z.infer<typeof phoneSchema>;
+export type ReviewBodyType = z.infer<typeof reviewSchema>;

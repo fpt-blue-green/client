@@ -24,7 +24,6 @@ import {
 } from '@radix-ui/react-icons';
 import { LuFilter } from 'react-icons/lu';
 import { Slider } from '@/components/ui/slider';
-import { formats } from '@/lib/utils';
 import { Toggle } from '@/components/ui/toggle';
 import {
   DropdownMenu,
@@ -93,12 +92,15 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
 
   return (
     <div className="flex items-center justify-between gap-6 max-md:flex-col">
-      <Input
-        startAdornment={<MagnifyingGlassIcon className="size-7 text-muted-foreground" />}
-        placeholder="Tìm kiếm..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
+      <Badge label="Premium" variant="gradient" className="translate-x-0 -translate-y-1/2">
+        <Input
+          startAdornment={<MagnifyingGlassIcon className="size-7 text-muted-foreground" />}
+          placeholder="Tìm kiếm..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          disabled
+        />
+      </Badge>
       <div className="flex items-center gap-4">
         <Sheet>
           <SheetTrigger asChild>

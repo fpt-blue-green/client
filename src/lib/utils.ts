@@ -37,7 +37,15 @@ export const formats = {
       return num.toString();
     }
   },
-  date: (date: Date, options?: Intl.DateTimeFormatOptions): string => {
+  date: (input: Date | string, options?: Intl.DateTimeFormatOptions): string => {
+    // Chuyển đổi input thành Date nếu là string
+    const date = typeof input === 'string' ? new Date(input) : input;
+
+    // Kiểm tra xem date có hợp lệ hay không
+    if (isNaN(date.getTime())) {
+      throw new Error('Invalid date');
+    }
+
     const formattedDate = new Intl.DateTimeFormat('vi-VN', {
       year: options?.year || 'numeric',
       month: options?.month || '2-digit',

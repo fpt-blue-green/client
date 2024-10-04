@@ -37,7 +37,7 @@ const CampaignDetails: FC<CampaignDetailsProps> = async ({}) => {
   return (
     <div className="container mt-8 mb-16">
       <div className="relative grid md:grid-cols-2 gap-6">
-        <div className="md:sticky top-4 h-fit">
+        <div className="md:sticky top-20 h-fit">
           <ImagesCarousel />
         </div>
         <div className="py-4 space-y-6">
