@@ -15,12 +15,19 @@ const routes = {
   brand: {
     base: '/brand',
     create: (step: number) => `/brand/create?step=${step}`,
-    campaigns: '/brand/campaigns',
+    campaigns: {
+      base: '/brand/campaigns',
+      edit: (id: string, step: number) => `/brand/campaigns/${id}?step=${step}`,
+    },
   },
   brands: {
     base: '/brands',
     details: (slug: string) => `/brands/${slug}`,
     editProfile: '/brands/edit-profile',
+  },
+  campaigns: {
+    base: '/campaigns',
+    details: (id: string) => `/campaigns/${id}`,
   },
   register: {
     brand: '/auth/register/brand',

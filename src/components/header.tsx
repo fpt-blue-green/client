@@ -53,7 +53,7 @@ const Header = () => {
                 </>
               )}
               {session && session.user.role === ERole.Brand && (
-                <MenuItem href={config.routes.brand.campaigns}>Chiến dịch của tôi</MenuItem>
+                <MenuItem href={config.routes.brand.campaigns.base}>Chiến dịch của tôi</MenuItem>
               )}
             </div>
           </div>

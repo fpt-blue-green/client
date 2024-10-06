@@ -13,13 +13,14 @@ export const authOptions: NextAuthOptions = {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         try {
           if (!credentials) {
             return null;
           }
+          const userAgent = req.headers?.['user-agent'];
 
-          const res = await authRequest.login(credentials);
+          const res = await authRequest.login(credentials, userAgent);
           const user = res.data || null;
 
           return user;
