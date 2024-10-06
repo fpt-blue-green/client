@@ -5,6 +5,7 @@ const campaignsRequest = {
   getCampaignById: (id: string) => http.get(`/Campaign/${id}`, { noToken: false, next: { revalidate: 60 } }),
   createCampaign: (body: BasicBodyType) =>
     http.post('/Campaign', { ...body, startDate: body.dates[0], endDate: body.dates[1] }),
+  addTags: (id: string, tagIds: string[]) => http.post(`/Campaigns/${id}`, tagIds),
 };
 
 export default campaignsRequest;

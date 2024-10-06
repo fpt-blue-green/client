@@ -1,10 +1,13 @@
+import ITag from './tag';
+
 interface ICampaign {
   id: string;
   name: string;
   title: string;
   description: string;
-  startDate: Date;
-  endDate: Date;
+  tags: ITag[];
+  startDate: string;
+  endDate: string;
   budget: number;
   brandId: string;
 }
