@@ -8,7 +8,7 @@ import Image from 'next/image';
 
 const Footer = () => {
   return (
-    <footer className="border border-t pt-16">
+    <footer className="border-t pt-16">
       <div className="container">
         <div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-1 gap-8 text-sm">
           <div className="lg:col-span-2 md:col-span-3 max-lg:items-center max-lg:text-center flex flex-col gap-4">

@@ -24,7 +24,7 @@ const Create: FC<CreateProps> = async ({ searchParams, params }) => {
       const page = stepPages[step];
       if (page) {
         return (
-          <div className="w-full max-w-3xl mx-auto my-16 space-y-10">
+          <div className="w-full max-w-3xl mx-auto my-16 px-4 space-y-10">
             <Progress value={(100 * step) / Object.keys(stepPages).length} className="h-3" />
             {step > 1 && (
               <Button variant="secondary" className="rounded-full self-start" startIcon={<ArrowLeftIcon />} asChild>
