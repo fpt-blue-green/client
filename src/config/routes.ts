@@ -25,6 +25,10 @@ const routes = {
     details: (slug: string) => `/brands/${slug}`,
     editProfile: '/brands/edit-profile',
   },
+  campaigns: {
+    base: '/campaigns',
+    details: (id: string) => `/campaigns/${id}`,
+  },
   register: {
     brand: '/auth/register/brand',
     influencer: '/auth/register/influencer',

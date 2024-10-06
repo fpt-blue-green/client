@@ -8,14 +8,14 @@ import clsx from 'clsx';
 import { FaTrashAlt } from 'react-icons/fa';
 import DetailStepProps from './props';
 import { toast } from 'sonner';
-import { influencerRequest } from '@/request';
+import { campaignsRequest } from '@/request';
 import { useRouter } from 'next/navigation';
 import config from '@/config';
 import { emitter } from '@/lib/utils';
 import IImage from '@/types/image';
 
-const Step5: FC<DetailStepProps> = ({ profile, mutate }) => {
-  const [images, setImages] = useState<IImage[]>(profile.images);
+const Step2: FC<DetailStepProps> = ({ id, campaign, mutate }) => {
+  const [images, setImages] = useState<IImage[]>(campaign.images || []);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -72,10 +72,10 @@ const Step5: FC<DetailStepProps> = ({ profile, mutate }) => {
 
     const imageIds = images.filter((i) => !!i.id).map((i) => i.id);
     setLoading(true);
-    influencerRequest
-      .uploadImages(imageIds, imageFiles)
+    campaignsRequest
+      .uploadImages(id, imageIds, imageFiles)
       .then(() => {
-        mutate().then(() => router.push(config.routes.influencer.create(6)));
+        mutate().then(() => router.push(config.routes.brand.campaigns.edit(id, 3)));
       })
       .catch((err) => toast.error(err.message))
       .finally(() => setLoading(false));
@@ -122,4 +122,4 @@ const Step5: FC<DetailStepProps> = ({ profile, mutate }) => {
   );
 };
 
-export default Step5;
+export default Step2;

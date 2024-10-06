@@ -1,4 +1,5 @@
 import { EGender, EPlatform } from './enum';
+import IImage from './image';
 import ITag from './tag';
 import { ISocialProfile } from './utilities';
 
@@ -16,12 +17,6 @@ export interface IPackage {
   description?: string;
   price: number;
   quantity: number;
-}
-
-export interface IImage {
-  id: string;
-  url: string;
-  description?: string;
 }
 
 interface IInfluencer {

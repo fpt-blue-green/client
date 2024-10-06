@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { InfoCircledIcon } from '@radix-ui/react-icons';
@@ -12,21 +12,29 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import PriceInput from '@/components/custom/price-input';
 import DateRangePicker from '@/components/custom/date-range-picker';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { campaignsRequest } from '@/request';
 import { toast } from 'sonner';
 import { constants } from '@/lib/utils';
+import ICampaign from '@/types/campaign';
 
-const CreateForm = () => {
+interface CreateFormProps {
+  campaign?: ICampaign;
+}
+
+const CreateForm: FC<CreateFormProps> = ({ campaign }) => {
   const [loading, setLoading] = useState(false);
   const form = useForm<BasicBodyType>({
     resolver: zodResolver(basicSchema),
     defaultValues: {
-      name: '',
-      title: '',
-      description: '',
-      dates: [undefined, undefined],
-      budget: 0,
+      name: campaign?.name || '',
+      title: campaign?.title || '',
+      description: campaign?.description || '',
+      dates:
+        campaign?.startDate && campaign?.endDate
+          ? [new Date(campaign.startDate), new Date(campaign.endDate)]
+          : [undefined, undefined],
+      budget: campaign?.budget || 0,
     },
   });
 
@@ -148,6 +156,11 @@ const CreateForm = () => {
           />
         </div>
         <DialogFooter>
+          <DialogClose asChild>
+            <Button type="button" variant="ghost" loading={loading}>
+              Huỷ
+            </Button>
+          </DialogClose>
           <Button type="submit" variant="gradient" loading={loading}>
             OK
           </Button>

@@ -39,6 +39,7 @@ import useSWR from 'swr';
 import { fetcher } from '@/lib/http';
 import ITag from '@/types/tag';
 import PriceInput from '@/components/custom/price-input';
+import PremiumBadge from '@/components/custom/premium-badge';
 
 interface FilterProps {
   isChanged: boolean;
@@ -92,7 +93,7 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
 
   return (
     <div className="flex items-center justify-between gap-6 max-md:flex-col">
-      <Badge label="Premium" variant="gradient" className="translate-x-0 -translate-y-1/2">
+      <PremiumBadge>
         <Input
           startAdornment={<MagnifyingGlassIcon className="size-7 text-muted-foreground" />}
           placeholder="Tìm kiếm..."
@@ -100,7 +101,7 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
           onChange={(e) => setSearch(e.target.value)}
           disabled
         />
-      </Badge>
+      </PremiumBadge>
       <div className="flex items-center gap-4">
         <Sheet>
           <SheetTrigger asChild>

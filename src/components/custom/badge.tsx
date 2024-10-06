@@ -14,7 +14,7 @@ const badgeVariants = cva('absolute transition-all', {
   },
 });
 
-interface BadgeProps extends SBadgeProps, VariantProps<typeof badgeVariants> {
+export interface BadgeProps extends SBadgeProps, VariantProps<typeof badgeVariants> {
   children: ReactNode;
   label?: string | number;
   invisible?: boolean;
@@ -44,6 +44,7 @@ const Badge: FC<BadgeProps> = ({
             badgeVariants({ position }),
             { 'size-2 p-0': dot },
             invisible ? 'scale-0' : 'scale-100',
+            'select-none',
             className,
           )}
           {...props}
