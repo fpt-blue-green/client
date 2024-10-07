@@ -17,7 +17,7 @@ interface ICampaign {
   brand: IBrand;
 }
 
-interface IContent {
+export interface IContent {
   id: string;
   platform: EPlatform;
   contentType: EContentType;

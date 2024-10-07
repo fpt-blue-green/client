@@ -24,8 +24,7 @@ interface CampaignCardProps {
 }
 
 const CampaignCard: FC<CampaignCardProps> = ({ data, onEdit, reload }) => {
-  const firstImage =
-    'https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTA5L3Jhd3BpeGVsX29mZmljZV8zM193YWxscGFwZXJfb2ZfY2xvdWRzX2dyYWRpZW50X2dsaXR0ZXJfb25fc2ltcF8zNzFmOGU1Zi1jZTM2LTRjNjctOWMyZC1lMWZkZTI1YmEwM2ZfMS5qcGc.jpg';
+  const firstImage = data.images[0].url;
 
   const handleDelete = (campaign: ICampaign) => () => {
     emitter.confirm({
@@ -52,7 +51,7 @@ const CampaignCard: FC<CampaignCardProps> = ({ data, onEdit, reload }) => {
           className="object-cover w-full aspect-square transition-transform hover:scale-110"
         />
       )}
-      <div className="absolute left-0 top-0 right-0 bottom-0 bg-bg-gradient-to-b from-black/5 from-75% to-black"></div>
+      <div className="absolute left-0 top-0 right-0 bottom-0 bg-bg-gradient-to-b from-black/5 from-75% to-black pointer-events-none"></div>
       <div className="absolute left-4 bottom-4 text-white">
         <Link href={config.routes.brand.campaigns.edit(data.id, 1)} className="font-semibold hover:underline">
           {data.name}

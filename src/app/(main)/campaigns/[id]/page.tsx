@@ -5,10 +5,10 @@ import { notFound } from 'next/navigation';
 import { FC } from 'react';
 import ImagesCarousel from './images-carousel';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { PlatformData } from '@/types/enum';
 import Link from 'next/link';
 import { formats } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import Contents from './contents';
+import { RiFacebookFill, RiInstagramFill, RiLink, RiTiktokFill, RiYoutubeFill } from 'react-icons/ri';
 
 const getCampaign = async (id: string): Promise<ICampaign> => {
   try {
@@ -33,32 +33,50 @@ export async function generateMetadata({ params }: CampaignDetailsProps): Promis
   };
 }
 
-const CampaignDetails: FC<CampaignDetailsProps> = async ({}) => {
+const CampaignDetails: FC<CampaignDetailsProps> = async ({ params }) => {
+  const campaign = await getCampaign(params.id);
+  const { websiteUrl, tiktokUrl, youtubeUrl, instagramUrl, facebookUrl } = campaign.brand;
+
   return (
     <div className="container mt-8 mb-16">
-      <div className="relative grid md:grid-cols-2 gap-6">
-        <div className="md:sticky top-20 h-fit">
-          <ImagesCarousel />
-        </div>
+      <div>
+        <ImagesCarousel campaign={campaign} />
         <div className="py-4 space-y-6">
-          <h1 className="font-bold text-2xl">Tên chiến dịch gì đó</h1>
-          <p className="text-muted-foreground">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sequi nisi esse aut, quos harum, error hic illo
-            quasi animi repellat rerum ullam architecto tenetur laboriosam eos voluptatum sit. Laudantium, in.
-          </p>
+          <h1 className="font-bold text-2xl">{campaign.title}</h1>
+          <p className="text-muted-foreground">{campaign.description}</p>
           <div className="flex items-center gap-2">
             <Avatar className="size-16">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src={campaign.brand.avatar} alt={`Ảnh đại diện của nhãn hàng ${campaign.brand.name}`} />
+              <AvatarFallback>${campaign.brand.name}</AvatarFallback>
             </Avatar>
             <div>
-              <h5 className="font-semibold">Tên nhãn hàng</h5>
+              <h5 className="font-semibold">{campaign.brand.name}</h5>
               <div className="flex items-center gap-3 mt-2">
-                {Object.entries(PlatformData).map(([key, { Icon }]) => (
-                  <Link key={key} href="#">
-                    <Icon className="size-5" />
+                {websiteUrl && (
+                  <Link href={websiteUrl}>
+                    <RiLink className="size-5" />
                   </Link>
-                ))}
+                )}
+                {facebookUrl && (
+                  <Link href={facebookUrl}>
+                    <RiFacebookFill className="size-5" />
+                  </Link>
+                )}
+                {youtubeUrl && (
+                  <Link href={youtubeUrl}>
+                    <RiYoutubeFill className="size-5" />
+                  </Link>
+                )}
+                {instagramUrl && (
+                  <Link href={instagramUrl}>
+                    <RiInstagramFill className="size-5" />
+                  </Link>
+                )}
+                {tiktokUrl && (
+                  <Link href={tiktokUrl}>
+                    <RiTiktokFill className="size-5" />
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -67,39 +85,17 @@ const CampaignDetails: FC<CampaignDetailsProps> = async ({}) => {
             <ul className="list-disc pl-8 space-y-2">
               <li>
                 <span className="font-medium">Thời gian: </span>
-                {formats.date(new Date())} - {formats.date(new Date())}
+                {formats.date(campaign.startDate)} - {formats.date(campaign.endDate)}
               </li>
               <li>
                 <span className="font-medium">Ngân sách ước tính: </span>
-                {formats.price(1200000)}
+                {formats.price(campaign.budget)}
               </li>
             </ul>
           </div>
           <div>
             <h3 className="text-xl font-semibold mb-6">Yêu cầu nội dung</h3>
-            <div className="flex flex-col gap-6">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <div className="border border-foreground px-5 py-4 rounded-sm" key={index}>
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="font-semibold">{'1 video Tiktok'}</span>
-                    <span className="font-semibold">{formats.price(200000)}</span>
-                  </div>
-                  <p className="mt-4 text-muted-foreground text-sm">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Non voluptatum velit veritatis debitis,
-                    sunt explicabo error. Velit, repellat asperiores ullam dicta aspernatur quo doloribus minima
-                    recusandae tempore molestias. A, iure!
-                  </p>
-                  <div className="flex items-center justify-between mt-4">
-                    <div className="flex items-center justify-center size-9 text-background bg-foreground rounded-md">
-                      {/* <Icon className="size-6" /> */}
-                    </div>
-                    <Button variant="gradient" className="text-base">
-                      Tiếp tục
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <Contents data={campaign.contents} />
           </div>
         </div>
       </div>

@@ -7,6 +7,8 @@ const campaignsRequest = {
     http.get<ICampaign>(`/Campaigns/${id}`, { noToken: false, next: { revalidate: 60 } }),
   createCampaign: (body: BasicBodyType) =>
     http.post('/Campaign', { ...body, startDate: body.dates[0], endDate: body.dates[1] }),
+  updateCampaign: (id: string, body: BasicBodyType) =>
+    http.put(`/Campaign/${id}`, { ...body, startDate: body.dates[0], endDate: body.dates[1] }),
   addTags: (id: string, tagIds: string[]) => http.post(`/Campaigns/${id}/tags`, tagIds),
   uploadImages: (id: string, imageIds: string[], images: File[]) => {
     const formData = new FormData();
