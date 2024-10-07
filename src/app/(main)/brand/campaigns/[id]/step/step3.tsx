@@ -66,7 +66,7 @@ const Step6: FC<DetailStepProps> = ({ id, campaign, mutate }) => {
 
     setLoading(true);
     campaignsRequest
-      .createContents(id, values)
+      .createContents(id, values.contents)
       .then(() => {
         mutate().then(() => router.push(config.routes.brand.campaigns.base));
       })
@@ -206,7 +206,7 @@ const Step6: FC<DetailStepProps> = ({ id, campaign, mutate }) => {
           onClick={addContent}
         >
           <PlusCircledIcon className="size-6" />
-          Thêm Gói
+          Thêm yêu cầu
         </div>
         <Button type="submit" size="large" variant="gradient" fullWidth className="col-span-full" loading={loading}>
           Tiếp tục

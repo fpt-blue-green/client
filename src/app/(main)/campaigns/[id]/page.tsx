@@ -17,7 +17,7 @@ const getCampaign = async (id: string): Promise<ICampaign> => {
       return notFound();
     }
     return res.data;
-  } catch {
+  } catch (ex) {
     return notFound();
   }
 };
