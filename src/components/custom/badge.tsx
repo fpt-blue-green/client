@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react';
+import { FC, forwardRef, ReactNode } from 'react';
 import { Badge as SBadge, BadgeProps as SBadgeProps } from '../ui/badge';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
@@ -23,37 +23,32 @@ export interface BadgeProps extends SBadgeProps, VariantProps<typeof badgeVarian
   dot?: boolean;
 }
 
-const Badge: FC<BadgeProps> = ({
-  children,
-  label,
-  max,
-  dot,
-  position = 'top-right',
-  invisible,
-  className,
-  ...props
-}) => {
-  const content = !dot && label && typeof label === 'number' ? (max && label > max ? `${max}+` : label) : label;
+const Badge: FC<BadgeProps> = forwardRef<HTMLDivElement, BadgeProps>(
+  ({ children, label, max, dot, position = 'top-right', invisible, className, ...props }, ref) => {
+    const content = !dot && label && typeof label === 'number' ? (max && label > max ? `${max}+` : label) : label;
 
-  return (
-    <div className="relative inline-block">
-      {children}
-      {(label || dot) && (
-        <SBadge
-          className={cn(
-            badgeVariants({ position }),
-            { 'size-2 p-0': dot },
-            invisible ? 'scale-0' : 'scale-100',
-            'select-none',
-            className,
-          )}
-          {...props}
-        >
-          {content}
-        </SBadge>
-      )}
-    </div>
-  );
-};
+    return (
+      <div ref={ref} className="relative inline-block">
+        {children}
+        {(label || dot) && (
+          <SBadge
+            className={cn(
+              badgeVariants({ position }),
+              { 'size-2 p-0': dot },
+              invisible ? 'scale-0' : 'scale-100',
+              'select-none',
+              className,
+            )}
+            {...props}
+          >
+            {content}
+          </SBadge>
+        )}
+      </div>
+    );
+  },
+);
+
+Badge.displayName = 'Badge';
 
 export default Badge;

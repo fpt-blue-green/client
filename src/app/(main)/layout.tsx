@@ -23,9 +23,10 @@ const getInfluencer = async (): Promise<IInfluencer | undefined | null> => {
 
 interface MainLayoutProps {
   children: ReactNode;
+  admin: ReactNode;
 }
 
-const MainLayout: FC<Readonly<MainLayoutProps>> = async ({ children }) => {
+const MainLayout: FC<Readonly<MainLayoutProps>> = async ({ admin, children }) => {
   const session = await getServerSession(authOptions);
 
   if (session) {
@@ -51,11 +52,17 @@ const MainLayout: FC<Readonly<MainLayoutProps>> = async ({ children }) => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <main className="flex-1 md:pt-20 pt-16">{children}</main>
-      <Footer />
-    </div>
+    <>
+      {session?.user.role === ERole.Admin ? (
+        admin
+      ) : (
+        <div className="flex flex-col min-h-screen">
+          <Header />
+          <main className="flex-1 md:pt-20 pt-16">{children}</main>
+          <Footer />
+        </div>
+      )}
+    </>
   );
 };
 

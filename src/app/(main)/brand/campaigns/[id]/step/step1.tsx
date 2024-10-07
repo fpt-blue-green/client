@@ -13,11 +13,14 @@ import { Button } from '@/components/ui/button';
 import { campaignsRequest } from '@/request';
 import config from '@/config';
 import { useRouter } from 'next/navigation';
+import PremiumBadge from '@/components/custom/premium-badge';
+import IBrand from '@/types/brand';
 
 const Step1: FC<DetailStepProps> = ({ id, campaign, mutate }) => {
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState<string[]>(campaign.tags?.map((t) => t.id) || []);
   const { data, isLoading } = useSWRImmutable<ITag[]>('/Tags', fetcher);
+  const { data: profile } = useSWRImmutable<IBrand>('/Brand', fetcher);
   const router = useRouter();
 
   const handleToggle = (value: string) => () => {
@@ -46,20 +49,25 @@ const Step1: FC<DetailStepProps> = ({ id, campaign, mutate }) => {
   return (
     <div className="space-y-10">
       <ScrollArea className="h-[40vh]">
-        <div className="grid md:grid-cols-2 grid-cols-1 gap-x-4 gap-y-6">
+        <div className="grid md:grid-cols-2 grid-cols-1 gap-x-4 gap-y-6 pr-2">
           {isLoading
             ? Array.from({ length: 20 }).map((_, index) => <Skeleton key={index} className="h-10 w-full" />)
-            : data?.map((tag) => (
-                <Toggle
-                  variant="primary"
-                  size="large"
-                  key={tag.id}
-                  pressed={tags.includes(tag.id)}
-                  onPressedChange={handleToggle(tag.id)}
-                >
-                  {tag.name}
-                </Toggle>
-              ))}
+            : data
+                ?.sort((a, b) => +a.isPremium - +b.isPremium)
+                .map((tag) => (
+                  <PremiumBadge key={tag.id} invisible={profile?.isPremium || !tag.isPremium}>
+                    <Toggle
+                      variant="primary"
+                      size="large"
+                      pressed={tags.includes(tag.id)}
+                      onPressedChange={handleToggle(tag.id)}
+                      className="w-full"
+                      disabled={!profile?.isPremium && tag.isPremium}
+                    >
+                      {tag.name}
+                    </Toggle>
+                  </PremiumBadge>
+                ))}
         </div>
       </ScrollArea>
       <Button
