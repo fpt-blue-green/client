@@ -32,7 +32,7 @@ const PremiumBadge: FC<PremiumBadgeProps> = ({
         <Badge
           variant="gradient"
           size="small"
-          className={cn('cursor-pointer translate-x-0 -translate-y-1/2 text-[10px]', className)}
+          className={cn('cursor-pointer translate-x-0 -translate-y-1/2 text-[10px] leading-3', className)}
           {...props}
           label="Premium"
         />

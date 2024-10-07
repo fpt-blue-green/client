@@ -14,7 +14,7 @@ import PremiumBadge from '@/components/custom/premium-badge';
 import IBrand from '@/types/brand';
 
 const List = () => {
-  const { data, isLoading } = useSWRImmutable<ICampaign[]>('/Brand/campaigns', fetcher);
+  const { data, isLoading, mutate } = useSWRImmutable<ICampaign[]>('/Brand/campaigns', fetcher);
   const { data: profile } = useSWRImmutable<IBrand>('/Brand', fetcher);
   const [open, setOpen] = useState(false);
   const [campaign, setCampaign] = useState<ICampaign>();
@@ -22,6 +22,10 @@ const List = () => {
   const handleOpen = (campaign?: ICampaign) => () => {
     setOpen(true);
     setCampaign(campaign);
+  };
+
+  const reload = async () => {
+    await mutate();
   };
 
   const canCreate = Boolean(profile?.isPremium || (data?.length && data.length === 0));
@@ -47,7 +51,7 @@ const List = () => {
         {isLoading ? (
           Array.from({ length: 12 }).map((_, index) => <Skeleton key={index} className="h-40" />)
         ) : data && data.length > 0 ? (
-          data.map((campaign) => <CampaignCard key={campaign.id} data={campaign} onEdit={handleOpen} />)
+          data.map((campaign) => <CampaignCard key={campaign.id} data={campaign} onEdit={handleOpen} reload={reload} />)
         ) : (
           <NoData description="Không có chiến dịch" className="col-span-full" />
         )}
