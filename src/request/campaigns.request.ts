@@ -13,6 +13,8 @@ const campaignsRequest = {
     return http.post<string[]>(`/Campaigns/${id}/images`, formData);
   },
   createContents: (id: string, contents: ContentsBodyType) => http.post(`/Campaigns/${id}/contents`, contents),
+  updateCampaign: (id: string, body: BasicBodyType) =>
+    http.put(`/Campaign/${id}`, { ...body, startDate: body.dates[0], endDate: body.dates[1] }),
 };
 
 export default campaignsRequest;

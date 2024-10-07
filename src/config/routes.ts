@@ -28,6 +28,7 @@ const routes = {
   campaigns: {
     base: '/campaigns',
     details: (id: string) => `/campaigns/${id}`,
+    editCampaign: '/campaigns/edit-campaign',
   },
   register: {
     brand: '/auth/register/brand',
