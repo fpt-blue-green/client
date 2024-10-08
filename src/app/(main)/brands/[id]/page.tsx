@@ -13,6 +13,7 @@ import { notFound } from 'next/navigation';
 import { FC } from 'react';
 import { FaEdit } from 'react-icons/fa';
 import useSWR from 'swr';
+import Campaigns from './campaigns';
 
 const getBrand = async (id: string): Promise<IBrand> => {
   try {
@@ -80,19 +81,7 @@ const BrandDetails: FC<BrandDetailsProps> = async ({ params }) => {
           </Button>
         </p>
       </div>
-      <div className="relative">
-        <h2 className="mt-10 mb-4 text-xl font-semibold">Chiến dịch của bạn</h2>
-        <Link href={''} target="_blank">
-          <Image
-            className="w-full md:w-1/2 max-h-[300px] object-cover rounded-sm ease-out duration-300"
-            src="https://d5ik1gor6xydq.cloudfront.net/websiteImages/creatorMarketplace/noPic.png"
-            alt="Brand_Campaign"
-            width={400}
-            height={200}
-          />
-          <p className="absolute bottom-2 left-2 text-primary-foreground">In-progress</p>
-        </Link>
-      </div>
+      <Campaigns />
       <div>
         <h2 className="mt-10 mb-4 text-xl font-semibold">Lượt đánh giá</h2>
         <p className="text-sm font-light">Bạn chưa có lượt đánh giá nào.</p>
