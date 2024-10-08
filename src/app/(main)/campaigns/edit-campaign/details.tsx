@@ -13,6 +13,7 @@ import { BasicBodyType, basicSchema } from '@/schema-validations/campaign.schema
 import CampaignDetailsProps from './props';
 import { campaignsRequest } from '@/request';
 import { toast } from 'sonner';
+import { Input } from '@/components/ui/input';
 
 const CampaignTabDetails: FC<CampaignDetailsProps> = ({ campaign }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -50,9 +51,9 @@ const CampaignTabDetails: FC<CampaignDetailsProps> = ({ campaign }) => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <Label htmlFor="address">Tên</Label>
+                    <Label htmlFor="name">Tên</Label>
                     <FormControl>
-                      <Textarea {...field} id="name" className="w-full" rows={2} />
+                      <Input {...field} id="name" className="w-full" value={field.value || ''} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -63,9 +64,9 @@ const CampaignTabDetails: FC<CampaignDetailsProps> = ({ campaign }) => {
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <Label htmlFor="address">Tiêu đề chiến dịch</Label>
+                    <Label htmlFor="title">Tiêu đề</Label>
                     <FormControl>
-                      <Textarea {...field} id="name" className="w-full" rows={2} />
+                      <Input {...field} id="title" className="w-full" value={field.value || ''} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -78,12 +79,13 @@ const CampaignTabDetails: FC<CampaignDetailsProps> = ({ campaign }) => {
                   <FormItem>
                     <Label htmlFor="budget">Ngân sách</Label>
                     <FormControl>
-                      <Textarea {...field} id="budget" className="w-full" rows={2} />
+                      <Input {...field} id="budget" className="w-full" value={field.value || ''} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={detailsForm.control}
                 name="description"
