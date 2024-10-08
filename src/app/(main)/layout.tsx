@@ -2,16 +2,29 @@ import { FC, ReactNode } from 'react';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import IInfluencer from '@/types/influencer';
-import { influencerRequest } from '@/request';
+import { brandRequest, influencerRequest } from '@/request';
 import { redirect } from 'next/navigation';
 import config from '@/config';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]/route';
 import { ERole } from '@/types/enum';
+import IBrand from '@/types/brand';
 
 const getInfluencer = async (): Promise<IInfluencer | undefined | null> => {
   try {
     const res = await influencerRequest.me(true);
+    if (!res.data) {
+      return null;
+    }
+    return res.data;
+  } catch {
+    return undefined;
+  }
+};
+
+const getBrand = async (): Promise<IBrand | undefined | null> => {
+  try {
+    const res = await brandRequest.me(true);
     if (!res.data) {
       return null;
     }
@@ -31,6 +44,8 @@ const MainLayout: FC<Readonly<MainLayoutProps>> = async ({ admin, children }) =>
 
   if (session) {
     const { user } = session;
+    if (user.role === ERole.Admin) return <>{admin}</>;
+
     if (user.role === ERole.Influencer) {
       const influencer = await getInfluencer();
 
@@ -47,6 +62,13 @@ const MainLayout: FC<Readonly<MainLayoutProps>> = async ({ admin, children }) =>
         }
       } else if (influencer === null) {
         redirect(config.routes.influencer.create(1));
+      }
+    }
+
+    if (user.role === ERole.Brand) {
+      const brand = await getBrand();
+      if (!brand) {
+        redirect(config.routes.brand.create(1));
       }
     }
   }

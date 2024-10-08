@@ -10,6 +10,7 @@ import {
   BreadcrumbSeparator,
 } from '../ui/breadcrumb';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 export interface IBreadcrumbItem {
   label: string;
@@ -32,8 +33,8 @@ const Breadcrumbs: FC<BreadcrumbsProps> = ({ items, separator = '/', className }
             <BreadcrumbItem key={index}>
               {item.icon}
               {item.href ? (
-                <BreadcrumbLink href={item.href} className="hover:underline">
-                  {item.label}
+                <BreadcrumbLink className="hover:underline" asChild>
+                  <Link href={item.href}>{item.label}</Link>
                 </BreadcrumbLink>
               ) : (
                 <BreadcrumbPage>{item.label}</BreadcrumbPage>

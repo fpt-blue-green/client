@@ -28,7 +28,7 @@ const List = () => {
     await mutate();
   };
 
-  const canCreate = Boolean(profile?.isPremium || (data?.length && data.length === 0));
+  const canCreate = Boolean(profile?.isPremium || (data && data.length === 0));
 
   return (
     <div className="space-y-7">
