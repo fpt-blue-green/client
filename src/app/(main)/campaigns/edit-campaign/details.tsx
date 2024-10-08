@@ -5,15 +5,16 @@ import Paper from '@/components/custom/paper';
 import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import AddressPicker from '@/components/custom/address-picker';
 import { BasicBodyType, basicSchema } from '@/schema-validations/campaign.schema';
 import CampaignDetailsProps from './props';
 import { campaignsRequest } from '@/request';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
+import PriceInput from '@/components/custom/price-input';
+import DateRangePicker from '@/components/custom/date-range-picker';
 
 const CampaignTabDetails: FC<CampaignDetailsProps> = ({ campaign }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -21,15 +22,18 @@ const CampaignTabDetails: FC<CampaignDetailsProps> = ({ campaign }) => {
   const detailsForm = useForm<BasicBodyType>({
     resolver: zodResolver(basicSchema),
     defaultValues: {
-      name: campaign.name || undefined,
-      title: campaign.title || undefined,
-      description: campaign.description || undefined,
-      budget: campaign.budget || undefined,
+      name: campaign.name || '',
+      title: campaign.title || '',
+      description: campaign.description || '',
+      budget: campaign.budget || 0,
+      dates:
+        campaign?.startDate && campaign?.endDate
+          ? [new Date(campaign.startDate), new Date(campaign.endDate)]
+          : [undefined, undefined],
     },
   });
 
   const onSubmit = (values: BasicBodyType) => {
-    console.log(values);
     setIsLoading(true);
     campaignsRequest
       .updateCampaign(campaign.id, values)
@@ -53,7 +57,7 @@ const CampaignTabDetails: FC<CampaignDetailsProps> = ({ campaign }) => {
                   <FormItem>
                     <Label htmlFor="name">Tên</Label>
                     <FormControl>
-                      <Input {...field} id="name" className="w-full" value={field.value || ''} />
+                      <Input {...field} id="name" fullWidth value={field.value || ''} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -66,7 +70,7 @@ const CampaignTabDetails: FC<CampaignDetailsProps> = ({ campaign }) => {
                   <FormItem>
                     <Label htmlFor="title">Tiêu đề</Label>
                     <FormControl>
-                      <Input {...field} id="title" className="w-full" value={field.value || ''} />
+                      <Input {...field} id="title" fullWidth value={field.value || ''} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -77,23 +81,43 @@ const CampaignTabDetails: FC<CampaignDetailsProps> = ({ campaign }) => {
                 name="budget"
                 render={({ field }) => (
                   <FormItem>
-                    <Label htmlFor="budget">Ngân sách</Label>
+                    <FormLabel htmlFor="budget" className="md:text-right">
+                      Ngân sách
+                    </FormLabel>
                     <FormControl>
-                      <Input {...field} id="budget" className="w-full" value={field.value || ''} />
+                      <PriceInput id="budget" type="number" fullWidth {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={detailsForm.control}
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <Label htmlFor="description">Mô tả</Label>
+                    <Label htmlFor="description">Miêu tả</Label>
                     <FormControl>
                       <Textarea {...field} id="description" className="w-full" rows={4} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={detailsForm.control}
+                name="dates"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="dates">Thời gian</FormLabel>
+                    <FormControl>
+                      <DateRangePicker
+                        id="dates"
+                        selected={field.value}
+                        onChange={field.onChange}
+                        fullWidth
+                        disablePast
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
