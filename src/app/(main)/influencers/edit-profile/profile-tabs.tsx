@@ -42,7 +42,7 @@ const ProfileTabs = () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="details">
-          <Details influencer={influencer} mutate={mutate} />
+          <Details />
         </TabsContent>
         <TabsContent value="images">
           <ImageGallery influencer={influencer} mutate={mutate} />

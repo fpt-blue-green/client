@@ -6,20 +6,23 @@ import { UploadIcon } from '@radix-ui/react-icons';
 import { RiCloseCircleFill, RiEditFill } from 'react-icons/ri';
 import { Input } from '@/components/ui/input';
 import { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
-import IInfluencer, { IImage } from '@/types/influencer';
+import IInfluencer from '@/types/influencer';
 import { toast } from 'sonner';
 import { influencerRequest } from '@/request';
 import { emitter } from '@/lib/utils';
 import { KeyedMutator } from 'swr/_internal';
+import IImage from '@/types/image';
+import { useAuthInfluencer } from '@/hooks';
 
 interface IImageGalleryProps {
   influencer: IInfluencer;
   mutate: KeyedMutator<IInfluencer>;
 }
 
-const ImageGallery: FC<IImageGalleryProps> = ({ influencer, mutate }) => {
+const ImageGallery: FC<IImageGalleryProps> = ({}) => {
+  const { profile, refreshProfile } = useAuthInfluencer();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [imageGallery, setImageGallery] = useState<IImage[]>(influencer.images || []);
+  const [imageGallery, setImageGallery] = useState<IImage[]>(profile?.images || []);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isSaveButtonDisplayed, setIsSaveButtonDisplayed] = useState<boolean>();
@@ -30,7 +33,7 @@ const ImageGallery: FC<IImageGalleryProps> = ({ influencer, mutate }) => {
   };
 
   useEffect(() => {
-    if (imageGallery.length !== influencer.images.length) setIsSaveButtonDisplayed(true);
+    if (imageGallery.length !== profile?.images.length) setIsSaveButtonDisplayed(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageGallery.length]);
 
@@ -86,7 +89,7 @@ const ImageGallery: FC<IImageGalleryProps> = ({ influencer, mutate }) => {
       .uploadImages(imageIds, imageFiles)
       .then(() => {
         setIsSaveButtonDisplayed(false);
-        mutate().then(() => {
+        refreshProfile().then(() => {
           toast.success('Bạn cập nhật thư viện ảnh thành công');
         });
       })
@@ -95,53 +98,57 @@ const ImageGallery: FC<IImageGalleryProps> = ({ influencer, mutate }) => {
   };
   return (
     <Paper>
-      <div className="flex justify-between items-center mb-8">
-        <h3 className="font-semibold text-xl">Thư Viện Ảnh</h3>
-        <div className="flex justify-between items-center gap-4">
-          {imageGallery.length <= 10 && (
-            <Button onClick={handleUploadImage} variant="secondary" className="font-bold">
-              <UploadIcon />
-              <Input
-                type="file"
-                accept="image/jpeg,image/png,image/gif"
-                className="hidden"
-                ref={fileInputRef}
-                onChange={handleOnChangeImage}
-                multiple
-              />
-              Thêm ảnh
-            </Button>
-          )}
-          {isSaveButtonDisplayed && (
-            <Button onClick={handleSaveChanges} variant="gradient" className="font-bold" loading={loading}>
-              <RiEditFill />
-              Lưu thay đổi
-            </Button>
-          )}
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
-        {imageGallery.map((img, index) => (
-          <div key={img.id} className="min-w-40 min-h-40 relative">
-            <Image
-              className="w-full rounded-md object-cover aspect-square"
-              src={img.url}
-              width={200}
-              height={200}
-              alt={'User Image'}
-            />
-            <div className="absolute z-10 w-full h-full bg-red top-0 opacity-0 hover:opacity-100">
-              <RiCloseCircleFill
-                size={24}
-                className="absolute top-2 right-2 hover:cursor-pointer"
-                onClick={() => {
-                  handleDelete(index);
-                }}
-              />
+      {profile && (
+        <>
+          <div className="flex justify-between items-center mb-8">
+            <h3 className="font-semibold text-xl">Thư Viện Ảnh</h3>
+            <div className="flex justify-between items-center gap-4">
+              {imageGallery.length <= 10 && (
+                <Button onClick={handleUploadImage} variant="secondary" className="font-bold">
+                  <UploadIcon />
+                  <Input
+                    type="file"
+                    accept="image/jpeg,image/png,image/gif"
+                    className="hidden"
+                    ref={fileInputRef}
+                    onChange={handleOnChangeImage}
+                    multiple
+                  />
+                  Thêm ảnh
+                </Button>
+              )}
+              {isSaveButtonDisplayed && (
+                <Button onClick={handleSaveChanges} variant="gradient" className="font-bold" loading={loading}>
+                  <RiEditFill />
+                  Lưu thay đổi
+                </Button>
+              )}
             </div>
           </div>
-        ))}
-      </div>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
+            {imageGallery.map((img, index) => (
+              <div key={img.id} className="min-w-40 min-h-40 relative">
+                <Image
+                  className="w-full rounded-md object-cover aspect-square"
+                  src={img.url}
+                  width={200}
+                  height={200}
+                  alt={'User Image'}
+                />
+                <div className="absolute z-10 w-full h-full bg-red top-0 opacity-0 hover:opacity-100">
+                  <RiCloseCircleFill
+                    size={24}
+                    className="absolute top-2 right-2 hover:cursor-pointer"
+                    onClick={() => {
+                      handleDelete(index);
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </Paper>
   );
 };

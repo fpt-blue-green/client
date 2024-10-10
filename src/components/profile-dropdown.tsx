@@ -22,18 +22,13 @@ import {
   DialogTrigger,
 } from './ui/dialog';
 import Image from 'next/image';
-import { signIn, signOut, useSession } from 'next-auth/react';
-import useSWR from 'swr';
-import { fetcher } from '@/lib/http';
-import IInfluencer from '@/types/influencer';
-import { ERole } from '@/types/enum';
-import IBrand from '@/types/brand';
+import { signIn, signOut } from 'next-auth/react';
+import { useAuthBrand, useAuthInfluencer } from '@/hooks';
 
 const ProfileDropdown = () => {
-  const { data: session } = useSession<true>();
+  const { session, profile: influencer } = useAuthInfluencer();
+  const { profile: brand } = useAuthBrand();
   const user = session?.user;
-  const { data: influencer } = useSWR<IInfluencer>('/Influencer', user?.role === ERole.Influencer ? fetcher : null);
-  const { data: brand } = useSWR<IBrand>('/Brand', user?.role === ERole.Brand ? fetcher : null);
 
   return (
     <DropdownMenu>
