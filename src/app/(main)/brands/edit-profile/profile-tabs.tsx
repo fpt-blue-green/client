@@ -19,8 +19,6 @@ const initBrand: IBrand = {
   avatar: '',
   coverImg: '',
   description: '',
-  createdAt: new Date(),
-  modifiedAt: new Date(),
   websiteUrl: '',
   facebookUrl: '',
   tiktokUrl: '',
@@ -29,7 +27,7 @@ const initBrand: IBrand = {
 };
 
 const ProfileTabs = () => {
-  const { data: brand, isLoading, mutate } = useSWRImmutable<IBrand>('/Brand', fetcher);
+  const { data: brand, mutate } = useSWRImmutable<IBrand>('/Brand', fetcher);
 
   return (
     // <div className="flex flex-col gap-8">
