@@ -1,10 +1,8 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { Button } from '@/components/ui/button';
 import config from '@/config';
-import { fetcher } from '@/lib/http';
 import brandsRequest from '@/request/brands.request';
 import IBrand from '@/types/brand';
-import ICampaign from '@/types/campaign';
 import { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 import Image from 'next/image';
@@ -12,7 +10,6 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { FC } from 'react';
 import { FaEdit } from 'react-icons/fa';
-import useSWR from 'swr';
 import Campaigns from './campaigns';
 
 const getBrand = async (id: string): Promise<IBrand> => {
@@ -43,11 +40,13 @@ const BrandDetails: FC<BrandDetailsProps> = async ({ params }) => {
 
   return (
     <div className="container my-8">
-      <div className="flex justify-end mb-4">
-        <Button variant="ghost" startIcon={<FaEdit />} asChild>
-          <Link href={config.routes.brands.editProfile}>Chỉnh sửa</Link>
-        </Button>
-      </div>
+      {session?.user.id === brand.userId && (
+        <div className="flex justify-end mb-4">
+          <Button variant="ghost" startIcon={<FaEdit />} asChild>
+            <Link href={config.routes.brands.editProfile}>Chỉnh sửa</Link>
+          </Button>
+        </div>
+      )}
       <div className="relative flex flex-col items-center mb-12">
         <Image
           className="w-full max-h-[480px] object-cover cursor-pointer hover:opacity-80 rounded-md"
@@ -75,17 +74,13 @@ const BrandDetails: FC<BrandDetailsProps> = async ({ params }) => {
       <div>
         <h5 className="text-center font-semibold text-xl">{brand.name}</h5>
         <p className="mt-3 font-light text-sm text-center md:text-start">
-          {brand.description || ''}
+          {brand.description}
           <Button className="font-semibold text-md text-foreground underline" variant="link">
             <Link href={config.routes.brands.editProfile}>Hoàn thành hồ sơ ngay.</Link>
           </Button>
         </p>
       </div>
       <Campaigns />
-      <div>
-        <h2 className="mt-10 mb-4 text-xl font-semibold">Lượt đánh giá</h2>
-        <p className="text-sm font-light">Bạn chưa có lượt đánh giá nào.</p>
-      </div>
     </div>
   );
 };
