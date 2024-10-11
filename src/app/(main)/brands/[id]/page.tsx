@@ -1,10 +1,8 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { Button } from '@/components/ui/button';
 import config from '@/config';
-import { fetcher } from '@/lib/http';
 import brandsRequest from '@/request/brands.request';
 import IBrand from '@/types/brand';
-import ICampaign from '@/types/campaign';
 import { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 import Image from 'next/image';
@@ -12,7 +10,6 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { FC } from 'react';
 import { FaEdit } from 'react-icons/fa';
-import useSWR from 'swr';
 import Campaigns from './campaigns';
 
 const getBrand = async (id: string): Promise<IBrand> => {
@@ -39,7 +36,7 @@ export async function generateMetadata({ params }: BrandDetailsProps): Promise<M
 }
 
 const BrandDetails: FC<BrandDetailsProps> = async ({ params }) => {
-  const [brand, session] = await Promise.all([getBrand(params.id), getServerSession(authOptions)]);
+  const [brand] = await Promise.all([getBrand(params.id), getServerSession(authOptions)]);
 
   return (
     <div className="container my-8">
