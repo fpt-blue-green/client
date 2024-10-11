@@ -2,7 +2,7 @@
 
 import { fetcher } from '@/lib/http';
 import IInfluencer from '@/types/influencer';
-import { FC, memo, useLayoutEffect } from 'react';
+import { FC, memo } from 'react';
 import useSWRImmutable from 'swr/immutable';
 import DetailStepProps from './step/props';
 import { stepPages } from './page';
@@ -17,6 +17,7 @@ interface StepProps {
 
 const defaultProfile: IBrand = {
   id: '',
+  avatar: '',
   userId: '',
   name: '',
   address: '',
@@ -37,7 +38,7 @@ const Step: FC<StepProps> = ({ Element, step }) => {
   const { data: profile, isLoading, mutate } = useSWRImmutable<IBrand>('/Brand', fetcher);
   const router = useRouter();
 
-  return <>{!isLoading && <Element profile={profile || defaultProfile} mutate={mutate} />}</>;
+  return <Element profile={profile || defaultProfile} mutate={mutate} />;
 };
 
 export default memo(Step);

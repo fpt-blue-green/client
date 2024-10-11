@@ -2,12 +2,13 @@ import { FC, ReactNode } from 'react';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import IInfluencer from '@/types/influencer';
-import { influencerRequest } from '@/request';
+import { brandRequest, influencerRequest } from '@/request';
 import { redirect } from 'next/navigation';
 import config from '@/config';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]/route';
 import { ERole } from '@/types/enum';
+import IBrand from '@/types/brand';
 
 const getInfluencer = async (): Promise<IInfluencer | undefined | null> => {
   try {
@@ -21,15 +22,30 @@ const getInfluencer = async (): Promise<IInfluencer | undefined | null> => {
   }
 };
 
+const getBrand = async (): Promise<IBrand | undefined | null> => {
+  try {
+    const res = await brandRequest.me(true);
+    if (!res.data) {
+      return null;
+    }
+    return res.data;
+  } catch {
+    return undefined;
+  }
+};
+
 interface MainLayoutProps {
   children: ReactNode;
+  admin: ReactNode;
 }
 
-const MainLayout: FC<Readonly<MainLayoutProps>> = async ({ children }) => {
+const MainLayout: FC<Readonly<MainLayoutProps>> = async ({ admin, children }) => {
   const session = await getServerSession(authOptions);
 
   if (session) {
     const { user } = session;
+    if (user.role === ERole.Admin) return <>{admin}</>;
+
     if (user.role === ERole.Influencer) {
       const influencer = await getInfluencer();
 
@@ -48,14 +64,27 @@ const MainLayout: FC<Readonly<MainLayoutProps>> = async ({ children }) => {
         redirect(config.routes.influencer.create(1));
       }
     }
+
+    if (user.role === ERole.Brand) {
+      const brand = await getBrand();
+      if (!brand) {
+        redirect(config.routes.brand.create(1));
+      }
+    }
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <main className="flex-1 md:pt-20 pt-16">{children}</main>
-      <Footer />
-    </div>
+    <>
+      {session?.user.role === ERole.Admin ? (
+        admin
+      ) : (
+        <div className="flex flex-col min-h-screen">
+          <Header />
+          <main className="flex-1 md:pt-20 pt-16">{children}</main>
+          <Footer />
+        </div>
+      )}
+    </>
   );
 };
 

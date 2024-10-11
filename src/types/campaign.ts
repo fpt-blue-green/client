@@ -1,3 +1,4 @@
+import IBrand from './brand';
 import { EContentType, EPlatform } from './enum';
 import IImage from './image';
 import ITag from './tag';
@@ -13,10 +14,10 @@ interface ICampaign {
   startDate: string;
   endDate: string;
   budget: number;
-  brandId: string;
+  brand: IBrand;
 }
 
-interface IContent {
+export interface IContent {
   id: string;
   platform: EPlatform;
   contentType: EContentType;

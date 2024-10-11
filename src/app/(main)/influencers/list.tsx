@@ -74,12 +74,7 @@ const filterReducer = (state: FilterState, action: FilterAction) => {
       const isAscending = !action.payload.startsWith('-');
       return { ...state, sortBy: action.payload.substring(isAscending ? 0 : 1), isAscending };
     case 'RESET_FILTER':
-      return {
-        ...state,
-        platforms: initialState.platforms,
-        tags: initialState.tags,
-        priceRange: initialState.priceRange,
-      };
+      return initialState;
     default:
       return state;
   }

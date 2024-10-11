@@ -13,7 +13,7 @@ import IInfluencer from '@/types/influencer';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const ProfileTabs = () => {
-  const { data: influencer, isLoading, mutate } = useSWRImmutable<IInfluencer>('/Influencer', fetcher);
+  const { data: influencer, isLoading } = useSWRImmutable<IInfluencer>('/Influencer', fetcher);
 
   return isLoading && !influencer ? (
     <div className="flex flex-col gap-8">
@@ -42,16 +42,16 @@ const ProfileTabs = () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="details">
-          <Details influencer={influencer} mutate={mutate} />
+          <Details />
         </TabsContent>
         <TabsContent value="images">
-          <ImageGallery influencer={influencer} mutate={mutate} />
+          <ImageGallery />
         </TabsContent>
         <TabsContent value="socialMedias">
-          <SocialMedias influencer={influencer} mutate={mutate} />
+          <SocialMedias />
         </TabsContent>
         <TabsContent value="packages">
-          <Packages influencer={influencer} mutate={mutate} />
+          <Packages />
         </TabsContent>
       </Tabs>
     )

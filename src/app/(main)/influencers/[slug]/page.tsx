@@ -48,6 +48,7 @@ export async function generateMetadata({ params }: InfluencerDetailsProps): Prom
 
 const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
   const [influencer, session] = await Promise.all([getInfluencer(params.slug), getServerSession(authOptions)]);
+  const count = influencer.rateAverage ? (await influencersRequest.countFeedback(influencer.id)).data : 0;
 
   const breadcrumbItems: IBreadcrumbItem[] = [
     {
@@ -101,7 +102,7 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
           <div className="flex items-center gap-2">
             <Rating defaultValue={influencer.rateAverage} precision={0.25} readOnly />
             <span className="text-sm text-muted-foreground">
-              {influencer.rateAverage > 0 ? '432 đánh giá' : 'Chưa có đánh giá'}
+              {influencer.rateAverage > 0 ? `${count} đánh giá` : 'Chưa có đánh giá'}
             </span>
             <Button variant="link" asChild className="text-foreground">
               <Link href="#reviews">Thêm đánh giá</Link>

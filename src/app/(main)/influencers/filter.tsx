@@ -161,16 +161,20 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
               <div className="space-y-3">
                 <h5 className="font-medium mb-2">Danh mục</h5>
                 <div className="flex flex-wrap gap-4 items-center">
-                  {tags?.map((t) => (
-                    <Toggle
-                      key={t.id}
-                      variant="primary"
-                      pressed={categories.includes(t.id)}
-                      onPressedChange={handleToggleCategory(t.id)}
-                    >
-                      {t.name}
-                    </Toggle>
-                  ))}
+                  {tags
+                    ?.sort((a, b) => Number(a.isPremium) - Number(b.isPremium))
+                    .map((t) => (
+                      <PremiumBadge key={t.id} invisible={!t.isPremium}>
+                        <Toggle
+                          variant="primary"
+                          pressed={categories.includes(t.id)}
+                          onPressedChange={handleToggleCategory(t.id)}
+                          disabled={t.isPremium}
+                        >
+                          {t.name}
+                        </Toggle>
+                      </PremiumBadge>
+                    ))}
                 </div>
               </div>
               <div>

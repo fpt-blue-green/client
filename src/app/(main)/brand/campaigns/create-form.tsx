@@ -40,8 +40,10 @@ const CreateForm: FC<CreateFormProps> = ({ campaign }) => {
 
   const onSubmit = (values: BasicBodyType) => {
     setLoading(true);
-    campaignsRequest
-      .createCampaign(values)
+    const caller = campaign
+      ? campaignsRequest.updateCampaign(campaign.id, values)
+      : campaignsRequest.createCampaign(values);
+    caller
       .then(() => {})
       .catch((err) => toast.error(err?.message || constants.sthWentWrong))
       .finally(() => setLoading(false));
