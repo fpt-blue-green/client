@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Cross2Icon, PlusCircledIcon } from '@radix-ui/react-icons';
+import { Cross2Icon, InfoCircledIcon, PlusCircledIcon } from '@radix-ui/react-icons';
 import { toast } from 'sonner';
 import clsx from 'clsx';
 import { PlatformData } from '@/types/enum';
@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation';
 import config from '@/config';
 import PriceInput from '@/components/custom/price-input';
 import { ContentsBodyType, contentsSchema } from '@/schema-validations/campaign.schema';
+import Tooltip from '@/components/custom/tooltip';
 
 const Step6: FC<DetailStepProps> = ({ id, campaign, mutate }) => {
   const router = useRouter();
@@ -173,7 +174,32 @@ const Step6: FC<DetailStepProps> = ({ id, campaign, mutate }) => {
             />
             <FormField
               control={form.control}
-              name={`contents.${index}.content`}
+              name={`contents.${index}.targetReaction`}
+              render={({ field }) => (
+                <FormItem className="col-span-full">
+                  <FormControl>
+                    <Input
+                      placeholder="Mục tiêu"
+                      type="number"
+                      {...field}
+                      onChange={(e) => field.onChange(+e.target.value)}
+                      endAdornment={
+                        <div className="flex items-center gap-1">
+                          <span className="text-nowrap">lượt tương tác</span>
+                          <Tooltip label="Bao gồm lượt xem, yêu thích và bình luận">
+                            <InfoCircledIcon />
+                          </Tooltip>
+                        </div>
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name={`contents.${index}.description`}
               render={({ field }) => (
                 <FormItem className="col-span-full">
                   <FormControl>

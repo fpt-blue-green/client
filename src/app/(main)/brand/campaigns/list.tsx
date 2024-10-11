@@ -11,17 +11,26 @@ import { Button } from '@/components/ui/button';
 import CampaignCard from './campaign-card';
 import { useState } from 'react';
 import PremiumBadge from '@/components/custom/premium-badge';
-import IBrand from '@/types/brand';
+import { useAuthBrand, useMount } from '@/hooks';
 
 const List = () => {
   const { data, isLoading, mutate } = useSWRImmutable<ICampaign[]>('/Brand/campaigns', fetcher);
-  const { data: profile } = useSWRImmutable<IBrand>('/Brand', fetcher);
+  const { profile } = useAuthBrand();
   const [open, setOpen] = useState(false);
   const [campaign, setCampaign] = useState<ICampaign>();
+
+  useMount(() => {
+    mutate();
+  });
 
   const handleOpen = (campaign?: ICampaign) => () => {
     setOpen(true);
     setCampaign(campaign);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setCampaign(undefined);
   };
 
   const reload = async () => {
@@ -43,7 +52,7 @@ const List = () => {
             </DialogTrigger>
           </PremiumBadge>
           <DialogContent className="max-w-2xl" onPointerDownOutside={(e) => e.preventDefault()}>
-            <CreateForm campaign={campaign} />
+            <CreateForm campaign={campaign} reload={reload} onClose={handleClose} />
           </DialogContent>
         </Dialog>
       </h1>

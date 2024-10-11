@@ -13,9 +13,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { DotsVerticalIcon, EyeOpenIcon, Pencil1Icon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons';
+import { ClockIcon, DotsVerticalIcon, EyeOpenIcon, Pencil1Icon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons';
 import { campaignsRequest } from '@/request';
 import { toast } from 'sonner';
+import Chip from '@/components/custom/chip';
+import { FaRegMoneyBillAlt } from 'react-icons/fa';
+import { ECampaignStatus } from '@/types/enum';
 
 interface CampaignCardProps {
   data: ICampaign;
@@ -24,7 +27,7 @@ interface CampaignCardProps {
 }
 
 const CampaignCard: FC<CampaignCardProps> = ({ data, onEdit, reload }) => {
-  const firstImage = data.images[0].url;
+  const firstImage = data.images[0]?.url;
 
   const handleDelete = (campaign: ICampaign) => () => {
     emitter.confirm({
@@ -38,62 +41,98 @@ const CampaignCard: FC<CampaignCardProps> = ({ data, onEdit, reload }) => {
   };
 
   return (
-    <div
-      key={data.id}
-      className={cn('relative bg-accent rounded-lg overflow-hidden select-none', { 'pb-[100%]': !firstImage })}
-    >
-      {firstImage && (
-        <Image
-          src={firstImage}
-          alt={`Ảnh về chiến dịch ${data.title}`}
-          width={500}
-          height={500}
-          className="object-cover w-full aspect-square transition-transform hover:scale-110"
-        />
-      )}
-      <div className="absolute left-0 top-0 right-0 bottom-0 bg-bg-gradient-to-b from-black/5 from-75% to-black pointer-events-none"></div>
-      <div className="absolute left-4 bottom-4 text-white">
-        <Link href={config.routes.brand.campaigns.edit(data.id, 1)} className="font-semibold hover:underline">
-          {data.name}
-        </Link>
-        <div className="text-sm">
+    <div className="flex flex-col bg-background border rounded-lg shadow-md overflow-hidden">
+      <div
+        key={data.id}
+        className={cn('relative bg-foreground overflow-hidden select-none', { 'pb-[56.25%]': !firstImage })}
+      >
+        {firstImage && (
+          <Image
+            src={firstImage}
+            alt={`Ảnh về chiến dịch ${data.title}`}
+            width={500}
+            height={500}
+            className="object-cover w-full aspect-video transition-transform hover:scale-110"
+          />
+        )}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="secondary" size="icon" className="absolute top-4 right-4">
+              <DotsVerticalIcon />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem asChild>
+              <Link href={config.routes.campaigns.details(data.id)} className="flex items-center gap-2">
+                <EyeOpenIcon />
+                Xem chi tiết
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={onEdit(data)}>
+              <span className="flex items-center gap-2">
+                <Pencil1Icon />
+                Chỉnh sửa chung
+              </span>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={config.routes.brand.campaigns.edit(data.id, 1)} className="flex items-center gap-2">
+                <Pencil2Icon />
+                Chỉnh sửa chi tiết
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleDelete(data)}>
+              <span className="flex items-center gap-2">
+                <TrashIcon />
+                Xóa
+              </span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <div className="p-4 space-y-2 text-sm">
+        <div className="flex items-center justify-between gap-4 text-base">
+          <Link href={config.routes.brand.campaigns.edit(data.id, 1)} className="font-semibold hover:underline">
+            {data.name}
+          </Link>
+          <Chip label={CampaignStatus[data.status].label} variant={CampaignStatus[data.status].color} />
+        </div>
+        <h6 className="text-sm">{data.title}</h6>
+        <div className="flex items-center gap-2">
+          <ClockIcon />
           {formats.date(data.startDate)} - {formats.date(data.endDate)}
         </div>
+        <div className="flex items-center gap-2">
+          <FaRegMoneyBillAlt />
+          {formats.price(data.budget)}
+        </div>
       </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="secondary" size="icon" className="absolute top-4 right-4">
-            <DotsVerticalIcon />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem asChild>
-            <Link href={config.routes.campaigns.details(data.id)} className="flex items-center gap-2">
-              <EyeOpenIcon />
-              Xem chi tiết
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={onEdit(data)}>
-            <span className="flex items-center gap-2">
-              <Pencil1Icon />
-              Chỉnh sửa chung
-            </span>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href={config.routes.brand.campaigns.edit(data.id, 1)} className="flex items-center gap-2">
-              <Pencil2Icon />
-              Chỉnh sửa chi tiết
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleDelete(data)}>
-            <span className="flex items-center gap-2">
-              <TrashIcon />
-              Xóa
-            </span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
     </div>
   );
 };
+
+const CampaignStatus: {
+  [key: string]: { label: string; color: 'secondary' | 'warning' | 'info' | 'success' | 'destructive' };
+} = {
+  [ECampaignStatus.Draft]: {
+    label: 'Bản nháp',
+    color: 'secondary',
+  },
+  [ECampaignStatus.Published]: {
+    label: 'Công khai',
+    color: 'warning',
+  },
+  [ECampaignStatus.Active]: {
+    label: 'Đang diễn ra',
+    color: 'info',
+  },
+  [ECampaignStatus.Completed]: {
+    label: 'Hoàn thành',
+    color: 'success',
+  },
+  [ECampaignStatus.Expired]: {
+    label: 'Quá hạn',
+    color: 'destructive',
+  },
+};
+
 export default CampaignCard;

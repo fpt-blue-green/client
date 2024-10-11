@@ -27,7 +27,11 @@ const contentSchema = z.object({
     .number({ required_error: 'Nhập giá tiền' })
     .int('Nhập giá trị nguyên')
     .min(50000, 'Nhập giá trị lớn hơn hoặc bằng 50.000'),
-  content: z.string({ required_error: 'Vui lòng nhập mô tả chi tiết' }).min(1, 'Vui lòng nhập mô tả chi tiết'),
+  targetReaction: z
+    .number({ required_error: 'Nhập số tương tác' })
+    .int('Nhập giá trị nguyên')
+    .min(1, 'Nhập giá trị lớn hơn 0'),
+  description: z.string({ required_error: 'Vui lòng nhập mô tả chi tiết' }).min(1, 'Vui lòng nhập mô tả chi tiết'),
 });
 
 export const contentsSchema = z
