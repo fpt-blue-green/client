@@ -94,7 +94,7 @@ const RefreshProvider: FC<Readonly<AuthProviderProps>> = ({ children }) => {
       return () => clearInterval(handler);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session?.user]);
+  }, [session?.user.accessToken]);
 
   return (
     <AuthContext.Provider

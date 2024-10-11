@@ -5,21 +5,14 @@ import Image from 'next/image';
 import { UploadIcon } from '@radix-ui/react-icons';
 import { RiCloseCircleFill, RiEditFill } from 'react-icons/ri';
 import { Input } from '@/components/ui/input';
-import { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
-import IInfluencer from '@/types/influencer';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { influencerRequest } from '@/request';
 import { emitter } from '@/lib/utils';
-import { KeyedMutator } from 'swr/_internal';
 import IImage from '@/types/image';
 import { useAuthInfluencer } from '@/hooks';
 
-interface IImageGalleryProps {
-  influencer: IInfluencer;
-  mutate: KeyedMutator<IInfluencer>;
-}
-
-const ImageGallery: FC<IImageGalleryProps> = ({}) => {
+const ImageGallery = () => {
   const { profile, refreshProfile } = useAuthInfluencer();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageGallery, setImageGallery] = useState<IImage[]>(profile?.images || []);

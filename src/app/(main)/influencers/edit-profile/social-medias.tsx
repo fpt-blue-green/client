@@ -9,35 +9,29 @@ import { ChannelsBodyType, channelsSchema } from '@/schema-validations/influence
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm, UseFormReturn } from 'react-hook-form';
 import { EPlatform, PlatformData } from '@/types/enum';
-import IInfluencer from '@/types/influencer';
 import { influencerRequest } from '@/request';
 import { toast } from 'sonner';
 import { emitter, formats } from '@/lib/utils';
-import { useDebounce } from '@/hooks';
+import { useAuthInfluencer, useDebounce } from '@/hooks';
 import useSWRImmutable from 'swr/immutable';
 import { fetcher } from '@/lib/http';
 import { ISocialProfile } from '@/types/utilities';
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { KeyedMutator } from 'swr/_internal';
 
-interface ISocialAccountsProps {
-  influencer: IInfluencer;
-  mutate: KeyedMutator<IInfluencer>;
-}
-
-const SocialMedias: FC<ISocialAccountsProps> = ({ influencer, mutate }) => {
+const SocialMedias = () => {
+  const { profile, refreshProfile } = useAuthInfluencer();
   const [loading, setLoading] = useState(false);
   const form = useForm<ChannelsBodyType>({
     resolver: zodResolver(channelsSchema),
     defaultValues: {
       channels: Object.entries(PlatformData).map(([key]) => {
         const platform = +key as unknown as EPlatform;
-        const channel = influencer.channels.find((c) => c.platform === platform);
+        const channel = profile?.channels.find((c) => c.platform === platform);
         return {
           id: channel?.id,
           platform,
           userName: channel?.userName || '',
-          show: influencer.channels.some((c) => c.platform === platform),
+          show: profile?.channels.some((c) => c.platform === platform),
         };
       }),
     },
@@ -53,7 +47,7 @@ const SocialMedias: FC<ISocialAccountsProps> = ({ influencer, mutate }) => {
     influencerRequest
       .updateChannels(values.channels.filter((c) => c.show))
       .then(() => {
-        mutate().then(() => toast.success('Cập nhật thành công'));
+        refreshProfile().then(() => toast.success('Cập nhật thành công'));
       })
       .catch((err) => toast.error(err.message))
       .finally(() => setLoading(false));

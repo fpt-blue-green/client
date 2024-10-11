@@ -1,5 +1,5 @@
 'use client';
-import { ChangeEvent, FC, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Paper from '@/components/custom/paper';
@@ -15,21 +15,16 @@ import clsx from 'clsx';
 import { EPlatform, PlatformData } from '@/types/enum';
 import { influencerRequest } from '@/request';
 import { emitter, functions } from '@/lib/utils';
-import IInfluencer from '@/types/influencer';
-import { KeyedMutator } from 'swr/_internal';
 import PriceInput from '@/components/custom/price-input';
+import { useAuthInfluencer } from '@/hooks';
 
-interface IPackagesProps {
-  influencer: IInfluencer;
-  mutate: KeyedMutator<IInfluencer>;
-}
-
-const Packages: FC<IPackagesProps> = ({ influencer, mutate }) => {
+const Packages = () => {
+  const { profile, refreshProfile } = useAuthInfluencer();
   const [loading, setLoading] = useState(false);
   const form = useForm<PackagesBodyType>({
     resolver: zodResolver(packagesSchema),
     defaultValues: {
-      packages: influencer.packages.map((p) => {
+      packages: profile?.packages.map((p) => {
         let timeUnit: 's' | 'm' | 'h' = 's';
         let duration: number | undefined = undefined;
         if (p.duration) {
@@ -70,7 +65,7 @@ const Packages: FC<IPackagesProps> = ({ influencer, mutate }) => {
   const removePackage = (index: number) => () => {
     const values = form.getValues() || [];
     const packageId = values.packages[index]?.id;
-    if (influencer.packages.some((item) => item.id === packageId)) {
+    if (profile?.packages.some((item) => item.id === packageId)) {
       emitter.confirm({
         content: 'Bạn sẽ xoá gói mặc định của mình đấy',
         callback: () => {
@@ -99,7 +94,7 @@ const Packages: FC<IPackagesProps> = ({ influencer, mutate }) => {
     influencerRequest
       .updatePackages(data)
       .then(() => {
-        mutate().then(() => toast.success('Cập nhật các gói thành công'));
+        refreshProfile().then(() => toast.success('Cập nhật các gói thành công'));
       })
       .catch((err) => toast.error(err.message))
       .finally(() => setLoading(false));
@@ -135,7 +130,7 @@ const Packages: FC<IPackagesProps> = ({ influencer, mutate }) => {
                         <SelectContent>
                           {Object.entries(PlatformData)
                             .filter(([key]) =>
-                              influencer.channels.some((c) => c.platform === (+key as unknown as EPlatform)),
+                              profile?.channels.some((c) => c.platform === (+key as unknown as EPlatform)),
                             )
                             .map(([key, { Icon, name }]) => (
                               <SelectItem key={key} value={key}>
