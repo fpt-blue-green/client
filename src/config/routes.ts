@@ -13,7 +13,7 @@ const routes = {
     editProfile: '/influencers/edit-profile',
   },
   brand: {
-    base: '/brand',
+    base: '/brand/',
     create: (step: number) => `/brand/create?step=${step}`,
     campaigns: {
       base: '/brand/campaigns',
