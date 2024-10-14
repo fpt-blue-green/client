@@ -1,6 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { IdCardIcon, LockClosedIcon } from '@radix-ui/react-icons';
-import General from './general';
+import { LockClosedIcon } from '@radix-ui/react-icons';
 import Security from './security';
 import { getServerSession } from 'next-auth';
 

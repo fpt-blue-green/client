@@ -5,7 +5,6 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import IInfluencer from '@/types/influencer';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import config from '@/config';
 import ImagesCarousel from './images-carousel';
 import Breadcrumbs, { IBreadcrumbItem } from '@/components/custom/breadcrumbs';
@@ -48,7 +47,7 @@ export async function generateMetadata({ params }: InfluencerDetailsProps): Prom
 }
 
 const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
-  const [influencer, session] = await Promise.all([getInfluencer(params.slug), getServerSession(authOptions)]);
+  const [influencer, session] = await Promise.all([getInfluencer(params.slug), getServerSession(config.auth)]);
   const count = influencer.rateAverage ? (await influencersRequest.countFeedback(influencer.id)).data : 0;
 
   const breadcrumbItems: IBreadcrumbItem[] = [
@@ -59,7 +58,7 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
     },
     {
       label: 'Người sáng tạo',
-      href: config.routes.influencers.base,
+      href: config.routes.influencers.landing,
     },
     {
       label: influencer.fullName,

@@ -20,7 +20,7 @@ const Home = () => {
           </Button>
           <div className="border h-0 md:h-12 w-48 md:w-px"></div>
           <Button size="large" variant="gradient" className="h-16 px-12 text-lg rounded-full" asChild>
-            <Link href={config.routes.brand.base}>Trở thành nhãn hàng</Link>
+            <Link href={config.routes.brand.landing}>Trở thành nhãn hàng</Link>
           </Button>
         </div>
       </div>

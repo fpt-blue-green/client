@@ -63,7 +63,7 @@ const Step6: FC<DetailStepProps> = ({ profile, mutate }) => {
 
   const addPackage = () => {
     // ? Ignore error
-    append({ timeUnit: 's' });
+    append({ timeUnit: 's' } as any);
   };
 
   const removePackage = (index: number) => () => {

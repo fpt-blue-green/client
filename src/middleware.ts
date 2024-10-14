@@ -14,10 +14,7 @@ export default withAuth(
       return NextResponse.next();
     }
 
-    if (
-      brandPaths.some((path) => pathname.startsWith(path)) &&
-      (token?.role === ERole.Brand || pathname === routes.brand.base)
-    ) {
+    if (brandPaths.some((path) => pathname.startsWith(path)) && token?.role === ERole.Brand) {
       return NextResponse.next();
     }
 

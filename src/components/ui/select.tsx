@@ -17,7 +17,12 @@ const useSelectContext = () => {
   return React.useContext(SelectContext);
 };
 
-const Select: React.FC<SelectPrimitive.SelectProps> = ({ ...props }) => {
+interface SelectProps extends SelectPrimitive.SelectProps {
+  'aria-describedby'?: string;
+  'aria-invalid'?: boolean;
+}
+
+const Select: React.FC<SelectProps> = ({ ...props }) => {
   return (
     <SelectContext.Provider value={{ ariaDescribedby: props['aria-describedby'], ariaInvalid: props['aria-invalid'] }}>
       <SelectPrimitive.Root {...props} />

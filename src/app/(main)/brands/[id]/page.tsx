@@ -1,4 +1,3 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { Button } from '@/components/ui/button';
 import config from '@/config';
 import brandsRequest from '@/request/brands.request';
@@ -36,7 +35,7 @@ export async function generateMetadata({ params }: BrandDetailsProps): Promise<M
 }
 
 const BrandDetails: FC<BrandDetailsProps> = async ({ params }) => {
-  const [brand] = await Promise.all([getBrand(params.id), getServerSession(authOptions)]);
+  const [brand] = await Promise.all([getBrand(params.id), getServerSession(config.auth)]);
 
   return (
     <div className="container my-8">

@@ -2,7 +2,6 @@ import { constants } from './utils';
 import config from '@/config';
 import { getSession } from 'next-auth/react';
 import { getServerSession, Session } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 type CustomRequest = Omit<RequestInit, 'method'> & {
   baseUrl?: string;
@@ -36,7 +35,7 @@ const request = async <Response>(
     if (isClient()) {
       session = await getSession();
     } else {
-      session = await getServerSession(authOptions);
+      session = await getServerSession(config.auth);
     }
 
     if (session?.user.accessToken) {

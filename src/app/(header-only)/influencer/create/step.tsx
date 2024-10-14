@@ -1,19 +1,23 @@
 'use client';
 
-import { fetcher } from '@/lib/http';
 import IInfluencer from '@/types/influencer';
 import { FC, memo, useLayoutEffect } from 'react';
-import useSWRImmutable from 'swr/immutable';
 import DetailStepProps from './step/props';
 import { EGender } from '@/types/enum';
-import { stepPages } from './page';
-import { useRouter } from 'next/navigation';
+import { notFound, useRouter, useSearchParams } from 'next/navigation';
 import config from '@/config';
-
-interface StepProps {
-  step: number;
-  Element: FC<DetailStepProps>;
-}
+import Step1 from './step/step1';
+import Step2 from './step/step2';
+import Step3 from './step/step3';
+import Step4 from './step/step4';
+import Step5 from './step/step5';
+import Step6 from './step/step6';
+import Step7 from './step/step7';
+import { Progress } from '@/components/ui/progress';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { ArrowLeftIcon } from '@radix-ui/react-icons';
+import { useAuthInfluencer } from '@/hooks';
 
 const defaultProfile: IInfluencer = {
   id: '',
@@ -45,17 +49,22 @@ const checkStep = (step: number, influencer: IInfluencer): number => {
   else return step;
 };
 
-const Step: FC<StepProps> = ({ Element, step }) => {
-  const { data: profile, isLoading, mutate } = useSWRImmutable<IInfluencer>('/Influencer', fetcher);
+const Step = () => {
+  const { profile, isLoading, refreshProfile } = useAuthInfluencer();
+  const searchParams = useSearchParams();
   const router = useRouter();
 
+  const step = searchParams.get('step');
+  const stepNum = +(step || 1);
+  const { title, component: Element } = stepPages[stepNum];
+
   useLayoutEffect(() => {
-    if (step > 1 && !isLoading) {
+    if (stepNum > 1 && !isLoading) {
       if (profile?.isPublish) {
         router.push(config.routes.home);
       } else {
-        const checkedStep = checkStep(step, profile || defaultProfile);
-        if (checkedStep !== step) {
+        const checkedStep = checkStep(stepNum, profile || defaultProfile);
+        if (checkedStep !== stepNum) {
           router.push(config.routes.influencer.create(checkedStep));
         }
       }
@@ -63,7 +72,62 @@ const Step: FC<StepProps> = ({ Element, step }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, isLoading]);
 
-  return <>{!isLoading && <Element profile={profile ? profile : defaultProfile} mutate={mutate} />}</>;
+  if (!step) return notFound();
+
+  return (
+    <>
+      <div className="space-y-10">
+        <Progress value={(100 * stepNum) / Object.keys(stepPages).length} className="h-3" />
+        {stepNum > 1 && (
+          <Button variant="secondary" className="rounded-full self-start" startIcon={<ArrowLeftIcon />} asChild>
+            <Link href={config.routes.influencer.create(stepNum - 1)}>Trở lại</Link>
+          </Button>
+        )}
+        <h1 className="text-3xl font-semibold">{title}</h1>
+        {!isLoading && <Element profile={profile || defaultProfile} mutate={refreshProfile} />}
+      </div>
+    </>
+  );
+};
+
+export const stepPages: {
+  [key: number]: { title: string; component: FC<DetailStepProps>; checkKey: keyof IInfluencer };
+} = {
+  1: {
+    title: 'Thông tin cơ bản của bạn',
+    component: Step1,
+    checkKey: 'slug',
+  },
+  2: {
+    title: 'Ảnh đại diện',
+    component: Step2,
+    checkKey: 'avatar',
+  },
+  3: {
+    title: 'Thêm các trang mạng xã hội của bạn',
+    component: Step3,
+    checkKey: 'channels',
+  },
+  4: {
+    title: 'Chọn các thẻ phù hợp với nội dung của bạn',
+    component: Step4,
+    checkKey: 'tags',
+  },
+  5: {
+    title: 'Thêm 3 - 10 ảnh về bạn và nội dụng của bạn',
+    component: Step5,
+    checkKey: 'images',
+  },
+  6: {
+    title: 'Thêm vào các gói nội dung',
+    component: Step6,
+    checkKey: 'packages',
+  },
+  7: {
+    title: 'Thêm số điện thoại để nhận thông báo khi bạn có lời đề nghị',
+    component: Step7,
+    checkKey: 'phone',
+  },
 };
 
 export default memo(Step);
