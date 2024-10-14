@@ -4,7 +4,7 @@ const routes = {
   forgot: '/auth/forgot-password',
   account: '/account',
   influencer: {
-    base: '/influencer',
+    base: '/landing/influencer',
     create: (step: number) => `/influencer/create?step=${step}`,
   },
   influencers: {
@@ -13,12 +13,13 @@ const routes = {
     editProfile: '/influencers/edit-profile',
   },
   brand: {
-    base: '/brand/',
+    base: '/landing/brand',
     create: (step: number) => `/brand/create?step=${step}`,
     campaigns: {
       base: '/brand/campaigns',
       edit: (id: string, step: number) => `/brand/campaigns/${id}?step=${step}`,
     },
+    wishlist: '/brand/wishlist',
   },
   brands: {
     base: '/brands',

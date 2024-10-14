@@ -12,7 +12,7 @@ import Breadcrumbs, { IBreadcrumbItem } from '@/components/custom/breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { RiHome4Fill } from 'react-icons/ri';
 import Link from 'next/link';
-import { LuHeart, LuPencil, LuShare } from 'react-icons/lu';
+import { LuPencil } from 'react-icons/lu';
 import Rating from '@/components/custom/rating';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { PlatformData } from '@/types/enum';
@@ -22,6 +22,7 @@ import Packages from './packages';
 import Comments from './comments';
 import InfluencerList from '@/components/influencer-list';
 import Tooltip from '@/components/custom/tooltip';
+import Action from './action';
 
 const getInfluencer = async (slug: string): Promise<IInfluencer> => {
   try {
@@ -109,14 +110,7 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
             </Button>
           </div>
           <p className="text-muted-foreground text-sm">{influencer.description}</p>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" startIcon={<LuShare />}>
-              Chia Sẻ
-            </Button>
-            <Button variant="ghost" startIcon={<LuHeart />}>
-              Yêu thích
-            </Button>
-          </div>
+          <Action influencer={influencer} />
           <Accordion type="multiple" defaultValue={['social', 'packages', 'reviews']}>
             <AccordionItem value="social">
               <AccordionTrigger className="text-xl font-semibold">Mạng xã hội</AccordionTrigger>

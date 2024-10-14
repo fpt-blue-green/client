@@ -12,6 +12,7 @@ import IInfluencer from '@/types/influencer';
 import { PlatformData } from '@/types/enum';
 import { brandRequest, fetchRequest } from '@/request';
 import { toast } from 'sonner';
+import { useThrottle } from '@/hooks';
 
 const mockInfluencer: IInfluencer = {
   id: 'fakeId',
@@ -49,16 +50,16 @@ const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer, favori
   const { data: favorites, mutate } = fetchRequest.favorites();
   const isFavorite = favorites?.some((f) => f.influencer.id === data.id);
 
-  const handleFavorite = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleFavorite = useThrottle((e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
     const caller = isFavorite ? brandRequest.unfavorite(data.id) : brandRequest.favorite(data.id);
     caller
       .then(() => {
-        mutate().then(() => toast.success('Đã thêm vào danh sách yêu thích'));
+        mutate().then(() => () => toast.success(isFavorite ? 'Đã xóa khỏi' : 'Đã thêm vào' + ' danh sách yêu thích'));
       })
       .catch((err) => toast.error(err?.message || constants.sthWentWrong));
-  };
+  }, 750);
 
   return (
     <div className="relative">
@@ -72,7 +73,7 @@ const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer, favori
       <Link href={config.routes.influencers.details(data.slug)} className="space-y-1.5 text-sm">
         <div className="relative rounded-lg overflow-hidden group">
           <Image
-            src={data.images[0].url}
+            src={data.images[0]?.url}
             alt={`Ảnh đại diện của ${data.fullName}`}
             width={400}
             height={600}

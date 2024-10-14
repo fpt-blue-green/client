@@ -67,9 +67,14 @@ const ProfileDropdown = () => {
                 </DropdownMenuItem>
               )}
               {brand && (
-                <DropdownMenuItem asChild>
-                  <Link href={config.routes.brands.details(brand.id)}>Trang cá nhân</Link>
-                </DropdownMenuItem>
+                <>
+                  <DropdownMenuItem asChild>
+                    <Link href={config.routes.brands.details(brand.id)}>Trang cá nhân</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href={config.routes.brand.wishlist}>Yêu thích</Link>
+                  </DropdownMenuItem>
+                </>
               )}
               <DropdownMenuItem onClick={() => signOut({ callbackUrl: config.routes.home })}>
                 Đăng xuất
