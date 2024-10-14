@@ -14,6 +14,7 @@
     "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/no-explicit-any": "off",
     "jsx-quotes": ["error", "prefer-double"],
+    "react/prop-types": "off",
     "quotes": ["warn", "single", { "avoidEscape": true }],
     "default-case": "error",
     "eqeqeq": "error",

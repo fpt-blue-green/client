@@ -42,7 +42,7 @@ const mockInfluencer: IInfluencer = {
 };
 
 interface InfluencerCardProps {
-  data: IInfluencer;
+  data?: IInfluencer;
   favorite?: boolean;
 }
 

@@ -8,12 +8,13 @@ const routes = {
     create: (step: number) => `/influencer/create?step=${step}`,
   },
   influencers: {
-    base: '/influencers',
+    landing: '/influencers',
     details: (slug: string) => `/influencers/${slug}`,
     editProfile: '/influencers/edit-profile',
   },
   brand: {
-    base: '/landing/brand',
+    base: '/brand',
+    landing: '/landing/brand',
     create: (step: number) => `/brand/create?step=${step}`,
     campaigns: {
       base: '/brand/campaigns',

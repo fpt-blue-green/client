@@ -52,7 +52,7 @@ const Step6: FC<DetailStepProps> = ({ id, campaign, mutate }) => {
 
   const addContent = () => {
     // ? Ignore error
-    append({});
+    append({} as any);
   };
 
   const removeContent = (index: number) => () => {

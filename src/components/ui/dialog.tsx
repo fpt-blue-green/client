@@ -35,7 +35,7 @@ const DialogContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => {
   const handleClose = () => (e: React.MouseEvent) => {
-    props.onCloseAutoFocus?.(e);
+    props.onCloseAutoFocus?.(e as any);
   };
   return (
     <DialogPortal>

@@ -59,7 +59,7 @@ const Packages = () => {
     };
 
   const addPackage = () => {
-    append({ timeUnit: 's' });
+    append({ timeUnit: 's' } as any);
   };
 
   const removePackage = (index: number) => () => {

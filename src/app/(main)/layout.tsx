@@ -6,7 +6,6 @@ import { brandRequest, influencerRequest } from '@/request';
 import { redirect } from 'next/navigation';
 import config from '@/config';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../api/auth/[...nextauth]/route';
 import { ERole } from '@/types/enum';
 import IBrand from '@/types/brand';
 
@@ -40,7 +39,7 @@ interface MainLayoutProps {
 }
 
 const MainLayout: FC<Readonly<MainLayoutProps>> = async ({ admin, children }) => {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(config.auth);
 
   if (session) {
     const { user } = session;

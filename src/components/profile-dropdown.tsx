@@ -107,7 +107,7 @@ const ProfileDropdown = () => {
                 </DialogClose>
                 <DialogClose asChild>
                   <Button size="large" className="py-5 px-16 h-14" variant="gradient" asChild>
-                    <Link href={config.routes.brand.base}>Nhãn Hàng / Agency</Link>
+                    <Link href={config.routes.brand.landing}>Nhãn Hàng / Agency</Link>
                   </Button>
                 </DialogClose>
               </div>
