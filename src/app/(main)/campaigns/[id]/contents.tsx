@@ -1,11 +1,11 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { formats } from '@/lib/utils';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FC, useState } from 'react';
 import { PlatformData } from '@/types/enum';
 import { IContent } from '@/types/campaign';
+import { formats } from '@/lib/utils';
 
 interface ContentsProps {
   data: IContent[];
@@ -40,9 +40,9 @@ const Contents: FC<ContentsProps> = ({ data }) => {
               <div className="border border-foreground px-5 py-4 rounded-sm" key={pack.id}>
                 <div className="flex items-center justify-between gap-4">
                   <span className="font-semibold">{`${pack.quantity} ${contentTypes[pack.contentType]}`}</span>
-                  {/* <span className="font-semibold">{formats.price(pack.price)}</span> */}
+                  <span className="font-semibold">{formats.price(pack.price)}</span>
                 </div>
-                <p className="mt-4 text-muted-foreground text-sm">{pack.content}</p>
+                <p className="mt-4 text-muted-foreground text-sm">{pack.description}</p>
                 <div className="flex items-center justify-between mt-8">
                   <div className="flex items-center justify-center size-9 text-background bg-foreground rounded-md">
                     <Icon className="size-6" />

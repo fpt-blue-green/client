@@ -20,9 +20,11 @@ import ICampaign from '@/types/campaign';
 
 interface CreateFormProps {
   campaign?: ICampaign;
+  reload: () => Promise<void>;
+  onClose: () => void;
 }
 
-const CreateForm: FC<CreateFormProps> = ({ campaign }) => {
+const CreateForm: FC<CreateFormProps> = ({ campaign, reload, onClose }) => {
   const [loading, setLoading] = useState(false);
   const form = useForm<BasicBodyType>({
     resolver: zodResolver(basicSchema),
@@ -44,7 +46,7 @@ const CreateForm: FC<CreateFormProps> = ({ campaign }) => {
       ? campaignsRequest.updateCampaign(campaign.id, values)
       : campaignsRequest.createCampaign(values);
     caller
-      .then(() => {})
+      .then(() => reload().then(onClose))
       .catch((err) => toast.error(err?.message || constants.sthWentWrong))
       .finally(() => setLoading(false));
   };

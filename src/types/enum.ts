@@ -84,3 +84,11 @@ export enum EVerifyAction {
   ChangePass,
   ForgotPassword,
 }
+
+export enum ECampaignStatus {
+  Draft,
+  Published,
+  Active,
+  Completed,
+  Expired,
+}

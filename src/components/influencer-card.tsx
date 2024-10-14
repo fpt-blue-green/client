@@ -1,8 +1,8 @@
 'use client';
 
-import { FC, MouseEvent, useState } from 'react';
+import { FC, MouseEvent } from 'react';
 import config from '@/config';
-import { formats } from '@/lib/utils';
+import { constants, formats } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Skeleton } from './ui/skeleton';
@@ -10,6 +10,9 @@ import { HeartFilledIcon, HeartIcon, StarFilledIcon } from '@radix-ui/react-icon
 import { Button } from './ui/button';
 import IInfluencer from '@/types/influencer';
 import { PlatformData } from '@/types/enum';
+import { brandRequest, fetchRequest } from '@/request';
+import { toast } from 'sonner';
+import { useThrottle } from '@/hooks';
 
 const mockInfluencer: IInfluencer = {
   id: 'fakeId',
@@ -44,14 +47,19 @@ interface InfluencerCardProps {
 }
 
 const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer, favorite }) => {
-  const [isFavorite, setIsFavorite] = useState(favorite);
+  const { data: favorites, mutate } = fetchRequest.favorites();
+  const isFavorite = favorites?.some((f) => f.influencer.id === data.id);
 
-  const handleFavorite = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleFavorite = useThrottle((e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsFavorite(!isFavorite);
-    // !TODO
-  };
+    const caller = isFavorite ? brandRequest.unfavorite(data.id) : brandRequest.favorite(data.id);
+    caller
+      .then(() => {
+        mutate().then(() => () => toast.success(isFavorite ? 'Đã xóa khỏi' : 'Đã thêm vào' + ' danh sách yêu thích'));
+      })
+      .catch((err) => toast.error(err?.message || constants.sthWentWrong));
+  }, 750);
 
   return (
     <div className="relative">
@@ -65,7 +73,7 @@ const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer, favori
       <Link href={config.routes.influencers.details(data.slug)} className="space-y-1.5 text-sm">
         <div className="relative rounded-lg overflow-hidden group">
           <Image
-            src={data.images[0].url}
+            src={data.images[0]?.url}
             alt={`Ảnh đại diện của ${data.fullName}`}
             width={400}
             height={600}

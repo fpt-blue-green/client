@@ -11,6 +11,8 @@ const brandRequest = {
     return http.patch<string>('/Brand/CoverImg', formData);
   },
   addSocialLink: (body: SocialBodyType) => http.put('/Brand/social', body),
+  favorite: (influencerId: string) => http.post(`/Brand/favorites/${influencerId}`),
+  unfavorite: (influencerId: string) => http.delete(`/Brand/favorites/${influencerId}`),
 };
 
 export default brandRequest;
