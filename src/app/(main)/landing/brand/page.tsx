@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
-import TypingText from './typing-text';
+import TypingText from '../brand/typing-text';
 import Image from 'next/image';
-import Banner from '../(home)/banner';
+import Banner from '../../(home)/banner';
 import Link from 'next/link';
 import config from '@/config';
 
