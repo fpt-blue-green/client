@@ -1,6 +1,7 @@
 import IBrand from './brand';
-import { ECampaignStatus, EContentType, EPlatform } from './enum';
+import { ECampaignStatus } from './enum';
 import IImage from './image';
+import { IContent } from './offer';
 import ITag from './tag';
 
 interface ICampaign {
@@ -16,16 +17,6 @@ interface ICampaign {
   budget: number;
   brand: IBrand;
   status: ECampaignStatus;
-}
-
-export interface IContent {
-  id: string;
-  platform: EPlatform;
-  contentType: EContentType;
-  quantity: number;
-  price: number;
-  targetReaction: number;
-  description: string;
 }
 
 export default ICampaign;

@@ -1,5 +1,6 @@
 import { EGender, EPlatform } from './enum';
 import IImage from './image';
+import { IPackage } from './offer';
 import ITag from './tag';
 import { ISocialProfile } from './utilities';
 
@@ -7,16 +8,6 @@ export interface IChannel extends ISocialProfile {
   id: string;
   platform: EPlatform;
   userName: string;
-}
-
-export interface IPackage {
-  id: string;
-  platform: EPlatform;
-  contentType: number;
-  duration?: number;
-  description?: string;
-  price: number;
-  quantity: number;
 }
 
 interface IInfluencer {

@@ -5,7 +5,8 @@ import { formats } from '@/lib/utils';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FC, useState } from 'react';
 import { PlatformData } from '@/types/enum';
-import { IPackage } from '@/types/influencer';
+import { IPackage } from '@/types/offer';
+import OfferDialog from '@/components/offer-dialog';
 
 interface PackagesProps {
   data: IPackage[];
@@ -47,7 +48,9 @@ const Packages: FC<PackagesProps> = ({ data }) => {
                   <div className="flex items-center justify-center size-9 text-background bg-foreground rounded-md">
                     <Icon className="size-6" />
                   </div>
-                  <Button variant="foreground">Tiếp tục</Button>
+                  <OfferDialog asChild>
+                    <Button variant="foreground">Tiếp tục</Button>
+                  </OfferDialog>
                 </div>
               </div>
             );
