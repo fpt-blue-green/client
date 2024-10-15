@@ -63,4 +63,8 @@ const Register: FC<RegisterProps> = ({ params }) => {
   );
 };
 
+export function generateStaticParams() {
+  return [{ role: 'influencer' }, { role: 'brand' }];
+}
+
 export default Register;

@@ -11,8 +11,8 @@ interface AuthSession<T> {
   session: Session | null;
   update: (data?: any) => Promise<Session | null>;
   isLoading: boolean;
-  profile?: T;
-  refreshProfile: KeyedMutator<T>;
+  profile?: T | null;
+  refreshProfile: KeyedMutator<T | null>;
 }
 
 export const useAuthInfluencer = (): AuthSession<IInfluencer> => {

@@ -5,11 +5,21 @@ import routes from './config/routes';
 
 const brandPaths = [routes.account, routes.brand.base];
 const influencerPaths = [routes.account, '/influencer/create'];
+const adminPaths = [routes.admin.base];
 
 export default withAuth(
   function middleware(req) {
     const { pathname } = req.nextUrl;
     const token = req.nextauth.token;
+
+    if (adminPaths.some((path) => pathname.startsWith(path))) {
+      if (token?.role === ERole.Admin) {
+        return NextResponse.next();
+      } else {
+        return NextResponse.redirect(new URL('/', req.url));
+      }
+    }
+
     if (influencerPaths.some((path) => pathname.startsWith(path)) && token?.role === ERole.Influencer) {
       return NextResponse.next();
     }
@@ -31,5 +41,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ['/account', '/influencer/create', '/brand/:path*'],
+  matcher: ['/account', '/influencer/create', '/brand/:path*', '/admin/:path*'],
 };
