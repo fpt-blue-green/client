@@ -36,6 +36,9 @@ const routes = {
     influencer: '/auth/register/influencer',
     emailVerification: '/auth/register/email-verification',
   },
+  admin: {
+    base: '/admin',
+  },
 };
 
 export default routes;

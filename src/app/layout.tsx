@@ -10,9 +10,9 @@ export const metadata: Metadata = {
   title: {
     template: '%s | adfusion',
     default: 'adfusion',
-    absolute: 'Influencer marketing | adfusion',
+    absolute: 'Marketing những người sáng tạo nội dung | adfusion',
   },
-  description: 'Influencer marketing made easy',
+  description: 'Marketing những người sáng tạo nội dung một cách dễ dàng và chuyên nghiệp',
 };
 
 export default function RootLayout({

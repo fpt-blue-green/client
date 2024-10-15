@@ -13,6 +13,7 @@ import { ERole } from '@/types/enum';
 import IBrand from '@/types/brand';
 import { Session } from 'next-auth';
 import { KeyedMutator } from 'swr';
+import { usePathname, useRouter } from 'next/navigation';
 interface AuthProviderProps {
   children: ReactNode;
 }
@@ -29,10 +30,10 @@ interface AuthContextProps {
   session: Session | null;
   update: (data?: any) => Promise<Session | null>;
   isLoading: boolean;
-  influencer?: IInfluencer;
-  brand?: IBrand;
-  refreshInfluencer: KeyedMutator<IInfluencer>;
-  refreshBrand: KeyedMutator<IBrand>;
+  influencer?: IInfluencer | null;
+  brand?: IBrand | null;
+  refreshInfluencer: KeyedMutator<IInfluencer | null>;
+  refreshBrand: KeyedMutator<IBrand | null>;
 }
 
 export const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -43,14 +44,16 @@ const RefreshProvider: FC<Readonly<AuthProviderProps>> = ({ children }) => {
     data: influencer,
     isLoading: isLoadingInfluencer,
     mutate: refreshInfluencer,
-  } = useSWRImmutable<IInfluencer>('/Influencer', session?.user.role === ERole.Influencer ? fetcher : null);
+  } = useSWRImmutable<IInfluencer | null>('/Influencer', session?.user.role === ERole.Influencer ? fetcher : null);
   const {
     data: brand,
     isLoading: isLoadingBrand,
     mutate: refreshBrand,
-  } = useSWRImmutable<IBrand>('/Brand', session?.user.role === ERole.Brand ? fetcher : null);
+  } = useSWRImmutable<IBrand | null>('/Brand', session?.user.role === ERole.Brand ? fetcher : null);
 
   const sessionFlag = useRef(true);
+  const router = useRouter();
+  const pathname = usePathname();
 
   const refreshTokenIfNeeded = async (user: IUser) => {
     const decoded = jwtDecode(user.accessToken);
@@ -78,6 +81,7 @@ const RefreshProvider: FC<Readonly<AuthProviderProps>> = ({ children }) => {
     }
   };
 
+  // Lập lịch để thực hiện refresh token
   useEffect(() => {
     const user = session?.user;
 
@@ -95,6 +99,48 @@ const RefreshProvider: FC<Readonly<AuthProviderProps>> = ({ children }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session?.user.accessToken]);
+
+  // Chuyển trang nếu cần thiết
+  useEffect(() => {
+    const user = session?.user;
+
+    if (user && !sessionFlag.current) {
+      switch (user.role) {
+        case ERole.Admin:
+          if (!pathname.startsWith(config.routes.admin.base)) {
+            router.push(config.routes.admin.base);
+          }
+          break;
+        case ERole.Influencer:
+          if (!isLoadingInfluencer) {
+            if (influencer) {
+              if (!influencer.isPublish) {
+                let step = 1;
+                if (!influencer.avatar) step = 2;
+                else if (!influencer.channels.length) step = 3;
+                else if (!influencer.tags.length) step = 4;
+                else if (!influencer.images.length) step = 5;
+                else if (!influencer.packages.length) step = 6;
+                else if (!influencer.phone) step = 7;
+                router.push(config.routes.influencer.create(step));
+              }
+            } else if (influencer === null) {
+              router.push(config.routes.influencer.create(2));
+            }
+          }
+          break;
+        case ERole.Brand:
+          if (!isLoadingBrand) {
+            if (brand === null) {
+              router.push(config.routes.brand.create(1));
+            }
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }, [pathname, session, influencer, brand, isLoadingBrand, isLoadingInfluencer, router]);
 
   return (
     <AuthContext.Provider

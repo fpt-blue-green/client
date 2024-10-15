@@ -84,7 +84,7 @@ const Step = () => {
           </Button>
         )}
         <h1 className="text-3xl font-semibold">{title}</h1>
-        {!isLoading && <Element profile={profile || defaultProfile} mutate={refreshProfile} />}
+        {(profile === null || !isLoading) && <Element profile={profile || defaultProfile} mutate={refreshProfile} />}
       </div>
     </>
   );
