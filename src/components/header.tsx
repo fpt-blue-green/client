@@ -52,6 +52,9 @@ const Header = () => {
                   <MenuItem href={config.routes.brand.landing}>Trở thành nhãn hàng</MenuItem>
                 </>
               )}
+              {session && session.user.role === ERole.Influencer && (
+                <MenuItem href={config.routes.campaigns.base}>Chiến dịch</MenuItem>
+              )}
               {session && session.user.role === ERole.Brand && (
                 <MenuItem href={config.routes.brand.campaigns.base}>Chiến dịch của tôi</MenuItem>
               )}

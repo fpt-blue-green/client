@@ -8,7 +8,7 @@ import useSWRImmutable from 'swr/immutable';
 import CreateForm from './create-form';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import CampaignCard from './campaign-card';
+import CampaignCard from '@/components/campaign-card';
 import { useState } from 'react';
 import PremiumBadge from '@/components/custom/premium-badge';
 import { useAuthBrand, useMount } from '@/hooks';

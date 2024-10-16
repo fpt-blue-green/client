@@ -28,7 +28,7 @@ import IInfluencer from '@/types/influencer';
 import IBrand from '@/types/brand';
 import { fetchRequest, offerRequest } from '@/request';
 import { toast } from 'sonner';
-import { constants } from '@/lib/utils';
+import { constants, functions } from '@/lib/utils';
 
 interface OfferDialogProps extends OfferFormProps {
   children: ReactNode;
@@ -80,15 +80,27 @@ const OfferForm: FC<OfferFormProps> = ({ data, campaign, influencer, brand }) =>
   const channels = influencer ? influencer.channels : influencerProfile?.channels;
   const [loading, setLoading] = useState(false);
 
+  const time = () => {
+    let timeUnit: 's' | 'm' | 'h' = 's';
+    let duration: number | undefined = undefined;
+    if (data?.duration) {
+      const result = functions.convertSecondsToTime(data.duration);
+      timeUnit = result.unit;
+      duration = result.value;
+    }
+    return { timeUnit, duration };
+  };
+
   const form = useForm<OfferBodyType>({
     resolver: zodResolver(offerSchema),
     defaultValues: {
       job: {
         campaignId: campaign?.id,
-        influencerId: influencer?.id,
+        influencerId: influencer?.id || influencerProfile?.id,
       },
       offer: {
         ...data,
+        ...time(),
         description: '',
         from: influencer ? ERole.Brand : ERole.Influencer,
       },
