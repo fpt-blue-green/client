@@ -5,14 +5,14 @@ import { formats } from '@/lib/utils';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FC, useState } from 'react';
 import { PlatformData } from '@/types/enum';
-import { IPackage } from '@/types/offer';
 import OfferDialog from '@/components/offer-dialog';
+import IInfluencer from '@/types/influencer';
 
 interface PackagesProps {
-  data: IPackage[];
+  influencer: IInfluencer;
 }
 
-const Packages: FC<PackagesProps> = ({ data }) => {
+const Packages: FC<PackagesProps> = ({ influencer }) => {
   const [tab, setTab] = useState('all');
 
   return (
@@ -23,7 +23,7 @@ const Packages: FC<PackagesProps> = ({ data }) => {
             Tất cả
           </TabsTrigger>
           {Object.entries(PlatformData)
-            .filter(([key]) => data.some((p) => p.platform === +key))
+            .filter(([key]) => influencer.packages.some((p) => p.platform === +key))
             .map(([key, value]) => (
               <TabsTrigger key={key} value={key} className="py-2 px-5">
                 {value.name}
@@ -32,7 +32,7 @@ const Packages: FC<PackagesProps> = ({ data }) => {
         </TabsList>
       </Tabs>
       <div className="flex flex-col gap-6">
-        {data
+        {influencer.packages
           .filter((pack) => tab === 'all' || pack.platform === +tab)
           .map((pack) => {
             const { contentTypes, Icon } = PlatformData[pack.platform];
@@ -48,7 +48,7 @@ const Packages: FC<PackagesProps> = ({ data }) => {
                   <div className="flex items-center justify-center size-9 text-background bg-foreground rounded-md">
                     <Icon className="size-6" />
                   </div>
-                  <OfferDialog asChild>
+                  <OfferDialog data={pack} influencer={influencer} asChild>
                     <Button variant="foreground">Tiếp tục</Button>
                   </OfferDialog>
                 </div>
@@ -59,7 +59,9 @@ const Packages: FC<PackagesProps> = ({ data }) => {
       <div className="border border-foreground px-5 py-4 rounded-sm max-w-3xl mt-6">
         <div className="flex items-center justify-between space-x-2">
           <h4 className="font-semibold">Có yêu cầu nào chưa được đề xuất không?</h4>
-          <Button variant="foreground">Gửi Đề Xuất</Button>
+          <OfferDialog influencer={influencer} asChild>
+            <Button variant="foreground">Gửi Đề Xuất</Button>
+          </OfferDialog>
         </div>
       </div>
     </div>

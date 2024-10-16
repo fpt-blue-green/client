@@ -138,7 +138,7 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
                 </div>
               </AccordionTrigger>
               <AccordionContent className="md:px-4 md:text-base">
-                <Packages data={influencer.packages} />
+                <Packages influencer={influencer} />
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="reviews" id="reviews">

@@ -5,7 +5,7 @@ export const offerSchema = z
   .object({
     job: z.object({
       influencerId: z.string({ required_error: 'Lỗi thiếu influencer id' }),
-      campaignId: z.string({ required_error: 'Lỗi thiếu campaign id' }),
+      campaignId: z.string({ required_error: 'Vui lòng chọn chiến dịch' }),
     }),
     offer: z.object({
       platform: z.nativeEnum(EPlatform, { required_error: 'Chọn nền tảng' }),

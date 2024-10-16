@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, FC, ReactNode } from 'react';
+import { ChangeEvent, FC, ReactNode, useState } from 'react';
 import {
   Dialog,
   DialogClose,
@@ -16,43 +16,92 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { OfferBodyType, offerSchema } from '@/schema-validations/offer.schema';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { PlatformData } from '@/types/enum';
+import { ERole, PlatformData } from '@/types/enum';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import PriceInput from './custom/price-input';
 import { Textarea } from './ui/textarea';
+import { IPackage } from '@/types/offer';
+import { useAuthBrand, useAuthInfluencer } from '@/hooks';
+import ICampaign from '@/types/campaign';
+import IInfluencer from '@/types/influencer';
+import IBrand from '@/types/brand';
+import { fetchRequest, offerRequest } from '@/request';
+import { toast } from 'sonner';
+import { constants } from '@/lib/utils';
 
-interface OfferDialogProps {
+interface OfferDialogProps extends OfferFormProps {
   children: ReactNode;
   title?: string;
   description?: string;
   asChild?: boolean;
 }
 
-const OfferDialog: FC<OfferDialogProps> = ({ children, title = 'Gửi một lời đề nghị', description, asChild }) => {
+const OfferDialog: FC<OfferDialogProps> = ({
+  children,
+  data,
+  influencer,
+  campaign,
+  brand,
+  title = 'Gửi một lời đề nghị',
+  description,
+  asChild,
+}) => {
+  const { profile: influencerProfile } = useAuthInfluencer();
+  const { profile: brandProfile } = useAuthBrand();
+
   return (
     <Dialog>
-      <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
+      {((influencerProfile && campaign) || (brandProfile && influencer)) && (
+        <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
+      )}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <OfferForm />
+        <OfferForm data={data} influencer={influencer} campaign={campaign} brand={brand} />
       </DialogContent>
     </Dialog>
   );
 };
 
-interface OfferFormProps {}
+interface OfferFormProps {
+  data?: IPackage;
+  campaign?: ICampaign;
+  influencer?: IInfluencer;
+  brand?: IBrand;
+}
 
-const OfferForm: FC<OfferFormProps> = () => {
+const OfferForm: FC<OfferFormProps> = ({ data, campaign, influencer, brand }) => {
+  const { profile: influencerProfile } = useAuthInfluencer();
+  const { profile: brandProfile } = useAuthBrand();
+  const { data: brandCampaigns } = fetchRequest.campaign.currentBrand(!!brandProfile && !brand);
+  const channels = influencer ? influencer.channels : influencerProfile?.channels;
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<OfferBodyType>({
     resolver: zodResolver(offerSchema),
+    defaultValues: {
+      job: {
+        campaignId: campaign?.id,
+        influencerId: influencer?.id,
+      },
+      offer: {
+        ...data,
+        description: '',
+        from: influencer ? ERole.Brand : ERole.Influencer,
+      },
+    },
   });
 
   const onSubmit = (values: OfferBodyType) => {
-    console.log(values);
+    setLoading(true);
+    offerRequest
+      .createOffer(values)
+      .then(() => toast.success('Đã gửi lời đề nghị tham gia của bạn'))
+      .catch((err) => toast.error(err?.message || constants.sthWentWrong))
+      .finally(() => setLoading(false));
   };
 
   const handleChange =
@@ -74,9 +123,37 @@ const OfferForm: FC<OfferFormProps> = () => {
       <form className="flex flex-col gap-4" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
+          name="job.campaignId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="campaign">Chiến dịch</FormLabel>
+              <FormControl>
+                <Select {...field} onValueChange={field.onChange} disabled={!!campaign}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Chiến dịch" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {campaign ? (
+                      <SelectItem value={campaign.id}>{campaign.title}</SelectItem>
+                    ) : (
+                      brandCampaigns?.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.title}
+                        </SelectItem>
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="offer.platform"
           render={({ field }) => (
-            <FormItem className="col-span-full">
+            <FormItem>
               <FormLabel htmlFor="platform">Nền tảng</FormLabel>
               <FormControl>
                 <Select
@@ -90,14 +167,17 @@ const OfferForm: FC<OfferFormProps> = () => {
                     <SelectValue placeholder="Nền tảng" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.entries(PlatformData).map(([key, { Icon, name }]) => (
-                      <SelectItem key={key} value={key}>
-                        <div className="flex items-center gap-2">
-                          <Icon />
-                          {name}
-                        </div>
-                      </SelectItem>
-                    ))}
+                    {channels?.map((c) => {
+                      const { Icon, name } = PlatformData[c.platform];
+                      return (
+                        <SelectItem key={c.platform} value={c.platform.toString()}>
+                          <div className="flex items-center gap-2">
+                            <Icon />
+                            {name}
+                          </div>
+                        </SelectItem>
+                      );
+                    })}
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -105,7 +185,7 @@ const OfferForm: FC<OfferFormProps> = () => {
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-3">
           <FormLabel className="col-span-full">Nội dung</FormLabel>
           <FormField
             control={form.control}
@@ -153,7 +233,7 @@ const OfferForm: FC<OfferFormProps> = () => {
             }}
           />
         </div>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-3">
           <FormLabel className="col-span-full">Thời lượng (tùy chọn)</FormLabel>
           <FormField
             control={form.control}
@@ -224,11 +304,11 @@ const OfferForm: FC<OfferFormProps> = () => {
         />
         <DialogFooter>
           <DialogClose asChild>
-            <Button type="button" variant="ghost">
+            <Button type="button" variant="ghost" loading={loading}>
               Huỷ
             </Button>
           </DialogClose>
-          <Button type="submit" variant="gradient">
+          <Button type="submit" variant="gradient" loading={loading}>
             OK
           </Button>
         </DialogFooter>
