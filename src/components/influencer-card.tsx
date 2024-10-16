@@ -48,7 +48,7 @@ interface InfluencerCardProps {
 
 const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer, favorite }) => {
   const { data: favorites, mutate } = fetchRequest.favorites();
-  const isFavorite = favorites?.some((f) => f.influencer.id === data.id);
+  const isFavorite = favorites?.some((f) => f.id === data.id);
 
   const handleFavorite = useThrottle((e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -56,7 +56,7 @@ const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer, favori
     const caller = isFavorite ? brandRequest.unfavorite(data.id) : brandRequest.favorite(data.id);
     caller
       .then(() => {
-        mutate().then(() => () => toast.success(isFavorite ? 'Đã xóa khỏi' : 'Đã thêm vào' + ' danh sách yêu thích'));
+        mutate().then(() => toast.success((isFavorite ? 'Đã xóa khỏi' : 'Đã thêm vào') + ' danh sách yêu thích'));
       })
       .catch((err) => toast.error(err?.message || constants.sthWentWrong));
   }, 750);

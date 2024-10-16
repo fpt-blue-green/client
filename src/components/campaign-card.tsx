@@ -22,8 +22,8 @@ import { ECampaignStatus } from '@/types/enum';
 
 interface CampaignCardProps {
   data: ICampaign;
-  onEdit: (campaign?: ICampaign) => () => void;
-  reload: () => Promise<void>;
+  onEdit?: (campaign?: ICampaign) => () => void;
+  reload?: () => Promise<void>;
 }
 
 const CampaignCard: FC<CampaignCardProps> = ({ data, onEdit, reload }) => {
@@ -35,7 +35,7 @@ const CampaignCard: FC<CampaignCardProps> = ({ data, onEdit, reload }) => {
       callback: () =>
         campaignsRequest
           .delete(campaign.id)
-          .then(() => reload().then(() => toast.success(`Xóa chiến dịch ${campaign.name} thành công`)))
+          .then(() => reload?.().then(() => toast.success(`Xóa chiến dịch ${campaign.name} thành công`)))
           .catch((err) => toast.error(err?.message || constants.sthWentWrong)),
     });
   };
@@ -55,48 +55,56 @@ const CampaignCard: FC<CampaignCardProps> = ({ data, onEdit, reload }) => {
             className="object-cover w-full aspect-video transition-transform hover:scale-110"
           />
         )}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="secondary" size="icon" className="absolute top-4 right-4">
-              <DotsVerticalIcon />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem asChild>
-              <Link href={config.routes.campaigns.details(data.id)} className="flex items-center gap-2">
-                <EyeOpenIcon />
-                Xem chi tiết
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={onEdit(data)}>
-              <span className="flex items-center gap-2">
-                <Pencil1Icon />
-                Chỉnh sửa chung
-              </span>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href={config.routes.brand.campaigns.edit(data.id, 1)} className="flex items-center gap-2">
-                <Pencil2Icon />
-                Chỉnh sửa chi tiết
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleDelete(data)}>
-              <span className="flex items-center gap-2">
-                <TrashIcon />
-                Xóa
-              </span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {onEdit && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary" size="icon" className="absolute top-4 right-4">
+                <DotsVerticalIcon />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem asChild>
+                <Link href={config.routes.campaigns.details(data.id)} className="flex items-center gap-2">
+                  <EyeOpenIcon />
+                  Xem chi tiết
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={onEdit(data)}>
+                <span className="flex items-center gap-2">
+                  <Pencil1Icon />
+                  Chỉnh sửa chung
+                </span>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={config.routes.brand.campaigns.edit(data.id, 1)} className="flex items-center gap-2">
+                  <Pencil2Icon />
+                  Chỉnh sửa chi tiết
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleDelete(data)}>
+                <span className="flex items-center gap-2">
+                  <TrashIcon />
+                  Xóa
+                </span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
       <div className="p-4 space-y-2 text-sm">
         <div className="flex items-center justify-between gap-4 text-base">
-          <Link href={config.routes.brand.campaigns.edit(data.id, 1)} className="font-semibold hover:underline">
-            {data.name}
-          </Link>
+          {onEdit ? (
+            <Link href={config.routes.brand.campaigns.edit(data.id, 1)} className="font-semibold hover:underline">
+              {data.name}
+            </Link>
+          ) : (
+            <Link href={config.routes.campaigns.details(data.id)} className="font-semibold hover:underline">
+              {data.title}
+            </Link>
+          )}
           <Chip label={CampaignStatus[data.status].label} variant={CampaignStatus[data.status].color} />
         </div>
-        <h6 className="text-sm">{data.title}</h6>
+        {onEdit && <h6 className="text-sm">{data.title}</h6>}
         <div className="flex items-center gap-2">
           <ClockIcon />
           {formats.date(data.startDate)} - {formats.date(data.endDate)}

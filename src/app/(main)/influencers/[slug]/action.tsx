@@ -16,13 +16,13 @@ interface ActionProps {
 
 const Action: FC<ActionProps> = ({ influencer }) => {
   const { data, mutate } = fetchRequest.favorites();
-  const isFavorite = data?.some((f) => f.influencer.id === influencer.id);
+  const isFavorite = data?.some((f) => f.id === influencer.id);
 
   const handleFavorite = useThrottle(() => {
     const caller = isFavorite ? brandRequest.unfavorite(influencer.id) : brandRequest.favorite(influencer.id);
     caller
       .then(() => {
-        mutate().then(() => toast.success(isFavorite ? 'Đã xóa khỏi' : 'Đã thêm vào' + ' danh sách yêu thích'));
+        mutate().then(() => toast.success((isFavorite ? 'Đã xóa khỏi' : 'Đã thêm vào') + ' danh sách yêu thích'));
       })
       .catch((err) => toast.error(err?.message || constants.sthWentWrong));
   }, 750);

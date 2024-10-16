@@ -4,14 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FC, useState } from 'react';
 import { PlatformData } from '@/types/enum';
-import { IContent } from '@/types/campaign';
 import { formats } from '@/lib/utils';
+import OfferDialog from '@/components/offer-dialog';
+import ICampaign from '@/types/campaign';
 
 interface ContentsProps {
-  data: IContent[];
+  campaign: ICampaign;
 }
 
-const Contents: FC<ContentsProps> = ({ data }) => {
+const Contents: FC<ContentsProps> = ({ campaign }) => {
   const [tab, setTab] = useState('all');
 
   return (
@@ -22,7 +23,7 @@ const Contents: FC<ContentsProps> = ({ data }) => {
             Tất cả
           </TabsTrigger>
           {Object.entries(PlatformData)
-            .filter(([key]) => data.some((p) => p.platform === +key))
+            .filter(([key]) => campaign?.contents.some((p) => p.platform === +key))
             .map(([key, value]) => (
               <TabsTrigger key={key} value={key} className="py-2 px-5">
                 {value.name}
@@ -31,7 +32,7 @@ const Contents: FC<ContentsProps> = ({ data }) => {
         </TabsList>
       </Tabs>
       <div className="grid md:grid-cols-2 grid-cols-1 gap-x-6 gap-y-8">
-        {data
+        {campaign.contents
           .filter((pack) => tab === 'all' || pack.platform === +tab)
           .map((pack) => {
             const { contentTypes, Icon } = PlatformData[pack.platform];
@@ -47,7 +48,9 @@ const Contents: FC<ContentsProps> = ({ data }) => {
                   <div className="flex items-center justify-center size-9 text-background bg-foreground rounded-md">
                     <Icon className="size-6" />
                   </div>
-                  <Button variant="foreground">Tiếp tục</Button>
+                  <OfferDialog data={pack} campaign={campaign} asChild>
+                    <Button variant="foreground">Tiếp tục</Button>
+                  </OfferDialog>
                 </div>
               </div>
             );

@@ -95,7 +95,7 @@ const CampaignDetails: FC<CampaignDetailsProps> = async ({ params }) => {
           </div>
           <div>
             <h3 className="text-xl font-semibold mb-6">Yêu cầu nội dung</h3>
-            <Contents data={campaign.contents} />
+            <Contents campaign={campaign} />
           </div>
         </div>
       </div>
