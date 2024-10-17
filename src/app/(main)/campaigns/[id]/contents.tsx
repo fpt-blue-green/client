@@ -59,7 +59,9 @@ const Contents: FC<ContentsProps> = ({ campaign }) => {
       <div className="border border-foreground px-5 py-4 rounded-sm max-w-3xl mt-6">
         <div className="flex items-center justify-between space-x-2">
           <h4 className="font-semibold">Có yêu cầu nào chưa được đề xuất không?</h4>
-          <Button variant="foreground">Gửi Đề Xuất</Button>
+          <OfferDialog campaign={campaign} asChild>
+            <Button variant="foreground">Gửi Đề Xuất</Button>
+          </OfferDialog>
         </div>
       </div>
     </div>

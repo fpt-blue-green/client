@@ -41,7 +41,7 @@ const CampaignCard: FC<CampaignCardProps> = ({ data, onEdit, reload }) => {
   };
 
   return (
-    <div className="flex flex-col bg-background border rounded-lg shadow-md overflow-hidden">
+    <div className="relative flex flex-col bg-background border rounded-lg shadow-md overflow-hidden">
       <div
         key={data.id}
         className={cn('relative bg-foreground overflow-hidden select-none', { 'pb-[56.25%]': !firstImage })}
@@ -102,7 +102,12 @@ const CampaignCard: FC<CampaignCardProps> = ({ data, onEdit, reload }) => {
               {data.title}
             </Link>
           )}
-          <Chip label={CampaignStatus[data.status].label} variant={CampaignStatus[data.status].color} />
+          <Chip
+            label={CampaignStatus[data.status].label}
+            variant={CampaignStatus[data.status].color}
+            size="small"
+            className={cn({ 'absolute top-3 right-3': !onEdit })}
+          />
         </div>
         {onEdit && <h6 className="text-sm">{data.title}</h6>}
         <div className="flex items-center gap-2">
@@ -127,11 +132,11 @@ const CampaignStatus: {
   },
   [ECampaignStatus.Published]: {
     label: 'Công khai',
-    color: 'warning',
+    color: 'info',
   },
   [ECampaignStatus.Active]: {
     label: 'Đang diễn ra',
-    color: 'info',
+    color: 'warning',
   },
   [ECampaignStatus.Completed]: {
     label: 'Hoàn thành',

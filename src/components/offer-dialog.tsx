@@ -29,6 +29,9 @@ import IBrand from '@/types/brand';
 import { fetchRequest, offerRequest } from '@/request';
 import { toast } from 'sonner';
 import { constants, functions } from '@/lib/utils';
+import { signIn } from 'next-auth/react';
+import Link from 'next/link';
+import config from '@/config';
 
 interface OfferDialogProps extends OfferFormProps {
   children: ReactNode;
@@ -49,19 +52,49 @@ const OfferDialog: FC<OfferDialogProps> = ({
 }) => {
   const { profile: influencerProfile } = useAuthInfluencer();
   const { profile: brandProfile } = useAuthBrand();
+  const showButton =
+    (!influencerProfile && !brandProfile) || (influencerProfile && campaign) || (brandProfile && influencer);
+  const showDialog =
+    (influencerProfile &&
+      campaign &&
+      (!data || influencerProfile.channels.some((c) => c.platform === data.platform))) ||
+    (brandProfile && influencer);
+
+  const handleClick = () => {
+    if (!influencerProfile && !brandProfile) {
+      signIn();
+    } else if (influencerProfile && data) {
+      if (!influencerProfile.channels.some((c) => c.platform === data.platform)) {
+        toast.warning('Bạn không đăng ký mạng xã hội ' + PlatformData[data.platform].name, {
+          description: (
+            <span>
+              Cập nhật thông tin của bạn{' '}
+              <Link href={config.routes.influencers.editProfile} className="underline">
+                tại đây
+              </Link>
+            </span>
+          ),
+        });
+      }
+    }
+  };
 
   return (
     <Dialog>
-      {((influencerProfile && campaign) || (brandProfile && influencer)) && (
-        <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
+      {showButton && (
+        <DialogTrigger asChild={asChild} onClick={handleClick}>
+          {children}
+        </DialogTrigger>
       )}
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
-        </DialogHeader>
-        <OfferForm data={data} influencer={influencer} campaign={campaign} brand={brand} />
-      </DialogContent>
+      {showDialog && (
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>{description}</DialogDescription>
+          </DialogHeader>
+          <OfferForm data={data} influencer={influencer} campaign={campaign} brand={brand} />
+        </DialogContent>
+      )}
     </Dialog>
   );
 };
@@ -303,9 +336,29 @@ const OfferForm: FC<OfferFormProps> = ({ data, campaign, influencer, brand }) =>
         />
         <FormField
           control={form.control}
+          name="offer.targetReaction"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Số lượt tương tác mục tiêu</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  className="w-full"
+                  placeholder="Số lượt tương tác mục tiêu"
+                  {...field}
+                  value={field.value || ''}
+                  onChange={handleChange(field)}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="offer.description"
           render={({ field }) => (
-            <FormItem className="col-span-full">
+            <FormItem>
               <FormLabel>Lời nhắn</FormLabel>
               <FormControl>
                 <Textarea placeholder="Lời nhắn" {...field} onChange={handleChange(field)} />
