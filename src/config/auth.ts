@@ -24,7 +24,8 @@ const auth: NextAuthOptions = {
           const user = res.data || null;
 
           return user;
-        } catch {
+        } catch (e) {
+          console.error(e);
           return null;
         }
       },
