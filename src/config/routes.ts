@@ -38,6 +38,10 @@ const routes = {
   },
   admin: {
     base: '/admin',
+    influencer: '/admin/influencer-management',
+    brand: '/admin/brand-management',
+    campaign: '/admin/campaign-management',
+    statistic: '/admin/statistic',
   },
 };
 
