@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useThrottle } from '@/hooks';
+import { useAuthBrand, useThrottle } from '@/hooks';
 import { cn, constants } from '@/lib/utils';
 import { brandRequest, fetchRequest } from '@/request';
 import IInfluencer from '@/types/influencer';
@@ -15,8 +15,9 @@ interface ActionProps {
 }
 
 const Action: FC<ActionProps> = ({ influencer }) => {
-  const { data, mutate } = fetchRequest.favorites();
-  const isFavorite = data?.some((f) => f.id === influencer.id);
+  const { profile } = useAuthBrand();
+  const { data, mutate } = fetchRequest.favorites(!!profile);
+  const isFavorite = Boolean(data && data.some((f) => f.id === influencer.id));
 
   const handleFavorite = useThrottle(() => {
     const caller = isFavorite ? brandRequest.unfavorite(influencer.id) : brandRequest.favorite(influencer.id);

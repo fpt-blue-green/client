@@ -12,7 +12,7 @@ import IInfluencer from '@/types/influencer';
 import { PlatformData } from '@/types/enum';
 import { brandRequest, fetchRequest } from '@/request';
 import { toast } from 'sonner';
-import { useThrottle } from '@/hooks';
+import { useAuthBrand, useThrottle } from '@/hooks';
 
 const mockInfluencer: IInfluencer = {
   id: 'fakeId',
@@ -43,12 +43,12 @@ const mockInfluencer: IInfluencer = {
 
 interface InfluencerCardProps {
   data?: IInfluencer;
-  favorite?: boolean;
 }
 
-const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer, favorite }) => {
-  const { data: favorites, mutate } = fetchRequest.favorites();
-  const isFavorite = favorites?.some((f) => f.id === data.id);
+const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer }) => {
+  const { profile } = useAuthBrand();
+  const { data: favorites, mutate } = fetchRequest.favorites(!!profile);
+  const isFavorite = Boolean(favorites && favorites.some((f) => f.id === data.id));
 
   const handleFavorite = useThrottle((e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -63,7 +63,7 @@ const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer, favori
 
   return (
     <div className="relative">
-      {favorite !== undefined && (
+      {profile && (
         <div className="absolute top-3 right-3 z-10">
           <Button variant="secondary" className="h-7 p-1 rounded-full" onClick={handleFavorite}>
             {isFavorite ? <HeartFilledIcon className="size-5 text-destructive" /> : <HeartIcon className="size-5" />}

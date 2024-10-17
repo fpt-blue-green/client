@@ -7,7 +7,7 @@ import IInfluencer from '@/types/influencer';
 import useSWRImmutable from 'swr/immutable';
 
 const fetchRequest = {
-  favorites: () => useSWRImmutable<IInfluencer[]>('/Brand/favorites', fetcher),
+  favorites: (fetch = false) => useSWRImmutable<IInfluencer[]>('/Brand/favorites', fetch ? fetcher : null),
   campaign: {
     available: () => useSWRImmutable<ICampaign[]>('/Campaigns', fetcher),
     currentBrand: (fetch = false) => useSWRImmutable<ICampaign[]>('/Brand/campaigns', fetch ? fetcher : null),
