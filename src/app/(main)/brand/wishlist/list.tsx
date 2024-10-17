@@ -12,7 +12,7 @@ const List = () => {
       {isLoading ? (
         Array.from({ length: 20 }).map((_, index) => <InfluencerCardSkeleton key={index} />)
       ) : data && data.length > 0 ? (
-        data.map((influencer) => <InfluencerCard key={influencer.id} data={influencer} favorite={false} />)
+        data.map((influencer) => <InfluencerCard key={influencer.id} data={influencer} />)
       ) : (
         <NoData description="Bạn chưa thêm ai vào danh sách yêu thích" className="col-span-full" />
       )}

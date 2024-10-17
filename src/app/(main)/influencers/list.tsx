@@ -134,7 +134,7 @@ const List = () => {
         {isLoading ? (
           Array.from({ length: filter.pageSize }).map((_, index) => <InfluencerCardSkeleton key={index} />)
         ) : data && data.influencers.length > 0 ? (
-          data.influencers.map((i) => <InfluencerCard key={i.id} data={i} favorite={false} />)
+          data.influencers.map((i) => <InfluencerCard key={i.id} data={i} />)
         ) : (
           <NoData description="Không tìm thấy người sáng tạo" className="col-span-full" />
         )}
