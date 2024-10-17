@@ -33,7 +33,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { FilterAction, FilterState } from './list';
-import { useDebounce, useUpdateEffect } from '@/hooks';
+import { useAuthBrand, useDebounce, useUpdateEffect } from '@/hooks';
 import { EPlatform } from '@/types/enum';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/http';
@@ -48,6 +48,7 @@ interface FilterProps {
 }
 
 const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
+  const { profile } = useAuthBrand();
   const { searchTerm, platforms, tags: categories, priceRange, rating, sortBy, isAscending } = data;
   const [sortOpen, setSortOpen] = useState(false);
   const [search, setSearch] = useState(searchTerm);
@@ -93,15 +94,19 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
 
   return (
     <div className="flex items-center justify-between gap-6 max-md:flex-col">
-      <PremiumBadge>
-        <Input
-          startAdornment={<MagnifyingGlassIcon className="size-7 text-muted-foreground" />}
-          placeholder="Tìm kiếm..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          disabled
-        />
-      </PremiumBadge>
+      {profile ? (
+        <PremiumBadge invisible={profile?.isPremium}>
+          <Input
+            startAdornment={<MagnifyingGlassIcon className="size-7 text-muted-foreground" />}
+            placeholder="Tìm kiếm..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            disabled={!profile?.isPremium}
+          />
+        </PremiumBadge>
+      ) : (
+        <span></span>
+      )}
       <div className="flex items-center gap-4">
         <Sheet>
           <SheetTrigger asChild>

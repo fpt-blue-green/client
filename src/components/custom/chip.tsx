@@ -1,6 +1,6 @@
 import { FC, MouseEvent, MouseEventHandler, ReactNode } from 'react';
 import { Badge, BadgeProps } from '../ui/badge';
-import clsx from 'clsx';
+import { cn } from '@/lib/utils';
 import { Cross2Icon } from '@radix-ui/react-icons';
 
 interface ChipProps extends Omit<BadgeProps, 'children'> {
@@ -9,7 +9,7 @@ interface ChipProps extends Omit<BadgeProps, 'children'> {
   onDelete?: MouseEventHandler;
 }
 
-const Chip: FC<ChipProps> = ({ label, icon, onDelete, ...props }) => {
+const Chip: FC<ChipProps> = ({ label, icon, className, onDelete, ...props }) => {
   const btnVariants = {
     default: 'bg-primary-foreground text-primary rounded-full hover:opacity-80 transition',
     secondary: 'bg-secondary-foreground text-secondary rounded-full hover:opacity-80 transition',
@@ -29,7 +29,7 @@ const Chip: FC<ChipProps> = ({ label, icon, onDelete, ...props }) => {
   };
 
   return (
-    <Badge {...props} className={clsx({ 'cursor-pointer hover:opacity-80': props.onClick })}>
+    <Badge {...props} className={cn({ 'cursor-pointer hover:opacity-80': props.onClick }, className)}>
       <div className="flex items-center gap-1.5">
         {icon}
         <span className="leading-[1]">{label}</span>
