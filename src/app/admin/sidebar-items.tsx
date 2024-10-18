@@ -1,11 +1,17 @@
 import config from '@/config';
-import { SideBarItemModel } from '@/types/sidebar-item';
 import { DashboardIcon } from '@radix-ui/react-icons';
+import { ReactNode } from 'react';
 import { FaPeopleGroup } from 'react-icons/fa6';
+
+export interface SideBarItemModel {
+  route: string;
+  icon: ReactNode;
+  content: string;
+}
 
 export const items: SideBarItemModel[] = [
   {
-    route: config.routes.admin.statistic,
+    route: config.routes.admin.base,
     icon: <DashboardIcon />,
     content: 'Tổng Quan',
   },

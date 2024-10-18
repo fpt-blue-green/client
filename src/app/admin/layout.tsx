@@ -1,7 +1,8 @@
-import AdminHeader from '@/components/ui/admin-header';
-import AdminSideBar from '@/components/ui/admin-sidebar';
+import AdminHeader from '@/components/admin-header';
+import AdminSideBar from '@/components/admin-sidebar';
 import { FC, ReactNode } from 'react';
 import { items } from './sidebar-items';
+import { ScrollArea } from '@/components/ui/scroll-area';
 interface AdminLayoutProps {
   children: ReactNode;
 }
@@ -9,10 +10,12 @@ interface AdminLayoutProps {
 const AdminLayout: FC<Readonly<AdminLayoutProps>> = ({ children }) => {
   return (
     <div className="flex">
-      <AdminSideBar items={items} />
-      <div className="flex-1 flex flex-col min-h-screen">
+      <div className="flex-shrink-0">
+        <AdminSideBar items={items} />
+      </div>
+      <div className="flex-1 flex flex-col h-screen">
         <AdminHeader />
-        <main className="flex-1 md:pt-6 pt-3">{children}</main>
+        <ScrollArea className="flex-1 h-[calc(100vh-64px)]">{children}</ScrollArea>
       </div>
     </div>
   );

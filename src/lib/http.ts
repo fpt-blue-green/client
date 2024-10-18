@@ -26,8 +26,12 @@ const request = async <Response>(
 ): Promise<CustomResponse<Response>> => {
   const body =
     options?.body instanceof FormData ? options.body : options?.body ? JSON.stringify(options?.body) : undefined;
-  const baseHeaders: { [key: string]: string } =
-    options?.body instanceof FormData ? {} : { 'Content-Type': 'application/json; charset=utf-8' };
+  const baseHeaders: { [key: string]: string } = {
+    'ngrok-skip-browser-warning': '1', // * Test ngrok env
+  };
+  if (!(options?.body instanceof FormData)) {
+    baseHeaders['Content-Type'] = 'application/json; charset=utf-8';
+  }
 
   let session: Session | null;
 

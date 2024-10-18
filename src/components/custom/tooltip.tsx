@@ -5,18 +5,25 @@ interface TooltipProps {
   children: ReactNode;
   label: string | ReactNode;
   position?: 'top' | 'bottom' | 'left' | 'right';
+  disabled?: boolean;
 }
 
-const Tooltip: FC<TooltipProps> = ({ children, label, position = 'top' }) => {
+const Tooltip: FC<TooltipProps> = ({ children, label, position = 'top', disabled }) => {
   return (
-    <TooltipProvider delayDuration={250}>
-      <ShadeTooltip>
-        <TooltipTrigger asChild>{children}</TooltipTrigger>
-        <TooltipContent className="bg-foreground text-background" side={position}>
-          {label}
-        </TooltipContent>
-      </ShadeTooltip>
-    </TooltipProvider>
+    <>
+      {disabled ? (
+        children
+      ) : (
+        <TooltipProvider delayDuration={250}>
+          <ShadeTooltip>
+            <TooltipTrigger asChild>{children}</TooltipTrigger>
+            <TooltipContent className="bg-foreground text-background" side={position}>
+              {label}
+            </TooltipContent>
+          </ShadeTooltip>
+        </TooltipProvider>
+      )}
+    </>
   );
 };
 

@@ -1,26 +1,33 @@
 'use client';
+
 import { FC } from 'react';
-import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { SideBarItemModel } from '@/types/sidebar-item';
+import { SideBarItemModel } from '@/app/admin/sidebar-items';
+import { cn } from '@/lib/utils';
+import Tooltip from './custom/tooltip';
 
-const AdminMenuItem: FC<SideBarItemModel> = ({ route, content, icon }) => {
+interface AdminMenuItemProps {
+  item: SideBarItemModel;
+  collapse?: boolean;
+}
+
+const AdminMenuItem: FC<AdminMenuItemProps> = ({ item, collapse }) => {
   const pathname = usePathname();
 
   return (
-    <Link
-      href={route}
-      className={clsx(
-        'relative font-medium text-sm text-muted-foreground hover:text-foreground hover:bg-accent  px-6 py-4 mt-2',
-        pathname === route ? 'text-foreground bg-accent' : 'text-muted-foreground',
-      )}
-    >
-      <div className="flex gap-2 items-center">
-        {icon && icon}
-        {content}
-      </div>
-    </Link>
+    <Tooltip label={item.content} position="right" disabled={!collapse}>
+      <Link
+        href={item.route}
+        className={cn(
+          'flex items-center gap-2 h-12 font-medium text-sm text-muted-foreground hover:text-foreground hover:bg-accent px-6 transition-colors',
+          { 'text-foreground bg-accent font-semibold': pathname === item.route, 'px-0 justify-center': collapse },
+        )}
+      >
+        <span className="size-4">{item.icon}</span>
+        <span className={cn({ 'sr-only': collapse })}>{item.content}</span>
+      </Link>
+    </Tooltip>
   );
 };
 
