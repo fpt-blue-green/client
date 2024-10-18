@@ -43,6 +43,19 @@ export async function generateMetadata({ params }: InfluencerDetailsProps): Prom
   const influencer = await getInfluencer(params.slug);
   return {
     title: influencer.fullName,
+    openGraph: {
+      title: influencer.fullName,
+      description: influencer.description,
+      images: influencer.images.slice(0, 3).map((img) => ({
+        url: img.url,
+        width: 600,
+        height: 800,
+        alt: 'Ảnh bìa của ' + influencer.fullName,
+      })),
+      siteName: 'adfusion',
+      type: 'profile',
+      locale: 'vi_VN',
+    },
   };
 }
 
@@ -57,7 +70,7 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
       icon: <RiHome4Fill />,
     },
     {
-      label: 'Người sáng tạo',
+      label: 'Nhà sáng tạo nội dung',
       href: config.routes.influencers.landing,
     },
     {

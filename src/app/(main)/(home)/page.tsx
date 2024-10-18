@@ -4,6 +4,15 @@ import config from '@/config';
 import Link from 'next/link';
 import HowItWork from './how-it-work';
 import Banner from './banner';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  openGraph: {
+    description: 'Marketing những người sáng tạo nội dung một cách dễ dàng và chuyên nghiệp',
+    type: 'website',
+    siteName: 'adfusion',
+  },
+};
 
 const Home = () => {
   return (

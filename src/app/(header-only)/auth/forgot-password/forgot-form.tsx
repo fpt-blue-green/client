@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { constants } from '@/lib/utils';
 import { authRequest } from '@/request';
 import { ForgotPasswordBodyType, forgotPasswordSchema } from '@/schema-validations/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -28,11 +29,12 @@ const ForgotForm = () => {
 
   const onSubmit = (values: ForgotPasswordBodyType) => {
     setLoading(true);
-    authRequest
-      .forgotPassword(values)
-      .then(() => toast.success('Vui lòng kiểm tra email để xác nhận'))
-      .catch((err) => toast.error(err.message))
-      .finally(() => setLoading(false));
+    toast.promise(authRequest.forgotPassword(values), {
+      loading: 'Đang tải',
+      success: 'Vui lòng kiểm tra email để xác nhận',
+      error: (err) => err.message || constants.sthWentWrong,
+      finally: () => setLoading(false),
+    });
   };
 
   return (

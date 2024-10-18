@@ -126,7 +126,7 @@ const List = () => {
 
   return (
     <div className="space-y-7">
-      <h1 className="text-2xl font-semibold">Influencers</h1>
+      <h1 className="text-2xl font-semibold">Nhà sáng tạo nội dung</h1>
       <div>
         <Filter data={filter} dispatch={dispatch} isChanged={isOptionsChange} />
       </div>

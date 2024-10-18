@@ -21,11 +21,14 @@ const Action: FC<ActionProps> = ({ influencer }) => {
 
   const handleFavorite = useThrottle(() => {
     const caller = isFavorite ? brandRequest.unfavorite(influencer.id) : brandRequest.favorite(influencer.id);
-    caller
-      .then(() => {
-        mutate().then(() => toast.success((isFavorite ? 'Đã xóa khỏi' : 'Đã thêm vào') + ' danh sách yêu thích'));
-      })
-      .catch((err) => toast.error(err?.message || constants.sthWentWrong));
+    toast.promise(caller, {
+      loading: 'Đang tải',
+      success: () => {
+        mutate();
+        return (isFavorite ? 'Đã xóa khỏi' : 'Đã thêm vào') + ' danh sách yêu thích';
+      },
+      error: (err) => err?.message || constants.sthWentWrong,
+    });
   }, 750);
 
   return (

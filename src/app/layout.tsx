@@ -13,6 +13,13 @@ export const metadata: Metadata = {
     absolute: 'Marketing những người sáng tạo nội dung | adfusion',
   },
   description: 'Marketing những người sáng tạo nội dung một cách dễ dàng và chuyên nghiệp',
+  openGraph: {
+    title: {
+      template: '%s | adfusion',
+      default: 'adfusion',
+      absolute: 'Marketing những người sáng tạo nội dung | adfusion',
+    },
+  },
 };
 
 export default function RootLayout({

@@ -13,6 +13,7 @@ import { authRequest } from '@/request';
 import { ERole } from '@/types/enum';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { constants } from '@/lib/utils';
 
 interface IRegisterFormProps {
   role: string;
@@ -39,11 +40,15 @@ const RegisterForm: FC<IRegisterFormProps> = ({ role }) => {
 
   const onSubmit = (values: RegisterBodyType) => {
     setLoading(true);
-    authRequest
-      .register(values)
-      .then(() => router.push(`${config.routes.register.emailVerification}?email=${form.getValues().email}`))
-      .catch((err) => toast.error(err.message))
-      .finally(() => setLoading(false));
+    toast.promise(authRequest.register(values), {
+      loading: 'Đang tải',
+      success: () => {
+        router.push(`${config.routes.register.emailVerification}?email=${values.email}`);
+        return 'Đăng ký thành công';
+      },
+      error: (err) => err.message || constants.sthWentWrong,
+      finally: () => setLoading(false),
+    });
   };
 
   return (
