@@ -4,7 +4,6 @@ import { ModeToggle } from '@/components/mode-toggle';
 import ProfileDropdown from '@/components/profile-dropdown';
 import { Input } from './ui/input';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import Chip from './custom/chip';
 import { Badge } from './ui/badge';
 
 const AdminHeader = () => {
