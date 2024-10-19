@@ -27,7 +27,11 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 bg-background/80 backdrop-blur-[6px]">
+    <header
+      className={cn('fixed top-0 left-0 right-0 z-40 transition-all', {
+        'bg-background/80 backdrop-blur-[6px]': isScrolled,
+      })}
+    >
       <div className={cn('container md:h-20 h-16 transition-all', { 'md:h-16': isScrolled })}>
         <div className="h-full flex items-center justify-between">
           <div className="flex items-center gap-2">

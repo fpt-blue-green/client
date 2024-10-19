@@ -25,6 +25,7 @@ const auth: NextAuthOptions = {
 
           return user;
         } catch (e) {
+          // eslint-disable-next-line no-console
           console.error(e);
           return null;
         }
@@ -52,6 +53,7 @@ const auth: NextAuthOptions = {
           //TODO: Call Api
           console.log(user);
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.error('Failed to send data to backend:', error);
         }
       }
@@ -60,6 +62,7 @@ const auth: NextAuthOptions = {
           //TODO: Call Api
           console.log(user);
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.error('Failed to send data to backend:', error);
         }
       }

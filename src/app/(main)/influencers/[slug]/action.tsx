@@ -6,6 +6,7 @@ import { cn, constants } from '@/lib/utils';
 import { brandRequest, fetchRequest } from '@/request';
 import IInfluencer from '@/types/influencer';
 import { HeartFilledIcon, HeartIcon } from '@radix-ui/react-icons';
+import { signIn } from 'next-auth/react';
 import { FC } from 'react';
 import { LuShare } from 'react-icons/lu';
 import { toast } from 'sonner';
@@ -15,11 +16,15 @@ interface ActionProps {
 }
 
 const Action: FC<ActionProps> = ({ influencer }) => {
-  const { profile } = useAuthBrand();
+  const { session, profile } = useAuthBrand();
   const { data, mutate } = fetchRequest.favorites(!!profile);
   const isFavorite = Boolean(data && data.some((f) => f.id === influencer.id));
 
   const handleFavorite = useThrottle(() => {
+    if (!session) {
+      signIn();
+      return;
+    }
     const caller = isFavorite ? brandRequest.unfavorite(influencer.id) : brandRequest.favorite(influencer.id);
     toast.promise(caller, {
       loading: 'Đang tải',
