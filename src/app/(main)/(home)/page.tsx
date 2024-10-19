@@ -16,30 +16,54 @@ export const metadata: Metadata = {
 
 const Home = () => {
   return (
-    <div className="container my-16 space-y-20">
-      <div className="mx-auto max-w-4xl text-center group">
-        <h1 className="text-4xl text-gradient font-bold">Nền tảng Influencer Marketing</h1>
-        <p className="text-muted-foreground mt-3 mb-8">
-          Tìm và thuê những người có ảnh hưởng hàng đầu trên Instagram, TikTok và Youtube để tạo nội dung độc đáo cho
-          thương hiệu của bạn
-        </p>
-        <div className="flex max-md:flex-col items-center justify-center gap-8">
-          <Button size="large" variant="gradient" className="h-16 px-12 text-lg rounded-full" asChild>
-            <Link href={config.routes.influencer.base}>Trở thành nhà sáng tạo</Link>
-          </Button>
-          <div className="border h-0 md:h-12 w-48 md:w-px"></div>
-          <Button size="large" variant="gradient" className="h-16 px-12 text-lg rounded-full" asChild>
-            <Link href={config.routes.brand.landing}>Trở thành nhãn hàng</Link>
-          </Button>
+    <>
+      <div className="relative h-screen -mt-20">
+        <video className="w-full h-full object-cover" autoPlay loop muted>
+          <source src="/assets/videos/homepage.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/20 to-zinc-900/80"></div>
+        <div className="absolute top-1/2 inset-x-0 -translate-y-1/2 text-white">
+          <div className="container">
+            <div className="md:w-2/3 px-5 space-y-7 max-md:text-center">
+              <h1 className="md:text-5xl text-4xl font-bold !leading-tight">
+                Nền tảng tiếp thị{' '}
+                <em
+                  style={{
+                    WebkitTextStrokeWidth: '0.025em',
+                    WebkitTextFillColor: 'transparent',
+                    WebkitTextStrokeColor: 'currentcolor',
+                  }}
+                >
+                  người sáng tạo
+                </em>{' '}
+                và <em className="bg-gradient">người ảnh hưởng </em>miễn phí và dễ dàng
+              </h1>
+              <p className="text-lg max-md:hidden">
+                Tìm và thuê những người có ảnh hưởng hàng đầu trên Instagram, TikTok và Youtube để tạo nội dung độc đáo
+                cho thương hiệu của bạn
+              </p>
+              <div className="flex max-lg:flex-col items-center max-lg:justify-center gap-8">
+                <Button size="large" variant="gradient" className="h-12 px-8 text-lg rounded-full" asChild>
+                  <Link href={config.routes.influencer.base}>Trở thành nhà sáng tạo</Link>
+                </Button>
+                <div className="border h-0 lg:h-12 w-48 lg:w-px"></div>
+                <Button size="large" variant="gradient" className="h-12 px-8 text-lg rounded-full" asChild>
+                  <Link href={config.routes.brand.landing}>Trở thành nhãn hàng</Link>
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <InfluencerList title="Nổi bật" subtitle="Thuê những người có ảnh hưởng hàng đầu trên tất cả nền tảng" />
-      <InfluencerList title="Instagram" subtitle="Thuê những người có ảnh hưởng trên Instagram" />
-      <InfluencerList title="TikTok" subtitle="Thuê những người có ảnh hưởng trên TikTok" />
+      <div className="container my-16 space-y-20">
+        <InfluencerList title="Nổi bật" subtitle="Thuê những người có ảnh hưởng hàng đầu trên tất cả nền tảng" />
+        <InfluencerList title="Instagram" subtitle="Thuê những người có ảnh hưởng trên Instagram" />
+        <InfluencerList title="TikTok" subtitle="Thuê những người có ảnh hưởng trên TikTok" />
 
-      <HowItWork />
-      <Banner />
-    </div>
+        <HowItWork />
+        <Banner />
+      </div>
+    </>
   );
 };
 
