@@ -44,12 +44,12 @@ const RefreshProvider: FC<Readonly<AuthProviderProps>> = ({ children }) => {
     data: influencer,
     isLoading: isLoadingInfluencer,
     mutate: refreshInfluencer,
-  } = useSWRImmutable<IInfluencer | null>('/Influencer', session?.user.role === ERole.Influencer ? fetcher : null);
+  } = useSWRImmutable<IInfluencer | null>(session?.user.role === ERole.Influencer ? '/Influencer' : null, fetcher);
   const {
     data: brand,
     isLoading: isLoadingBrand,
     mutate: refreshBrand,
-  } = useSWRImmutable<IBrand | null>('/Brand', session?.user.role === ERole.Brand ? fetcher : null);
+  } = useSWRImmutable<IBrand | null>(session?.user.role === ERole.Brand ? '/Brand' : null, fetcher);
 
   const sessionFlag = useRef(true);
   const router = useRouter();
@@ -125,7 +125,7 @@ const RefreshProvider: FC<Readonly<AuthProviderProps>> = ({ children }) => {
                 router.push(config.routes.influencer.create(step));
               }
             } else if (influencer === null) {
-              router.push(config.routes.influencer.create(2));
+              router.push(config.routes.influencer.create(1));
             }
           }
           break;
