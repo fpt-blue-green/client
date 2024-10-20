@@ -57,6 +57,8 @@ const request = async <Response>(
 
     if (data.startsWith('{') || data.startsWith('[')) {
       data = JSON.parse(data);
+    } else if (data === 'null') {
+      data = null;
     } else if (isBoolean(data)) {
       data = data === 'true';
     } else if (isNumber(data)) {
