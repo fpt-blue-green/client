@@ -42,6 +42,7 @@ const routes = {
     brand: '/admin/brand-management',
     campaign: '/admin/campaign-management',
     statistic: '/admin/statistic',
+    tag: '/admin/tag-management',
   },
 };
 
