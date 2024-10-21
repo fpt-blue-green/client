@@ -1,5 +1,3 @@
-import React from 'react';
-
 const BrandManagement = () => {
   return (
     <div className="container">

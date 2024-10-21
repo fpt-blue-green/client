@@ -92,3 +92,8 @@ export enum ECampaignStatus {
   Completed,
   Expired,
 }
+
+export enum FluctuationType {
+  ASC = 1,
+  DESC,
+}
