@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { formats } from '@/lib/utils';
-import { FluctuationType } from '@/types/enum';
+import { FluctuationType, NumberType } from '@/types/enum';
 
 interface CardProps {
   details: {
@@ -9,6 +9,7 @@ interface CardProps {
     fluctuationType?: FluctuationType;
   };
   title: string;
+  cardType: number;
   icon: ReactNode;
 }
 
@@ -21,7 +22,9 @@ const Card: FC<CardProps> = (props) => {
         {props.icon && props.icon}
       </div>
       <div className="p-6 pt-0">
-        <h5 className="text-2xl font-semibold">+{formats.bigNum(quantity)}</h5>
+        <h5 className="text-2xl font-semibold">
+          +{props.cardType === NumberType.Quantity ? formats.bigNum(quantity) : formats.price(quantity)}
+        </h5>
         <p className="text-xs text-muted-foreground">
           {fluctuationType === FluctuationType.ASC ? '+' : '-'}
           {`${fluctuationValue}% so với tháng trước`}

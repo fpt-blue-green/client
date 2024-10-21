@@ -97,3 +97,8 @@ export enum FluctuationType {
   ASC = 1,
   DESC,
 }
+
+export enum NumberType {
+  Currency = 1,
+  Quantity,
+}
