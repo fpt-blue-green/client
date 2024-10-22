@@ -93,6 +93,14 @@ export enum ECampaignStatus {
   Expired,
 }
 
+export enum EJobStatus {
+  Pending = 0, // Offer đang được xem xét
+  InProgress = 1, // Job đang được thực hiện
+  Completed = 2, // Job đã hoàn thành
+  Failed = 3, // Job thất bại
+  NotCreated = 4, // Job không thành công do không có offer nào được đồng ý
+}
+
 export enum FluctuationType {
   ASC = 1,
   DESC,

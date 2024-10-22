@@ -49,15 +49,18 @@ const Header = () => {
               />
             </Link>
             <div className="flex items-center gap-4 ml-10 max-md:hidden">
-              <MenuItem href={config.routes.influencers.landing}>Khám phá</MenuItem>
+              <MenuItem href={config.routes.influencers.list}>Khám phá</MenuItem>
               {!session && (
                 <>
-                  <MenuItem href={config.routes.influencer.base}>Trở thành nhà sáng tạo</MenuItem>
+                  <MenuItem href={config.routes.influencer.landing}>Trở thành nhà sáng tạo</MenuItem>
                   <MenuItem href={config.routes.brand.landing}>Trở thành nhãn hàng</MenuItem>
                 </>
               )}
               {session && session.user.role === ERole.Influencer && (
-                <MenuItem href={config.routes.campaigns.base}>Chiến dịch</MenuItem>
+                <>
+                  <MenuItem href={config.routes.campaigns.base}>Chiến dịch</MenuItem>
+                  <MenuItem href={config.routes.influencer.watchList}>Đang theo dõi</MenuItem>
+                </>
               )}
               {session && session.user.role === ERole.Brand && (
                 <MenuItem href={config.routes.brand.campaigns.base}>Chiến dịch của tôi</MenuItem>

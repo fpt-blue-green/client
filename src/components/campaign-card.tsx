@@ -18,7 +18,6 @@ import { campaignsRequest } from '@/request';
 import { toast } from 'sonner';
 import Chip from '@/components/custom/chip';
 import { FaRegMoneyBillAlt } from 'react-icons/fa';
-import { ECampaignStatus } from '@/types/enum';
 
 interface CampaignCardProps {
   data: ICampaign;
@@ -103,8 +102,8 @@ const CampaignCard: FC<CampaignCardProps> = ({ data, onEdit, reload }) => {
             </Link>
           )}
           <Chip
-            label={CampaignStatus[data.status].label}
-            variant={CampaignStatus[data.status].color}
+            label={constants.campaignStatus[data.status].label}
+            variant={constants.campaignStatus[data.status].color}
             size="small"
             className={cn({ 'absolute top-3 right-3': !onEdit })}
           />
@@ -121,31 +120,6 @@ const CampaignCard: FC<CampaignCardProps> = ({ data, onEdit, reload }) => {
       </div>
     </div>
   );
-};
-
-const CampaignStatus: {
-  [key: string]: { label: string; color: 'secondary' | 'warning' | 'info' | 'success' | 'destructive' };
-} = {
-  [ECampaignStatus.Draft]: {
-    label: 'Bản nháp',
-    color: 'secondary',
-  },
-  [ECampaignStatus.Published]: {
-    label: 'Công khai',
-    color: 'info',
-  },
-  [ECampaignStatus.Active]: {
-    label: 'Đang diễn ra',
-    color: 'warning',
-  },
-  [ECampaignStatus.Completed]: {
-    label: 'Hoàn thành',
-    color: 'success',
-  },
-  [ECampaignStatus.Expired]: {
-    label: 'Quá hạn',
-    color: 'destructive',
-  },
 };
 
 export default CampaignCard;
