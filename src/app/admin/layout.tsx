@@ -15,7 +15,7 @@ const AdminLayout: FC<Readonly<AdminLayoutProps>> = ({ children }) => {
       </div>
       <div className="flex-1 flex flex-col h-screen">
         <AdminHeader />
-        <ScrollArea className="flex-1 h-[calc(100vh-64px)]">{children}</ScrollArea>
+        <ScrollArea className="flex-1 h-[calc(100vh-64px)] mt-6">{children}</ScrollArea>
       </div>
     </div>
   );
