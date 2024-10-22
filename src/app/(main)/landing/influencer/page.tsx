@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 const JoinAsCreator = () => {
   return (
-    <div className="container my-16">
+    <div className="container mt-8 mb-16">
       {/* Claim section */}
       <div className="flex flex-col mb-10 items-center text-center">
         <h1 className="font-semibold text-4xl">Kiếm tiền như một nhà sáng tạo</h1>

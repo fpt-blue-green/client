@@ -7,7 +7,7 @@ const routes = {
     base: '/influencer',
     landing: '/landing/influencer',
     create: (step: number) => `/influencer/create?step=${step}`,
-    watchList: '/influencer/watch-list',
+    jobs: '/influencer/jobs',
   },
   influencers: {
     list: '/influencers',

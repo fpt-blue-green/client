@@ -28,7 +28,7 @@ const Header = () => {
 
   return (
     <header
-      className={cn('fixed top-0 left-0 right-0 z-40 transition-all', {
+      className={cn('sticky top-0 left-0 right-0 z-40 transition-all', {
         'bg-background/80 backdrop-blur-[6px]': isScrolled,
       })}
     >
@@ -59,7 +59,7 @@ const Header = () => {
               {session && session.user.role === ERole.Influencer && (
                 <>
                   <MenuItem href={config.routes.campaigns.base}>Chiến dịch</MenuItem>
-                  <MenuItem href={config.routes.influencer.watchList}>Đang theo dõi</MenuItem>
+                  <MenuItem href={config.routes.influencer.jobs}>Công việc</MenuItem>
                 </>
               )}
               {session && session.user.role === ERole.Brand && (
