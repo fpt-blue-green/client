@@ -1,6 +1,7 @@
 import ICampaign from './campaign';
 import { EJobStatus } from './enum';
 import IInfluencer from './influencer';
+import IOffer from './offer';
 
 interface IJob {
   id: string;
@@ -9,6 +10,7 @@ interface IJob {
   status: EJobStatus;
   campaign: ICampaign;
   influencer: IInfluencer;
+  offer: IOffer;
 }
 
 export default IJob;

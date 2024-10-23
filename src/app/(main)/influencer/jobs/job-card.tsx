@@ -3,8 +3,9 @@
 import Chip from '@/components/custom/chip';
 import Paper from '@/components/custom/paper';
 import { constants, formats } from '@/lib/utils';
+import { PlatformData } from '@/types/enum';
 import IJob from '@/types/job';
-import { ClockIcon } from '@radix-ui/react-icons';
+import { FaceIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 import { FC } from 'react';
 import { FaRegMoneyBillAlt } from 'react-icons/fa';
@@ -14,6 +15,8 @@ interface JobCardProps {
 }
 
 const JobCard: FC<JobCardProps> = ({ item }) => {
+  const { Icon, contentTypes } = PlatformData[item.offer.platform];
+
   return (
     <Paper className="relative grid grid-cols-1 md:grid-cols-3 gap-4 p-3">
       <Chip
@@ -32,13 +35,19 @@ const JobCard: FC<JobCardProps> = ({ item }) => {
       <div className="md:col-span-2 space-y-2">
         <h4 className="font-semibold text-lg">{item.campaign.title}</h4>
         <p className="text-sm text-muted-foreground">{item.campaign.description}</p>
-        <div className="flex items-center gap-2">
-          <ClockIcon />
-          {formats.date(item.campaign.startDate)} - {formats.date(item.campaign.endDate)}
-        </div>
-        <div className="flex items-center gap-2">
-          <FaRegMoneyBillAlt />
-          {formats.price(item.campaign.budget)}
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <Icon />
+            {item.offer.quantity} {contentTypes[item.offer.contentType]}
+          </div>
+          <div className="flex items-center gap-2">
+            <FaRegMoneyBillAlt />
+            {formats.price(item.offer.price)}
+          </div>
+          <div className="flex items-center gap-2">
+            <FaceIcon />
+            {item.offer.targetReaction}
+          </div>
         </div>
         <div className="text-right">
           <Chip

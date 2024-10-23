@@ -15,7 +15,7 @@ const fetchRequest = {
     currentBrand: (fetch = false) => useSWRImmutable<ICampaign[]>(fetch ? '/Brand/campaigns' : null, fetcher),
   },
   influencer: {
-    jobs: () => useSWRImmutable<IJob[]>('/Influencer/jobs', fetcher),
+    jobs: () => useSWRImmutable<{ totalCount: number; jobs: IJob[] }>('/Influencer/jobs', fetcher),
   },
 };
 

@@ -7,9 +7,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cn, constants } from '@/lib/utils';
 import { ECampaignStatus, EJobStatus } from '@/types/enum';
 import { useState } from 'react';
+import NoData from '@/components/no-data';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const List = () => {
-  const { data } = fetchRequest.influencer.jobs();
+  const { data, isLoading } = fetchRequest.influencer.jobs();
   const [jobStatus, setJobStatus] = useState('all');
   const [campaignStatus, setCampaignStatus] = useState('all');
 
@@ -112,9 +114,13 @@ const List = () => {
       </div>
 
       <div className="lg:col-span-2 space-y-4">
-        {data?.map((job) => (
-          <JobCard key={job.id} item={job} />
-        ))}
+        {isLoading ? (
+          Array.from({ length: 4 }).map((_, index) => <Skeleton key={index} className="h-52 rounded-lg" />)
+        ) : data ? (
+          data.jobs.map((job) => <JobCard key={job.id} item={job} />)
+        ) : (
+          <NoData />
+        )}
       </div>
     </div>
   );
