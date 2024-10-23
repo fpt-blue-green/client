@@ -7,6 +7,7 @@ import { FC, useState } from 'react';
 import { PlatformData } from '@/types/enum';
 import OfferDialog from '@/components/offer-dialog';
 import IInfluencer from '@/types/influencer';
+import Image from 'next/image';
 
 interface PackagesProps {
   influencer: IInfluencer;
@@ -35,7 +36,7 @@ const Packages: FC<PackagesProps> = ({ influencer }) => {
         {influencer.packages
           .filter((pack) => tab === 'all' || pack.platform === +tab)
           .map((pack) => {
-            const { contentTypes, Icon } = PlatformData[pack.platform];
+            const { contentTypes, logo, name } = PlatformData[pack.platform];
 
             return (
               <div className="border border-foreground px-5 py-4 rounded-sm" key={pack.id}>
@@ -45,9 +46,7 @@ const Packages: FC<PackagesProps> = ({ influencer }) => {
                 </div>
                 <p className="mt-4 text-muted-foreground text-sm">{pack.description}</p>
                 <div className="flex items-center justify-between mt-8">
-                  <div className="flex items-center justify-center size-9 text-background bg-foreground rounded-md">
-                    <Icon className="size-6" />
-                  </div>
+                  <Image src={logo} alt={name} width={40} height={40} className="size-9" />
                   <OfferDialog data={pack} influencer={influencer} asChild>
                     <Button variant="foreground">Tiếp tục</Button>
                   </OfferDialog>

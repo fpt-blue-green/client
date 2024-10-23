@@ -2,7 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { EventEmitter } from 'fbemitter';
 import { ConfirmBody } from '@/components/confirm-dialog';
-import { campaignStatus, jobStatus } from './constants';
+import { campaignStatus, jobStatus, offerStatus } from './constants';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -17,6 +17,7 @@ export const constants = {
   yesterday: new Date(new Date().setDate(new Date().getDate() - 1)),
   campaignStatus,
   jobStatus,
+  offerStatus,
 };
 
 export const formats = {

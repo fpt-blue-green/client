@@ -5,17 +5,18 @@ import Paper from '@/components/custom/paper';
 import { constants, formats } from '@/lib/utils';
 import { PlatformData } from '@/types/enum';
 import IJob from '@/types/job';
-import { FaceIcon } from '@radix-ui/react-icons';
+import { RxFace } from 'react-icons/rx';
 import Image from 'next/image';
 import { FC } from 'react';
 import { FaRegMoneyBillAlt } from 'react-icons/fa';
-
+import JobOffer from './job-offer';
 interface JobCardProps {
   item: IJob;
 }
 
 const JobCard: FC<JobCardProps> = ({ item }) => {
-  const { Icon, contentTypes } = PlatformData[item.offer.platform];
+  const { name, logo, contentTypes } = PlatformData[item.offer.platform];
+  const campaignImage = item.campaign.images[0]?.url;
 
   return (
     <Paper className="relative grid grid-cols-1 md:grid-cols-3 gap-4 p-3">
@@ -25,27 +26,31 @@ const JobCard: FC<JobCardProps> = ({ item }) => {
         className="absolute top-6 left-6"
         size="small"
       />
-      <Image
-        src={item.campaign.images[0]?.url || '/assets/img/influencer.jpg'}
-        alt={`Chiến dịch ${item.campaign.title}`}
-        width={450}
-        height={300}
-        className="w-full aspect-cover object-cover rounded-lg"
-      />
+      {campaignImage ? (
+        <Image
+          src={campaignImage}
+          alt={`Chiến dịch ${item.campaign.title}`}
+          width={450}
+          height={300}
+          className="w-full aspect-cover object-cover rounded-lg"
+        />
+      ) : (
+        <div className="pb-[calc(4/3)] bg-foreground rounded-lg"></div>
+      )}
       <div className="md:col-span-2 space-y-2">
         <h4 className="font-semibold text-lg">{item.campaign.title}</h4>
         <p className="text-sm text-muted-foreground">{item.campaign.description}</p>
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <Icon />
+            <Image src={logo} alt={name} width={50} height={50} className="size-5" />
             {item.offer.quantity} {contentTypes[item.offer.contentType]}
           </div>
           <div className="flex items-center gap-2">
-            <FaRegMoneyBillAlt />
+            <FaRegMoneyBillAlt className="text-xl" />
             {formats.price(item.offer.price)}
           </div>
           <div className="flex items-center gap-2">
-            <FaceIcon />
+            <RxFace className="text-xl" />
             {item.offer.targetReaction}
           </div>
         </div>
@@ -55,6 +60,7 @@ const JobCard: FC<JobCardProps> = ({ item }) => {
             variant={constants.jobStatus[item.status].color}
             size="large"
           />
+          <JobOffer offer={item.offer} />
         </div>
       </div>
     </Paper>

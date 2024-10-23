@@ -1,4 +1,4 @@
-import { EContentType, EPlatform, ERole } from './enum';
+import { EContentType, EOfferStatus, EPlatform, ERole } from './enum';
 
 export interface IContent {
   id: string;
@@ -16,5 +16,6 @@ export interface IPackage extends IContent {
 export default interface IOffer extends IPackage {
   targetReaction: number;
   from: ERole.Brand | ERole.Influencer;
+  status: EOfferStatus;
   createdAt?: string;
 }

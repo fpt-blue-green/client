@@ -99,8 +99,8 @@ const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer }) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1 text-sm">
             {data.channels.map((c, index) => {
-              const { Icon } = PlatformData[c.platform];
-              return <Icon key={index} />;
+              const { name, logo } = PlatformData[c.platform];
+              return <Image key={index} src={logo} alt={name} width={50} height={50} className="size-5" />;
             })}
           </div>
           <span className="font-bold">{formats.price(data.averagePrice)}</span>

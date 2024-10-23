@@ -6,14 +6,27 @@ import Paper from '@/components/custom/paper';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn, constants } from '@/lib/utils';
 import { ECampaignStatus, EJobStatus } from '@/types/enum';
-import { useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import NoData from '@/components/no-data';
 import { Skeleton } from '@/components/ui/skeleton';
+import Pagination from '@/components/custom/pagination';
+
+const PAGE_SIZE = 10;
 
 const List = () => {
-  const { data, isLoading } = fetchRequest.influencer.jobs();
+  const [page, setPage] = useState(1);
   const [jobStatus, setJobStatus] = useState('all');
   const [campaignStatus, setCampaignStatus] = useState('all');
+  const cStatus = campaignStatus === 'all' ? undefined : (campaignStatus as unknown as ECampaignStatus);
+  const jStatus = jobStatus === 'all' ? undefined : (jobStatus as unknown as EJobStatus);
+  const { data, isLoading } = fetchRequest.influencer.jobs(page, PAGE_SIZE, cStatus, jStatus);
+  const [pageCount, setPageCount] = useState(0);
+
+  useLayoutEffect(() => {
+    if (!isLoading) {
+      setPageCount(data ? Math.ceil(data.totalCount / PAGE_SIZE) : 0);
+    }
+  }, [data, isLoading]);
 
   const filterItemStyles = (color: string) =>
     cn('inline-flex items-center gap-2 before:size-2 before:rounded', {
@@ -54,14 +67,14 @@ const List = () => {
             className="p-0 text-center font-semibold cursor-pointer"
             onClick={() => setJobStatus(EJobStatus.Failed.toString())}
           >
-            <div className="p-3 text-sm bg-secondary">Không đạt</div>
+            <div className="p-3 text-sm bg-destructive">Không đạt</div>
             <div className="p-3 text-xl">4</div>
           </Paper>
           <Paper
             className="p-0 text-center font-semibold cursor-pointer"
             onClick={() => setJobStatus(EJobStatus.NotCreated.toString())}
           >
-            <div className="p-3 text-sm bg-destructive">Từ chối</div>
+            <div className="p-3 text-sm bg-secondary">Từ chối</div>
             <div className="p-3 text-xl">4</div>
           </Paper>
         </div>
@@ -116,10 +129,13 @@ const List = () => {
       <div className="lg:col-span-2 space-y-4">
         {isLoading ? (
           Array.from({ length: 4 }).map((_, index) => <Skeleton key={index} className="h-52 rounded-lg" />)
-        ) : data ? (
-          data.jobs.map((job) => <JobCard key={job.id} item={job} />)
+        ) : data && data.totalCount === 0 ? (
+          <NoData description="Không tìm thấy công việc" />
         ) : (
-          <NoData />
+          data?.jobs.map((job) => <JobCard key={job.id} item={job} />)
+        )}
+        {pageCount > 1 && (
+          <Pagination count={pageCount} page={page} boundaryCount={2} onPageChange={(value) => setPage(value)} />
         )}
       </div>
     </div>
