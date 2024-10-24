@@ -25,6 +25,9 @@ const fetchRequest = {
       return useSWRImmutable<{ totalCount: number; jobs: IJob[] }>('/Influencer/jobs?' + searchParams, fetcher);
     },
   },
+  job: {
+    statistical: () => useSWRImmutable<{ jobStatus: EJobStatus; count: number }[]>('/Job/statistical', fetcher),
+  },
 };
 
 export default fetchRequest;

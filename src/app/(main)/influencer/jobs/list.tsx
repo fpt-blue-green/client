@@ -20,6 +20,7 @@ const List = () => {
   const cStatus = campaignStatus === 'all' ? undefined : (campaignStatus as unknown as ECampaignStatus);
   const jStatus = jobStatus === 'all' ? undefined : (jobStatus as unknown as EJobStatus);
   const { data, isLoading } = fetchRequest.influencer.jobs(page, PAGE_SIZE, cStatus, jStatus);
+  const { data: statistical } = fetchRequest.job.statistical();
   const [pageCount, setPageCount] = useState(0);
 
   useLayoutEffect(() => {
@@ -42,41 +43,20 @@ const List = () => {
     <div className="grid lg:grid-cols-3 grid-cols-1 gap-6">
       <div className="lg:order-last">
         <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-2 gap-4">
-          <Paper
-            className="p-0 text-center font-semibold cursor-pointer col-span-full md:col-span-1 lg:col-span-full"
-            onClick={() => setJobStatus(EJobStatus.Completed.toString())}
-          >
-            <div className="p-3 text-sm bg-success">Hoàn thành</div>
-            <div className="p-3 text-xl">4</div>
-          </Paper>
-          <Paper
-            className="p-0 text-center font-semibold cursor-pointer"
-            onClick={() => setJobStatus(EJobStatus.Pending.toString())}
-          >
-            <div className="p-3 text-sm bg-warning">Chờ xác nhận</div>
-            <div className="p-3 text-xl">4</div>
-          </Paper>
-          <Paper
-            className="p-0 text-center font-semibold cursor-pointer"
-            onClick={() => setJobStatus(EJobStatus.InProgress.toString())}
-          >
-            <div className="p-3 text-sm bg-info">Đang thực hiện</div>
-            <div className="p-3 text-xl">0</div>
-          </Paper>
-          <Paper
-            className="p-0 text-center font-semibold cursor-pointer"
-            onClick={() => setJobStatus(EJobStatus.Failed.toString())}
-          >
-            <div className="p-3 text-sm bg-destructive">Không đạt</div>
-            <div className="p-3 text-xl">4</div>
-          </Paper>
-          <Paper
-            className="p-0 text-center font-semibold cursor-pointer"
-            onClick={() => setJobStatus(EJobStatus.NotCreated.toString())}
-          >
-            <div className="p-3 text-sm bg-secondary">Từ chối</div>
-            <div className="p-3 text-xl">4</div>
-          </Paper>
+          {statistical?.map((item, index) => (
+            <Paper
+              className={cn('p-0 text-center font-semibold cursor-pointer', {
+                'col-span-full md:col-span-1 lg:col-span-full order-first': item.jobStatus === EJobStatus.Completed,
+              })}
+              onClick={() => setJobStatus(item.jobStatus.toString())}
+              key={index}
+            >
+              <div className={cn('p-3 text-sm', constants.jobStatus[item.jobStatus].backgroundColor)}>
+                {constants.jobStatus[item.jobStatus].label}
+              </div>
+              <div className="p-3 text-xl">{item.count}</div>
+            </Paper>
+          ))}
         </div>
       </div>
       <div className="col-span-full">

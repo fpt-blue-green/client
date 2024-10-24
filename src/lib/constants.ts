@@ -9,6 +9,7 @@ import { GiPayMoney } from 'react-icons/gi';
 interface EnumLabel {
   label: string;
   color: 'secondary' | 'warning' | 'info' | 'success' | 'destructive';
+  backgroundColor?: 'bg-secondary' | 'bg-warning' | 'bg-info' | 'bg-success' | 'bg-destructive';
 }
 
 interface EnumLabelWithIcon extends EnumLabel {
@@ -43,22 +44,27 @@ export const jobStatus: { [key: string]: EnumLabel } = {
   [EJobStatus.Pending]: {
     label: 'Chờ xác nhận',
     color: 'warning',
+    backgroundColor: 'bg-warning',
   },
   [EJobStatus.InProgress]: {
     label: 'Đang thực hiện',
     color: 'info',
+    backgroundColor: 'bg-info',
   },
   [EJobStatus.Completed]: {
     label: 'Hoàn thành',
     color: 'success',
+    backgroundColor: 'bg-success',
   },
   [EJobStatus.Failed]: {
     label: 'Không đạt',
     color: 'destructive',
+    backgroundColor: 'bg-destructive',
   },
   [EJobStatus.NotCreated]: {
-    label: 'Từ chối',
+    label: 'Bị hủy bỏ',
     color: 'secondary',
+    backgroundColor: 'bg-secondary',
   },
 };
 

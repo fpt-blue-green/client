@@ -10,6 +10,7 @@ import Image from 'next/image';
 import { FC } from 'react';
 import { FaRegMoneyBillAlt } from 'react-icons/fa';
 import JobOffer from './job-offer';
+import ReadMore from '@/components/custom/read-more';
 interface JobCardProps {
   item: IJob;
 }
@@ -39,7 +40,7 @@ const JobCard: FC<JobCardProps> = ({ item }) => {
       )}
       <div className="md:col-span-2 space-y-2">
         <h4 className="font-semibold text-lg">{item.campaign.title}</h4>
-        <p className="text-sm text-muted-foreground">{item.campaign.description}</p>
+        <ReadMore className="text-sm text-muted-foreground">{item.campaign.description}</ReadMore>
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Image src={logo} alt={name} width={50} height={50} className="size-5" />
