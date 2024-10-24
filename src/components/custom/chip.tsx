@@ -16,9 +16,9 @@ const Chip: FC<ChipProps> = ({ label, icon, className, onDelete, ...props }) => 
     gradient: 'bg-primary-foreground text-primary rounded-full hover:opacity-80 transition',
     destructive: 'bg-destructive-foreground text-destructive rounded-full hover:opacity-80 transition',
     outline: 'bg-foreground text-background rounded-full hover:opacity-80 transition',
-    success: 'bg-emerald-500 text-primary-foreground hover:opacity-80 transition',
-    warning: 'bg-amber-500 text-primary-foreground hover:opacity-80 transition',
-    info: 'bg-sky-500 text-primary-foreground hover:opacity-80 transition',
+    success: 'bg-success text-success-foreground hover:opacity-80 transition',
+    warning: 'bg-warning text-warning-foreground hover:opacity-80 transition',
+    info: 'bg-info text-info-foreground hover:opacity-80 transition',
   };
 
   const handleDelete = () => (event: MouseEvent<HTMLButtonElement>) => {

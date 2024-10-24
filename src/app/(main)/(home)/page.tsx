@@ -43,11 +43,11 @@ const Home = () => {
                 cho thương hiệu của bạn
               </p>
               <div className="flex max-lg:flex-col items-center max-lg:justify-center gap-8">
-                <Button size="large" variant="gradient" className="h-12 px-8 text-lg rounded-full" asChild>
-                  <Link href={config.routes.influencer.base}>Trở thành nhà sáng tạo</Link>
+                <Button size="large" variant="gradient" className="h-12 px-8 text-base rounded-full" asChild>
+                  <Link href={config.routes.influencer.landing}>Trở thành nhà sáng tạo</Link>
                 </Button>
                 <div className="border h-0 lg:h-12 w-48 lg:w-px"></div>
-                <Button size="large" variant="gradient" className="h-12 px-8 text-lg rounded-full" asChild>
+                <Button size="large" variant="gradient" className="h-12 px-8 text-base rounded-full" asChild>
                   <Link href={config.routes.brand.landing}>Trở thành nhãn hàng</Link>
                 </Button>
               </div>
@@ -55,7 +55,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="container my-16 space-y-20">
+      <div className="container mt-8 mb-16 space-y-20">
         <InfluencerList title="Nổi bật" subtitle="Thuê những người có ảnh hưởng hàng đầu trên tất cả nền tảng" />
         <InfluencerList title="Instagram" subtitle="Thuê những người có ảnh hưởng trên Instagram" />
         <InfluencerList title="TikTok" subtitle="Thuê những người có ảnh hưởng trên TikTok" />

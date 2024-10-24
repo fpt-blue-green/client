@@ -30,4 +30,19 @@ export const offerSchema = z
   })
   .strict();
 
+export const reofferSchema = z.object({
+  quantity: z.number({ required_error: 'Nhập số lượng' }).int('Nhập giá trị nguyên').min(1, 'Nhập giá trị lớn hơn 0'),
+  targetReaction: z
+    .number({ required_error: 'Nhập số lượt tương tác' })
+    .int('Nhập giá trị nguyên')
+    .min(0, 'Nhập giá trị lớn hơn 0'),
+  price: z
+    .number({ required_error: 'Nhập giá tiền' })
+    .int('Nhập giá trị nguyên')
+    .min(50000, 'Nhập giá trị lớn hơn hoặc bằng 50.000'),
+  duration: z.number().int('Nhập giá trị nguyên').min(0, 'Nhập giá trị lớn hơn 0').nullable().optional(),
+  timeUnit: z.enum(['s', 'm', 'h']).optional(),
+});
+
 export type OfferBodyType = z.infer<typeof offerSchema>;
+export type ReofferBodyType = z.infer<typeof reofferSchema>;

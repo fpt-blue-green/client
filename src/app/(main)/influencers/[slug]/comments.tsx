@@ -16,15 +16,16 @@ import {
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { fetcher } from '@/lib/http';
-import { constants, formats } from '@/lib/utils';
+import { constants, emitter, formats } from '@/lib/utils';
 import { influencersRequest } from '@/request';
 import { ReviewBodyType, reviewSchema } from '@/schema-validations/influencer.schema';
 import IFeedback from '@/types/feedback';
 import IInfluencer from '@/types/influencer';
 import IUser from '@/types/user';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signIn } from 'next-auth/react';
-import { FC } from 'react';
+import { Pencil1Icon } from '@radix-ui/react-icons';
+import { signIn, useSession } from 'next-auth/react';
+import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import useSWRImmutable from 'swr/immutable';
@@ -36,10 +37,12 @@ interface CommentsProps {
 
 const Comments: FC<CommentsProps> = ({ influencer, user }) => {
   const { data, mutate } = useSWRImmutable<IFeedback[]>(`/Influencers/${influencer.id}/feedbacks`, fetcher);
+  const { data: session } = useSession();
   const { data: count, mutate: mutateCount } = useSWRImmutable<number>(
     `/Influencers/${influencer.id}/feedbacks/count`,
     fetcher,
   );
+  const [comment, setComment] = useState<IFeedback>();
 
   const reload = async () => {
     await Promise.all([mutate(), mutateCount()]);
@@ -47,52 +50,63 @@ const Comments: FC<CommentsProps> = ({ influencer, user }) => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-center gap-4">
-        {influencer.rateAverage > 0 ? (
+      <Dialog>
+        <div className="flex items-center justify-center gap-4">
+          {influencer.rateAverage > 0 ? (
+            <>
+              <span className="relative text-7xl font-extrabold after:absolute after:bg-muted-foreground after:rotate-12 after:h-20 after:w-0.5 after:top-1/2 after:-right-2 after:-translate-y-1/2">
+                {influencer.rateAverage.toFixed(1)}
+              </span>
+              <span>{count} đánh giá</span>
+            </>
+          ) : (
+            <p>Chưa có đánh giá</p>
+          )}
+        </div>
+        {user ? (
           <>
-            <span className="relative text-7xl font-extrabold after:absolute after:bg-muted-foreground after:rotate-12 after:h-20 after:w-0.5 after:top-1/2 after:-right-2 after:-translate-y-1/2">
-              {influencer.rateAverage.toFixed(1)}
-            </span>
-            <span>{count} đánh giá</span>
+            <DialogTrigger asChild>
+              <Button type="button" variant="gradient" size="large" fullWidth onClick={() => setComment(undefined)}>
+                Viết đánh giá
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <CommentForm influencer={influencer} reload={reload} data={comment} />
+            </DialogContent>
           </>
         ) : (
-          <p>Chưa có đánh giá</p>
+          <Button type="button" variant="gradient" size="large" fullWidth onClick={() => signIn()}>
+            Viết đánh giá
+          </Button>
         )}
-      </div>
-      {user ? (
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button type="button" variant="gradient" size="large" fullWidth>
-              Viết đánh giá
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <CommentForm influencer={influencer} reload={reload} />
-          </DialogContent>
-        </Dialog>
-      ) : (
-        <Button type="button" variant="gradient" size="large" fullWidth onClick={() => signIn()}>
-          Viết đánh giá
-        </Button>
-      )}
-      {data?.map((comment) => (
-        <div className="flex flex-col md:flex-row gap-4" key={comment.id}>
-          <div className="flex md:flex-col gap-4 items-center md:w-36 md:text-center">
-            <Avatar className="size-12 md:size-16">
-              <AvatarImage src={comment.user.image} alt={`Ảnh đại diện của ${comment.user.name}`} />
-              <AvatarFallback>{comment.user.name[0]}</AvatarFallback>
-            </Avatar>
-            <div className="flex-1">
-              <div className="font-semibold">{comment.user.name}</div>
-              <div className="text-sm text-muted-foreground">{formats.date(comment.createdAt)}</div>
+        {data?.map((comment) => (
+          <div className="flex flex-col md:flex-row gap-4" key={comment.id}>
+            <div className="flex md:flex-col gap-4 items-center md:w-36 md:text-center">
+              <Avatar className="size-12 md:size-16">
+                <AvatarImage src={comment.user.image} alt={`Ảnh đại diện của ${comment.user.name}`} />
+                <AvatarFallback>{comment.user.name[0]}</AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <div className="font-semibold">{comment.user.name}</div>
+                <div className="text-sm text-muted-foreground">{formats.date(comment.createdAt)}</div>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2 flex-1">
+              <div className="flex items-center justify-between">
+                <Rating defaultValue={comment.rating} precision={0.25} readOnly size={20} />
+                {session?.user.id === comment.user.id && (
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" size="icon" onClick={() => setComment(comment)}>
+                      <Pencil1Icon />
+                    </Button>
+                  </DialogTrigger>
+                )}
+              </div>
+              <p>{comment.content}</p>
             </div>
           </div>
-          <div className="flex flex-col gap-2 flex-1">
-            <Rating defaultValue={comment.rating} precision={0.25} readOnly size={20} />
-            <p>{comment.content}</p>
-          </div>
-        </div>
-      ))}
+        ))}
+      </Dialog>
     </div>
   );
 };
@@ -100,24 +114,52 @@ const Comments: FC<CommentsProps> = ({ influencer, user }) => {
 interface CommentFormProps {
   influencer: IInfluencer;
   reload: () => Promise<void>;
+  data?: IFeedback;
 }
 
-const CommentForm: FC<CommentFormProps> = ({ influencer, reload }) => {
+const CommentForm: FC<CommentFormProps> = ({ influencer, reload, data }) => {
   const form = useForm<ReviewBodyType>({
     resolver: zodResolver(reviewSchema),
     defaultValues: {
-      rating: 0,
-      content: '',
+      rating: data?.rating || 0,
+      content: data?.content || '',
     },
   });
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = (values: ReviewBodyType) => {
-    influencersRequest
-      .sendFeedback(influencer.id, values)
-      .then(() => {
-        reload().then(() => toast.success('Gửi đánh giá thành công'));
-      })
-      .catch((err) => toast.error(err?.message || constants.sthWentWrong));
+    const caller = data
+      ? influencersRequest.updateFeedback(influencer.id, data.id, values)
+      : influencersRequest.sendFeedback(influencer.id, values);
+    setLoading(true);
+    toast.promise(caller, {
+      loading: 'Đang tải',
+      success: () => {
+        reload();
+        return data ? 'Đánh giá đã được cập nhật' : 'Đánh giá đã gửi thành công!';
+      },
+      error: (err) => err?.message || constants.sthWentWrong,
+      finally: () => setLoading(false),
+    });
+  };
+
+  const handleDelete = () => {
+    if (data) {
+      emitter.confirm({
+        callback: () => {
+          setLoading(true);
+          toast.promise(influencersRequest.deleteFeedback(influencer.id, data.id), {
+            loading: 'Đang tải',
+            success: () => {
+              reload();
+              return 'Đã xoá đánh giá thành công';
+            },
+            error: (err) => err?.message || constants.sthWentWrong,
+            finally: () => setLoading(false),
+          });
+        },
+      });
+    }
   };
 
   return (
@@ -136,7 +178,7 @@ const CommentForm: FC<CommentFormProps> = ({ influencer, reload }) => {
                 <FormLabel>Bạn đánh giá như thế nào?</FormLabel>
                 <FormControl>
                   <div>
-                    <Rating {...field} />
+                    <Rating {...field} value={field.value} />
                   </div>
                 </FormControl>
                 <FormMessage />
@@ -163,7 +205,14 @@ const CommentForm: FC<CommentFormProps> = ({ influencer, reload }) => {
               Hủy
             </Button>
           </DialogClose>
-          <Button type="submit" variant="gradient">
+          {data && (
+            <DialogClose asChild>
+              <Button type="button" variant="destructive" onClick={handleDelete}>
+                Xoá
+              </Button>
+            </DialogClose>
+          )}
+          <Button type="submit" variant="gradient" loading={loading}>
             Gửi
           </Button>
         </DialogFooter>

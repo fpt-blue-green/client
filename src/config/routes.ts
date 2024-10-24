@@ -4,11 +4,13 @@ const routes = {
   forgot: '/auth/forgot-password',
   account: '/account',
   influencer: {
-    base: '/landing/influencer',
+    base: '/influencer',
+    landing: '/landing/influencer',
     create: (step: number) => `/influencer/create?step=${step}`,
+    jobs: '/influencer/jobs',
   },
   influencers: {
-    landing: '/influencers',
+    list: '/influencers',
     details: (slug: string) => `/influencers/${slug}`,
     editProfile: '/influencers/edit-profile',
   },

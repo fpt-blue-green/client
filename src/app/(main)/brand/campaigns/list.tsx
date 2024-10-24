@@ -2,9 +2,7 @@
 
 import NoData from '@/components/no-data';
 import { Skeleton } from '@/components/ui/skeleton';
-import { fetcher } from '@/lib/http';
 import ICampaign from '@/types/campaign';
-import useSWRImmutable from 'swr/immutable';
 import CreateForm from './create-form';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -12,10 +10,11 @@ import CampaignCard from '@/components/campaign-card';
 import { useState } from 'react';
 import PremiumBadge from '@/components/custom/premium-badge';
 import { useAuthBrand, useMount } from '@/hooks';
+import { fetchRequest } from '@/request';
 
 const List = () => {
-  const { data, isLoading, mutate } = useSWRImmutable<ICampaign[]>('/Brand/campaigns', fetcher);
   const { profile } = useAuthBrand();
+  const { data, isLoading, mutate } = fetchRequest.campaign.currentBrand(!!profile);
   const [open, setOpen] = useState(false);
   const [campaign, setCampaign] = useState<ICampaign>();
 

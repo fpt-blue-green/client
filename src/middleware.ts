@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 import routes from './config/routes';
 
 const brandPaths = [routes.account, routes.brand.base];
-const influencerPaths = [routes.account, '/influencer/create'];
+const influencerPaths = [routes.account, routes.influencer.base];
 const adminPaths = [routes.admin.base];
 
 export default withAuth(
@@ -41,5 +41,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ['/account', '/influencer/create', '/brand/:path*', '/admin/:path*'],
+  matcher: ['/account', '/influencer/:path*', '/brand/:path*', '/admin/:path*'],
 };

@@ -71,7 +71,7 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
     },
     {
       label: 'Nhà sáng tạo nội dung',
-      href: config.routes.influencers.landing,
+      href: config.routes.influencers.list,
     },
     {
       label: influencer.fullName,

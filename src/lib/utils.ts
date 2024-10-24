@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { EventEmitter } from 'fbemitter';
 import { ConfirmBody } from '@/components/confirm-dialog';
+import { campaignStatus, jobStatus, offerStatus } from './constants';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -14,6 +15,9 @@ export const constants = {
   otpRegex: /[0-9]{6}\b/g,
   slugRegex: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
   yesterday: new Date(new Date().setDate(new Date().getDate() - 1)),
+  campaignStatus,
+  jobStatus,
+  offerStatus,
 };
 
 export const formats = {
