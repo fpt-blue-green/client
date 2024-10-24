@@ -97,6 +97,6 @@ export const offerStatus: { [key: string]: EnumLabelWithIcon } = {
     label: 'Đã thanh toán',
     color: 'success',
     Icon: GiPayMoney,
-    description: 'Lời đề nghị hoàn tất và nhãn',
+    description: 'Lời đề nghị hoàn tất và bạn đã tham gia vào chiến dịch',
   },
 };

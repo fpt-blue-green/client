@@ -55,12 +55,13 @@ const JobCard: FC<JobCardProps> = ({ item }) => {
           </div>
         </div>
         <div className="text-right">
-          <Chip
-            label={`Trạng thái công việc: ${constants.jobStatus[item.status].label}`}
-            variant={constants.jobStatus[item.status].color}
-            size="large"
-          />
-          <JobOffer offer={item.offer} />
+          <JobOffer offer={item.offer} campaign={item.campaign}>
+            <Chip
+              label={`Trạng thái công việc: ${constants.jobStatus[item.status].label}`}
+              variant={constants.jobStatus[item.status].color}
+              size="large"
+            />
+          </JobOffer>
         </div>
       </div>
     </Paper>

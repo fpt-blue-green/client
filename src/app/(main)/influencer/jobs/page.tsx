@@ -1,4 +1,11 @@
+import { Metadata } from 'next';
 import List from './list';
+
+export const metadata: Metadata = {
+  title: 'Công việc của bạn',
+  description:
+    'Bạn có thể theo dõi những chiến dịch bạn đã đăng ký hoặc những lời đề nghị tham gia từ những chiến dịch.',
+};
 
 const Page = () => {
   return (
