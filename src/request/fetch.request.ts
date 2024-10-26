@@ -3,7 +3,7 @@
 
 import { fetcher } from '@/lib/http';
 import ICampaign from '@/types/campaign';
-import { ECampaignStatus, EJobStatus } from '@/types/enum';
+import { ECampaignStatus, EJobStatus, ERole } from '@/types/enum';
 import IInfluencer from '@/types/influencer';
 import IJob from '@/types/job';
 import useSWR from 'swr';
@@ -16,12 +16,13 @@ const fetchRequest = {
     currentBrand: (fetch = false) => useSWRImmutable<ICampaign[]>(fetch ? '/Brand/campaigns' : null, fetcher),
   },
   influencer: {
-    jobs: (page = 1, pageSize = 10, campaignStatus?: ECampaignStatus, jobStatus?: EJobStatus) => {
+    jobs: (page = 1, pageSize = 10, campaignStatus?: ECampaignStatus[], jobStatus?: EJobStatus[], from?: ERole) => {
       const searchParams = new URLSearchParams();
       searchParams.append('PageIndex', page.toString());
       searchParams.append('PageSize', pageSize.toString());
-      if (campaignStatus) searchParams.append('CampaignStatus', campaignStatus.toString());
-      if (jobStatus) searchParams.append('JobStatus', jobStatus.toString());
+      campaignStatus?.forEach((status) => searchParams.append('CampaignStatuses', status.toString()));
+      jobStatus?.forEach((status) => searchParams.append('JobStatuses', status.toString()));
+      if (from) searchParams.append('From', from.toString());
       return useSWRImmutable<{ totalCount: number; jobs: IJob[] }>('/Influencer/jobs?' + searchParams, fetcher);
     },
   },

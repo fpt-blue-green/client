@@ -46,6 +46,11 @@ export const jobStatus: { [key: string]: EnumLabel } = {
     color: 'warning',
     backgroundColor: 'bg-warning',
   },
+  [EJobStatus.Approved]: {
+    label: 'Chấp thuận',
+    color: 'success',
+    backgroundColor: 'bg-success',
+  },
   [EJobStatus.InProgress]: {
     label: 'Đang thực hiện',
     color: 'info',
@@ -83,8 +88,8 @@ export const offerStatus: { [key: string]: EnumLabelWithIcon } = {
   },
   [EOfferStatus.WaitingPayment]: {
     label: 'Chấp thuận',
-    color: 'success',
-    Icon: FaCheck,
+    color: 'info',
+    Icon: GiPayMoney,
     description: 'Lời đề nghị đã chấp nhận và đang đợi nhãn hàng thanh toán đặt cọc',
   },
   [EOfferStatus.Cancelled]: {
@@ -100,9 +105,9 @@ export const offerStatus: { [key: string]: EnumLabelWithIcon } = {
     description: 'Lời để nghị đã hết hạn sau một thời gian không có phản hồi',
   },
   [EOfferStatus.Done]: {
-    label: 'Đã thanh toán',
+    label: 'Đã tham gia',
     color: 'success',
-    Icon: GiPayMoney,
+    Icon: FaCheck,
     description: 'Lời đề nghị hoàn tất và bạn đã tham gia vào chiến dịch',
   },
 };

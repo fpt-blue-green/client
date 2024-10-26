@@ -99,6 +99,7 @@ export enum ECampaignStatus {
 
 export enum EJobStatus {
   Pending, // Offer đang được xem xét
+  Approved,
   InProgress, // Job đang được thực hiện
   Completed, // Job đã hoàn thành
   Failed, // Job thất bại

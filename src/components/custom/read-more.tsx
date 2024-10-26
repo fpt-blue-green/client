@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { FC, useState } from 'react';
 
 interface ReadMoreProps {
@@ -22,9 +21,9 @@ const ReadMore: FC<ReadMoreProps> = ({ children, className, length = 255 }) => {
     <p className={className}>
       {isReadMore ? text.slice(0, length) + '...' : text}
       {initReadMore && (
-        <Link href="#" className="font-medium ml-1 hover:underline" onClick={toggleReadMore}>
+        <span className="font-medium ml-1 hover:underline cursor-pointer" onClick={toggleReadMore}>
           {isReadMore ? 'Xem thêm' : 'Ẩn bớt'}
-        </Link>
+        </span>
       )}
     </p>
   );

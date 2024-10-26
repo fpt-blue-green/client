@@ -1,4 +1,4 @@
-import { FaBox, FaGlobe, FaPeopleGroup, FaSackDollar } from 'react-icons/fa6';
+import { FaGlobe, FaPeopleGroup, FaSackDollar } from 'react-icons/fa6';
 import Card from './components/card-overview';
 import { FluctuationType, NumberType } from '@/types/enum';
 import { FaProjectDiagram } from 'react-icons/fa';
