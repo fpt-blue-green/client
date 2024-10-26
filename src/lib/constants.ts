@@ -9,6 +9,7 @@ import { GiPayMoney } from 'react-icons/gi';
 interface EnumLabel {
   label: string;
   color: 'secondary' | 'warning' | 'info' | 'success' | 'destructive';
+  backgroundColor?: 'bg-secondary' | 'bg-warning' | 'bg-info' | 'bg-success' | 'bg-destructive';
 }
 
 interface EnumLabelWithIcon extends EnumLabel {
@@ -43,22 +44,32 @@ export const jobStatus: { [key: string]: EnumLabel } = {
   [EJobStatus.Pending]: {
     label: 'Chờ xác nhận',
     color: 'warning',
+    backgroundColor: 'bg-warning',
+  },
+  [EJobStatus.Approved]: {
+    label: 'Chấp thuận',
+    color: 'success',
+    backgroundColor: 'bg-success',
   },
   [EJobStatus.InProgress]: {
     label: 'Đang thực hiện',
     color: 'info',
+    backgroundColor: 'bg-info',
   },
   [EJobStatus.Completed]: {
     label: 'Hoàn thành',
     color: 'success',
+    backgroundColor: 'bg-success',
   },
   [EJobStatus.Failed]: {
     label: 'Không đạt',
     color: 'destructive',
+    backgroundColor: 'bg-destructive',
   },
   [EJobStatus.NotCreated]: {
-    label: 'Từ chối',
+    label: 'Bị hủy bỏ',
     color: 'secondary',
+    backgroundColor: 'bg-secondary',
   },
 };
 
@@ -77,8 +88,8 @@ export const offerStatus: { [key: string]: EnumLabelWithIcon } = {
   },
   [EOfferStatus.WaitingPayment]: {
     label: 'Chấp thuận',
-    color: 'success',
-    Icon: FaCheck,
+    color: 'info',
+    Icon: GiPayMoney,
     description: 'Lời đề nghị đã chấp nhận và đang đợi nhãn hàng thanh toán đặt cọc',
   },
   [EOfferStatus.Cancelled]: {
@@ -94,9 +105,9 @@ export const offerStatus: { [key: string]: EnumLabelWithIcon } = {
     description: 'Lời để nghị đã hết hạn sau một thời gian không có phản hồi',
   },
   [EOfferStatus.Done]: {
-    label: 'Đã thanh toán',
+    label: 'Đã tham gia',
     color: 'success',
-    Icon: GiPayMoney,
+    Icon: FaCheck,
     description: 'Lời đề nghị hoàn tất và bạn đã tham gia vào chiến dịch',
   },
 };

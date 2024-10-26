@@ -3,23 +3,30 @@
 import { fetchRequest } from '@/request';
 import JobCard from './job-card';
 import Paper from '@/components/custom/paper';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn, constants } from '@/lib/utils';
-import { ECampaignStatus, EJobStatus } from '@/types/enum';
+import { ECampaignStatus, EJobStatus, ERole } from '@/types/enum';
 import { useLayoutEffect, useState } from 'react';
 import NoData from '@/components/no-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import Pagination from '@/components/custom/pagination';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { FaChartSimple, FaHandshake, FaSuitcase, FaUserPlus } from 'react-icons/fa6';
+import { RiCalendarScheduleFill } from 'react-icons/ri';
 
 const PAGE_SIZE = 10;
 
+interface JobFilter {
+  campaigns?: ECampaignStatus[];
+  jobs?: EJobStatus[];
+  from?: ERole;
+}
+
 const List = () => {
   const [page, setPage] = useState(1);
-  const [jobStatus, setJobStatus] = useState('all');
-  const [campaignStatus, setCampaignStatus] = useState('all');
-  const cStatus = campaignStatus === 'all' ? undefined : (campaignStatus as unknown as ECampaignStatus);
-  const jStatus = jobStatus === 'all' ? undefined : (jobStatus as unknown as EJobStatus);
-  const { data, isLoading } = fetchRequest.influencer.jobs(page, PAGE_SIZE, cStatus, jStatus);
+  const [tab, setTab] = useState('1');
+  const [filter, setFilter] = useState<JobFilter>({ jobs: [EJobStatus.Pending], from: ERole.Brand });
+  const { data, isLoading } = fetchRequest.influencer.jobs(page, PAGE_SIZE, filter.campaigns, filter.jobs, filter.from);
+  const { data: statistical } = fetchRequest.job.statistical();
   const [pageCount, setPageCount] = useState(0);
 
   useLayoutEffect(() => {
@@ -28,102 +35,69 @@ const List = () => {
     }
   }, [data, isLoading]);
 
-  const filterItemStyles = (color: string) =>
-    cn('inline-flex items-center gap-2 before:size-2 before:rounded', {
-      'before:bg-success': color === 'success',
-      'before:bg-warning': color === 'warning',
-      'before:bg-info': color === 'info',
-      'before:bg-destructive': color === 'destructive',
-      'before:bg-primary': color === 'primary',
-      'before:bg-secondary': color === 'secondary',
-    });
+  const handleChangeTab = (value: string) => {
+    setTab(value);
+    switch (value) {
+      case '1':
+        setFilter({ jobs: [EJobStatus.Pending], from: ERole.Brand });
+        break;
+      case '2':
+        setFilter({ jobs: [EJobStatus.Pending], from: ERole.Influencer });
+        break;
+      case '3':
+        setFilter({ jobs: [EJobStatus.Approved] });
+        break;
+      case '4':
+        setFilter({ jobs: [EJobStatus.InProgress] });
+        break;
+      case '5':
+        setFilter({ jobs: [EJobStatus.NotCreated, EJobStatus.Completed, EJobStatus.Failed] });
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <div className="grid lg:grid-cols-3 grid-cols-1 gap-6">
       <div className="lg:order-last">
-        <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-2 gap-4">
-          <Paper
-            className="p-0 text-center font-semibold cursor-pointer col-span-full md:col-span-1 lg:col-span-full"
-            onClick={() => setJobStatus(EJobStatus.Completed.toString())}
-          >
-            <div className="p-3 text-sm bg-success">Hoàn thành</div>
-            <div className="p-3 text-xl">4</div>
-          </Paper>
-          <Paper
-            className="p-0 text-center font-semibold cursor-pointer"
-            onClick={() => setJobStatus(EJobStatus.Pending.toString())}
-          >
-            <div className="p-3 text-sm bg-warning">Chờ xác nhận</div>
-            <div className="p-3 text-xl">4</div>
-          </Paper>
-          <Paper
-            className="p-0 text-center font-semibold cursor-pointer"
-            onClick={() => setJobStatus(EJobStatus.InProgress.toString())}
-          >
-            <div className="p-3 text-sm bg-info">Đang thực hiện</div>
-            <div className="p-3 text-xl">0</div>
-          </Paper>
-          <Paper
-            className="p-0 text-center font-semibold cursor-pointer"
-            onClick={() => setJobStatus(EJobStatus.Failed.toString())}
-          >
-            <div className="p-3 text-sm bg-destructive">Không đạt</div>
-            <div className="p-3 text-xl">4</div>
-          </Paper>
-          <Paper
-            className="p-0 text-center font-semibold cursor-pointer"
-            onClick={() => setJobStatus(EJobStatus.NotCreated.toString())}
-          >
-            <div className="p-3 text-sm bg-secondary">Từ chối</div>
-            <div className="p-3 text-xl">4</div>
-          </Paper>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-4">
+          {statistical?.map((item, index) => (
+            <Paper className={cn('p-0 text-center font-semibold cursor-pointer')} key={index}>
+              <div className={cn('p-3 text-sm', constants.jobStatus[item.jobStatus].backgroundColor)}>
+                {constants.jobStatus[item.jobStatus].label}
+              </div>
+              <div className="p-3 text-xl">{item.count}</div>
+            </Paper>
+          ))}
         </div>
       </div>
+
       <div className="col-span-full">
-        <div className="flex max-md:flex-col items-center gap-4">
-          <Select value={jobStatus} onValueChange={(value) => setJobStatus(value)}>
-            <SelectTrigger className="md:w-80">
-              <SelectValue>
-                <span className="font-semibold">Trạng thái công việc: </span>
-                <span className={filterItemStyles(constants.jobStatus[jobStatus]?.color || 'primary')}>
-                  {constants.jobStatus[jobStatus]?.label || 'Tất cả'}
-                </span>
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">
-                <span className={filterItemStyles('primary')}>Tất cả</span>
-              </SelectItem>
-              {Object.entries(constants.jobStatus).map(([key, { color, label }]) => (
-                <SelectItem key={key} value={key}>
-                  <span className={filterItemStyles(color)}>{label}</span>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={campaignStatus} onValueChange={(value) => setCampaignStatus(value)}>
-            <SelectTrigger className="md:w-72">
-              <SelectValue>
-                <span className="font-semibold">Giai đoạn chiến dịch: </span>
-                <span className={filterItemStyles(constants.campaignStatus[campaignStatus]?.color || 'primary')}>
-                  {constants.campaignStatus[campaignStatus]?.label || 'Tất cả'}
-                </span>
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">
-                <span className={filterItemStyles('primary')}>Tất cả</span>
-              </SelectItem>
-              {Object.entries(constants.campaignStatus)
-                .filter(([key]) => +key !== ECampaignStatus.Draft)
-                .map(([key, { color, label }]) => (
-                  <SelectItem key={key} value={key}>
-                    <span className={filterItemStyles(color)}>{label}</span>
-                  </SelectItem>
-                ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <Tabs defaultValue="1" value={tab} onValueChange={handleChangeTab}>
+          <TabsList className="grid w-full grid-cols-5 *:flex *:max-lg:flex-col *:items-center *:gap-2">
+            <TabsTrigger value="1" className="flex items-center gap-2 py-2">
+              <FaUserPlus />
+              <span className="max-md:hidden">Lời mời tham gia</span>
+            </TabsTrigger>
+            <TabsTrigger value="2" className="flex items-center gap-2 py-2">
+              <FaSuitcase />
+              <span className="max-md:hidden">Đề nghị của bạn</span>
+            </TabsTrigger>
+            <TabsTrigger value="3" className="flex items-center gap-2 py-2">
+              <FaHandshake />
+              <span className="max-md:hidden">Đã chấp thuận</span>
+            </TabsTrigger>
+            <TabsTrigger value="4" className="flex items-center gap-2 py-2">
+              <FaChartSimple />
+              <span className="max-md:hidden">Đang thực hiện</span>
+            </TabsTrigger>
+            <TabsTrigger value="5" className="flex items-center gap-2 py-2">
+              <RiCalendarScheduleFill />
+              <span className="max-md:hidden">Công việc đã qua</span>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
 
       <div className="lg:col-span-2 space-y-4">

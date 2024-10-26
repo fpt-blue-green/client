@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { cn, constants, formats, functions } from '@/lib/utils';
-import { fetchRequest, offerRequest } from '@/request';
+import { offerRequest } from '@/request';
 import { ReofferBodyType, reofferSchema } from '@/schema-validations/offer.schema';
 import ICampaign from '@/types/campaign';
 import { EOfferStatus, ERole, PlatformData } from '@/types/enum';
@@ -28,6 +28,7 @@ import { ControllerRenderProps, useForm } from 'react-hook-form';
 import { FaRegMoneyBillAlt } from 'react-icons/fa';
 import { RxFace } from 'react-icons/rx';
 import { toast } from 'sonner';
+import { mutate } from 'swr';
 
 interface JobOfferProps {
   offer: IOffer;
@@ -90,7 +91,6 @@ const JobOffer: FC<JobOfferProps> = ({ offer, campaign, children }) => {
 const ReofferForm = ({ offer, onClose }: { offer: IOffer; onClose: () => void }) => {
   const [loading, setLoading] = useState(false);
   const { logo, name, contentTypes } = PlatformData[offer.platform];
-  const { mutate } = fetchRequest.influencer.jobs();
 
   const time = () => {
     let timeUnit: 's' | 'm' | 'h' = 's';
@@ -134,7 +134,7 @@ const ReofferForm = ({ offer, onClose }: { offer: IOffer; onClose: () => void })
     toast.promise(offerRequest.reoffer(offer.id, values), {
       loading: 'Đang tải',
       success: () => {
-        mutate();
+        mutate((key: string) => key?.startsWith('/Influencer/jobs'));
         onClose();
         return 'Đã gửi đề nghị của bạn thành công';
       },
@@ -148,7 +148,7 @@ const ReofferForm = ({ offer, onClose }: { offer: IOffer; onClose: () => void })
     toast.promise(offerRequest.approveOffer(offer.id), {
       loading: 'Đang tải',
       success: () => {
-        mutate();
+        mutate((key: string) => key?.startsWith('/Influencer/jobs'));
         onClose();
         return 'Đã chấp thuận lời đề nghị. Chờ nhãn hàng thanh toán tiền đặt cọc';
       },
@@ -162,7 +162,7 @@ const ReofferForm = ({ offer, onClose }: { offer: IOffer; onClose: () => void })
     toast.promise(offerRequest.rejectOffer(offer.id), {
       loading: 'Đang tải',
       success: () => {
-        mutate();
+        mutate((key: string) => key?.startsWith('/Influencer/jobs'));
         onClose();
         return 'Đã từ chối lời đề nghị thành công';
       },
