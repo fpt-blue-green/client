@@ -29,7 +29,7 @@ import { Table as LibraryTable, TableBody, TableCell, TableHead, TableHeader, Ta
 import { fetcher } from '@/lib/http';
 import useSWR from 'swr';
 import { LuMoreHorizontal } from 'react-icons/lu';
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { forwardRef, ReactNode, useEffect, useState } from 'react';
 import { FaPlus } from 'react-icons/fa6';
 import { Skeleton } from '../ui/skeleton';
 import { DoubleArrowLeftIcon, DoubleArrowRightIcon } from '@radix-ui/react-icons';
@@ -49,14 +49,14 @@ interface TableProps<TData, TValue> {
   pagination?: boolean;
 }
 
-export const Table = <TData, TValue>({
+export const Table = forwardRef<HTMLDivElement, TableProps<any, any>>(function Table({
   columns: paramsColumns,
   url,
   buttons,
-  searchable = false,
-  isCheckBoxVisibility = false,
-  pagination = true,
-}: TableProps<TData, TValue>) => {
+  searchable,
+  isCheckBoxVisibility,
+  pagination,
+}, ref) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -156,7 +156,7 @@ export const Table = <TData, TValue>({
   };
 
   return (
-    <div className="w-full">
+    <div ref={ref} className="w-full">
       <div className="flex items-center justify-between py-4">
         {searchable && (
           <Input
@@ -194,7 +194,7 @@ export const Table = <TData, TValue>({
           {buttons &&
             buttons.length > 0 &&
             buttons.map((item) => (
-              <Button key={item.text} variant="ghost" className="ml-2">
+              <Button key={item.text}  variant="ghost" className="ml-2">
                 {renderActionIcon(item.text)} {item.text}
               </Button>
             ))}
