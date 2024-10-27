@@ -1,4 +1,5 @@
 'use client';
+import { ReactNode, useState } from 'react';
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { Table as LibraryTable, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '../ui/input';
@@ -8,15 +9,63 @@ import { FaEdit } from 'react-icons/fa';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/http';
 import { Skeleton } from '../ui/skeleton';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { LuMoreHorizontal } from 'react-icons/lu';
 
+interface IButton {
+  text: string;
+  onClick: () => void;
+}
 interface TableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  isHideButtons?: boolean;
+  searchable?: boolean;
+  buttons?: IButton[];
   url: string;
 }
 
-const Table = <TData, TValue>({ columns, url, isHideButtons = false }: TableProps<TData, TValue>) => {
+const Table = <TData, TValue>({
+  columns: paramsColumns,
+  url,
+  buttons,
+  searchable = false,
+}: TableProps<TData, TValue>) => {
   const { data = [], mutate, isValidating } = useSWR(url, fetcher);
+
+  const combinedColumns = [
+    ...paramsColumns,
+    {
+      id: 'actions',
+      cell: ({ row }) => {
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <LuMoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Thực hiện</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(row.original.id)}>
+                Sao chép ID
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem>
+              <DropdownMenuItem>Xoá</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
+  const [columns] = useState(combinedColumns);
 
   const table = useReactTable({
     data,
@@ -24,28 +73,35 @@ const Table = <TData, TValue>({ columns, url, isHideButtons = false }: TableProp
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const renderActionIcon = (value: string): ReactNode => {
+    switch (value) {
+      case 'Thêm':
+        return <FaPlus />;
+      default:
+        return '';
+    }
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between py-4">
-        {!isHideButtons && (
-          <div className="flex items-center">
-            <Button variant="ghost">
-              <FaPlus /> Thêm
-            </Button>
-            <Button variant="ghost">
-              <FaEdit /> Chỉnh sửa
-            </Button>
-            <Button variant="ghost">
-              <FaTrash /> Xoá
-            </Button>
-          </div>
+        <div className="flex items-center">
+          {buttons &&
+            buttons.length > 0 &&
+            buttons.map((item) => (
+              <Button key={item.text} variant="ghost">
+                {renderActionIcon(item.text)} {item.text}
+              </Button>
+            ))}
+        </div>
+        {searchable && (
+          <Input
+            placeholder="Tìm kiếm..."
+            value={(table.getColumn('id')?.getFilterValue() as string) ?? ''}
+            onChange={(event) => table.getColumn('id')?.setFilterValue(event.target.value)}
+            className="max-w-sm"
+          />
         )}
-        <Input
-          placeholder="Tìm kiếm mã gói..."
-          value={(table.getColumn('id')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('id')?.setFilterValue(event.target.value)}
-          className="max-w-sm"
-        />
       </div>
       <div className="rounded-md border">
         <LibraryTable>
