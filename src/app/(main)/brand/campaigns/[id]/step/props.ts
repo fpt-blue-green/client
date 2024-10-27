@@ -3,7 +3,7 @@ import { KeyedMutator } from 'swr/_internal';
 
 interface DetailStepProps {
   id: string;
-  campaign: ICampaign;
+  campaign?: ICampaign;
   mutate: KeyedMutator<ICampaign>;
 }
 

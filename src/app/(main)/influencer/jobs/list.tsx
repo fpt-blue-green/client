@@ -78,23 +78,23 @@ const List = () => {
           <TabsList className="grid w-full grid-cols-5 *:flex *:max-lg:flex-col *:items-center *:gap-2">
             <TabsTrigger value="1" className="flex items-center gap-2 py-2">
               <FaUserPlus />
-              <span className="max-md:hidden">Lời mời tham gia</span>
+              <span className="max-md:sr-only">Lời mời tham gia</span>
             </TabsTrigger>
             <TabsTrigger value="2" className="flex items-center gap-2 py-2">
               <FaSuitcase />
-              <span className="max-md:hidden">Đề nghị của bạn</span>
+              <span className="max-md:sr-only">Đề nghị của bạn</span>
             </TabsTrigger>
             <TabsTrigger value="3" className="flex items-center gap-2 py-2">
               <FaHandshake />
-              <span className="max-md:hidden">Đã chấp thuận</span>
+              <span className="max-md:sr-only">Đã chấp thuận</span>
             </TabsTrigger>
             <TabsTrigger value="4" className="flex items-center gap-2 py-2">
               <FaChartSimple />
-              <span className="max-md:hidden">Đang thực hiện</span>
+              <span className="max-md:sr-only">Đang thực hiện</span>
             </TabsTrigger>
             <TabsTrigger value="5" className="flex items-center gap-2 py-2">
               <RiCalendarScheduleFill />
-              <span className="max-md:hidden">Công việc đã qua</span>
+              <span className="max-md:sr-only">Công việc đã qua</span>
             </TabsTrigger>
           </TabsList>
         </Tabs>

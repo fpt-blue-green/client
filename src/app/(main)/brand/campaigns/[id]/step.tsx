@@ -5,6 +5,7 @@ import DetailStepProps from './step/props';
 import useSWRImmutable from 'swr/immutable';
 import ICampaign from '@/types/campaign';
 import { fetcher } from '@/lib/http';
+import StepGeneral from './step/step-general';
 import Step1 from './step/step1';
 import Step2 from './step/step2';
 import Step3 from './step/step3';
@@ -38,7 +39,9 @@ const Step: FC<StepProps> = ({ id }) => {
           </Button>
         )}
         <h1 className="text-3xl font-semibold">{title}</h1>
-        {!isLoading && data && <Element id={id} campaign={data} mutate={mutate} />}
+        {((!isLoading && data) || (id === 'new' && step === '1')) && (
+          <Element id={id} campaign={data} mutate={mutate} />
+        )}
       </div>
     </>
   );
@@ -48,14 +51,18 @@ export const stepPages: {
   [key: string]: { title: string; component: FC<DetailStepProps> };
 } = {
   1: {
+    title: 'Thông tin cơ bản để nhà sáng tạo nội dung có thể tìm kiếm',
+    component: StepGeneral,
+  },
+  2: {
     title: 'Danh mục nào mô tả đúng nhất thương hiệu của bạn?',
     component: Step1,
   },
-  2: {
+  3: {
     title: 'Thêm ảnh vào cho sản phẩm hoặc dịch vụ của bạn',
     component: Step2,
   },
-  3: {
+  4: {
     title: 'Những yêu cầu của nội dung và mức giá',
     component: Step3,
   },
