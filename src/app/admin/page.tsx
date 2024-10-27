@@ -25,7 +25,8 @@ const campaignCardDetails = {
 const Overview = () => {
   return (
     <div className="container">
-      <h1 className="text-xl font-bold">Phân Tích Số Liệu</h1>
+      <h1 className="text-xl font-bold">Chào Mừng Trở Lại!</h1>
+      <p className="text-sm text-muted-foreground">Dưới đây là số liệu phân tích của hệ thống gần đây!</p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
         <Card
           cardType={NumberType.Currency}
