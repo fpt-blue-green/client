@@ -26,7 +26,7 @@ const Step6: FC<DetailStepProps> = ({ id, campaign, mutate }) => {
   const form = useForm<ContentsBodyType>({
     resolver: zodResolver(contentsSchema),
     defaultValues: {
-      contents: campaign.contents || [],
+      contents: campaign?.contents || [],
     },
   });
 

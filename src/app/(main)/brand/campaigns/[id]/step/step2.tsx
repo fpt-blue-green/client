@@ -15,7 +15,7 @@ import { emitter } from '@/lib/utils';
 import IImage from '@/types/image';
 
 const Step2: FC<DetailStepProps> = ({ id, campaign, mutate }) => {
-  const [images, setImages] = useState<IImage[]>(campaign.images || []);
+  const [images, setImages] = useState<IImage[]>(campaign?.images || []);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
