@@ -11,7 +11,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { ChevronDown, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -32,7 +32,6 @@ import { LuMoreHorizontal } from 'react-icons/lu';
 import React, { forwardRef, ReactNode, useEffect, useState } from 'react';
 import { FaPlus } from 'react-icons/fa6';
 import { Skeleton } from '../ui/skeleton';
-import { DoubleArrowLeftIcon, DoubleArrowRightIcon } from '@radix-ui/react-icons';
 import Pagination from './pagination';
 
 interface IButton {
@@ -49,14 +48,10 @@ interface TableProps<TData, TValue> {
   pagination?: boolean;
 }
 
-export const Table = forwardRef<HTMLDivElement, TableProps<any, any>>(function Table({
-  columns: paramsColumns,
-  url,
-  buttons,
-  searchable,
-  isCheckBoxVisibility,
-  pagination,
-}, ref) {
+export const Table = forwardRef<HTMLDivElement, TableProps<any, any>>(function Table(
+  { columns: paramsColumns, url, buttons, searchable, isCheckBoxVisibility, pagination },
+  ref,
+) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -194,7 +189,7 @@ export const Table = forwardRef<HTMLDivElement, TableProps<any, any>>(function T
           {buttons &&
             buttons.length > 0 &&
             buttons.map((item) => (
-              <Button key={item.text}  variant="ghost" className="ml-2">
+              <Button key={item.text} variant="ghost" className="ml-2">
                 {renderActionIcon(item.text)} {item.text}
               </Button>
             ))}
@@ -247,4 +242,4 @@ export const Table = forwardRef<HTMLDivElement, TableProps<any, any>>(function T
       )}
     </div>
   );
-};
+});
