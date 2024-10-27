@@ -4,6 +4,7 @@ import { FluctuationType, NumberType } from '@/types/enum';
 import { FaProjectDiagram } from 'react-icons/fa';
 import OverviewChart from './components/chart';
 import CardCampaign from './components/card-campaign';
+import Paper from '@/components/custom/paper';
 
 // Mock
 const overviewCardDetails = {
@@ -53,10 +54,10 @@ const Overview = () => {
         />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-11 mt-4 gap-4">
-        <div className="md:col-span-6 border rounded-md shadow-md p-6">
+        <Paper className="md:col-span-6">
           <OverviewChart />
-        </div>
-        <div className="md:col-span-5 border rounded-md shadow-md p-6">
+        </Paper>
+        <Paper className="md:col-span-5">
           <h3 className="font-semibold">Chiến dịch gần đây</h3>
           <p className="text-muted-foreground text-sm">Khoảng 110 chiến dịch tháng này.</p>
           <div className="mt-8 flex flex-col gap-8">
@@ -66,7 +67,7 @@ const Overview = () => {
             <CardCampaign details={campaignCardDetails} />
             <CardCampaign details={campaignCardDetails} />
           </div>
-        </div>
+        </Paper>
       </div>
     </div>
   );
