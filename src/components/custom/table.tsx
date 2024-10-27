@@ -1,42 +1,75 @@
 'use client';
-import { ReactNode, useState } from 'react';
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { Table as LibraryTable, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
-import { FaPlus, FaTrash } from 'react-icons/fa6';
-import { FaEdit } from 'react-icons/fa';
-import useSWR from 'swr';
-import { fetcher } from '@/lib/http';
-import { Skeleton } from '../ui/skeleton';
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
+import { ChevronDown, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Table as LibraryTable, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { fetcher } from '@/lib/http';
+import useSWR from 'swr';
 import { LuMoreHorizontal } from 'react-icons/lu';
+import React, { ReactNode, useEffect, useState } from 'react';
+import { FaPlus } from 'react-icons/fa6';
+import { Skeleton } from '../ui/skeleton';
+import { DoubleArrowLeftIcon, DoubleArrowRightIcon } from '@radix-ui/react-icons';
+import Pagination from './pagination';
 
 interface IButton {
   text: string;
   onClick: () => void;
 }
+
 interface TableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   searchable?: boolean;
   buttons?: IButton[];
   url: string;
+  isCheckBoxVisibility?: boolean;
+  pagination?: boolean;
 }
 
-const Table = <TData, TValue>({
+export const Table = <TData, TValue>({
   columns: paramsColumns,
   url,
   buttons,
   searchable = false,
+  isCheckBoxVisibility = false,
+  pagination = true,
 }: TableProps<TData, TValue>) => {
-  const { data = [], mutate, isValidating } = useSWR(url, fetcher);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize] = useState<number>(10);
+  const [pageCount, setPageCount] = useState<number>(10);
+
+  const { data = [], mutate, isValidating } = useSWR(`${url}?page=${currentPage}`, fetcher);
+
+  useEffect(() => {
+    setPageCount(Math.ceil(data.length / pageSize));
+  }, [data, pageSize]);
 
   const combinedColumns = [
     ...paramsColumns,
@@ -47,7 +80,7 @@ const Table = <TData, TValue>({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
+                <span className="sr-only">Các hành động</span>
                 <LuMoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -65,13 +98,30 @@ const Table = <TData, TValue>({
       },
     },
   ];
-  const [columns] = useState(combinedColumns);
 
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
+  if (isCheckBoxVisibility) {
+    combinedColumns.unshift({
+      id: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    });
+  }
+
+  const [columns] = useState(combinedColumns);
 
   const renderActionIcon = (value: string): ReactNode => {
     switch (value) {
@@ -82,26 +132,73 @@ const Table = <TData, TValue>({
     }
   };
 
+  const table = useReactTable({
+    data,
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
+  });
+
+  const handlePagination = (value: number) => {
+    setCurrentPage(value);
+  };
+
   return (
-    <div>
+    <div className="w-full">
       <div className="flex items-center justify-between py-4">
-        <div className="flex items-center">
-          {buttons &&
-            buttons.length > 0 &&
-            buttons.map((item) => (
-              <Button key={item.text} variant="ghost">
-                {renderActionIcon(item.text)} {item.text}
-              </Button>
-            ))}
-        </div>
         {searchable && (
           <Input
             placeholder="Tìm kiếm..."
-            value={(table.getColumn('id')?.getFilterValue() as string) ?? ''}
-            onChange={(event) => table.getColumn('id')?.setFilterValue(event.target.value)}
+            value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
+            onChange={(event) => table.getColumn('email')?.setFilterValue(event.target.value)}
             className="max-w-sm"
           />
         )}
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Hiển thị <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          {buttons &&
+            buttons.length > 0 &&
+            buttons.map((item) => (
+              <Button key={item.text} variant="ghost" className="ml-2">
+                {renderActionIcon(item.text)} {item.text}
+              </Button>
+            ))}
+        </>
       </div>
       <div className="rounded-md border">
         <LibraryTable>
@@ -138,15 +235,16 @@ const Table = <TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  Không có gói nào.
+                  Không có dữ liệu.
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </LibraryTable>
       </div>
+      {pagination && (
+        <Pagination className="mt-8" page={currentPage} count={pageCount} onPageChange={handlePagination} />
+      )}
     </div>
   );
 };
-
-export default Table;
