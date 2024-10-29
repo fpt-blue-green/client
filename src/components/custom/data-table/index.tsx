@@ -1,6 +1,6 @@
 'use client';
 
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import { forwardRef, Ref, useImperativeHandle, useMemo, useState } from 'react';
 import { DataTable } from './table';
 import { ColumnDef } from '@tanstack/react-table';
 import useSWRImmutable from 'swr/immutable';
@@ -9,10 +9,13 @@ import { DataTableColumnHeader } from './column-header';
 import { DataTablePagination } from './pagination';
 import { mutate } from 'swr';
 import { useDataTable, useUpdateEffect } from '@/hooks';
+import { Checkbox } from '@/components/ui/checkbox';
+import { DataTableViewOptions } from './column-toggle';
 
 interface TableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   url: string;
+  onCheck?: (items: TData[]) => void;
 }
 
 interface TableRef {
@@ -20,25 +23,53 @@ interface TableRef {
 }
 
 // Sử dụng một hàm wrapper để khai báo generic và truyền vào `forwardRef`.
-function TableComponent<TData, TValue>({ columns, url }: TableProps<TData, TValue>, ref: React.Ref<TableRef>) {
+function TableComponent<TData, TValue>({ columns, url, onCheck }: TableProps<TData, TValue>, ref: Ref<TableRef>) {
   const [urlQuery, setUrlQuery] = useState<string>();
   const { data } = useSWRImmutable<{ totalCount: number; influencers: TData[] }>(urlQuery, fetcher);
 
-  const mColumns = columns.map((column) => {
-    if (typeof column.header === 'string') {
-      const title = column.header;
-      return {
-        ...column,
-        header: ({ column }) => <DataTableColumnHeader column={column} title={title} />,
-      } as ColumnDef<TData, TValue>;
+  const mColumns = useMemo(() => {
+    const results = columns.map((column) => {
+      if (typeof column.header === 'string') {
+        const title = column.header;
+        return {
+          ...column,
+          header: ({ column }) => <DataTableColumnHeader column={column} title={title} />,
+        } as ColumnDef<TData, TValue>;
+      }
+      return column;
+    });
+
+    if (onCheck) {
+      results.unshift({
+        id: 'select',
+        header: ({ table }) => (
+          <Checkbox
+            checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            aria-label="Select all"
+          />
+        ),
+        cell: ({ row }) => (
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
+          />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+      });
     }
-    return column;
-  });
+
+    return results;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [columns]);
 
   const { table, queryString } = useDataTable({
     data: data?.influencers || [],
     columns: mColumns,
     totalCount: data?.totalCount,
+    onRowChecked: onCheck,
   });
 
   useUpdateEffect(() => {
@@ -51,6 +82,9 @@ function TableComponent<TData, TValue>({ columns, url }: TableProps<TData, TValu
 
   return (
     <div className="space-y-4">
+      <div>
+        <DataTableViewOptions table={table} />
+      </div>
       <DataTable table={table} />
       <DataTablePagination table={table} />
     </div>

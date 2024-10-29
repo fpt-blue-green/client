@@ -8,7 +8,9 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  OnChangeFn,
   PaginationState,
+  RowSelectionState,
   TableState,
   useReactTable,
 } from '@tanstack/react-table';
@@ -24,27 +26,29 @@ interface UseDataTableProps<TData, TValue> {
       desc: boolean;
     }[];
   };
+  onRowChecked?: (items: TData[]) => void;
 }
 
 const searchParams = new URLSearchParams();
 
-const useDataTable = <TData, TValue>({ columns, data, totalCount, state }: UseDataTableProps<TData, TValue>) => {
+const useDataTable = <TData, TValue>({
+  columns,
+  data,
+  totalCount,
+  state,
+  onRowChecked,
+}: UseDataTableProps<TData, TValue>) => {
   const [queryString, setQueryString] = useState('');
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 2 });
   const [pageCount, setPageCount] = useState(0);
+  const [rowSelection, setRowSelection] = useState({});
 
   useEffect(() => {
     searchParams.set('PageIndex', (pageIndex + 1).toString());
-    setQueryString(searchParams.toString());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageIndex]);
-
-  useEffect(() => {
     searchParams.set('PageSize', pageSize.toString());
-    setPagination({ pageSize, pageIndex: 0 });
     setQueryString(searchParams.toString());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageSize]);
+  }, [pageIndex, pageSize]);
 
   useEffect(() => {
     if (totalCount !== undefined) {
@@ -52,6 +56,33 @@ const useDataTable = <TData, TValue>({ columns, data, totalCount, state }: UseDa
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCount, pageSize]);
+
+  const handlePaginationChange: OnChangeFn<PaginationState> = (updater) => {
+    setPagination((prevPagination) => {
+      const newPagination = typeof updater === 'function' ? updater(prevPagination) : updater;
+
+      if (newPagination.pageSize !== prevPagination.pageSize) {
+        newPagination.pageIndex = 0;
+      }
+      searchParams.set('PageIndex', (newPagination.pageIndex + 1).toString());
+      searchParams.set('PageSize', pageSize.toString());
+      setQueryString(searchParams.toString());
+
+      return newPagination;
+    });
+    handleRowSelection({});
+  };
+
+  const handleRowSelection: OnChangeFn<RowSelectionState> = (updater) => {
+    setRowSelection((prevRowSelection) => {
+      const newRowSelection = typeof updater === 'function' ? updater(prevRowSelection) : updater;
+      if (onRowChecked) {
+        const items = Object.keys(newRowSelection).map((key) => data[+key]);
+        onRowChecked(items);
+      }
+      return newRowSelection;
+    });
+  };
 
   const table = useReactTable({
     columns,
@@ -64,8 +95,10 @@ const useDataTable = <TData, TValue>({ columns, data, totalCount, state }: UseDa
         pageIndex,
         pageSize,
       },
+      rowSelection,
     },
-    onPaginationChange: setPagination,
+    onPaginationChange: handlePaginationChange,
+    onRowSelectionChange: handleRowSelection,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
