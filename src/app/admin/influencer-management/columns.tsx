@@ -1,16 +1,16 @@
 'use client';
 
-import ITag from '@/types/tag';
+import IInfluencer from '@/types/influencer';
 import { ColumnDef } from '@tanstack/react-table';
 
-const columns: ColumnDef<ITag>[] = [
+const columns: ColumnDef<IInfluencer>[] = [
   {
-    accessorKey: 'name',
-    header: 'Name',
+    accessorKey: 'fullName',
+    header: 'Tên',
   },
   {
-    accessorKey: 'isPremium',
-    header: 'Premium',
+    accessorKey: 'address',
+    header: 'Địa chỉ',
     enableSorting: false,
   },
 ];
