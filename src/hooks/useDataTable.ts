@@ -13,6 +13,7 @@ import {
   OnChangeFn,
   PaginationState,
   RowSelectionState,
+  SortingState,
   TableState,
   useReactTable,
 } from '@tanstack/react-table';
@@ -44,10 +45,11 @@ const useDataTable = <TData, TValue>({
   onRowChecked,
 }: UseDataTableProps<TData, TValue>) => {
   const [queryString, setQueryString] = useState('');
-  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 2 });
+  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 });
   const [pageCount, setPageCount] = useState(0);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   const { searchFields, optionFields } = useMemo(() => {
     return {
@@ -91,6 +93,11 @@ const useDataTable = <TData, TValue>({
     }
   }, [totalCount, pageSize]);
 
+  useEffect(() => {
+    handleRowSelection({});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryString]);
+
   const handlePaginationChange: OnChangeFn<PaginationState> = (updater) => {
     setPagination((prevPagination) => {
       const newPagination = typeof updater === 'function' ? updater(prevPagination) : updater;
@@ -104,7 +111,22 @@ const useDataTable = <TData, TValue>({
 
       return newPagination;
     });
-    handleRowSelection({});
+  };
+
+  const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
+    setSorting((prevSorting) => {
+      const newSorting = typeof updater === 'function' ? updater(prevSorting) : updater;
+      const firstSorting = newSorting[0];
+      if (firstSorting) {
+        searchParams.set('SortBy', firstSorting.id);
+        searchParams.set('IsAscending', String(!firstSorting.desc));
+      } else {
+        searchParams.delete('SortBy');
+        searchParams.delete('IsAscending');
+      }
+      setQueryString(searchParams.toString());
+      return newSorting;
+    });
   };
 
   const handleRowSelection: OnChangeFn<RowSelectionState> = (updater) => {
@@ -129,12 +151,14 @@ const useDataTable = <TData, TValue>({
         pageIndex,
         pageSize,
       },
+      sorting,
       rowSelection,
       columnFilters,
     },
     onPaginationChange: handlePaginationChange,
     onRowSelectionChange: handleRowSelection,
     onColumnFiltersChange: setColumnFilters,
+    onSortingChange: handleSortingChange,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

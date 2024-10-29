@@ -12,25 +12,27 @@ import { mutate } from 'swr';
 import { useDataTable, useUpdateEffect } from '@/hooks';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableFilterField } from './filter-type';
+import { ButtonProps } from '@/components/ui/button';
 
 interface TableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   url: string;
   filters?: DataTableFilterField<TData>[];
+  buttons?: ButtonProps[];
   onCheck?: (items: TData[]) => void;
 }
 
-interface TableRef {
+export interface TableRef {
   reload: () => Promise<void>;
 }
 
 // Sử dụng một hàm wrapper để khai báo generic và truyền vào `forwardRef`.
 function TableComponent<TData, TValue>(
-  { columns, url, filters, onCheck }: TableProps<TData, TValue>,
+  { columns, url, filters, buttons, onCheck }: TableProps<TData, TValue>,
   ref: Ref<TableRef>,
 ) {
   const [urlQuery, setUrlQuery] = useState<string>();
-  const { data } = useSWRImmutable<{ totalCount: number; influencers: TData[] }>(urlQuery, fetcher);
+  const { data, isLoading } = useSWRImmutable<{ totalCount: number; items: TData[] }>(urlQuery, fetcher);
 
   const mColumns = useMemo(() => {
     const results = columns.map((column) => {
@@ -71,7 +73,7 @@ function TableComponent<TData, TValue>(
   }, [columns]);
 
   const { table, queryString } = useDataTable({
-    data: data?.influencers || [],
+    data: data?.items || [],
     columns: mColumns,
     totalCount: data?.totalCount,
     filters,
@@ -88,8 +90,8 @@ function TableComponent<TData, TValue>(
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} filters={filters} />
-      <DataTable table={table} />
+      <DataTableToolbar table={table} filters={filters} buttons={buttons} />
+      <DataTable table={table} isLoading={isLoading} />
       <DataTablePagination table={table} />
     </div>
   );

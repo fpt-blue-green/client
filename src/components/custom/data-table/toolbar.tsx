@@ -4,14 +4,15 @@ import { Table } from '@tanstack/react-table';
 import { DataTableViewOptions } from './column-toggle';
 import { DataTableFilterField } from './filter-type';
 import { useMemo } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button, ButtonProps } from '@/components/ui/button';
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   filters?: DataTableFilterField<TData>[];
+  buttons?: ButtonProps[];
 }
 
-export function DataTableToolbar<TData>({ table, filters }: DataTableToolbarProps<TData>) {
+export function DataTableToolbar<TData>({ table, filters, buttons }: DataTableToolbarProps<TData>) {
   const { searchFields, optionFields } = useMemo(() => {
     return {
       searchFields: filters?.filter((field) => !field.options) || [],
@@ -56,15 +57,17 @@ export function DataTableToolbar<TData>({ table, filters }: DataTableToolbarProp
             aria-label="Đặt lại"
             variant="ghost"
             size="small"
-            className="h-8 px-2 lg:px-3"
             onClick={() => table.resetColumnFilters()}
+            endIcon={<Cross2Icon className="size-4" aria-hidden="true" />}
           >
             Đặt lại
-            <Cross2Icon className="ml-2 size-4" aria-hidden="true" />
           </Button>
         )}
       </div>
-      <div>
+      <div className="flex items-center gap-2">
+        {buttons?.map((props, index) => (
+          <Button key={index} size="small" variant="outline" {...props} />
+        ))}
         <DataTableViewOptions table={table} />
       </div>
     </div>

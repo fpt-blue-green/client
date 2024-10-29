@@ -46,7 +46,7 @@ export const columns: ColumnDef<IInfluencer, IInfluencer>[] = [
     id: 'createdAt',
     accessorKey: 'createdAt',
     header: 'Ngày tham gia',
-    cell: ({ row }) => formats.date(row.original.createdAt),
+    cell: ({ row }) => formats.date(row.original.createdAt || ''),
   },
 ];
 

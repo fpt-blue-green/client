@@ -3,12 +3,14 @@
 import { flexRender, Table as ReactTable } from '@tanstack/react-table';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface DataTableProps<TData> {
   table: ReactTable<TData>;
+  isLoading?: boolean;
 }
 
-export function DataTable<TData>({ table }: DataTableProps<TData>) {
+export function DataTable<TData>({ table, isLoading }: DataTableProps<TData>) {
   return (
     <div className="rounded-md border">
       <Table>
@@ -26,7 +28,17 @@ export function DataTable<TData>({ table }: DataTableProps<TData>) {
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {isLoading ? (
+            Array.from({ length: table.getState().pagination.pageSize }).map((_, index) => (
+              <TableRow key={index}>
+                {table.getVisibleLeafColumns().map((_, cellIndex) => (
+                  <TableCell className="max-w-24 truncate" key={cellIndex}>
+                    <Skeleton className="w-full h-4 flex" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                 {row.getVisibleCells().map((cell) => (
