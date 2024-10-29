@@ -10,11 +10,11 @@ interface DataTablePaginationProps<TData> {
 
 export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
   return (
-    <div className="flex items-center justify-between px-2">
+    <div className="flex max-md:flex-col-reverse items-center justify-between px-2 gap-y-4">
       <div className="flex-1 text-sm text-muted-foreground">
         {table.getFilteredSelectedRowModel().rows.length} trên {table.getFilteredRowModel().rows.length} dòng được chọn.
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex max-sm:flex-col-reverse items-center gap-4">
         <div className="flex items-center space-x-2">
           <p className="text-sm font-medium">Số dòng mỗi trang</p>
           <Select

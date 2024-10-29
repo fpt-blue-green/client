@@ -11,6 +11,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import Tooltip from '../tooltip';
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
@@ -19,12 +20,14 @@ interface DataTableViewOptionsProps<TData> {
 export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps<TData>) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="small" className="ml-auto hidden h-8 lg:flex">
-          <MixerHorizontalIcon className="mr-2 h-4 w-4" />
-          Hiển thị
-        </Button>
-      </DropdownMenuTrigger>
+      <Tooltip label="Hiển thị">
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="icon" className="size-8">
+            <MixerHorizontalIcon className="h-4 w-4" />
+            <span className="sr-only">Hiển thị</span>
+          </Button>
+        </DropdownMenuTrigger>
+      </Tooltip>
       <DropdownMenuContent align="end" className="w-[150px]">
         <DropdownMenuLabel>Chọn cột</DropdownMenuLabel>
         <DropdownMenuSeparator />

@@ -7,14 +7,16 @@ import useSWRImmutable from 'swr/immutable';
 import { fetcher } from '@/lib/http';
 import { DataTableColumnHeader } from './column-header';
 import { DataTablePagination } from './pagination';
+import { DataTableToolbar } from './toolbar';
 import { mutate } from 'swr';
 import { useDataTable, useUpdateEffect } from '@/hooks';
 import { Checkbox } from '@/components/ui/checkbox';
-import { DataTableViewOptions } from './column-toggle';
+import { DataTableFilterField } from './filter-type';
 
 interface TableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   url: string;
+  filters?: DataTableFilterField<TData>[];
   onCheck?: (items: TData[]) => void;
 }
 
@@ -23,7 +25,10 @@ interface TableRef {
 }
 
 // Sử dụng một hàm wrapper để khai báo generic và truyền vào `forwardRef`.
-function TableComponent<TData, TValue>({ columns, url, onCheck }: TableProps<TData, TValue>, ref: Ref<TableRef>) {
+function TableComponent<TData, TValue>(
+  { columns, url, filters, onCheck }: TableProps<TData, TValue>,
+  ref: Ref<TableRef>,
+) {
   const [urlQuery, setUrlQuery] = useState<string>();
   const { data } = useSWRImmutable<{ totalCount: number; influencers: TData[] }>(urlQuery, fetcher);
 
@@ -69,6 +74,7 @@ function TableComponent<TData, TValue>({ columns, url, onCheck }: TableProps<TDa
     data: data?.influencers || [],
     columns: mColumns,
     totalCount: data?.totalCount,
+    filters,
     onRowChecked: onCheck,
   });
 
@@ -82,9 +88,7 @@ function TableComponent<TData, TValue>({ columns, url, onCheck }: TableProps<TDa
 
   return (
     <div className="space-y-4">
-      <div>
-        <DataTableViewOptions table={table} />
-      </div>
+      <DataTableToolbar table={table} filters={filters} />
       <DataTable table={table} />
       <DataTablePagination table={table} />
     </div>
