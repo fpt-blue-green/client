@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import * as RechartsPrimitive from 'recharts';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { NameType, Payload, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 
 import { cn } from '@/lib/utils';

@@ -3,9 +3,12 @@
 import { Accordion } from '@/components/ui/accordion';
 import { cn } from '@/lib/utils';
 import InfluencerAccordion from './influencer-accordion';
-import Paper from '@/components/custom/paper';
+import { fetchRequest } from '@/request';
+import { useParams } from 'next/navigation';
 
 const Member = () => {
+  const params = useParams<{ id: string }>();
+  const { data } = fetchRequest.campaign.trackingInfluencers(params.id, [], []);
   const styles = (active = false, isLast = false) =>
     cn(
       'relative flex flex-col gap-2 py-4 px-8 bg-muted shadow-sm hover:z-1 hover:opacity-70 cursor-pointer transition-opacity',
@@ -52,12 +55,13 @@ const Member = () => {
           <span className="text-sm">Đã hủy</span>
         </div>
       </div>
-      <Paper className="mt-8">
+      <div className="mt-8">
         <Accordion type="multiple" className="w-full">
-          <InfluencerAccordion />
-          <InfluencerAccordion />
+          {data?.items.map((item) => (
+            <InfluencerAccordion key={item.id} item={item} />
+          ))}
         </Accordion>
-      </Paper>
+      </div>
     </div>
   );
 };

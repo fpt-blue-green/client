@@ -29,7 +29,7 @@ const Header = () => {
   return (
     <header
       className={cn('sticky top-0 left-0 right-0 z-40 transition-all', {
-        'bg-background/80 backdrop-blur-[6px]': isScrolled,
+        'bg-background/80 backdrop-blur-[6px] shadow-sm': isScrolled,
       })}
     >
       <div className={cn('container md:h-20 h-16 transition-all', { 'md:h-16': isScrolled })}>
