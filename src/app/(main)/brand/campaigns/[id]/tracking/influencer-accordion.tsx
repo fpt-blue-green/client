@@ -16,7 +16,7 @@ import { constants, formats } from '@/lib/utils';
 import { EOfferStatus, ERole, PlatformData } from '@/types/enum';
 import IInfluencerJobs from '@/types/influencer-jobs';
 import IJob from '@/types/job';
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { CheckIcon, Cross2Icon, DotsHorizontalIcon, ResetIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 import { FC } from 'react';
 import { FaReply } from 'react-icons/fa6';
@@ -105,9 +105,18 @@ const OfferAction = ({ job }: { job: IJob }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem>Đề nghị lại</DropdownMenuItem>
-          <DropdownMenuItem>Chấp nhận</DropdownMenuItem>
-          <DropdownMenuItem>Từ chối</DropdownMenuItem>
+          <DropdownMenuItem className="flex items-center gap-1">
+            <ResetIcon />
+            Đề nghị lại
+          </DropdownMenuItem>
+          <DropdownMenuItem className="flex items-center gap-1">
+            <CheckIcon />
+            Chấp nhận
+          </DropdownMenuItem>
+          <DropdownMenuItem className="flex items-center gap-1">
+            <Cross2Icon />
+            Từ chối
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     );
