@@ -13,6 +13,7 @@ import { useDataTable, useUpdateEffect } from '@/hooks';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableFilterField } from './filter-type';
 import { ButtonProps } from '@/components/ui/button';
+import { IFilterList } from '@/types/filter-list';
 
 interface TableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -32,7 +33,7 @@ function TableComponent<TData, TValue>(
   ref: Ref<TableRef>,
 ) {
   const [urlQuery, setUrlQuery] = useState<string>();
-  const { data, isLoading } = useSWRImmutable<{ totalCount: number; items: TData[] }>(urlQuery, fetcher);
+  const { data, isLoading } = useSWRImmutable<IFilterList<TData>>(urlQuery, fetcher);
 
   const mColumns = useMemo(() => {
     const results = columns.map((column) => {

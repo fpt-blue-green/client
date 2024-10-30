@@ -18,6 +18,7 @@ import { campaignsRequest } from '@/request';
 import { toast } from 'sonner';
 import Chip from '@/components/custom/chip';
 import { FaRegMoneyBillAlt } from 'react-icons/fa';
+import { ECampaignStatus } from '@/types/enum';
 
 interface CampaignCardProps {
   data: ICampaign;
@@ -87,9 +88,15 @@ const CampaignCard: FC<CampaignCardProps> = ({ data, canEdit, reload }) => {
       <div className="p-4 space-y-2 text-sm">
         <div className="flex items-center justify-between gap-4 text-base">
           {canEdit ? (
-            <Link href={config.routes.brand.campaigns.edit(data.id, 1)} className="font-semibold hover:underline">
-              {data.name}
-            </Link>
+            data.status === ECampaignStatus.Draft ? (
+              <Link href={config.routes.brand.campaigns.edit(data.id, 1)} className="font-semibold hover:underline">
+                {data.name}
+              </Link>
+            ) : (
+              <Link href={config.routes.brand.campaigns.tracking(data.id)} className="font-semibold hover:underline">
+                {data.name}
+              </Link>
+            )
           ) : (
             <Link href={config.routes.campaigns.details(data.id)} className="font-semibold hover:underline">
               {data.title}

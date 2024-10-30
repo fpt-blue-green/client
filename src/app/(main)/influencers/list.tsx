@@ -2,13 +2,11 @@
 
 import { useLayoutEffect, useMemo, useReducer, useState } from 'react';
 import InfluencerCard, { InfluencerCardSkeleton } from '@/components/influencer-card';
-import { fetcher } from '@/lib/http';
-import useSWRImmutable from 'swr/immutable';
 import Filter from './filter';
 import { EPlatform } from '@/types/enum';
-import IInfluencer from '@/types/influencer';
 import Pagination from '@/components/custom/pagination';
 import NoData from '@/components/no-data';
+import { fetchRequest } from '@/request';
 
 export interface FilterState {
   page: number;
@@ -102,9 +100,9 @@ const List = () => {
         searchParams.append('IsAscending', filter.isAscending ? 'true' : 'false');
       }
     }
-    return '/Influencers?' + searchParams.toString();
+    return searchParams;
   }, [filter]);
-  const { data, isLoading } = useSWRImmutable<{ totalCount: number; influencers: IInfluencer[] }>(url, fetcher);
+  const { data, isLoading } = fetchRequest.influencers.list(url);
   const [pageCount, setPageCount] = useState(0);
 
   useLayoutEffect(() => {
@@ -133,8 +131,8 @@ const List = () => {
       <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-x-6 gap-y-8">
         {isLoading ? (
           Array.from({ length: filter.pageSize }).map((_, index) => <InfluencerCardSkeleton key={index} />)
-        ) : data && data.influencers.length > 0 ? (
-          data.influencers.map((i) => <InfluencerCard key={i.id} data={i} />)
+        ) : data && data.items.length > 0 ? (
+          data.items.map((i) => <InfluencerCard key={i.id} data={i} />)
         ) : (
           <NoData description="Không tìm thấy người sáng tạo" className="col-span-full" />
         )}
