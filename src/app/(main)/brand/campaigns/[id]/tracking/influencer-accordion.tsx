@@ -12,7 +12,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Table, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { constants, formats } from '@/lib/utils';
+import { constants, emitter, formats } from '@/lib/utils';
+import { offerRequest } from '@/request';
 import { EOfferStatus, ERole, PlatformData } from '@/types/enum';
 import IInfluencerJobs from '@/types/influencer-jobs';
 import IJob from '@/types/job';
@@ -20,12 +21,14 @@ import { CheckIcon, Cross2Icon, DotsHorizontalIcon, ResetIcon } from '@radix-ui/
 import Image from 'next/image';
 import { FC } from 'react';
 import { FaReply } from 'react-icons/fa6';
+import { toast } from 'sonner';
 
 interface InfluencerAccordionProps {
   item: IInfluencerJobs;
+  reload: () => Promise<void>;
 }
 
-const InfluencerAccordion: FC<InfluencerAccordionProps> = ({ item }) => {
+const InfluencerAccordion: FC<InfluencerAccordionProps> = ({ item, reload }) => {
   return (
     <AccordionItem value={item.id}>
       <AccordionTrigger>
@@ -75,7 +78,7 @@ const InfluencerAccordion: FC<InfluencerAccordionProps> = ({ item }) => {
                     />
                   </TableCell>
                   <TableCell>
-                    <OfferAction job={job} />
+                    <OfferAction job={job} reload={reload} />
                   </TableCell>
                 </TableRow>
               );
@@ -87,8 +90,26 @@ const InfluencerAccordion: FC<InfluencerAccordionProps> = ({ item }) => {
   );
 };
 
-const OfferAction = ({ job }: { job: IJob }) => {
-  if (job.offer.status === EOfferStatus.WaitingPayment) {
+const OfferAction = ({ job, reload }: { job: IJob; reload: () => Promise<void> }) => {
+  const { offer } = job;
+
+  const handleResponseOffer = (id: string, accept: boolean) => () => {
+    const caller = accept ? offerRequest.approveOffer(id) : offerRequest.rejectOffer(id);
+    emitter.confirm({
+      content: `Bạn có chắc sẽ ${accept ? 'đồng ý' : 'từ chối'} lời đề nghị này không?`,
+      callback: () =>
+        toast.promise(caller, {
+          loading: 'Đang tải',
+          success: () => {
+            reload();
+            return `Lời đề nghị đã được ${accept ? 'chấp thuận' : 'từ chối'}`;
+          },
+          error: (err) => err?.message || constants.sthWentWrong,
+        }),
+    });
+  };
+
+  if (offer.status === EOfferStatus.WaitingPayment) {
     return (
       <Button variant="outline" size="small">
         Thanh toán
@@ -96,7 +117,15 @@ const OfferAction = ({ job }: { job: IJob }) => {
     );
   }
 
-  if (job.offer.status === EOfferStatus.Offering && job.offer.from === ERole.Influencer) {
+  if (offer.status === EOfferStatus.Done) {
+    return (
+      <Button variant="outline" size="small">
+        Xem chi tiết
+      </Button>
+    );
+  }
+
+  if (offer.status === EOfferStatus.Offering && offer.from === ERole.Influencer) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -109,11 +138,14 @@ const OfferAction = ({ job }: { job: IJob }) => {
             <ResetIcon />
             Đề nghị lại
           </DropdownMenuItem>
-          <DropdownMenuItem className="flex items-center gap-1">
+          <DropdownMenuItem className="flex items-center gap-1" onClick={handleResponseOffer(offer.id, true)}>
             <CheckIcon />
             Chấp nhận
           </DropdownMenuItem>
-          <DropdownMenuItem className="flex items-center gap-1">
+          <DropdownMenuItem
+            className="flex items-center gap-1 text-destructive"
+            onClick={handleResponseOffer(offer.id, false)}
+          >
             <Cross2Icon />
             Từ chối
           </DropdownMenuItem>

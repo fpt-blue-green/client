@@ -34,7 +34,7 @@ const Tracking: FC<TrackingProps> = async ({ params, searchParams }) => {
     <div className="container mt-8 mb-16">
       <div className="flex items-center justify-between mb-12">
         <div className="space-y-2">
-          <h1 className="text-3xl font-semibold">{campaign.name}</h1>
+          <h1 className="text-3xl font-semibold">{campaign.title}</h1>
           <p className="flex items-center gap-2">
             <CalendarIcon />
             {formats.date(campaign.startDate)} - {formats.date(campaign.endDate)}
