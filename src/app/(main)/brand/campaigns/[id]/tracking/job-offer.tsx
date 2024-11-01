@@ -18,26 +18,24 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn, constants, formats, functions } from '@/lib/utils';
 import { offerRequest } from '@/request';
 import { ReofferBodyType, reofferSchema } from '@/schema-validations/offer.schema';
-import ICampaign from '@/types/campaign';
 import { EOfferStatus, ERole, PlatformData } from '@/types/enum';
 import IOffer from '@/types/offer';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CheckCircledIcon, CrossCircledIcon, ResetIcon } from '@radix-ui/react-icons';
+import { ResetIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 import { ChangeEvent, FC, ReactNode, useState } from 'react';
 import { ControllerRenderProps, useForm } from 'react-hook-form';
 import { FaRegMoneyBillAlt } from 'react-icons/fa';
 import { RxChatBubble, RxFace } from 'react-icons/rx';
 import { toast } from 'sonner';
-import { mutate } from 'swr';
 
 interface JobOfferProps {
   offer: IOffer;
-  campaign: ICampaign;
   children: ReactNode;
+  reload: () => Promise<void>;
 }
 
-const JobOffer: FC<JobOfferProps> = ({ offer, campaign, children }) => {
+const JobOffer: FC<JobOfferProps> = ({ offer, children, reload }) => {
   const [open, setOpen] = useState(false);
   const { Icon, color, label, description } = constants.offerStatus[offer.status];
 
@@ -55,8 +53,9 @@ const JobOffer: FC<JobOfferProps> = ({ offer, campaign, children }) => {
       'bg-foreground/20': isBigCircle && color === 'secondary',
     });
 
-  const handleClose = () => {
+  const handleClose = async () => {
     setOpen(false);
+    await reload();
   };
 
   return (
@@ -78,10 +77,6 @@ const JobOffer: FC<JobOfferProps> = ({ offer, campaign, children }) => {
         </div>
         <Separator className="my-6" />
         <ScrollArea className="max-h-96 overflow-auto">
-          <div className="space-y-2 text-center mb-6">
-            <h3 className="text-lg font-semibold">{campaign.title}</h3>
-            <p className="text-sm text-muted-foreground">{campaign.description}</p>
-          </div>
           <ReofferForm offer={offer} onClose={handleClose} />
         </ScrollArea>
       </DialogContent>
@@ -104,7 +99,7 @@ const ReofferForm = ({ offer, onClose }: { offer: IOffer; onClose: () => void })
     return { timeUnit, duration };
   };
 
-  const canReoffer = offer.status === EOfferStatus.Offering && offer.from === ERole.Brand;
+  const canReoffer = offer.status === EOfferStatus.Offering && offer.from === ERole.Influencer;
 
   const form = useForm<ReofferBodyType>({
     resolver: zodResolver(reofferSchema),
@@ -136,37 +131,8 @@ const ReofferForm = ({ offer, onClose }: { offer: IOffer; onClose: () => void })
     toast.promise(offerRequest.reoffer(offer.id, values), {
       loading: 'Đang tải',
       success: () => {
-        mutate((key: string) => key?.startsWith('/Influencer/jobs'));
         onClose();
         return 'Đã gửi đề nghị của bạn thành công';
-      },
-      error: (err) => err?.message || constants.sthWentWrong,
-      finally: () => setLoading(false),
-    });
-  };
-
-  const handleApprove = () => {
-    setLoading(true);
-    toast.promise(offerRequest.approveOffer(offer.id), {
-      loading: 'Đang tải',
-      success: () => {
-        mutate((key: string) => key?.startsWith('/Influencer/jobs'));
-        onClose();
-        return 'Đã chấp thuận lời đề nghị. Chờ nhãn hàng thanh toán tiền đặt cọc';
-      },
-      error: (err) => err?.message || constants.sthWentWrong,
-      finally: () => setLoading(false),
-    });
-  };
-
-  const handleReject = () => {
-    setLoading(true);
-    toast.promise(offerRequest.rejectOffer(offer.id), {
-      loading: 'Đang tải',
-      success: () => {
-        mutate((key: string) => key?.startsWith('/Influencer/jobs'));
-        onClose();
-        return 'Đã từ chối lời đề nghị thành công';
       },
       error: (err) => err?.message || constants.sthWentWrong,
       finally: () => setLoading(false),
@@ -262,22 +228,11 @@ const ReofferForm = ({ offer, onClose }: { offer: IOffer; onClose: () => void })
             )}
           </div>
           {canReoffer && (
-            <>
-              <Button variant="destructive" startIcon={<CrossCircledIcon />} loading={loading} onClick={handleReject}>
-                Hủy đề nghị
-              </Button>
-              <Button type="submit" startIcon={<ResetIcon />} loading={loading}>
+            <div className="col-span-full">
+              <Button type="submit" startIcon={<ResetIcon />} loading={loading} fullWidth>
                 Đề nghị lại
               </Button>
-              <Button
-                className="bg-success text-success-foreground hover:bg-success/80"
-                startIcon={<CheckCircledIcon />}
-                loading={loading}
-                onClick={handleApprove}
-              >
-                Chấp thuận
-              </Button>
-            </>
+            </div>
           )}
         </div>
       </form>

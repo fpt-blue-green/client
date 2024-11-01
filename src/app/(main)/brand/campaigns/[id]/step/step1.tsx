@@ -18,7 +18,7 @@ import IBrand from '@/types/brand';
 
 const Step1: FC<DetailStepProps> = ({ id, campaign, mutate }) => {
   const [loading, setLoading] = useState(false);
-  const [tags, setTags] = useState<string[]>(campaign.tags?.map((t) => t.id) || []);
+  const [tags, setTags] = useState<string[]>(campaign?.tags?.map((t) => t.id) || []);
   const { data, isLoading } = useSWRImmutable<ITag[]>('/Tags', fetcher);
   const { data: profile } = useSWRImmutable<IBrand>('/Brand', fetcher);
   const router = useRouter();

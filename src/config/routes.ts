@@ -21,6 +21,7 @@ const routes = {
     campaigns: {
       base: '/brand/campaigns',
       edit: (id: string, step: number) => `/brand/campaigns/${id}?step=${step}`,
+      tracking: (id: string) => `/brand/campaigns/${id}/tracking`,
     },
     wishlist: '/brand/wishlist',
   },

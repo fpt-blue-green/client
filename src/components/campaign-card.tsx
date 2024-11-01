@@ -13,19 +13,20 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { ClockIcon, DotsVerticalIcon, EyeOpenIcon, Pencil1Icon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons';
+import { ClockIcon, DotsVerticalIcon, EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons';
 import { campaignsRequest } from '@/request';
 import { toast } from 'sonner';
 import Chip from '@/components/custom/chip';
 import { FaRegMoneyBillAlt } from 'react-icons/fa';
+import { ECampaignStatus } from '@/types/enum';
 
 interface CampaignCardProps {
   data: ICampaign;
-  onEdit?: (campaign?: ICampaign) => () => void;
+  canEdit?: boolean;
   reload?: () => Promise<void>;
 }
 
-const CampaignCard: FC<CampaignCardProps> = ({ data, onEdit, reload }) => {
+const CampaignCard: FC<CampaignCardProps> = ({ data, canEdit, reload }) => {
   const firstImage = data.images[0]?.url;
 
   const handleDelete = (campaign: ICampaign) => () => {
@@ -54,7 +55,7 @@ const CampaignCard: FC<CampaignCardProps> = ({ data, onEdit, reload }) => {
             className="object-cover w-full aspect-video transition-transform hover:scale-110"
           />
         )}
-        {onEdit && (
+        {canEdit && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" size="icon" className="absolute top-4 right-4">
@@ -68,16 +69,10 @@ const CampaignCard: FC<CampaignCardProps> = ({ data, onEdit, reload }) => {
                   Xem chi tiết
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onEdit(data)}>
-                <span className="flex items-center gap-2">
-                  <Pencil1Icon />
-                  Chỉnh sửa chung
-                </span>
-              </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href={config.routes.brand.campaigns.edit(data.id, 1)} className="flex items-center gap-2">
                   <Pencil2Icon />
-                  Chỉnh sửa chi tiết
+                  Chỉnh sửa
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleDelete(data)}>
@@ -92,10 +87,16 @@ const CampaignCard: FC<CampaignCardProps> = ({ data, onEdit, reload }) => {
       </div>
       <div className="p-4 space-y-2 text-sm">
         <div className="flex items-center justify-between gap-4 text-base">
-          {onEdit ? (
-            <Link href={config.routes.brand.campaigns.edit(data.id, 1)} className="font-semibold hover:underline">
-              {data.name}
-            </Link>
+          {canEdit ? (
+            data.status === ECampaignStatus.Draft ? (
+              <Link href={config.routes.brand.campaigns.edit(data.id, 1)} className="font-semibold hover:underline">
+                {data.name}
+              </Link>
+            ) : (
+              <Link href={config.routes.brand.campaigns.tracking(data.id)} className="font-semibold hover:underline">
+                {data.name}
+              </Link>
+            )
           ) : (
             <Link href={config.routes.campaigns.details(data.id)} className="font-semibold hover:underline">
               {data.title}
@@ -105,10 +106,10 @@ const CampaignCard: FC<CampaignCardProps> = ({ data, onEdit, reload }) => {
             label={constants.campaignStatus[data.status].label}
             variant={constants.campaignStatus[data.status].color}
             size="small"
-            className={cn({ 'absolute top-3 right-3': !onEdit })}
+            className={cn({ 'absolute top-3 right-3': !canEdit })}
           />
         </div>
-        {onEdit && <h6 className="text-sm">{data.title}</h6>}
+        {canEdit && <h6 className="text-sm">{data.title}</h6>}
         <div className="flex items-center gap-2">
           <ClockIcon />
           {formats.date(data.startDate)} - {formats.date(data.endDate)}

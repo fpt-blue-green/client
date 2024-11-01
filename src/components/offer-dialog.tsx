@@ -181,7 +181,7 @@ const OfferForm: FC<OfferFormProps> = ({ data, campaign, influencer, brand }) =>
                     {campaign ? (
                       <SelectItem value={campaign.id}>{campaign.title}</SelectItem>
                     ) : (
-                      brandCampaigns?.map((c) => (
+                      brandCampaigns?.items.map((c) => (
                         <SelectItem key={c.id} value={c.id}>
                           {c.title}
                         </SelectItem>
