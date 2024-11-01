@@ -42,6 +42,7 @@ export const reofferSchema = z.object({
     .min(50000, 'Nhập giá trị lớn hơn hoặc bằng 50.000'),
   duration: z.number().int('Nhập giá trị nguyên').min(0, 'Nhập giá trị lớn hơn 0').nullable().optional(),
   timeUnit: z.enum(['s', 'm', 'h']).optional(),
+  description: z.string().optional(),
 });
 
 export type OfferBodyType = z.infer<typeof offerSchema>;

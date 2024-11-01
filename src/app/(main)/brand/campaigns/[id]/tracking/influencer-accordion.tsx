@@ -19,9 +19,10 @@ import IInfluencerJobs from '@/types/influencer-jobs';
 import IJob from '@/types/job';
 import { CheckIcon, Cross2Icon, DotsHorizontalIcon, ResetIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { FaReply } from 'react-icons/fa6';
 import { toast } from 'sonner';
+import JobOffer from './job-offer';
 
 interface InfluencerAccordionProps {
   item: IInfluencerJobs;
@@ -71,11 +72,13 @@ const InfluencerAccordion: FC<InfluencerAccordionProps> = ({ item, reload }) => 
                   <TableCell>{job.offer.targetReaction}</TableCell>
                   <TableCell>{job.offer.duration}</TableCell>
                   <TableCell>
-                    <Chip
-                      label={label}
-                      variant={color}
-                      icon={job.offer.from === ERole.Brand ? <FaReply /> : undefined}
-                    />
+                    <JobOffer offer={job.offer} reload={reload}>
+                      <Chip
+                        label={label}
+                        variant={color}
+                        icon={job.offer.from === ERole.Brand ? <FaReply /> : undefined}
+                      />
+                    </JobOffer>
                   </TableCell>
                   <TableCell>
                     <OfferAction job={job} reload={reload} />
@@ -92,8 +95,10 @@ const InfluencerAccordion: FC<InfluencerAccordionProps> = ({ item, reload }) => 
 
 const OfferAction = ({ job, reload }: { job: IJob; reload: () => Promise<void> }) => {
   const { offer } = job;
+  const [open, setOpen] = useState(false);
 
   const handleResponseOffer = (id: string, accept: boolean) => () => {
+    setOpen(false);
     const caller = accept ? offerRequest.approveOffer(id) : offerRequest.rejectOffer(id);
     emitter.confirm({
       content: `Bạn có chắc sẽ ${accept ? 'đồng ý' : 'từ chối'} lời đề nghị này không?`,
@@ -127,17 +132,19 @@ const OfferAction = ({ job, reload }: { job: IJob; reload: () => Promise<void> }
 
   if (offer.status === EOfferStatus.Offering && offer.from === ERole.Influencer) {
     return (
-      <DropdownMenu>
+      <DropdownMenu open={open}>
         <DropdownMenuTrigger asChild>
-          <Button size="icon-sm" variant="outline">
+          <Button size="icon-sm" variant="outline" onClick={() => setOpen(true)}>
             <DotsHorizontalIcon />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem className="flex items-center gap-1">
-            <ResetIcon />
-            Đề nghị lại
-          </DropdownMenuItem>
+        <DropdownMenuContent align="end" onInteractOutside={() => setOpen(false)}>
+          <JobOffer offer={offer} reload={reload}>
+            <DropdownMenuItem className="flex items-center gap-1">
+              <ResetIcon />
+              Đề nghị lại
+            </DropdownMenuItem>
+          </JobOffer>
           <DropdownMenuItem className="flex items-center gap-1" onClick={handleResponseOffer(offer.id, true)}>
             <CheckIcon />
             Chấp nhận
