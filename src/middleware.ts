@@ -20,15 +20,15 @@ export default withAuth(
       }
     }
 
-    if (influencerPaths.some((path) => pathname.startsWith(path)) && token?.role === ERole.Influencer) {
-      return NextResponse.next();
+    if (influencerPaths.some((path) => pathname.startsWith(path)) && token?.role !== ERole.Influencer) {
+      return NextResponse.redirect(new URL('/', req.url));
     }
 
-    if (brandPaths.some((path) => pathname.startsWith(path)) && token?.role === ERole.Brand) {
-      return NextResponse.next();
+    if (brandPaths.some((path) => pathname.startsWith(path)) && token?.role !== ERole.Brand) {
+      return NextResponse.redirect(new URL('/', req.url));
     }
 
-    return NextResponse.redirect(new URL('/', req.url));
+    return NextResponse.next();
   },
   {
     callbacks: {
@@ -41,5 +41,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ['/account', '/influencer/:path*', '/brand/:path*', '/admin/:path*'],
+  matcher: ['/account', '/influencer/:path*', '/brand/:path*', '/admin/:path*', '/chats'],
 };
