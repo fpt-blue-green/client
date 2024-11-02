@@ -1,4 +1,5 @@
 'use client';
+
 import TagTable from './table';
 
 const TagManagement = () => {

@@ -1,4 +1,4 @@
-import Table from '@/components/custom/data-table';
+import Table, { TableRef } from '@/components/custom/data-table';
 import { columns } from './columns';
 import { ButtonProps } from '@/components/ui/button';
 import ITag from '@/types/tag';
@@ -8,10 +8,18 @@ import { MoreHorizontal } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import PopupForm from './popup-form';
 import { Mode } from '@/types/enum';
+import { ColumnDef } from '@tanstack/react-table';
+import { useRef, useState } from 'react';
 
 const TagTable = () => {
+  const [showDialog, setShowDialog] = useState<boolean>(false);
+
   const handleOnCheck = (item: ITag[]) => {};
-  const columnsWithActions = [
+  const tableRef = useRef<TableRef>(null);
+  const reloadTable = () => {
+    tableRef.current?.reload();
+  };
+  const columnsWithActions: ColumnDef<ITag, ITag>[] = [
     ...columns,
     {
       id: 'actions',
@@ -26,8 +34,8 @@ const TagTable = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="flex flex-col gap-1">
-              <PopupForm mode={Mode.Edit} tag={tag} />
-              <PopupForm mode={Mode.Delete} tag={tag} />
+              <PopupForm reload={reloadTable} mode={Mode.Edit} tag={tag} />
+              <PopupForm reload={reloadTable} mode={Mode.Delete} tag={tag} />
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -42,6 +50,7 @@ const TagTable = () => {
   ];
   return (
     <Table
+      ref={tableRef}
       onCheck={(item) => {
         handleOnCheck(item);
       }}
