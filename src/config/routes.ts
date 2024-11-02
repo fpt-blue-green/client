@@ -46,6 +46,7 @@ const routes = {
     campaign: '/admin/campaign-management',
     statistic: '/admin/statistic',
     tag: '/admin/tag-management',
+    chatBox: '/admin/message-management',
   },
 };
 
