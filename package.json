@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emoji-mart/data": "^1.2.1",
+    "@emoji-mart/react": "^1.1.1",
     "@hookform/resolvers": "^3.9.0",
     "@microsoft/signalr": "^8.0.7",
     "@radix-ui/react-accordion": "^1.2.1",
@@ -60,6 +62,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/emoji-mart": "^3.0.14",
     "@types/fbemitter": "^2.0.35",
     "@types/node": "^20",
     "@types/react": "^18",
