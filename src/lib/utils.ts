@@ -47,7 +47,7 @@ export const formats = {
 
     // Kiểm tra xem date có hợp lệ hay không
     if (isNaN(date.getTime())) {
-      throw new Error('Invalid date');
+      return '';
     }
 
     const formattedDate = new Intl.DateTimeFormat('vi-VN', {

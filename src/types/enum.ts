@@ -130,3 +130,8 @@ export enum NumberType {
   Currency = 1,
   Quantity,
 }
+
+export enum Mode {
+  Edit = 1,
+  Delete,
+}
