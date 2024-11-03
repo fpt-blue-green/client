@@ -7,8 +7,11 @@ import { Button } from '@/components/ui/button';
 import { LuMoreHorizontal, LuPhone, LuVideo } from 'react-icons/lu';
 import ChatContainer from './chat-container';
 import ChatForm from './chat-form';
+import { useChat } from '@/hooks';
 
 const BoxChat = () => {
+  const { messages } = useChat('f9a81449-f6d7-4b39-91b4-59b1a20c87a3');
+
   return (
     <div className="pl-4 pr-8 h-full">
       <Paper className="relative h-full p-4">
@@ -42,7 +45,7 @@ const BoxChat = () => {
           </div>
         </div>
         <div className="flex flex-col gap-4 h-full pt-16 -mr-4">
-          <ChatContainer />
+          <ChatContainer messages={messages} />
           <div className="shrink-0 pr-4">
             <ChatForm />
           </div>

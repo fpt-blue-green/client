@@ -7,19 +7,37 @@ import { Input } from '@/components/ui/input';
 import { LuImagePlus, LuPlus, LuSendHorizonal, LuSmilePlus } from 'react-icons/lu';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
-import { useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import { useTheme } from 'next-themes';
+import { useChat } from '@/hooks';
 
 const ChatForm = () => {
+  const [loading, setLoading] = useState(false);
   const { theme } = useTheme();
   const [message, setMessage] = useState('');
+  const { sendMessage } = useChat('f9a81449-f6d7-4b39-91b4-59b1a20c87a3');
 
   const handlePickEmoji = (emoji: any) => {
     setMessage(message + emoji.native);
   };
 
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setMessage(value);
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!loading && message.trim().length > 0) {
+      setLoading(true);
+      await sendMessage(message.trim());
+      setMessage('');
+      setLoading(false);
+    }
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <DropdownMenu>
         <Input
           className="h-12 text-base"
@@ -48,13 +66,13 @@ const ChatForm = () => {
           fullWidth
           endAdornment={
             <Tooltip label="Nhấn Enter để gửi">
-              <Button variant="ghost" size="icon" className="shrink-0">
+              <Button type="submit" variant="ghost" size="icon" className="shrink-0" loading={loading}>
                 <LuSendHorizonal className="text-xl" />
               </Button>
             </Tooltip>
           }
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={handleChange}
         />
         <DropdownMenuContent className="p-0">
           <Picker
