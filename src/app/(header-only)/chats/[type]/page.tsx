@@ -8,4 +8,8 @@ const Page = () => {
   );
 };
 
+export function generateStaticParams() {
+  return [{ type: 'group' }, { type: 'person' }];
+}
+
 export default Page;
