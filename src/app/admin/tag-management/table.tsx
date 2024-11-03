@@ -12,8 +12,6 @@ import { ColumnDef } from '@tanstack/react-table';
 import { useRef, useState } from 'react';
 
 const TagTable = () => {
-  const [showDialog, setShowDialog] = useState<boolean>(false);
-
   const handleOnCheck = (item: ITag[]) => {};
   const tableRef = useRef<TableRef>(null);
   const reloadTable = () => {

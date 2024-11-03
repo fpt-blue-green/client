@@ -1,6 +1,6 @@
-import { DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { FC, useRef, useState } from 'react';
+import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ITag from '@/types/tag';
 import { BasicBodyType, basicSchema } from '@/schema-validations/tag.schema';
@@ -10,12 +10,11 @@ import { toast } from 'sonner';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { TableRef } from '@/components/custom/data-table';
 
 interface EditFormProps {
   tag?: ITag;
   reload?: () => void;
-  setShowDialog?: () => void;
+  setShowDialog?: (value: boolean) => void;
 }
 
 const EditForm: FC<EditFormProps> = ({ tag, reload, setShowDialog }) => {
@@ -32,7 +31,7 @@ const EditForm: FC<EditFormProps> = ({ tag, reload, setShowDialog }) => {
     try {
       const res = await tagRequest.updateTag(tag?.id || '', values);
       reload && reload();
-      setShowDialog && setShowDialog();
+      setShowDialog && setShowDialog(false);
       toast.success('Cập nhật thẻ thành công.');
     } catch (err: any) {
       toast.error(err.message);

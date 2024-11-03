@@ -6,7 +6,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
@@ -30,9 +29,9 @@ const PopupForm: FC<IPopupFormProps> = ({ mode, tag, reload }) => {
   const handleDeleteTag = async () => {
     setLoading(true);
     try {
-      const res = await tagRequest.delete(tag?.id || '');
+      await tagRequest.delete(tag?.id || '');
       reload && reload();
-      setShowDialog;
+      setShowDialog && setShowDialog(false);
       toast.success('Xoá thẻ thành công.');
     } catch (err: any) {
       toast.error(err.message);
@@ -48,7 +47,7 @@ const PopupForm: FC<IPopupFormProps> = ({ mode, tag, reload }) => {
           className="w-full border-none"
           variant="outline"
           onClick={() => {
-            setShowDialog(true);
+            setShowDialog && setShowDialog(true);
           }}
         >
           {mode === Mode.Edit ? 'Chỉnh sửa' : 'Xoá'}

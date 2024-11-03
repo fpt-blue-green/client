@@ -1,5 +1,5 @@
 import http from '@/lib/http';
-import { BasicBodyType } from '@/schema-validations/campaign.schema';
+import { BasicBodyType } from '@/schema-validations/tag.schema';
 import ITag from '@/types/tag';
 const tagsRequest = {
   getTagById: (id: string) => http.get<ITag>(`/Tags/${id}`, { noToken: false, next: { revalidate: 60 } }),
