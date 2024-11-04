@@ -21,6 +21,7 @@ interface TableProps<TData, TValue> {
   filters?: DataTableFilterField<TData>[];
   buttons?: ButtonProps[];
   onCheck?: (items: TData[]) => void;
+  headClassName?: string;
 }
 
 export interface TableRef {
@@ -29,7 +30,7 @@ export interface TableRef {
 
 // Sử dụng một hàm wrapper để khai báo generic và truyền vào `forwardRef`.
 function TableComponent<TData, TValue>(
-  { columns, url, filters, buttons, onCheck }: TableProps<TData, TValue>,
+  { columns, url, filters, buttons, onCheck, headClassName }: TableProps<TData, TValue>,
   ref: Ref<TableRef>,
 ) {
   const [urlQuery, setUrlQuery] = useState<string>();
@@ -92,7 +93,7 @@ function TableComponent<TData, TValue>(
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} filters={filters} buttons={buttons} />
-      <DataTable table={table} isLoading={isLoading} />
+      <DataTable table={table} isLoading={isLoading} headClassName={headClassName} />
       <DataTablePagination table={table} />
     </div>
   );

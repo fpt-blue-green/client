@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { FC } from 'react';
 import Member from './member';
+import Performance from './performance';
 
 interface TrackingProps {
   params: { id: string };
@@ -76,6 +77,9 @@ const Tracking: FC<TrackingProps> = async ({ params, searchParams }) => {
         </TabsList>
         <TabsContent value="member">
           <Member />
+        </TabsContent>
+        <TabsContent value="performance">
+          <Performance />
         </TabsContent>
       </Tabs>
     </div>
