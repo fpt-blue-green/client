@@ -13,7 +13,7 @@ interface DataTableToolbarProps<TData> {
 }
 
 export function DataTableToolbar<TData>({ table, filters, buttons }: DataTableToolbarProps<TData>) {
-  const { searchFields, optionFields } = useMemo(() => {
+  const { searchFields } = useMemo(() => {
     return {
       searchFields: filters?.filter((field) => !field.options) || [],
       optionFields: filters?.filter((field) => field.options) || [],
