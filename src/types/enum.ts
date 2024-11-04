@@ -132,7 +132,8 @@ export enum NumberType {
 }
 
 export enum Mode {
-  Edit = 1,
+  Other = 0,
+  Edit,
   Delete,
   Add,
 }

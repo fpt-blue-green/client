@@ -33,11 +33,6 @@ export const items: SideBarItemModel[] = [
     content: 'Chiến Dịch',
   },
   {
-    route: config.routes.admin.chatBox,
-    icon: <MessageCircleIcon size={15} />,
-    content: 'Tin nhắn',
-  },
-  {
     route: config.routes.admin.tag,
     icon: <FaTag />,
     content: 'Thẻ',

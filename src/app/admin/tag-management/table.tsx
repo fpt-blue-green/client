@@ -5,18 +5,29 @@ import ITag from '@/types/tag';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal } from 'lucide-react';
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import PopupForm from './popup-form';
-import { Mode } from '@/types/enum';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
 import { useRef, useState } from 'react';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { constants, emitter } from '@/lib/utils';
+import { tagRequest } from '@/request';
+import { toast } from 'sonner';
+import ActionForm from './action-form';
 
 const TagTable = () => {
-  const handleOnCheck = (item: ITag[]) => {};
   const tableRef = useRef<TableRef>(null);
   const reloadTable = () => {
     tableRef.current?.reload();
   };
+
+  const [open, setOpen] = useState(false);
+  const [tag, setTag] = useState<ITag>();
+
   const columnsWithActions: ColumnDef<ITag, ITag>[] = [
     ...columns,
     {
@@ -32,8 +43,10 @@ const TagTable = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="flex flex-col gap-1">
-              <PopupForm reload={reloadTable} mode={Mode.Edit} tag={tag} />
-              <PopupForm reload={reloadTable} mode={Mode.Delete} tag={tag} />
+              <DropdownMenuItem asChild>
+                <DialogTrigger onClick={handleOpen(tag)}>Chỉnh sửa</DialogTrigger>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleDelete(tag)}>Xóa</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -41,21 +54,46 @@ const TagTable = () => {
     },
   ];
 
+  const handleOpen = (tag?: ITag) => () => {
+    setTag(tag);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setTag(undefined);
+    setOpen(false);
+  };
+
+  const handleDelete = (tag: ITag) => () => {
+    const caller = tagRequest.delete(tag.id);
+    emitter.confirm({
+      content: `Bạn có chắc khi muốn xóa thẻ ${tag.name}?`,
+      callback: () =>
+        toast.promise(caller, {
+          loading: 'Đang tải',
+          success: () => {
+            reloadTable();
+            return 'Đã xóa thẻ thành công.';
+          },
+          error: (err) => err?.message || constants.sthWentWrong,
+        }),
+    });
+  };
+
   const buttons: ButtonProps[] = [
     {
       children: 'Thêm',
+      onClick: handleOpen(undefined),
     },
   ];
+
   return (
-    <Table
-      ref={tableRef}
-      onCheck={(item) => {
-        handleOnCheck(item);
-      }}
-      columns={columnsWithActions}
-      url="/Tags/filter"
-      buttons={buttons}
-    />
+    <Dialog open={open} onOpenChange={setOpen}>
+      <Table ref={tableRef} columns={columnsWithActions} url="/Tags/filter" buttons={buttons} />
+      <DialogContent>
+        <ActionForm handleClose={handleClose} item={tag} reload={reloadTable} />
+      </DialogContent>
+    </Dialog>
   );
 };
 

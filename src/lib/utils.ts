@@ -41,7 +41,7 @@ export const formats = {
       return num.toString();
     }
   },
-  date: (input: Date | string, options?: Intl.DateTimeFormatOptions): string => {
+  date: (input: Date | string, showTime: boolean = false, options?: Intl.DateTimeFormatOptions): string => {
     // Chuyển đổi input thành Date nếu là string
     const date = typeof input === 'string' ? new Date(input) : input;
 
@@ -56,7 +56,12 @@ export const formats = {
       day: options?.day || '2-digit',
       ...options,
     }).format(date);
-    return formattedDate;
+    const formattedTime = new Intl.DateTimeFormat('vi-VN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    }).format(date);
+    return `${formattedDate} ${showTime && formattedTime}`;
   },
 };
 

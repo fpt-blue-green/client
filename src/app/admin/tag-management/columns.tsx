@@ -30,13 +30,13 @@ export const columns: ColumnDef<ITag, ITag>[] = [
     accessorKey: 'createdAt',
     header: 'Ngày tạo thẻ',
     enableSorting: true,
-    cell: ({ row }) => formats.date(row.original.createdAt || ''),
+    cell: ({ row }) => formats.date(row.original.createdAt || '', true),
   },
   {
     id: 'modifiedAt',
     accessorKey: 'modifiedAt',
     header: 'Lần cập nhật gần nhất',
     enableSorting: false,
-    cell: ({ row }) => formats.date(row.original.modifiedAt || ''),
+    cell: ({ row }) => formats.date(row.original.modifiedAt || '', true),
   },
 ];

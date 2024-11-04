@@ -11,28 +11,33 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-interface EditFormProps {
-  tag?: ITag;
+interface ActionFormProps {
+  item?: ITag;
   reload?: () => void;
-  setShowDialog?: (value: boolean) => void;
+  handleClose?: () => void;
 }
 
-const EditForm: FC<EditFormProps> = ({ tag, reload, setShowDialog }) => {
+const ActionForm: FC<ActionFormProps> = ({ item, reload, handleClose }) => {
   const [loading, setLoading] = useState(false);
   const form = useForm<BasicBodyType>({
     resolver: zodResolver(basicSchema),
     defaultValues: {
-      name: tag?.name || '',
-      isPremium: tag?.isPremium || false,
+      name: item?.name || '',
+      isPremium: item?.isPremium || false,
     },
   });
-  const handleUpdateTag = async (values: BasicBodyType) => {
+
+  const handleSubmit = async (values: BasicBodyType) => {
     setLoading(true);
     try {
-      const res = await tagRequest.updateTag(tag?.id || '', values);
-      reload && reload();
-      setShowDialog && setShowDialog(false);
-      toast.success('Cập nhật thẻ thành công.');
+      const res = item ? await tagRequest.updateTag(item?.id || '', values) : await tagRequest.createTag(values);
+      if (res.statusCode === 200) {
+        reload?.();
+        toast.success(item ? 'Cập nhật thẻ thành công.' : 'Tạo thẻ thành công.');
+      } else {
+        toast.error(item ? 'Cập nhật thẻ thất bại.' : 'Tạo thẻ thất bại.');
+      }
+      handleClose?.();
     } catch (err: any) {
       toast.error(err.message);
     } finally {
@@ -42,9 +47,9 @@ const EditForm: FC<EditFormProps> = ({ tag, reload, setShowDialog }) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleUpdateTag)}>
+      <form onSubmit={form.handleSubmit(handleSubmit)}>
         <DialogHeader>
-          <DialogTitle>Chỉnh sửa thẻ</DialogTitle>
+          <DialogTitle>{item ? 'Chỉnh sửa thẻ' : 'Thêm thẻ'}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-6">
           <FormField
@@ -52,7 +57,8 @@ const EditForm: FC<EditFormProps> = ({ tag, reload, setShowDialog }) => {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormControl>
+                <FormLabel>Tên thẻ</FormLabel>
+                <FormControl className="w-full">
                   <Input id="name" placeholder="Tên thẻ" {...field} />
                 </FormControl>
                 <FormMessage />
@@ -94,7 +100,7 @@ const EditForm: FC<EditFormProps> = ({ tag, reload, setShowDialog }) => {
         </div>
         <DialogFooter>
           <Button type="submit" loading={loading}>
-            Lưu thay đổi
+            Lưu
           </Button>
         </DialogFooter>
       </form>
@@ -102,4 +108,4 @@ const EditForm: FC<EditFormProps> = ({ tag, reload, setShowDialog }) => {
   );
 };
 
-export default EditForm;
+export default ActionForm;
