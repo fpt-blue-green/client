@@ -3,6 +3,7 @@
 
 import { fetcher } from '@/lib/http';
 import ICampaign from '@/types/campaign';
+import { ICampaignOverview } from '@/types/campaign-tracking';
 import { ECampaignStatus, EJobStatus, EOfferStatus, ERole } from '@/types/enum';
 import { IFilterList } from '@/types/filter-list';
 import IInfluencer from '@/types/influencer';
@@ -44,6 +45,9 @@ const fetchRequest = {
         mutateGlobal<IFilterList<IInfluencerJobs>>((key: string) => key.startsWith(`/Campaigns/${id}/Influencers`));
       return { ...swr, mutate };
     },
+    trackingOverview: (id: string) => useSWRImmutable<ICampaignOverview>(`/Campaigns/${id}/jobDetailBase`, fetcher),
+    statisticalChart: (id: string) =>
+      useSWRImmutable<{ date: string; totalReaction: number }[]>(`/Campaigns/${id}/jobDetailStatistic`, fetcher),
   },
   influencer: {
     jobs: (page = 1, pageSize = 10, campaignStatus?: ECampaignStatus[], jobStatus?: EJobStatus[], from?: ERole) => {
