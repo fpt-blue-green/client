@@ -4,13 +4,15 @@ import { flexRender, Table as ReactTable } from '@tanstack/react-table';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
+import NoData from '@/components/no-data';
 
 interface DataTableProps<TData> {
   table: ReactTable<TData>;
   isLoading?: boolean;
+  headClassName?: string;
 }
 
-export function DataTable<TData>({ table, isLoading }: DataTableProps<TData>) {
+export function DataTable<TData>({ table, isLoading, headClassName }: DataTableProps<TData>) {
   return (
     <div className="rounded-md border">
       <Table>
@@ -19,7 +21,7 @@ export function DataTable<TData>({ table, isLoading }: DataTableProps<TData>) {
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className={headClassName}>
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 );
@@ -49,7 +51,7 @@ export function DataTable<TData>({ table, isLoading }: DataTableProps<TData>) {
           ) : (
             <TableRow>
               <TableCell colSpan={table.getAllColumns().length} className="h-24 text-center">
-                No results.
+                <NoData />
               </TableCell>
             </TableRow>
           )}
