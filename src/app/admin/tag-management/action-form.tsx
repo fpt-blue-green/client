@@ -1,4 +1,6 @@
-import { DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+'use client';
+
+import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -10,11 +12,12 @@ import { toast } from 'sonner';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { constants } from '@/lib/utils';
 
 interface ActionFormProps {
   item?: ITag;
-  reload?: () => void;
-  handleClose?: () => void;
+  reload: () => Promise<void>;
+  handleClose: () => void;
 }
 
 const ActionForm: FC<ActionFormProps> = ({ item, reload, handleClose }) => {
@@ -27,22 +30,19 @@ const ActionForm: FC<ActionFormProps> = ({ item, reload, handleClose }) => {
     },
   });
 
-  const handleSubmit = async (values: BasicBodyType) => {
+  const handleSubmit = (values: BasicBodyType) => {
     setLoading(true);
-    try {
-      const res = item ? await tagRequest.updateTag(item?.id || '', values) : await tagRequest.createTag(values);
-      if (res.statusCode === 200) {
-        reload?.();
-        toast.success(item ? 'Cập nhật thẻ thành công.' : 'Tạo thẻ thành công.');
-      } else {
-        toast.error(item ? 'Cập nhật thẻ thất bại.' : 'Tạo thẻ thất bại.');
-      }
-      handleClose?.();
-    } catch (err: any) {
-      toast.error(err.message);
-    } finally {
-      setLoading(false);
-    }
+    const caller = item ? tagRequest.updateTag(item?.id || '', values) : tagRequest.createTag(values);
+    toast.promise(caller, {
+      loading: 'Đang tải',
+      success: () => {
+        reload();
+        handleClose();
+        return item ? 'Cập nhật thẻ thành công.' : 'Tạo thẻ thành công.';
+      },
+      error: (err) => err?.message || constants.sthWentWrong,
+      finally: () => setLoading(false),
+    });
   };
 
   return (
@@ -50,6 +50,7 @@ const ActionForm: FC<ActionFormProps> = ({ item, reload, handleClose }) => {
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <DialogHeader>
           <DialogTitle>{item ? 'Chỉnh sửa thẻ' : 'Thêm thẻ'}</DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-6">
           <FormField
@@ -70,26 +71,15 @@ const ActionForm: FC<ActionFormProps> = ({ item, reload, handleClose }) => {
             name="isPremium"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Hạng thẻ</FormLabel>
-                <Select
-                  onValueChange={(value) => {
-                    let rs: boolean;
-                    if (value === 'true') {
-                      rs = true;
-                    } else {
-                      rs = false;
-                    }
-                    field.onChange(rs);
-                  }}
-                  defaultValue={field.value ? 'true' : 'false'}
-                >
+                <FormLabel>Loại thẻ</FormLabel>
+                <Select onValueChange={(value) => field.onChange(Boolean(value))} value={String(field.value)}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Chọn hạng thẻ" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="true">Đặc biệt</SelectItem>
+                    <SelectItem value="true">Premium</SelectItem>
                     <SelectItem value="false">Thông thường</SelectItem>
                   </SelectContent>
                 </Select>
@@ -99,7 +89,12 @@ const ActionForm: FC<ActionFormProps> = ({ item, reload, handleClose }) => {
           />
         </div>
         <DialogFooter>
-          <Button type="submit" loading={loading}>
+          <DialogClose asChild>
+            <Button variant="ghost" type="button" loading={loading}>
+              Hủy
+            </Button>
+          </DialogClose>
+          <Button variant="gradient" type="submit" loading={loading}>
             Lưu
           </Button>
         </DialogFooter>

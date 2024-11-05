@@ -1,3 +1,5 @@
+'use client';
+
 import Table, { TableRef } from '@/components/custom/data-table';
 import { columns } from './columns';
 import { ButtonProps } from '@/components/ui/button';
@@ -21,8 +23,9 @@ import ActionForm from './action-form';
 
 const TagTable = () => {
   const tableRef = useRef<TableRef>(null);
-  const reloadTable = () => {
-    tableRef.current?.reload();
+
+  const reloadTable = async () => {
+    await tableRef.current?.reload();
   };
 
   const [open, setOpen] = useState(false);
@@ -83,6 +86,7 @@ const TagTable = () => {
   const buttons: ButtonProps[] = [
     {
       children: 'Thêm',
+      variant: 'gradient',
       onClick: handleOpen(undefined),
     },
   ];

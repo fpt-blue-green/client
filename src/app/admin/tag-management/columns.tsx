@@ -21,7 +21,7 @@ export const columns: ColumnDef<ITag, ITag>[] = [
   {
     id: 'isPremium',
     accessorKey: 'isPremium',
-    header: 'Loại thẻ đặc biệt?',
+    header: 'Premium',
     enableSorting: false,
     cell: ({ row }) => <div>{row.original.isPremium ? <CheckIcon /> : <></>}</div>,
   },

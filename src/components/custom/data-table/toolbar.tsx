@@ -66,7 +66,7 @@ export function DataTableToolbar<TData>({ table, filters, buttons }: DataTableTo
       </div>
       <div className="flex items-center gap-2">
         {buttons?.map((props, index) => (
-          <Button key={index} size="small" variant="gradient" {...props} />
+          <Button key={index} size="small" variant="outline" {...props} />
         ))}
         <DataTableViewOptions table={table} />
       </div>

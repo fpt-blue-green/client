@@ -41,7 +41,7 @@ export const formats = {
       return num.toString();
     }
   },
-  date: (input: Date | string, showTime: boolean = false, options?: Intl.DateTimeFormatOptions): string => {
+  date: (input: Date | string, showTime = false, options?: Intl.DateTimeFormatOptions): string => {
     // Chuyển đổi input thành Date nếu là string
     const date = typeof input === 'string' ? new Date(input) : input;
 
@@ -49,19 +49,31 @@ export const formats = {
     if (isNaN(date.getTime())) {
       return '';
     }
+    const defaultDateOptions: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    };
 
-    const formattedDate = new Intl.DateTimeFormat('vi-VN', {
-      year: options?.year || 'numeric',
-      month: options?.month || '2-digit',
-      day: options?.day || '2-digit',
-      ...options,
-    }).format(date);
-    const formattedTime = new Intl.DateTimeFormat('vi-VN', {
+    const defaultTimeOptions: Intl.DateTimeFormatOptions = {
       hour: '2-digit',
       minute: '2-digit',
-      hour12: false,
+      second: '2-digit',
+    };
+
+    const dateFormatted = new Intl.DateTimeFormat('vi-VN', {
+      ...defaultDateOptions,
+      ...options,
     }).format(date);
-    return `${formattedDate} ${showTime && formattedTime}`;
+
+    const timeFormatted = showTime
+      ? new Intl.DateTimeFormat('vi-VN', {
+          ...defaultTimeOptions,
+          ...options,
+        }).format(date)
+      : '';
+
+    return timeFormatted ? `${dateFormatted} ${timeFormatted}` : dateFormatted;
   },
 };
 

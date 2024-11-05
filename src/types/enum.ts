@@ -130,10 +130,3 @@ export enum NumberType {
   Currency = 1,
   Quantity,
 }
-
-export enum Mode {
-  Other = 0,
-  Edit,
-  Delete,
-  Add,
-}
