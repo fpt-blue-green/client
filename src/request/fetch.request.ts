@@ -16,6 +16,7 @@ const fetchRequest = {
   favorites: (fetch = false) => useSWR<IInfluencer[]>(fetch ? '/Brand/favorites' : null, fetcher),
   campaign: {
     available: () => useSWRImmutable<ICampaign[]>('/Campaigns', fetcher),
+    getById: (id: string) => useSWRImmutable<ICampaign>(`/Campaigns/${id}`, fetcher),
     currentBrand: (fetch = false, statuses?: ECampaignStatus[], page = 1, pageSize = 12) => {
       const searchParams = new URLSearchParams();
       searchParams.append('PageIndex', page.toString());

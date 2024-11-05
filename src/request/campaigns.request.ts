@@ -4,7 +4,7 @@ import ICampaign from '@/types/campaign';
 
 const campaignsRequest = {
   getCampaignById: (id: string) =>
-    http.get<ICampaign>(`/Campaigns/${id}`, { noToken: false, next: { revalidate: 60 } }),
+    http.get<ICampaign>(`/Campaigns/${id}`, { noToken: false, next: { revalidate: 30 } }),
   createCampaign: (body: BasicBodyType) =>
     http.post<string>('/Campaigns', { ...body, startDate: body.dates[0], endDate: body.dates[1] }),
   updateCampaign: (id: string, body: BasicBodyType) =>
@@ -18,6 +18,8 @@ const campaignsRequest = {
   },
   createContents: (id: string, contents: ContentBodyType[]) => http.post(`/Campaigns/${id}/contents`, contents),
   delete: (id: string) => http.delete(`/Campaigns/${id}`),
+  publish: (id: string) => http.put(`/Campaigns/${id}/publish`),
+  start: (id: string) => http.put(`/Campaigns/${id}/start`),
 };
 
 export default campaignsRequest;

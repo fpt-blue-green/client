@@ -75,7 +75,7 @@ const Step2: FC<DetailStepProps> = ({ id, campaign, mutate }) => {
     campaignsRequest
       .uploadImages(id, imageIds, imageFiles)
       .then(() => {
-        mutate().then(() => router.push(config.routes.brand.campaigns.edit(id, 3)));
+        mutate().then(() => router.push(config.routes.brand.campaigns.edit(id, 4)));
       })
       .catch((err) => toast.error(err.message))
       .finally(() => setLoading(false));

@@ -40,7 +40,7 @@ const Step1: FC<DetailStepProps> = ({ id, campaign, mutate }) => {
     campaignsRequest
       .addTags(id, tags)
       .then(() => {
-        mutate().then(() => router.push(config.routes.brand.campaigns.edit(id, 2)));
+        mutate().then(() => router.push(config.routes.brand.campaigns.edit(id, 3)));
       })
       .catch((err) => toast.error(err.message))
       .finally(() => setLoading(false));
