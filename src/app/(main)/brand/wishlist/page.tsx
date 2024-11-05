@@ -1,4 +1,7 @@
+import { Metadata } from 'next';
 import List from './list';
+
+export const metadata: Metadata = {};
 
 const Page = () => {
   return (

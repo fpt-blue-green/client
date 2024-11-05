@@ -72,7 +72,7 @@ const ActionForm: FC<ActionFormProps> = ({ item, reload, handleClose }) => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Loại thẻ</FormLabel>
-                <Select onValueChange={(value) => field.onChange(Boolean(value))} value={String(field.value)}>
+                <Select onValueChange={(value) => field.onChange(value === 'true')} value={String(field.value)}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Chọn hạng thẻ" />

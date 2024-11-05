@@ -12,8 +12,8 @@ const List = () => {
     <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-x-6 gap-y-8">
       {isLoading ? (
         Array.from({ length: 12 }).map((_, index) => <Skeleton key={index} className="h-40" />)
-      ) : data && data.length > 0 ? (
-        data.map((campaign) => <CampaignCard key={campaign.id} data={campaign} />)
+      ) : data && data.items.length > 0 ? (
+        data.items.map((campaign) => <CampaignCard key={campaign.id} data={campaign} />)
       ) : (
         <NoData description="Không có chiến dịch" className="col-span-full" />
       )}

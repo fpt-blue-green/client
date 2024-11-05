@@ -171,7 +171,9 @@ const OfferForm: FC<OfferFormProps> = ({ data, campaign, influencer, brand }) =>
           name="job.campaignId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="campaign">Chiến dịch</FormLabel>
+              <FormLabel htmlFor="campaign" required>
+                Chiến dịch
+              </FormLabel>
               <FormControl>
                 <Select {...field} onValueChange={field.onChange} disabled={!!campaign}>
                   <SelectTrigger className="w-full">
@@ -199,7 +201,9 @@ const OfferForm: FC<OfferFormProps> = ({ data, campaign, influencer, brand }) =>
           name="offer.platform"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="platform">Nền tảng</FormLabel>
+              <FormLabel htmlFor="platform" required>
+                Nền tảng
+              </FormLabel>
               <FormControl>
                 <Select
                   onValueChange={(value) => {
@@ -231,7 +235,9 @@ const OfferForm: FC<OfferFormProps> = ({ data, campaign, influencer, brand }) =>
           )}
         />
         <div className="grid grid-cols-3 gap-3">
-          <FormLabel className="col-span-full">Nội dung</FormLabel>
+          <FormLabel className="col-span-full" required>
+            Nội dung
+          </FormLabel>
           <FormField
             control={form.control}
             name="offer.quantity"
@@ -326,7 +332,7 @@ const OfferForm: FC<OfferFormProps> = ({ data, campaign, influencer, brand }) =>
           name="offer.price"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Giá</FormLabel>
+              <FormLabel required>Giá</FormLabel>
               <FormControl>
                 <PriceInput placeholder="Giá" {...field} fullWidth />
               </FormControl>
@@ -339,7 +345,7 @@ const OfferForm: FC<OfferFormProps> = ({ data, campaign, influencer, brand }) =>
           name="offer.targetReaction"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Số lượt tương tác mục tiêu</FormLabel>
+              <FormLabel required>Số lượt tương tác mục tiêu</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -359,7 +365,7 @@ const OfferForm: FC<OfferFormProps> = ({ data, campaign, influencer, brand }) =>
           name="offer.description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Lời nhắn</FormLabel>
+              <FormLabel required>Lời nhắn</FormLabel>
               <FormControl>
                 <Textarea placeholder="Lời nhắn" {...field} onChange={handleChange(field)} />
               </FormControl>

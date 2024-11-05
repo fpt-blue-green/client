@@ -10,6 +10,8 @@ import { FC } from 'react';
 import JobOffer from './job-offer';
 import ReadMore from '@/components/custom/read-more';
 import { FaReply } from 'react-icons/fa6';
+import Link from 'next/link';
+import config from '@/config';
 interface JobCardProps {
   item: IJob;
 }
@@ -38,7 +40,12 @@ const JobCard: FC<JobCardProps> = ({ item }) => {
         <div className="pb-[calc(4/3)] bg-foreground rounded-lg"></div>
       )}
       <div className="md:col-span-2 flex flex-col gap-2">
-        <h4 className="font-semibold text-lg">{item.campaign.title}</h4>
+        <Link
+          href={config.routes.campaigns.details(item.campaign.id)}
+          className="font-semibold text-lg transition-colors hover:text-info"
+        >
+          {item.campaign.title}
+        </Link>
         <ReadMore className="text-sm text-muted-foreground">{item.campaign.description}</ReadMore>
         <div className="flex items-center gap-2">
           <Image src={logo} alt={name} width={50} height={50} className="size-5" />

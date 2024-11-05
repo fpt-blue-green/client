@@ -9,13 +9,13 @@ import { IFilterList } from '@/types/filter-list';
 import IInfluencer from '@/types/influencer';
 import IInfluencerJobs from '@/types/influencer-jobs';
 import IJob from '@/types/job';
-import useSWR, { mutate as mutateGlobal } from 'swr';
+import { mutate as mutateGlobal } from 'swr';
 import useSWRImmutable from 'swr/immutable';
 
 const fetchRequest = {
-  favorites: (fetch = false) => useSWR<IInfluencer[]>(fetch ? '/Brand/favorites' : null, fetcher),
+  favorites: (fetch = false) => useSWRImmutable<IInfluencer[]>(fetch ? '/Brand/favorites' : null, fetcher),
   campaign: {
-    available: () => useSWRImmutable<ICampaign[]>('/Campaigns', fetcher),
+    available: () => useSWRImmutable<IFilterList<ICampaign>>('/Campaigns', fetcher),
     getById: (id: string) => useSWRImmutable<ICampaign>(`/Campaigns/${id}`, fetcher),
     currentBrand: (fetch = false, statuses?: ECampaignStatus[], page = 1, pageSize = 12) => {
       const searchParams = new URLSearchParams();
@@ -58,7 +58,7 @@ const fetchRequest = {
       campaignStatus?.forEach((status) => searchParams.append('CampaignStatuses', status.toString()));
       jobStatus?.forEach((status) => searchParams.append('JobStatuses', status.toString()));
       if (from) searchParams.append('From', from.toString());
-      return useSWRImmutable<{ totalCount: number; jobs: IJob[] }>('/Influencer/jobs?' + searchParams, fetcher);
+      return useSWRImmutable<IFilterList<IJob>>('/Influencer/jobs?' + searchParams, fetcher);
     },
   },
   influencers: {
