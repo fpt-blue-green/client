@@ -6,8 +6,8 @@ interface IUser {
   email: string;
   image?: string;
   role: ERole;
-  accessToken: string;
-  refreshToken: string;
+  accessToken?: string;
+  refreshToken?: string;
   error?: string;
 }
 

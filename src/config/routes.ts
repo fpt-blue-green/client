@@ -41,6 +41,7 @@ const routes = {
   },
   admin: {
     base: '/admin',
+    action: '/admin/action-management',
     influencer: '/admin/influencer-management',
     brand: '/admin/brand-management',
     campaign: '/admin/campaign-management',
