@@ -17,7 +17,7 @@ const Tooltip: FC<TooltipProps> = ({ children, label, position = 'top', disabled
         <TooltipProvider delayDuration={250}>
           <ShadeTooltip>
             <TooltipTrigger asChild>{children}</TooltipTrigger>
-            <TooltipContent className="bg-foreground text-background" side={position}>
+            <TooltipContent className="bg-foreground text-background flex flex-wrap max-w-100" side={position}>
               {label}
             </TooltipContent>
           </ShadeTooltip>

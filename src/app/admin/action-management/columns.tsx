@@ -1,6 +1,7 @@
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Tooltip from '@/components/custom/tooltip';
 import { formats } from '@/lib/utils';
 import IAdminAction from '@/types/action';
 import { ColumnDef } from '@tanstack/react-table';
@@ -17,7 +18,11 @@ export const columns: ColumnDef<IAdminAction, IAdminAction>[] = [
     accessorKey: 'actionDetails',
     header: 'Chi tiết hoạt động',
     enableSorting: false,
-    cell: ({ row }) => <div>{row.original.actionDetails}</div>,
+    cell: ({ row }) => (
+      <Tooltip label={row.original.actionDetails || ''}>
+        <div className="truncate max-w-80">{row.original.actionDetails}</div>
+      </Tooltip>
+    ),
   },
   {
     id: 'actionDate',
