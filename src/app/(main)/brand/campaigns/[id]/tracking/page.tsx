@@ -14,6 +14,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { FC } from 'react';
 import Member from './member';
+import Performance from './performance';
+import Actions from './actions';
 
 interface TrackingProps {
   params: { id: string };
@@ -33,34 +35,37 @@ const Tracking: FC<TrackingProps> = async ({ params, searchParams }) => {
   return (
     <div className="container mt-8 mb-16">
       <div className="flex items-center justify-between mb-12">
-        <div className="space-y-2">
+        <div className="space-y-2 flex-1">
           <h1 className="text-3xl font-semibold">{campaign.title}</h1>
           <p className="flex items-center gap-2">
             <CalendarIcon />
             {formats.date(campaign.startDate)} - {formats.date(campaign.endDate)}
           </p>
+          <Actions />
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon">
-              <GearIcon />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem asChild>
-              <Link href={config.routes.campaigns.details(params.id)} className="flex items-center gap-2">
-                <EyeOpenIcon />
-                Xem chi tiết
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href={config.routes.brand.campaigns.edit(params.id, 1)} className="flex items-center gap-2">
-                <Pencil2Icon />
-                Chỉnh sửa
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="max-md:hidden">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon">
+                <GearIcon />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem asChild>
+                <Link href={config.routes.campaigns.details(params.id)} className="flex items-center gap-2">
+                  <EyeOpenIcon />
+                  Xem chi tiết
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={config.routes.brand.campaigns.edit(params.id, 1)} className="flex items-center gap-2">
+                  <Pencil2Icon />
+                  Chỉnh sửa
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <Tabs defaultValue={searchParams.tab || 'member'}>
         <TabsList className="grid w-full grid-cols-3 *:flex *:max-lg:flex-col *:items-center *:gap-2">
@@ -76,6 +81,9 @@ const Tracking: FC<TrackingProps> = async ({ params, searchParams }) => {
         </TabsList>
         <TabsContent value="member">
           <Member />
+        </TabsContent>
+        <TabsContent value="performance">
+          <Performance />
         </TabsContent>
       </Tabs>
     </div>

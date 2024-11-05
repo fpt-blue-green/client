@@ -12,17 +12,27 @@ import { Textarea } from '@/components/ui/textarea';
 import { Cross2Icon, PlusCircledIcon } from '@radix-ui/react-icons';
 import { toast } from 'sonner';
 import clsx from 'clsx';
-import { PlatformData } from '@/types/enum';
+import { ECampaignStatus, PlatformData } from '@/types/enum';
 import DetailStepProps from './props';
 import { campaignsRequest } from '@/request';
 import { useRouter } from 'next/navigation';
 import config from '@/config';
 import PriceInput from '@/components/custom/price-input';
 import { ContentsBodyType, contentsSchema } from '@/schema-validations/campaign.schema';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { constants } from '@/lib/utils';
 
 const Step6: FC<DetailStepProps> = ({ id, campaign, mutate }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
   const form = useForm<ContentsBodyType>({
     resolver: zodResolver(contentsSchema),
     defaultValues: {
@@ -68,10 +78,33 @@ const Step6: FC<DetailStepProps> = ({ id, campaign, mutate }) => {
     campaignsRequest
       .createContents(id, values.contents)
       .then(() => {
-        mutate().then(() => router.push(config.routes.brand.campaigns.base));
+        mutate().then(() => {
+          if (campaign?.status === ECampaignStatus.Draft) {
+            setOpen(true);
+          } else {
+            router.push(config.routes.brand.campaigns.base);
+          }
+        });
       })
       .catch((err) => toast.error(err.message))
       .finally(() => setLoading(false));
+  };
+
+  const handlePublished = (published: boolean) => () => {
+    if (campaign) {
+      if (published) {
+        toast.promise(campaignsRequest.publish(campaign.id), {
+          loading: 'Đang tải',
+          success: () => {
+            router.push(config.routes.brand.campaigns.base);
+            return 'Chiến dịch đã được công khai.';
+          },
+          error: (err) => err?.message || constants.sthWentWrong,
+        });
+      } else {
+        router.push(config.routes.brand.campaigns.tracking(campaign.id));
+      }
+    }
   };
 
   return (
@@ -209,9 +242,28 @@ const Step6: FC<DetailStepProps> = ({ id, campaign, mutate }) => {
           Thêm yêu cầu
         </div>
         <Button type="submit" size="large" variant="gradient" fullWidth className="col-span-full" loading={loading}>
-          Tiếp tục
+          Lưu
         </Button>
       </form>
+      <Dialog open={open}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Bạn có muốn công khai chiến dịch?</DialogTitle>
+            <DialogDescription></DialogDescription>
+            <p className="py-4">
+              Các nhà sáng tạo nội dung có thể tìm hoặc xem thấy chiến dịch của bạn sau khi công khai.
+            </p>
+          </DialogHeader>
+          <DialogFooter className="grid grid-cols-2">
+            <Button variant="outline" onClick={handlePublished(false)}>
+              Lưu dưới dạng nháp
+            </Button>
+            <Button variant="gradient" onClick={handlePublished(true)}>
+              Công khai
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Form>
   );
 };
