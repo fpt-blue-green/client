@@ -58,7 +58,7 @@ const Message = ({ messages }: MessageProps) => {
       )}
       <div className={cn('flex flex-col gap-0.5 max-w-[70%]', { 'items-end': sent })}>
         {messages.map((message, index) => (
-          <Tooltip key={message.id} label={formats.date(message.sendTime, { hour: '2-digit', minute: '2-digit' })}>
+          <Tooltip key={message.id} label={formats.date(message.sendTime, true, { second: undefined })}>
             <div
               className={cn(' w-fit px-3 py-2 bg-secondary shadow-md', {
                 'bg-primary': sent,
