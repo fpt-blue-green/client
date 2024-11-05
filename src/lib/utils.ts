@@ -41,22 +41,39 @@ export const formats = {
       return num.toString();
     }
   },
-  date: (input: Date | string, options?: Intl.DateTimeFormatOptions): string => {
+  date: (input: Date | string, showTime = false, options?: Intl.DateTimeFormatOptions): string => {
     // Chuyển đổi input thành Date nếu là string
     const date = typeof input === 'string' ? new Date(input) : input;
 
     // Kiểm tra xem date có hợp lệ hay không
     if (isNaN(date.getTime())) {
-      throw new Error('Invalid date');
+      return '';
     }
+    const defaultDateOptions: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    };
 
-    const formattedDate = new Intl.DateTimeFormat('vi-VN', {
-      year: options?.year || 'numeric',
-      month: options?.month || '2-digit',
-      day: options?.day || '2-digit',
+    const defaultTimeOptions: Intl.DateTimeFormatOptions = {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    };
+
+    const dateFormatted = new Intl.DateTimeFormat('vi-VN', {
+      ...defaultDateOptions,
       ...options,
     }).format(date);
-    return formattedDate;
+
+    const timeFormatted = showTime
+      ? new Intl.DateTimeFormat('vi-VN', {
+          ...defaultTimeOptions,
+          ...options,
+        }).format(date)
+      : '';
+
+    return timeFormatted ? `${dateFormatted} ${timeFormatted}` : dateFormatted;
   },
 };
 
