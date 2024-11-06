@@ -11,7 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Table, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { constants, emitter, formats } from '@/lib/utils';
 import { offerRequest } from '@/request';
 import { EOfferStatus, ERole, PlatformData } from '@/types/enum';
@@ -55,37 +55,39 @@ const InfluencerAccordion: FC<InfluencerAccordionProps> = ({ item, reload }) => 
                 <TableHead className="text-center">Hành động</TableHead>
               </TableRow>
             </TableHeader>
-            {item.jobs.map((job) => {
-              const { logo, name, contentTypes } = PlatformData[job.offer.platform];
-              const { label, color } = constants.offerStatus[job.offer.status];
+            <TableBody>
+              {item.jobs.map((job) => {
+                const { logo, name, contentTypes } = PlatformData[job.offer.platform];
+                const { label, color } = constants.offerStatus[job.offer.status];
 
-              return (
-                <TableRow key={job.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-2 capitalize">
-                      <Image src={logo} alt={name} width={32} height={32} />
-                      {contentTypes[job.offer.contentType]}
-                    </div>
-                  </TableCell>
-                  <TableCell>{job.offer.quantity}</TableCell>
-                  <TableCell>{formats.price(job.offer.price)}</TableCell>
-                  <TableCell>{job.offer.targetReaction}</TableCell>
-                  <TableCell>{job.offer.duration}</TableCell>
-                  <TableCell>
-                    <JobOffer offer={job.offer} reload={reload}>
-                      <Chip
-                        label={label}
-                        variant={color}
-                        icon={job.offer.from === ERole.Brand ? <FaReply /> : undefined}
-                      />
-                    </JobOffer>
-                  </TableCell>
-                  <TableCell>
-                    <OfferAction job={job} reload={reload} />
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+                return (
+                  <TableRow key={job.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-2 capitalize">
+                        <Image src={logo} alt={name} width={32} height={32} />
+                        {contentTypes[job.offer.contentType]}
+                      </div>
+                    </TableCell>
+                    <TableCell>{job.offer.quantity}</TableCell>
+                    <TableCell>{formats.price(job.offer.price)}</TableCell>
+                    <TableCell>{job.offer.targetReaction}</TableCell>
+                    <TableCell>{job.offer.duration}</TableCell>
+                    <TableCell>
+                      <JobOffer offer={job.offer} reload={reload}>
+                        <Chip
+                          label={label}
+                          variant={color}
+                          icon={job.offer.from === ERole.Brand ? <FaReply /> : undefined}
+                        />
+                      </JobOffer>
+                    </TableCell>
+                    <TableCell>
+                      <OfferAction job={job} reload={reload} />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
           </Table>
         </Paper>
       </AccordionContent>
@@ -99,18 +101,19 @@ const OfferAction = ({ job, reload }: { job: IJob; reload: () => Promise<void> }
 
   const handleResponseOffer = (id: string, accept: boolean) => () => {
     setOpen(false);
-    const caller = accept ? offerRequest.approveOffer(id) : offerRequest.rejectOffer(id);
     emitter.confirm({
       content: `Bạn có chắc sẽ ${accept ? 'đồng ý' : 'từ chối'} lời đề nghị này không?`,
-      callback: () =>
+      callback: () => {
+        const caller = accept ? offerRequest.approveOffer(id) : offerRequest.rejectOffer(id);
         toast.promise(caller, {
           loading: 'Đang tải',
-          success: () => {
-            reload();
+          success: async () => {
+            await reload();
             return `Lời đề nghị đã được ${accept ? 'chấp thuận' : 'từ chối'}`;
           },
           error: (err) => err?.message || constants.sthWentWrong,
-        }),
+        });
+      },
     });
   };
 

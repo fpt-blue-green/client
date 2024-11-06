@@ -107,7 +107,7 @@ const ReofferForm = ({ offer, onClose }: { offer: IOffer; onClose: () => void })
       price: offer.price,
       targetReaction: offer.targetReaction,
       quantity: offer.quantity,
-      description: '',
+      description: offer.description,
       ...time,
     },
   });

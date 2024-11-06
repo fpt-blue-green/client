@@ -23,7 +23,10 @@ const fetchRequest = {
       searchParams.append('PageSize', pageSize.toString());
       statuses?.forEach((status) => searchParams.append('CampaignStatus', String(status)));
       const swr = useSWRImmutable<IFilterList<ICampaign>>(fetch ? '/Brand/campaigns?' + searchParams : null, fetcher);
-      const mutate = () => mutateGlobal<IFilterList<ICampaign>>((key: string) => key.startsWith('/Brand/campaigns'));
+      const mutate = () =>
+        mutateGlobal<IFilterList<ICampaign>>((key: string) => key.startsWith('/Brand/campaigns'), undefined, {
+          revalidate: true,
+        });
       return { ...swr, mutate };
     },
     trackingInfluencers: (
@@ -43,7 +46,11 @@ const fetchRequest = {
         fetcher,
       );
       const mutate = () =>
-        mutateGlobal<IFilterList<IInfluencerJobs>>((key: string) => key.startsWith(`/Campaigns/${id}/Influencers`));
+        mutateGlobal<IFilterList<IInfluencerJobs>>(
+          (key: string) => key.startsWith(`/Campaigns/${id}/Influencers`),
+          undefined,
+          { revalidate: true },
+        );
       return { ...swr, mutate };
     },
     trackingOverview: (id: string) => useSWRImmutable<ICampaignOverview>(`/Campaigns/${id}/jobDetailBase`, fetcher),
