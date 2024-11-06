@@ -2,11 +2,7 @@ import TagTable from './table';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  openGraph: {
-    description: 'Nhằm Quản Lí Các Thẻ Của Hệ Thống Hiệu Quả',
-    type: 'website',
-    siteName: 'adfusion',
-  },
+  title: 'Quản lý thẻ',
 };
 
 const TagManagement = () => {

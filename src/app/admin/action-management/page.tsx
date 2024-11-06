@@ -2,12 +2,10 @@ import AdminActionTable from './table';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  openGraph: {
-    description: 'Nhằm Quản Lí Các Hoạt Động Hiệu Quả',
-    type: 'website',
-    siteName: 'adfusion',
-  },
+  title: 'Quản lý hành động quản trị viên',
+  description: 'Theo dõi các hành động của quản trị viên',
 };
+
 const ActionManagement = () => {
   return (
     <div className="container">

@@ -41,9 +41,9 @@ export const columns: ColumnDef<IAdminAction, IAdminAction>[] = [
   {
     id: 'actionDate',
     accessorKey: 'actionDate',
-    header: 'Ngày thực hiện',
+    header: 'Giờ thực hiện',
     enableSorting: true,
-    cell: ({ row }) => formats.date(row.original.actionDate),
+    cell: ({ row }) => formats.date(row.original.actionDate, true),
   },
   {
     id: 'user',
@@ -54,7 +54,7 @@ export const columns: ColumnDef<IAdminAction, IAdminAction>[] = [
       <div className="flex items-center gap-2">
         <Avatar>
           <AvatarImage src={row.original.user.image} alt={`Ảnh đại diện của ${row.original.user.name}`} />
-          <AvatarFallback>{row.original.user.name}</AvatarFallback>
+          <AvatarFallback>{row.original.user.name[0]}</AvatarFallback>
         </Avatar>
         <span>{row.original.user.name}</span>
       </div>
