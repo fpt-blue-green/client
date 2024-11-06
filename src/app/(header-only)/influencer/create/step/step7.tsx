@@ -111,7 +111,7 @@ const Step7: FC<DetailStepProps> = ({ profile, mutate }) => {
             </FormItem>
           )}
         />
-        <Button size="large" variant="gradient" fullWidth className="col-span-full" loading={loading}>
+        <Button type="submit" size="large" variant="gradient" fullWidth className="col-span-full" loading={loading}>
           Hoàn thành
         </Button>
       </form>

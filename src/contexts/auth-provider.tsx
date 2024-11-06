@@ -90,9 +90,9 @@ const RefreshProvider: FC<Readonly<AuthProviderProps>> = ({ children }) => {
       if (sessionFlag.current) {
         refreshTokenIfNeeded(user);
         sessionFlag.current = false;
+        refreshBrand();
+        refreshInfluencer();
       }
-      refreshBrand();
-      refreshInfluencer();
       const handler = setInterval(() => refreshTokenIfNeeded(user), 60_000);
 
       return () => clearInterval(handler);

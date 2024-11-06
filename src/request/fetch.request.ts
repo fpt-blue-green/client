@@ -9,13 +9,13 @@ import { IFilterList } from '@/types/filter-list';
 import IInfluencer from '@/types/influencer';
 import IInfluencerJobs from '@/types/influencer-jobs';
 import IJob from '@/types/job';
-import useSWR, { mutate as mutateGlobal } from 'swr';
+import { mutate as mutateGlobal } from 'swr';
 import useSWRImmutable from 'swr/immutable';
 
 const fetchRequest = {
-  favorites: (fetch = false) => useSWR<IInfluencer[]>(fetch ? '/Brand/favorites' : null, fetcher),
+  favorites: (fetch = false) => useSWRImmutable<IInfluencer[]>(fetch ? '/Brand/favorites' : null, fetcher),
   campaign: {
-    available: () => useSWRImmutable<ICampaign[]>('/Campaigns', fetcher),
+    available: () => useSWRImmutable<IFilterList<ICampaign>>('/Campaigns', fetcher),
     getById: (id: string) => useSWRImmutable<ICampaign>(`/Campaigns/${id}`, fetcher),
     currentBrand: (fetch = false, statuses?: ECampaignStatus[], page = 1, pageSize = 12) => {
       const searchParams = new URLSearchParams();
@@ -23,7 +23,10 @@ const fetchRequest = {
       searchParams.append('PageSize', pageSize.toString());
       statuses?.forEach((status) => searchParams.append('CampaignStatus', String(status)));
       const swr = useSWRImmutable<IFilterList<ICampaign>>(fetch ? '/Brand/campaigns?' + searchParams : null, fetcher);
-      const mutate = () => mutateGlobal<IFilterList<ICampaign>>((key: string) => key.startsWith('/Brand/campaigns'));
+      const mutate = () =>
+        mutateGlobal<IFilterList<ICampaign>>((key: string) => key.startsWith('/Brand/campaigns'), undefined, {
+          revalidate: true,
+        });
       return { ...swr, mutate };
     },
     trackingInfluencers: (
@@ -43,7 +46,11 @@ const fetchRequest = {
         fetcher,
       );
       const mutate = () =>
-        mutateGlobal<IFilterList<IInfluencerJobs>>((key: string) => key.startsWith(`/Campaigns/${id}/Influencers`));
+        mutateGlobal<IFilterList<IInfluencerJobs>>(
+          (key: string) => key.startsWith(`/Campaigns/${id}/Influencers`),
+          undefined,
+          { revalidate: true },
+        );
       return { ...swr, mutate };
     },
     trackingOverview: (id: string) => useSWRImmutable<ICampaignOverview>(`/Campaigns/${id}/jobDetailBase`, fetcher),
@@ -58,7 +65,7 @@ const fetchRequest = {
       campaignStatus?.forEach((status) => searchParams.append('CampaignStatuses', status.toString()));
       jobStatus?.forEach((status) => searchParams.append('JobStatuses', status.toString()));
       if (from) searchParams.append('From', from.toString());
-      return useSWRImmutable<{ totalCount: number; jobs: IJob[] }>('/Influencer/jobs?' + searchParams, fetcher);
+      return useSWRImmutable<IFilterList<IJob>>('/Influencer/jobs?' + searchParams, fetcher);
     },
   },
   influencers: {

@@ -87,7 +87,7 @@ function TableComponent<TData, TValue>(
   }, [url, queryString]);
 
   useImperativeHandle(ref, () => ({
-    reload: async () => await mutate((key: string) => key.startsWith(url)),
+    reload: async () => await mutate((key: string) => key.startsWith(url), undefined, { revalidate: true }),
   }));
 
   return (

@@ -1,3 +1,5 @@
+'use client';
+
 import Step from './step';
 
 const Create = () => {

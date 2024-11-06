@@ -106,7 +106,7 @@ const List = () => {
         ) : data && data.totalCount === 0 ? (
           <NoData description="Không tìm thấy công việc" />
         ) : (
-          data?.jobs.map((job) => <JobCard key={job.id} item={job} />)
+          data?.items.map((job) => <JobCard key={job.id} item={job} />)
         )}
         {pageCount > 1 && (
           <Pagination count={pageCount} page={page} boundaryCount={2} onPageChange={(value) => setPage(value)} />
