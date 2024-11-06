@@ -130,3 +130,14 @@ export enum NumberType {
   Currency = 1,
   Quantity,
 }
+
+export enum EAdminActionType {
+  Create = 1,
+  Update,
+  Delete,
+  BanUser,
+  RejectWithDraw,
+  ApproveWithDraw,
+  ApproveUpdatePremium,
+  RejectUpdatePremium,
+}

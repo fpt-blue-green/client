@@ -5,13 +5,27 @@ import Tooltip from '@/components/custom/tooltip';
 import { formats } from '@/lib/utils';
 import IAdminAction from '@/types/action';
 import { ColumnDef } from '@tanstack/react-table';
+import { EAdminActionType } from '@/types/enum';
+
+const ConvertActionTypeToString: { [key in EAdminActionType]: string } = {
+  [EAdminActionType.Create]: 'Tạo mới',
+  [EAdminActionType.Update]: 'Cập nhật',
+  [EAdminActionType.Delete]: 'Xoá',
+  [EAdminActionType.BanUser]: 'Cấm người dùng',
+  [EAdminActionType.RejectWithDraw]: 'Từ chối yêu cầu rút tiền',
+  [EAdminActionType.ApproveWithDraw]: 'Phê duyệt yêu cầu rút tiền',
+  [EAdminActionType.ApproveUpdatePremium]: 'Phê duyệt yêu cầu nâng cấp tài khoản Premium',
+  [EAdminActionType.RejectUpdatePremium]: 'Từ chối yêu cầu nâng cấp tài khoản Premium',
+};
 
 export const columns: ColumnDef<IAdminAction, IAdminAction>[] = [
   {
     id: 'actionType',
     accessorKey: 'actionType',
     header: 'Hoạt động',
-    cell: ({ row }) => <div className="flex items-center gap-2 ">{row.original.actionType}</div>,
+    cell: ({ row }) => (
+      <div className="flex items-center gap-2 ">{ConvertActionTypeToString[row.original.actionType]}</div>
+    ),
   },
   {
     id: 'actionDetails',
