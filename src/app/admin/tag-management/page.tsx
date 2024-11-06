@@ -1,4 +1,9 @@
 import TagTable from './table';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Quản lý thẻ',
+};
 
 const TagManagement = () => {
   return (

@@ -56,12 +56,12 @@ const RefreshProvider: FC<Readonly<AuthProviderProps>> = ({ children }) => {
   const pathname = usePathname();
 
   const refreshTokenIfNeeded = async (user: IUser) => {
-    const decoded = jwtDecode(user.accessToken);
+    const decoded = jwtDecode(user.accessToken!);
     if (decoded.exp) {
       // Token còn dưới 2.5 phút thì refresh
       if (decoded.exp * 1000 - Date.now() < 180_000) {
         try {
-          const { data } = await authRequest.refreshToken(user.refreshToken);
+          const { data } = await authRequest.refreshToken(user.refreshToken!);
           if (data) {
             const { accessToken, refreshToken } = data;
             update({

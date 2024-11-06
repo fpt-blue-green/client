@@ -17,6 +17,11 @@ export const items: SideBarItemModel[] = [
     content: 'Tổng Quan',
   },
   {
+    route: config.routes.admin.action,
+    icon: <DashboardIcon />,
+    content: 'Các Hoạt Động',
+  },
+  {
     route: config.routes.admin.influencer,
     icon: <GlobeIcon />,
     content: 'Nhà Sáng Tạo',

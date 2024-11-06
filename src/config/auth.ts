@@ -83,7 +83,7 @@ const auth: NextAuthOptions = {
   events: {
     async signOut({ session }) {
       try {
-        await authRequest.logout(session.user.refreshToken);
+        await authRequest.logout(session.user.refreshToken!);
       } catch {}
     },
   },
