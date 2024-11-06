@@ -33,7 +33,7 @@ export const columns: ColumnDef<IAdminAction, IAdminAction>[] = [
     header: 'Chi tiết hoạt động',
     enableSorting: false,
     cell: ({ row }) => (
-      <Tooltip label={row.original.actionDetails || ''}>
+      <Tooltip className="max-w-96" label={row.original.actionDetails || ''}>
         <div className="truncate max-w-80">{row.original.actionDetails}</div>
       </Tooltip>
     ),
