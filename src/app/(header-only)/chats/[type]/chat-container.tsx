@@ -6,13 +6,14 @@ import { cn, formats } from '@/lib/utils';
 import IMessage from '@/types/message';
 import { useSession } from 'next-auth/react';
 import { useEffect, useRef } from 'react';
+import ChatForm from './chat-form';
+import { useChat } from '@/hooks';
+import { useSearchParams } from 'next/navigation';
 
-interface ChatContainerProps {
-  messages: IMessage[];
-}
-
-const ChatContainer = ({ messages }: ChatContainerProps) => {
+const ChatContainer = () => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const searchParams = useSearchParams();
+  const { messages, sendMessage } = useChat(searchParams.get('c') || '');
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
@@ -25,13 +26,18 @@ const ChatContainer = ({ messages }: ChatContainerProps) => {
   });
 
   return (
-    <div className="flex-1 flex items-end overflow-auto pt-4 pr-4">
-      <div className="flex flex-col gap-4 max-h-full w-full">
-        {groupConsecutiveMessagesBySender(messages).map((messageItems) => (
-          <Message key={messageItems[0].id} messages={messageItems} />
-        ))}
+    <div className="flex flex-col gap-4 h-full pt-16 -mr-4">
+      <div className="flex-1 flex items-end overflow-auto pt-4 pr-4">
+        <div className="flex flex-col gap-4 max-h-full w-full">
+          {groupConsecutiveMessagesBySender(messages).map((messageItems) => (
+            <Message key={messageItems[0].id} messages={messageItems} />
+          ))}
 
-        <div ref={messagesEndRef} />
+          <div ref={messagesEndRef} />
+        </div>
+      </div>
+      <div className="shrink-0 pr-4">
+        <ChatForm onSend={sendMessage} />
       </div>
     </div>
   );

@@ -6,14 +6,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { LuMoreHorizontal, LuPhone, LuVideo } from 'react-icons/lu';
 import ChatContainer from './chat-container';
-import ChatForm from './chat-form';
-import { useChat } from '@/hooks';
 
 const BoxChat = () => {
-  const { messages } = useChat('0f3d02f5-fc1b-43e3-8fb9-c91049496845');
-
-  console.log(messages);
-
   return (
     <div className="pl-4 pr-8 h-full">
       <Paper className="relative h-full p-4">
@@ -46,12 +40,7 @@ const BoxChat = () => {
             </Tooltip>
           </div>
         </div>
-        <div className="flex flex-col gap-4 h-full pt-16 -mr-4">
-          <ChatContainer messages={messages} />
-          <div className="shrink-0 pr-4">
-            <ChatForm />
-          </div>
-        </div>
+        <ChatContainer />
       </Paper>
     </div>
   );

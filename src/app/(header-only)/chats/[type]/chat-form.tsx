@@ -7,31 +7,33 @@ import { Input } from '@/components/ui/input';
 import { LuImagePlus, LuPlus, LuSendHorizonal, LuSmilePlus } from 'react-icons/lu';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FC, FormEvent, useState } from 'react';
 import { useTheme } from 'next-themes';
-import { useChat } from '@/hooks';
 
-const ChatForm = () => {
+interface ChatFormProps {
+  onSend: (content: string) => Promise<void>;
+}
+
+const ChatForm: FC<ChatFormProps> = ({ onSend }) => {
   const [loading, setLoading] = useState(false);
   const { theme } = useTheme();
-  const [message, setMessage] = useState('');
-  // const { sendMessage } = useChat('0f3d02f5-fc1b-43e3-8fb9-c91049496845');
+  const [content, setContent] = useState('');
 
   const handlePickEmoji = (emoji: any) => {
-    setMessage(message + emoji.native);
+    setContent(content + emoji.native);
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setMessage(value);
+    setContent(value);
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!loading && message.trim().length > 0) {
+    if (!loading && content.trim().length > 0) {
       setLoading(true);
-      // await sendMessage(message.trim());
-      setMessage('');
+      await onSend(content.trim());
+      setContent('');
       setLoading(false);
     }
   };
@@ -71,7 +73,7 @@ const ChatForm = () => {
               </Button>
             </Tooltip>
           }
-          value={message}
+          value={content}
           onChange={handleChange}
         />
         <DropdownMenuContent className="p-0">
