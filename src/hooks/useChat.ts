@@ -5,7 +5,7 @@ import { HubConnection, HubConnectionBuilder, HubConnectionState, LogLevel } fro
 import IMessage from '@/types/message';
 import { useSession } from 'next-auth/react';
 
-const useChat = (campaignId: string) => {
+const useChat = (campaignChatId: string) => {
   const [connection, setConnection] = useState<HubConnection>();
   const [messages, setMessages] = useState<IMessage[]>([]);
   const { data: session } = useSession();
@@ -24,9 +24,8 @@ const useChat = (campaignId: string) => {
           setConnection(newConnection);
           // Tham gia nhóm chat
           newConnection.invoke('JoinRoom', {
-            username: session.user.id,
-            roomId: 'cac112',
-            campaignId,
+            senderId: session.user.id,
+            campaignChatId,
           });
 
           // Lắng nghe sự kiện nhận tin nhắn
@@ -41,7 +40,7 @@ const useChat = (campaignId: string) => {
       if (connection) connection.stop();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [campaignId, session?.user.id]);
+  }, [campaignChatId, session?.user.id]);
 
   const sendMessage = async (message: string) => {
     if (connection && connection.state === HubConnectionState.Connected) {

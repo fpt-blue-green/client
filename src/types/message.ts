@@ -4,9 +4,10 @@ interface IMessage {
   id: string;
   sender: IUser;
   roomName: string;
-  sendTime: string;
+  sentAt: string;
+  modifiedAt: string;
   campaignId: string;
-  message: string;
+  content: string;
 }
 
 export default IMessage;

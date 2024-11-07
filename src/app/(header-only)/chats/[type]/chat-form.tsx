@@ -15,7 +15,7 @@ const ChatForm = () => {
   const [loading, setLoading] = useState(false);
   const { theme } = useTheme();
   const [message, setMessage] = useState('');
-  const { sendMessage } = useChat('f9a81449-f6d7-4b39-91b4-59b1a20c87a3');
+  // const { sendMessage } = useChat('0f3d02f5-fc1b-43e3-8fb9-c91049496845');
 
   const handlePickEmoji = (emoji: any) => {
     setMessage(message + emoji.native);
@@ -30,7 +30,7 @@ const ChatForm = () => {
     e.preventDefault();
     if (!loading && message.trim().length > 0) {
       setLoading(true);
-      await sendMessage(message.trim());
+      // await sendMessage(message.trim());
       setMessage('');
       setLoading(false);
     }

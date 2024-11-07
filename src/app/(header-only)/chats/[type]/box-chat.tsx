@@ -10,7 +10,9 @@ import ChatForm from './chat-form';
 import { useChat } from '@/hooks';
 
 const BoxChat = () => {
-  const { messages } = useChat('f9a81449-f6d7-4b39-91b4-59b1a20c87a3');
+  const { messages } = useChat('0f3d02f5-fc1b-43e3-8fb9-c91049496845');
+
+  console.log(messages);
 
   return (
     <div className="pl-4 pr-8 h-full">
