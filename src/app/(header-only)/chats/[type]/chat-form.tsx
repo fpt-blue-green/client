@@ -15,8 +15,8 @@ interface ChatFormProps {
 }
 
 const ChatForm: FC<ChatFormProps> = ({ onSend }) => {
-  const [loading, setLoading] = useState(false);
   const { theme } = useTheme();
+  const [loading, setLoading] = useState(false);
   const [content, setContent] = useState('');
 
   const handlePickEmoji = (emoji: any) => {
@@ -32,8 +32,9 @@ const ChatForm: FC<ChatFormProps> = ({ onSend }) => {
     e.preventDefault();
     if (!loading && content.trim().length > 0) {
       setLoading(true);
-      await onSend(content.trim());
-      setContent('');
+      await onSend(content.trim()).then(() => {
+        setContent('');
+      });
       setLoading(false);
     }
   };

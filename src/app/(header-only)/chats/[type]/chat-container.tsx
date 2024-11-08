@@ -5,15 +5,18 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn, formats } from '@/lib/utils';
 import IMessage from '@/types/message';
 import { useSession } from 'next-auth/react';
-import { useEffect, useRef } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import ChatForm from './chat-form';
 import { useChat } from '@/hooks';
-import { useSearchParams } from 'next/navigation';
+import IChat from '@/types/chat';
 
-const ChatContainer = () => {
+interface ChatContainerProps {
+  chat: IChat;
+}
+
+const ChatContainer: FC<ChatContainerProps> = ({ chat }) => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  const searchParams = useSearchParams();
-  const { messages, sendMessage } = useChat(searchParams.get('c') || '');
+  const { messages, sendMessage } = useChat(chat.chatId, chat.isCampaign);
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
