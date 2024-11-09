@@ -1,10 +1,10 @@
 'use client';
 
-import Table from '@/components/custom/data-table';
+import Table, { TableRef } from '@/components/custom/data-table';
 import { columns, filters } from './columns';
 import { Button, ButtonProps } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import IInfluencer from '@/types/influencer';
 import {
   DropdownMenu,
@@ -14,6 +14,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
 import { ColumnDef } from '@tanstack/react-table';
+import manageInfluencersRequest from '@/request/manage.influencers.request';
+import { constants, emitter } from '@/lib/utils';
+import { toast } from 'sonner';
 
 const InfluencerTable = () => {
   const columnsWithActions: ColumnDef<IInfluencer, IInfluencer>[] = [
@@ -63,8 +66,25 @@ const InfluencerTable = () => {
   ];
   const [influencer, setInfluencer] = useState<IInfluencer>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const handleDelete = (influencer: IInfluencer) => {};
+  const tableRef = useRef<TableRef>(null);
+  const reloadTable = async () => {
+    await tableRef.current?.reload();
+  };
+  const handleDelete = (influencer: IInfluencer) => () => {
+    const influencerDeletion = manageInfluencersRequest.delete(influencer.id);
+    emitter.confirm({
+      content: `Bạn có chắc khi muốn xóa nhà sáng tạo ${influencer.fullName}?`,
+      callback: () =>
+        toast.promise(influencerDeletion, {
+          loading: 'Đang tải',
+          success: () => {
+            reloadTable();
+            return 'Đã xóa thẻ thành công.';
+          },
+          error: (err) => err?.message || constants.sthWentWrong,
+        }),
+    });
+  };
 
   const handleOpen = (influencer?: IInfluencer) => {
     setIsOpen(true);
