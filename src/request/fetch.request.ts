@@ -74,7 +74,7 @@ const fetchRequest = {
     statistical: () => useSWR<{ jobStatus: EJobStatus; count: number }[]>('/Job/statistical', fetcher),
   },
   chat: {
-    list: () => useSWRImmutable<IChat[]>('/Contact/chat/contacts', fetcher),
+    list: () => useSWR<IChat[]>('/Contact/chat/contacts', fetcher),
   },
 };
 

@@ -58,6 +58,7 @@ const useChat = (chatId: string, isCampaign: boolean) => {
 
     return () => {
       if (connection) connection.stop();
+      setMessages([]);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatId, session?.user.id]);

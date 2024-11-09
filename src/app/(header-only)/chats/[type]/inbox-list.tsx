@@ -12,15 +12,19 @@ import { fetchRequest } from '@/request';
 import { MagnifyingGlassIcon, Pencil2Icon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Fragment } from 'react';
+import { FC, Fragment } from 'react';
 
-const InboxList = () => {
+interface InboxListProps {
+  toggle: () => void;
+}
+
+const InboxList: FC<InboxListProps> = ({ toggle }) => {
   const { session } = useAuthUser();
   const { data, isLoading } = fetchRequest.chat.list();
   const searchParams = useSearchParams();
 
   return (
-    <div className="relative flex flex-col gap-2 pl-8 pr-4 h-full">
+    <div className="relative flex flex-col gap-2 h-full md:w-1/4 md:min-w-72 w-full">
       <div className="sticky top-0 z-5">
         <div className="flex items-center justify-between mb-2">
           <h1 className="text-2xl font-bold">Đoạn chat</h1>
@@ -59,6 +63,7 @@ const InboxList = () => {
                     <Link
                       className="flex gap-2 w-full"
                       href={config.routes.chats.details(chat.isCampaign, chat.chatId)}
+                      onClick={toggle}
                     >
                       <Avatar className="size-10 shrink-0">
                         <AvatarImage src={chat.chatImage} alt={chat.chatName} />
@@ -66,10 +71,13 @@ const InboxList = () => {
                       </Avatar>
                       <div className="flex-1 text-left gap-1 overflow-hidden">
                         <h6 className="font-medium">{chat.chatName}</h6>
-                        <p className="truncate font-normal text-muted-foreground">
-                          {chat.sender.id === session?.user.id ? 'Bạn: ' : `${chat.sender.name}: `}
-                          {`${chat.lastMessage} · ${formats.timeAgo(chat.sentAt)}`}
-                        </p>
+                        <div className="flex items-center font-normal text-muted-foreground">
+                          <p className="truncate max-w-full">
+                            {(chat.sender.id === session?.user.id ? 'Bạn: ' : `${chat.sender.name}: `) +
+                              chat.lastMessage}
+                          </p>
+                          <span className="shrink-0">{` · ${formats.timeAgo(chat.sentAt)}`}</span>
+                        </div>
                       </div>
                     </Link>
                   </Button>
