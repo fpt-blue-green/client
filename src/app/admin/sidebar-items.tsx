@@ -3,6 +3,7 @@ import { DashboardIcon, GlobeIcon } from '@radix-ui/react-icons';
 import { ReactNode } from 'react';
 import { FaProjectDiagram } from 'react-icons/fa';
 import { FaPeopleGroup, FaTag } from 'react-icons/fa6';
+import { GiExecutionerHood } from 'react-icons/gi';
 
 export interface SideBarItemModel {
   route: string;
@@ -18,7 +19,7 @@ export const items: SideBarItemModel[] = [
   },
   {
     route: config.routes.admin.action,
-    icon: <DashboardIcon />,
+    icon: <GiExecutionerHood />,
     content: 'Các Hoạt Động',
   },
   {

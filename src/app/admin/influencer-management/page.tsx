@@ -1,4 +1,9 @@
+import { Metadata } from 'next';
 import InfluencerTable from './table';
+
+export const metadata: Metadata = {
+  title: 'Quản lý nhà sáng tạo',
+};
 
 const InfluencerManagement = () => {
   return (

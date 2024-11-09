@@ -24,7 +24,7 @@ export const columns: ColumnDef<IAdminAction, IAdminAction>[] = [
     accessorKey: 'actionType',
     header: 'Hoạt động',
     cell: ({ row }) => (
-      <div className="flex items-center gap-2 ">{ConvertActionTypeToString[row.original.actionType]}</div>
+      <div className="flex items-center gap-2 pl-4 ">{ConvertActionTypeToString[row.original.actionType]}</div>
     ),
   },
   {
