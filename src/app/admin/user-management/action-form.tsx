@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { constants } from '@/lib/utils';
 import { userRequest } from '@/request';
 import IUserManagement from '@/types/user-management';
+import { ERole } from '@/types/enum';
 interface ActionFormProps {
   item?: IUserManagement;
   handleClose: () => void;
@@ -24,7 +25,7 @@ const ActionForm: FC<ActionFormProps> = ({ item, handleClose, reloadTable }) => 
       displayName: item?.displayName || '',
       email: item?.email || '',
       wallet: item?.wallet || 0,
-      role: item?.role || 0,
+      role: item?.role || ERole.Influencer,
     },
   });
 
@@ -56,9 +57,9 @@ const ActionForm: FC<ActionFormProps> = ({ item, handleClose, reloadTable }) => 
             name="displayName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Tên người dùng</FormLabel>
+                <FormLabel>Tên hiển thị</FormLabel>
                 <FormControl className="w-full">
-                  <Input id="displayName" placeholder="Họ và tên người dùng" {...field} />
+                  <Input id="displayName" placeholder="Nhập tên..." {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -82,7 +83,7 @@ const ActionForm: FC<ActionFormProps> = ({ item, handleClose, reloadTable }) => 
             name="wallet"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Ví người dùng</FormLabel>
+                <FormLabel>Ví</FormLabel>
                 <FormControl className="w-full">
                   <Input id="wallet" placeholder="Nhập số tiền..." {...field} />
                 </FormControl>
@@ -103,8 +104,9 @@ const ActionForm: FC<ActionFormProps> = ({ item, handleClose, reloadTable }) => 
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="true">Nhãn hàng</SelectItem>
-                    <SelectItem value="false">Nhà sáng tạo</SelectItem>
+                    <SelectItem value={ERole.Influencer.toString()}>Nhà sáng tạo</SelectItem>
+                    <SelectItem value={ERole.Brand.toString()}>Nhãn hàng</SelectItem>
+                    <SelectItem value={ERole.Admin.toString()}>Quản trị viên</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />

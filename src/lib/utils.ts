@@ -89,7 +89,16 @@ export const functions = {
     }
   },
   convertRoleTypeToText: (roleType: ERole): string => {
-    return ERole[roleType];
+    switch (roleType) {
+      case ERole.Admin:
+        return 'Quản trị viên';
+      case ERole.Influencer:
+        return 'Nhà sáng tạo';
+      case ERole.Brand:
+        return 'Nhãn hàng';
+      default:
+        return 'Khác';
+    }
   },
 };
 

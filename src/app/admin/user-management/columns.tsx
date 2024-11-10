@@ -2,7 +2,7 @@
 
 import { DataTableFilterField } from '@/components/custom/data-table/filter-type';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { functions } from '@/lib/utils';
+import { formats, functions } from '@/lib/utils';
 import IUserManagement from '@/types/user-management';
 import { ColumnDef } from '@tanstack/react-table';
 
@@ -24,14 +24,35 @@ export const columns: ColumnDef<IUserManagement, IUserManagement>[] = [
   {
     id: 'email',
     accessorKey: 'email',
-    header: 'email',
+    header: 'Email',
     enableSorting: false,
+  },
+  {
+    id: 'wallet',
+    accessorKey: 'wallet',
+    header: 'Ví',
+    enableSorting: true,
+    cell: ({ row }) => <div className="pl-4">{formats.price(row.original.wallet)}</div>,
   },
   {
     id: 'role',
     accessorKey: 'role',
     header: 'Vai trò',
     cell: ({ row }) => <div className="pl-4">{functions.convertRoleTypeToText(row.original.role)}</div>,
+  },
+  {
+    id: 'createdAt',
+    accessorKey: 'createdAt',
+    header: 'Ngày đăng kí',
+    enableSorting: true,
+    cell: ({ row }) => <div className="pl-4">{formats.date(row.original.createdAt)}</div>,
+  },
+  {
+    id: 'modifiedAt',
+    accessorKey: 'modifiedAt',
+    header: 'Cập nhật gần đây',
+    enableSorting: true,
+    cell: ({ row }) => <div className="pl-4">{formats.date(row.original.modifiedAt)}</div>,
   },
 ];
 
