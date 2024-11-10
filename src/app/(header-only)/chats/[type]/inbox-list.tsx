@@ -11,17 +11,25 @@ import { cn, formats } from '@/lib/utils';
 import { fetchRequest } from '@/request';
 import { MagnifyingGlassIcon, Pencil2Icon } from '@radix-ui/react-icons';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { FC, Fragment } from 'react';
+import { useRouter } from 'next/navigation';
+import { FC, Fragment, useEffect } from 'react';
 
 interface InboxListProps {
+  id: string | null;
   toggle: () => void;
 }
 
-const InboxList: FC<InboxListProps> = ({ toggle }) => {
+const InboxList: FC<InboxListProps> = ({ id, toggle }) => {
   const { session } = useAuthUser();
   const { data, isLoading } = fetchRequest.chat.list();
-  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!id && data && data.length > 0) {
+      const item = data[0];
+      router.push(config.routes.chats.details(item.isCampaign, item.chatId));
+    }
+  }, [data, id, router]);
 
   return (
     <div className="relative flex flex-col gap-2 h-full md:w-1/4 md:min-w-72 w-full">
@@ -57,7 +65,7 @@ const InboxList: FC<InboxListProps> = ({ toggle }) => {
                 <Fragment key={chat.chatId}>
                   <Button
                     variant="ghost"
-                    className={cn('flex justify-start h-fit', { 'bg-accent': searchParams.get('c') === chat.chatId })}
+                    className={cn('flex justify-start h-fit', { 'bg-accent': id === chat.chatId })}
                     asChild
                   >
                     <Link

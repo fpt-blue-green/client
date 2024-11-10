@@ -75,6 +75,7 @@ const fetchRequest = {
   },
   chat: {
     list: () => useSWR<IChat[]>('/Contact/chat/contacts', fetcher),
+    details: (id: string) => useSWRImmutable<IChat>(`/Contact/chat/contacts/${id}`, fetcher),
   },
 };
 

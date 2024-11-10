@@ -7,27 +7,18 @@ import { Button } from '@/components/ui/button';
 import { LuMoreHorizontal, LuPhone, LuVideo } from 'react-icons/lu';
 import ChatContainer from './chat-container';
 import { fetchRequest } from '@/request';
-import { useSearchParams } from 'next/navigation';
-import { FC, useMemo } from 'react';
-import NoData from '@/components/no-data';
+import { FC } from 'react';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 
 interface BoxChatProps {
+  id: string;
   open: boolean;
   toggle: () => void;
 }
 
-const BoxChat: FC<BoxChatProps> = ({ open, toggle }) => {
-  const searchParams = useSearchParams();
-  const { data } = fetchRequest.chat.list();
-  const id = searchParams.get('c');
-
-  const chat = useMemo(() => {
-    return data?.find((c) => c.chatId === id);
-  }, [id, data]);
-
-  if (!id || !chat) return <NoData className="flex-1 h-full" description="Chọn đoạn chat hoặc nhắn tin mới" />;
+const BoxChat: FC<BoxChatProps> = ({ id, open, toggle }) => {
+  const { data } = fetchRequest.chat.details(id);
 
   return (
     <div
@@ -44,10 +35,10 @@ const BoxChat: FC<BoxChatProps> = ({ open, toggle }) => {
               </Button>
             </Tooltip>
             <Avatar className="size-11 shrink-0">
-              <AvatarImage src={chat.chatImage} alt={chat.chatName} />
-              <AvatarFallback>{chat.chatName?.[0]}</AvatarFallback>
+              <AvatarImage src={data?.chatImage} alt={data?.chatName} />
+              <AvatarFallback>{data?.chatName?.[0]}</AvatarFallback>
             </Avatar>
-            <div className="overflow-hidden truncate text-nowrap font-medium">{chat.chatName}</div>
+            <div className="overflow-hidden truncate text-nowrap font-medium">{data?.chatName}</div>
           </span>
           <div className="flex items-center gap-2 shrink-0">
             <Tooltip label="Bắt đầu gọi thoại">
@@ -67,7 +58,7 @@ const BoxChat: FC<BoxChatProps> = ({ open, toggle }) => {
             </Tooltip>
           </div>
         </div>
-        <ChatContainer chat={chat} />
+        {data && <ChatContainer chat={data} />}
       </Paper>
     </div>
   );
