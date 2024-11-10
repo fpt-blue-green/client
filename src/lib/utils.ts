@@ -3,6 +3,7 @@ import { twMerge } from 'tailwind-merge';
 import { EventEmitter } from 'fbemitter';
 import { ConfirmBody } from '@/components/confirm-dialog';
 import { campaignStatus, jobStatus, offerStatus } from './constants';
+import { ERole } from '@/types/enum';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -86,6 +87,9 @@ export const functions = {
     } else {
       return { value: seconds, unit: 's' };
     }
+  },
+  convertRoleTypeToText: (roleType: ERole): string => {
+    return ERole[roleType];
   },
 };
 
