@@ -1,6 +1,5 @@
 import config from '@/config';
-import { DashboardIcon, GlobeIcon } from '@radix-ui/react-icons';
-import { UserIcon } from 'lucide-react';
+import { DashboardIcon } from '@radix-ui/react-icons';
 import { ReactNode } from 'react';
 import { FaProjectDiagram } from 'react-icons/fa';
 import { FaPeopleGroup, FaTag } from 'react-icons/fa6';

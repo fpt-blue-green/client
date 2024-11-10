@@ -16,7 +16,6 @@ import { ColumnDef } from '@tanstack/react-table';
 import { constants, emitter } from '@/lib/utils';
 import { toast } from 'sonner';
 import ActionForm from './action-form';
-import IUser from '@/types/user';
 import { userRequest } from '@/request';
 import IUserManagement from '@/types/user-management';
 
