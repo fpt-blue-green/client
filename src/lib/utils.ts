@@ -100,6 +100,20 @@ export const functions = {
         return 'Khác';
     }
   },
+  convertMetricTrendType: (value: string): string => {
+    switch (value) {
+      case 'Revenue':
+        return 'Doanh Thu';
+      case 'NewUsers':
+        return 'Người dùng mới';
+      case 'ActiveUsers':
+        return 'Tài khoản đang hoạt động';
+      case 'ActiveCampaigns':
+        return 'Chiến dịch đang hoạt động';
+      default:
+        return 'Khác';
+    }
+  },
 };
 
 // Emitter
