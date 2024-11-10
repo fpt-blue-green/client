@@ -1,5 +1,6 @@
 import config from '@/config';
 import { DashboardIcon, GlobeIcon } from '@radix-ui/react-icons';
+import { UserIcon } from 'lucide-react';
 import { ReactNode } from 'react';
 import { FaProjectDiagram } from 'react-icons/fa';
 import { FaPeopleGroup, FaTag } from 'react-icons/fa6';
@@ -23,14 +24,9 @@ export const items: SideBarItemModel[] = [
     content: 'Các Hoạt Động',
   },
   {
-    route: config.routes.admin.influencer,
-    icon: <GlobeIcon />,
-    content: 'Nhà Sáng Tạo',
-  },
-  {
-    route: config.routes.admin.brand,
+    route: config.routes.admin.user,
     icon: <FaPeopleGroup />,
-    content: 'Nhãn Hàng',
+    content: 'Người dùng',
   },
   {
     route: config.routes.admin.campaign,

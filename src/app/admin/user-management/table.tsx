@@ -5,7 +5,6 @@ import { columns, filters } from './columns';
 import { Button, ButtonProps } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { useRef, useState } from 'react';
-import IInfluencer from '@/types/influencer';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,17 +13,20 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
 import { ColumnDef } from '@tanstack/react-table';
-import manageInfluencersRequest from '@/request/manage.influencers.request';
 import { constants, emitter } from '@/lib/utils';
 import { toast } from 'sonner';
+import ActionForm from './action-form';
+import IUser from '@/types/user';
+import { userRequest } from '@/request';
+import IUserManagement from '@/types/user-management';
 
 const InfluencerTable = () => {
-  const columnsWithActions: ColumnDef<IInfluencer, IInfluencer>[] = [
+  const columnsWithActions: ColumnDef<IUserManagement, IUserManagement>[] = [
     ...columns,
     {
       id: 'actions',
       cell: ({ row }) => {
-        const influencer = row.original;
+        const user = row.original;
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -37,7 +39,7 @@ const InfluencerTable = () => {
               <DropdownMenuItem asChild>
                 <DialogTrigger
                   onClick={() => {
-                    handleOpen(influencer);
+                    handleOpen(user);
                   }}
                 >
                   Chỉnh sửa
@@ -45,7 +47,7 @@ const InfluencerTable = () => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  handleDelete(influencer);
+                  handleDelete(user);
                 }}
               >
                 Xóa
@@ -64,42 +66,44 @@ const InfluencerTable = () => {
       },
     },
   ];
-  const [influencer, setInfluencer] = useState<IInfluencer>();
+  const [user, setUser] = useState<IUserManagement>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const tableRef = useRef<TableRef>(null);
   const reloadTable = async () => {
     await tableRef.current?.reload();
   };
-  const handleDelete = (influencer: IInfluencer) => () => {
-    const influencerDeletion = manageInfluencersRequest.delete(influencer.id);
+  const handleDelete = (user: IUserManagement) => () => {
+    const userDeletion = userRequest.delete(user.id);
     emitter.confirm({
-      content: `Bạn có chắc khi muốn xóa nhà sáng tạo ${influencer.fullName}?`,
+      content: `Bạn có chắc khi muốn xóa người dùng ${user.displayName}?`,
       callback: () =>
-        toast.promise(influencerDeletion, {
+        toast.promise(userDeletion, {
           loading: 'Đang tải',
           success: () => {
             reloadTable();
-            return 'Đã xóa thẻ thành công.';
+            return 'Đã xóa người dùng thành công.';
           },
           error: (err) => err?.message || constants.sthWentWrong,
         }),
     });
   };
 
-  const handleOpen = (influencer?: IInfluencer) => {
+  const handleOpen = (user?: IUserManagement) => {
     setIsOpen(true);
-    setInfluencer(influencer);
+    setUser(user);
   };
 
   const handleClose = () => {
     setIsOpen(false);
-    setInfluencer(undefined);
+    setUser(undefined);
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <Table columns={columnsWithActions} url="/Influencers" filters={filters} buttons={buttons} />
-      <DialogContent>Hi</DialogContent>
+      <Table columns={columnsWithActions} url="/User" filters={filters} buttons={buttons} />
+      <DialogContent>
+        <ActionForm handleClose={handleClose} item={user} reloadTable={reloadTable} />
+      </DialogContent>
     </Dialog>
   );
 };
