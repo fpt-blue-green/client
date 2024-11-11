@@ -70,7 +70,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const el = loading && !startIcon && !endIcon ? loadingComponent : children;
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, fullWidth, className }))}
+        className={cn(buttonVariants({ variant, size, fullWidth, className }), {
+          'pointer-events-none opacity-50': disabled,
+        })}
         ref={ref}
         disabled={disabled || loading}
         type={type}

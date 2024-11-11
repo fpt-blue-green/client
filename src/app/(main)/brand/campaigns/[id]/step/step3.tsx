@@ -96,6 +96,7 @@ const Step6: FC<DetailStepProps> = ({ id, campaign, mutate }) => {
         toast.promise(campaignsRequest.publish(campaign.id), {
           loading: 'Đang tải',
           success: () => {
+            mutate();
             router.push(config.routes.brand.campaigns.base);
             return 'Chiến dịch đã được công khai.';
           },
