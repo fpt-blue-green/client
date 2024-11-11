@@ -6,50 +6,59 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { LuMoreHorizontal, LuPhone, LuVideo } from 'react-icons/lu';
 import ChatContainer from './chat-container';
-import ChatForm from './chat-form';
-import { useChat } from '@/hooks';
+import { fetchRequest } from '@/request';
+import { FC } from 'react';
+import { ArrowLeftIcon } from '@radix-ui/react-icons';
+import { cn } from '@/lib/utils';
 
-const BoxChat = () => {
-  const { messages } = useChat('f9a81449-f6d7-4b39-91b4-59b1a20c87a3');
+interface BoxChatProps {
+  id: string;
+  open: boolean;
+  toggle: () => void;
+}
+
+const BoxChat: FC<BoxChatProps> = ({ id, open, toggle }) => {
+  const { data } = fetchRequest.chat.details(id);
 
   return (
-    <div className="pl-4 pr-8 h-full">
-      <Paper className="relative h-full p-4">
-        <div className="absolute top-0 inset-x-0 flex items-center justify-between p-4 bg-secondary shadow-lg z-1">
-          <span className="flex items-center gap-2 w-48">
+    <div
+      className={cn('flex-1 h-full max-md:absolute z-50 inset-y-0 right-0 max-md:w-0 transition-all', {
+        'max-md:w-full': open,
+      })}
+    >
+      <Paper className="relative h-full p-4 max-md:rounded-none">
+        <div className="absolute top-0 inset-x-0 flex items-center justify-between p-4 bg-background shadow-lg z-1">
+          <span className="flex items-center gap-2">
+            <Tooltip label="Trở lại">
+              <Button variant="ghost" size="icon-sm" className="md:hidden" onClick={toggle}>
+                <ArrowLeftIcon className="size-5" />
+              </Button>
+            </Tooltip>
             <Avatar className="size-11 shrink-0">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src={data?.chatImage} alt={data?.chatName} />
+              <AvatarFallback>{data?.chatName?.[0]}</AvatarFallback>
             </Avatar>
-            <div className="flex-1 text-left gap-1 overflow-hidden">
-              <h6 className="font-medium">Shadecn/ui</h6>
-              <p className="truncate font-normal text-muted-foreground">Title</p>
-            </div>
+            <div className="overflow-hidden truncate text-nowrap font-medium">{data?.chatName}</div>
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <Tooltip label="Bắt đầu gọi thoại">
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon-sm">
                 <LuPhone className="text-xl" />
               </Button>
             </Tooltip>
             <Tooltip label="Bắt đầu gọi video">
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon-sm">
                 <LuVideo className="text-xl" />
               </Button>
             </Tooltip>
             <Tooltip label="Thông tin về cuộc trò chuyện">
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon-sm">
                 <LuMoreHorizontal className="text-xl" />
               </Button>
             </Tooltip>
           </div>
         </div>
-        <div className="flex flex-col gap-4 h-full pt-16 -mr-4">
-          <ChatContainer messages={messages} />
-          <div className="shrink-0 pr-4">
-            <ChatForm />
-          </div>
-        </div>
+        {data && <ChatContainer chat={data} />}
       </Paper>
     </div>
   );

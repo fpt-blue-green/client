@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { ClockIcon, DotsVerticalIcon, EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons';
+import { ClockIcon, DotsVerticalIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons';
 import { campaignsRequest } from '@/request';
 import { toast } from 'sonner';
 import Chip from '@/components/custom/chip';
@@ -28,6 +28,11 @@ interface CampaignCardProps {
 
 const CampaignCard: FC<CampaignCardProps> = ({ data, canEdit, reload }) => {
   const firstImage = data.images[0]?.url;
+  const link = canEdit
+    ? data.status === ECampaignStatus.Draft
+      ? config.routes.brand.campaigns.edit(data.id, 1)
+      : config.routes.brand.campaigns.tracking(data.id)
+    : config.routes.campaigns.details(data.id);
 
   const handleDelete = (campaign: ICampaign) => () => {
     emitter.confirm({
@@ -41,84 +46,66 @@ const CampaignCard: FC<CampaignCardProps> = ({ data, canEdit, reload }) => {
   };
 
   return (
-    <div className="relative flex flex-col bg-background border rounded-lg shadow-md overflow-hidden">
-      <div
-        key={data.id}
-        className={cn('relative bg-foreground overflow-hidden select-none', { 'pb-[56.25%]': !firstImage })}
-      >
-        {firstImage && (
-          <Image
-            src={firstImage}
-            alt={`Ảnh về chiến dịch ${data.title}`}
-            width={500}
-            height={500}
-            className="object-cover w-full aspect-video transition-transform hover:scale-110"
-          />
-        )}
-        {canEdit && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="secondary" size="icon" className="absolute top-4 right-4">
-                <DotsVerticalIcon />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem asChild>
-                <Link href={config.routes.campaigns.details(data.id)} className="flex items-center gap-2">
-                  <EyeOpenIcon />
-                  Xem chi tiết
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href={config.routes.brand.campaigns.edit(data.id, 1)} className="flex items-center gap-2">
-                  <Pencil2Icon />
-                  Chỉnh sửa
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleDelete(data)}>
-                <span className="flex items-center gap-2">
-                  <TrashIcon />
-                  Xóa
-                </span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
-      </div>
-      <div className="p-4 space-y-2 text-sm">
-        <div className="flex items-center justify-between gap-4 text-base">
-          {canEdit ? (
-            data.status === ECampaignStatus.Draft ? (
-              <Link href={config.routes.brand.campaigns.edit(data.id, 1)} className="font-semibold hover:underline">
-                {data.name}
-              </Link>
-            ) : (
-              <Link href={config.routes.brand.campaigns.tracking(data.id)} className="font-semibold hover:underline">
-                {data.name}
-              </Link>
-            )
-          ) : (
-            <Link href={config.routes.campaigns.details(data.id)} className="font-semibold hover:underline">
-              {data.title}
-            </Link>
+    <div className="relative ">
+      <Link href={link} className="flex flex-col bg-background border rounded-lg shadow-md overflow-hidden">
+        <div
+          key={data.id}
+          className={cn('relative bg-foreground overflow-hidden select-none', { 'pb-[56.25%]': !firstImage })}
+        >
+          {firstImage && (
+            <Image
+              src={firstImage}
+              alt={`Ảnh về chiến dịch ${data.title}`}
+              width={500}
+              height={500}
+              className="object-cover w-full aspect-video transition-transform hover:scale-110"
+            />
           )}
-          <Chip
-            label={constants.campaignStatus[data.status].label}
-            variant={constants.campaignStatus[data.status].color}
-            size="small"
-            className={cn({ 'absolute top-3 right-3': !canEdit })}
-          />
         </div>
-        {canEdit && <h6 className="text-sm">{data.title}</h6>}
-        <div className="flex items-center gap-2">
-          <ClockIcon />
-          {formats.date(data.startDate)} - {formats.date(data.endDate)}
+        <div className="p-4 space-y-2 text-sm">
+          <div className="flex items-center justify-between gap-4 text-base">
+            <h6 className="font-semibold">{canEdit ? data.name : data.title}</h6>
+            <Chip
+              label={constants.campaignStatus[data.status].label}
+              variant={constants.campaignStatus[data.status].color}
+              size="small"
+              className={cn({ 'absolute top-3 right-3': !canEdit })}
+            />
+          </div>
+          {canEdit && <h6 className="text-sm">{data.title}</h6>}
+          <div className="flex items-center gap-2">
+            <ClockIcon />
+            {formats.date(data.startDate)} - {formats.date(data.endDate)}
+          </div>
+          <div className="flex items-center gap-2">
+            <FaRegMoneyBillAlt />
+            {formats.price(data.budget)}
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <FaRegMoneyBillAlt />
-          {formats.price(data.budget)}
-        </div>
-      </div>
+      </Link>
+      {canEdit && [ECampaignStatus.Draft, ECampaignStatus.Published].includes(data.status) && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="secondary" size="icon" className="absolute top-4 right-4">
+              <DotsVerticalIcon />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem asChild>
+              <Link href={config.routes.brand.campaigns.edit(data.id, 1)} className="flex items-center gap-2">
+                <Pencil2Icon />
+                Chỉnh sửa
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleDelete(data)}>
+              <span className="flex items-center gap-2">
+                <TrashIcon />
+                Xóa
+              </span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
     </div>
   );
 };

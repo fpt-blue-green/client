@@ -62,7 +62,7 @@ const useDataTable = <TData, TValue>({
     useDebounce(
       JSON.stringify(
         columnFilters.filter((filter) => {
-          return searchFields.find((column) => column.value === filter.id);
+          return searchFields.some((column) => column.value === filter.id);
         }),
       ),
       500,
@@ -140,6 +140,31 @@ const useDataTable = <TData, TValue>({
     });
   };
 
+  const handleColumnFilters: OnChangeFn<ColumnFiltersState> = (updater) => {
+    setColumnFilters((prevColumnFilter) => {
+      const newColumnFilter = typeof updater === 'function' ? updater(prevColumnFilter) : updater;
+
+      const optionColumnFields = newColumnFilter.filter((filter) => {
+        return optionFields.some((column) => column.value === filter.id);
+      });
+
+      optionFields.forEach((field) => {
+        const column = optionColumnFields.find((col) => col.id === field.value);
+        searchParams.delete(field.key);
+
+        if (column) {
+          (column.value as string[]).forEach((value) => searchParams.append(field.key, value));
+        } else {
+          searchParams.delete(field.key);
+        }
+      });
+
+      setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+      setQueryString(searchParams.toString());
+      return newColumnFilter;
+    });
+  };
+
   const table = useReactTable({
     columns,
     data,
@@ -157,7 +182,7 @@ const useDataTable = <TData, TValue>({
     },
     onPaginationChange: handlePaginationChange,
     onRowSelectionChange: handleRowSelection,
-    onColumnFiltersChange: setColumnFilters,
+    onColumnFiltersChange: handleColumnFilters,
     onSortingChange: handleSortingChange,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),

@@ -5,6 +5,7 @@ import { DataTableViewOptions } from './column-toggle';
 import { DataTableFilterField } from './filter-type';
 import { useMemo } from 'react';
 import { Button, ButtonProps } from '@/components/ui/button';
+import { DataTableFacetedFilter } from './faceted-filter';
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -13,7 +14,7 @@ interface DataTableToolbarProps<TData> {
 }
 
 export function DataTableToolbar<TData>({ table, filters, buttons }: DataTableToolbarProps<TData>) {
-  const { searchFields } = useMemo(() => {
+  const { searchFields, optionFields } = useMemo(() => {
     return {
       searchFields: filters?.filter((field) => !field.options) || [],
       optionFields: filters?.filter((field) => field.options) || [],
@@ -34,29 +35,27 @@ export function DataTableToolbar<TData>({ table, filters, buttons }: DataTableTo
                   placeholder={field.placeholder}
                   value={(table.getColumn(String(field.value))?.getFilterValue() as string) ?? ''}
                   onChange={(event) => table.getColumn(String(field.value))?.setFilterValue(event.target.value)}
-                  className="h-8 w-40 lg:w-64"
+                  className="h-9 w-40 lg:w-64"
                 />
               ),
           )}
-        {/* {optionFields.length > 0 &&
+        {optionFields.length > 0 &&
           optionFields.map(
             (column) =>
-              table.getColumn(column.value ? String(column.value) : "") && (
+              table.getColumn(column.value ? String(column.value) : '') && (
                 <DataTableFacetedFilter
                   key={String(column.value)}
-                  column={table.getColumn(
-                    column.value ? String(column.value) : ""
-                  )}
+                  column={table.getColumn(column.value ? String(column.value) : '')}
                   title={column.label}
+                  multiple={column.multiple}
                   options={column.options ?? []}
                 />
-              )
-          )} */}
+              ),
+          )}
         {isFiltered && (
           <Button
             aria-label="Đặt lại"
             variant="ghost"
-            size="small"
             onClick={() => table.resetColumnFilters()}
             endIcon={<Cross2Icon className="size-4" aria-hidden="true" />}
           >
@@ -66,7 +65,7 @@ export function DataTableToolbar<TData>({ table, filters, buttons }: DataTableTo
       </div>
       <div className="flex items-center gap-2">
         {buttons?.map((props, index) => (
-          <Button key={index} size="small" variant="outline" {...props} />
+          <Button key={index} variant="outline" {...props} />
         ))}
         <DataTableViewOptions table={table} />
       </div>

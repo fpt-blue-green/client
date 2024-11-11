@@ -14,7 +14,7 @@ import { SiCampaignmonitor } from 'react-icons/si';
 import Link from 'next/link';
 import config from '@/config';
 import { ECampaignStatus } from '@/types/enum';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 
 const List = () => {
   const { profile } = useAuthBrand();
@@ -28,8 +28,6 @@ const List = () => {
   const reload = async () => {
     await mutate();
   };
-
-  const canCreate = Boolean(profile?.isPremium || (data && data.items.length === 0));
 
   const handleTabChange = (value: string) => {
     if (value === 'all') {
@@ -46,11 +44,7 @@ const List = () => {
     <div className="space-y-7">
       <h1 className="flex items-center justify-between text-2xl font-semibold">
         Chiến dịch
-        <PremiumBadge invisible={canCreate}>
-          <Button variant="foreground" size="large" disabled={!canCreate} asChild>
-            <Link href={config.routes.brand.campaigns.edit('new', 1)}>Đăng một chiến dịch</Link>
-          </Button>
-        </PremiumBadge>
+        <CreateButton isPremium={profile?.isPremium} />
       </h1>
       <Tabs defaultValue="all" onValueChange={handleTabChange}>
         <TabsList className="grid w-full grid-cols-5 *:flex *:max-lg:flex-col *:items-center *:gap-2">
@@ -91,4 +85,22 @@ const List = () => {
     </div>
   );
 };
+
+interface CreateButtonProps {
+  isPremium?: boolean;
+}
+
+const CreateButton: FC<CreateButtonProps> = ({ isPremium }) => {
+  const { data } = fetchRequest.campaign.currentBrand(true);
+  const canCreate = Boolean(isPremium || (data && data.items.length < 2));
+
+  return (
+    <PremiumBadge invisible={canCreate}>
+      <Button variant="foreground" size="large" disabled={!canCreate} asChild>
+        <Link href={canCreate ? config.routes.brand.campaigns.edit('new', 1) : '#'}>Đăng một chiến dịch</Link>
+      </Button>
+    </PremiumBadge>
+  );
+};
+
 export default List;

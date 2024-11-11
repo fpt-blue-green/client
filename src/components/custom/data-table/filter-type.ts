@@ -6,10 +6,11 @@ export interface DataTableFilterField<TData> {
   value: keyof TData;
   placeholder?: string;
   options?: FilterOption[];
+  multiple?: boolean;
 }
 
-interface FilterOption {
+export interface FilterOption {
   label: string;
   key: string;
-  icon: ReactNode;
+  icon?: ReactNode;
 }

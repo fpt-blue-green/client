@@ -11,6 +11,7 @@ import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { useForm } from 'react-hook-form';
 import { userRequest } from '@/request';
 import { toast } from 'sonner';
+import { constants } from '@/lib/utils';
 
 const Security = () => {
   const [showPass, setShowPass] = useState(false);
@@ -31,17 +32,18 @@ const Security = () => {
 
   const onSubmit = async (values: ChangePasswordBodyType) => {
     setLoading(true);
-    userRequest
-      .changePassword(values)
-      .then(() => toast.success('Vui lòng kiểm tra email để xác nhận'))
-      .catch((err) => toast.error(err.message))
-      .finally(() => setLoading(false));
+    toast.promise(userRequest.changePassword(values), {
+      loading: 'Đang tải',
+      success: 'Vui lòng kiểm tra email để xác nhận',
+      error: (err) => err?.message || constants.sthWentWrong,
+      finally: () => setLoading(false),
+    });
   };
 
   return (
     <Paper>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
             name="oldPassword"

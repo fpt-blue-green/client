@@ -4,6 +4,8 @@ import { EventEmitter } from 'fbemitter';
 import { ConfirmBody } from '@/components/confirm-dialog';
 import { campaignStatus, jobStatus, offerStatus } from './constants';
 import { ERole } from '@/types/enum';
+import { formatDistanceToNow } from 'date-fns';
+import { vi } from 'date-fns/locale';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -75,6 +77,10 @@ export const formats = {
       : '';
 
     return timeFormatted ? `${dateFormatted} ${timeFormatted}` : dateFormatted;
+  },
+  timeAgo: (date: Date | string) => {
+    const result = formatDistanceToNow(date, { locale: vi });
+    return result.replace(' trước', '').replace('khoảng ', '');
   },
 };
 

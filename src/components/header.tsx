@@ -7,7 +7,7 @@ import ProfileDropdown from '@/components/profile-dropdown';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from './ui/button';
-import { HamburgerMenuIcon } from '@radix-ui/react-icons';
+import { ChatBubbleIcon, HamburgerMenuIcon } from '@radix-ui/react-icons';
 import { useSession } from 'next-auth/react';
 import { ERole } from '@/types/enum';
 import { useLayoutEffect, useState } from 'react';
@@ -68,6 +68,11 @@ const Header = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" asChild>
+              <Link href={config.routes.chats.base}>
+                <ChatBubbleIcon className="size-5" />
+              </Link>
+            </Button>
             <ModeToggle />
             <ProfileDropdown />
           </div>
