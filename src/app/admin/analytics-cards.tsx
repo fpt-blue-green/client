@@ -6,6 +6,7 @@ import Card from './components/card-overview';
 import { FaPeopleGroup, FaSackDollar } from 'react-icons/fa6';
 import { PersonIcon } from '@radix-ui/react-icons';
 import { FaProjectDiagram } from 'react-icons/fa';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const AnalyticsCards = () => {
   const { data } = useSWRImmutable<IMetricTrend[]>('/AdminStatistic/monthlyMetricsTrend', fetcher);
@@ -17,7 +18,7 @@ const AnalyticsCards = () => {
       <Card item={data[3]} icon={<FaProjectDiagram className="text-muted-foreground" />} />
     </div>
   ) : (
-    <></>
+    <Skeleton className="w-full h-4 flex" />
   );
 };
 
