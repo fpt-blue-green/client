@@ -19,7 +19,7 @@ import ActionForm from './action-form';
 import { userRequest } from '@/request';
 import IUserManagement from '@/types/user-management';
 
-const InfluencerTable = () => {
+const UserTable = () => {
   const columnsWithActions: ColumnDef<IUserManagement, IUserManagement>[] = [
     ...columns,
     {
@@ -106,4 +106,4 @@ const InfluencerTable = () => {
     </Dialog>
   );
 };
-export default InfluencerTable;
+export default UserTable;
