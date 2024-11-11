@@ -3,8 +3,8 @@ import { ERole } from './types/enum';
 import { NextResponse } from 'next/server';
 import routes from './config/routes';
 
-const brandPaths = [routes.account, routes.brand.base];
-const influencerPaths = [routes.account, routes.influencer.base];
+const brandPaths = [routes.brand.base];
+const influencerPaths = [routes.influencer.base];
 const adminPaths = [routes.admin.base];
 
 export default withAuth(

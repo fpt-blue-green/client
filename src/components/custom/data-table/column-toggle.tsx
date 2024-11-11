@@ -20,12 +20,7 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="size-8"
-          startIcon={<MixerHorizontalIcon className="h-4 w-4" />}
-        >
+        <Button variant="outline" size="icon" startIcon={<MixerHorizontalIcon className="h-4 w-4" />}>
           <span className="sr-only">Hiển thị</span>
         </Button>
       </DropdownMenuTrigger>

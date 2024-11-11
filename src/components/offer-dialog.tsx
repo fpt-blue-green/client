@@ -16,7 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { OfferBodyType, offerSchema } from '@/schema-validations/offer.schema';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { ERole, PlatformData } from '@/types/enum';
+import { ECampaignStatus, ERole, PlatformData } from '@/types/enum';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import PriceInput from './custom/price-input';
@@ -50,6 +50,7 @@ const OfferDialog: FC<OfferDialogProps> = ({
   description,
   asChild,
 }) => {
+  const [open, setOpen] = useState(false);
   const { profile: influencerProfile } = useAuthInfluencer();
   const { profile: brandProfile } = useAuthBrand();
   const showButton =
@@ -80,19 +81,25 @@ const OfferDialog: FC<OfferDialogProps> = ({
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       {showButton && (
         <DialogTrigger asChild={asChild} onClick={handleClick}>
           {children}
         </DialogTrigger>
       )}
       {showDialog && (
-        <DialogContent>
+        <DialogContent onInteractOutside={(e) => e.preventDefault()}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
-          <OfferForm data={data} influencer={influencer} campaign={campaign} brand={brand} />
+          <OfferForm
+            data={data}
+            influencer={influencer}
+            campaign={campaign}
+            brand={brand}
+            onClose={() => setOpen(false)}
+          />
         </DialogContent>
       )}
     </Dialog>
@@ -104,12 +111,16 @@ interface OfferFormProps {
   campaign?: ICampaign;
   influencer?: IInfluencer;
   brand?: IBrand;
+  onClose: () => void;
 }
 
-const OfferForm: FC<OfferFormProps> = ({ data, campaign, influencer, brand }) => {
+const OfferForm: FC<OfferFormProps> = ({ data, campaign, influencer, brand, onClose }) => {
   const { profile: influencerProfile } = useAuthInfluencer();
   const { profile: brandProfile } = useAuthBrand();
-  const { data: brandCampaigns } = fetchRequest.campaign.currentBrand(!!brandProfile && !brand);
+  const { data: brandCampaigns } = fetchRequest.campaign.currentBrand(!!brandProfile && !brand, [
+    ECampaignStatus.Active,
+    ECampaignStatus.Published,
+  ]);
   const channels = influencer ? influencer.channels : influencerProfile?.channels;
   const [loading, setLoading] = useState(false);
 
@@ -140,13 +151,22 @@ const OfferForm: FC<OfferFormProps> = ({ data, campaign, influencer, brand }) =>
     },
   });
 
+  const { mutate: campaignMutate } = fetchRequest.campaign.trackingInfluencers(form.getValues('job.campaignId'));
+  const { mutate: jobsMutate } = fetchRequest.influencer.jobs();
+
   const onSubmit = (values: OfferBodyType) => {
     setLoading(true);
-    offerRequest
-      .createOffer(values)
-      .then(() => toast.success('Đã gửi lời đề nghị tham gia của bạn'))
-      .catch((err) => toast.error(err?.message || constants.sthWentWrong))
-      .finally(() => setLoading(false));
+    toast.promise(offerRequest.createOffer(values), {
+      loading: 'Đang tải',
+      success: () => {
+        onClose();
+        campaignMutate();
+        jobsMutate();
+        return 'Đã gửi lời đề nghị tham gia của bạn';
+      },
+      error: (err) => err?.message || constants.sthWentWrong,
+      finally: () => setLoading(false),
+    });
   };
 
   const handleChange =

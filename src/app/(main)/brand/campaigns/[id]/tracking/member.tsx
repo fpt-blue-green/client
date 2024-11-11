@@ -42,7 +42,7 @@ const Member = () => {
         break;
       case 'joined':
         setJobStatuses([EJobStatus.Approved, EJobStatus.InProgress]);
-        setOfferStatuses([]);
+        setOfferStatuses([EOfferStatus.Done]);
         break;
       case 'fulfillment':
         setJobStatuses([EJobStatus.Completed]);

@@ -1,7 +1,7 @@
 'use client';
 
 import Table, { TableRef } from '@/components/custom/data-table';
-import { columns } from './columns';
+import { columns, filters } from './columns';
 import { ButtonProps } from '@/components/ui/button';
 import ITag from '@/types/tag';
 import { Button } from '@/components/ui/button';
@@ -93,7 +93,7 @@ const TagTable = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Table ref={tableRef} columns={columnsWithActions} url="/Tags/filter" buttons={buttons} />
+      <Table ref={tableRef} columns={columnsWithActions} url="/Tags/filter" buttons={buttons} filters={filters} />
       <DialogContent>
         <ActionForm handleClose={handleClose} item={tag} reload={reloadTable} />
       </DialogContent>
