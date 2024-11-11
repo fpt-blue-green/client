@@ -1,3 +1,4 @@
+export { default as adminRequest } from './admin.request';
 export { default as authRequest } from './auth.request';
 export { default as brandRequest } from './brand.request';
 export { default as campaignsRequest } from './campaigns.request';
