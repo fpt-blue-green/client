@@ -2,12 +2,14 @@
 
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import config from '@/config';
 import { useAuthBrand, useThrottle } from '@/hooks';
 import { cn, constants } from '@/lib/utils';
 import { brandRequest, fetchRequest } from '@/request';
 import IInfluencer from '@/types/influencer';
-import { HeartFilledIcon, HeartIcon, Link2Icon } from '@radix-ui/react-icons';
+import { ChatBubbleIcon, HeartFilledIcon, HeartIcon, Link2Icon } from '@radix-ui/react-icons';
 import { signIn } from 'next-auth/react';
+import Link from 'next/link';
 import { FC, useState } from 'react';
 import { FaFacebook, FaWhatsapp, FaXTwitter } from 'react-icons/fa6';
 import { LuShare } from 'react-icons/lu';
@@ -97,7 +99,11 @@ const Action: FC<ActionProps> = ({ influencer }) => {
       >
         <span className={cn({ 'text-destructive': isFavorite })}>{isFavorite ? 'Đã yêu thích' : 'Yêu thích'}</span>
       </Button>
+      <Button variant="ghost" startIcon={<ChatBubbleIcon className="size-5" />} asChild>
+        <Link href={config.routes.chats.details(false, influencer.userId)}>Nhắn tin</Link>
+      </Button>
     </div>
   );
 };
+
 export default Action;

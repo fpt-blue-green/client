@@ -10,7 +10,7 @@ interface NoDataProps {
 }
 const NoData: FC<NoDataProps> = ({ className, description }) => {
   return (
-    <div className={cn('flex flex-col items-center gap-2 p-8 text-muted-foreground', className)}>
+    <div className={cn('flex flex-col items-center justify-center gap-2 p-8 text-muted-foreground', className)}>
       <div>
         <PiCloudXFill className="size-20" />
       </div>

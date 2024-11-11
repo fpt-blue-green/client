@@ -5,14 +5,18 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn, formats } from '@/lib/utils';
 import IMessage from '@/types/message';
 import { useSession } from 'next-auth/react';
-import { useEffect, useRef } from 'react';
+import { FC, useEffect, useRef } from 'react';
+import ChatForm from './chat-form';
+import { useChat } from '@/hooks';
+import IChat from '@/types/chat';
 
 interface ChatContainerProps {
-  messages: IMessage[];
+  chat: IChat;
 }
 
-const ChatContainer = ({ messages }: ChatContainerProps) => {
+const ChatContainer: FC<ChatContainerProps> = ({ chat }) => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const { messages, sendMessage } = useChat(chat.chatId, chat.isCampaign);
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
@@ -25,13 +29,18 @@ const ChatContainer = ({ messages }: ChatContainerProps) => {
   });
 
   return (
-    <div className="flex-1 flex items-end overflow-auto pt-4 pr-4">
-      <div className="flex flex-col gap-4 max-h-full w-full">
-        {groupConsecutiveMessagesBySender(messages).map((messageItems) => (
-          <Message key={messageItems[0].id} messages={messageItems} />
-        ))}
+    <div className="flex flex-col gap-4 h-full pt-16 -mr-4">
+      <div className="flex-1 flex items-end overflow-auto pt-4 pr-4">
+        <div className="flex flex-col gap-4 max-h-full w-full">
+          {groupConsecutiveMessagesBySender(messages).map((messageItems) => (
+            <Message key={messageItems[0].id} messages={messageItems} />
+          ))}
 
-        <div ref={messagesEndRef} />
+          <div ref={messagesEndRef} />
+        </div>
+      </div>
+      <div className="shrink-0 pr-4">
+        <ChatForm onSend={sendMessage} />
       </div>
     </div>
   );
@@ -58,7 +67,7 @@ const Message = ({ messages }: MessageProps) => {
       )}
       <div className={cn('flex flex-col gap-0.5 max-w-[70%]', { 'items-end': sent })}>
         {messages.map((message, index) => (
-          <Tooltip key={message.id} label={formats.date(message.sendTime, true, { second: undefined })}>
+          <Tooltip key={message.id} label={formats.date(message.sentAt, true, { second: undefined })}>
             <div
               className={cn(' w-fit px-3 py-2 bg-secondary shadow-md', {
                 'bg-primary': sent,
@@ -70,7 +79,7 @@ const Message = ({ messages }: MessageProps) => {
                 'rounded-ee-lg': sent && index === messages.length - 1,
               })}
             >
-              {message.message}
+              {message.content}
             </div>
           </Tooltip>
         ))}

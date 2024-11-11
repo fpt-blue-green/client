@@ -48,6 +48,10 @@ const routes = {
     statistic: '/admin/statistic',
     tag: '/admin/tag-management',
   },
+  chats: {
+    base: '/chats/person',
+    details: (isCampaign: boolean, id: string) => `/chats/${isCampaign ? 'group' : 'person'}?c=${id}`,
+  },
 };
 
 export default routes;
