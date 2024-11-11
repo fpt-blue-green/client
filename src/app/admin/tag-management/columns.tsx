@@ -1,5 +1,6 @@
 'use client';
 
+import { DataTableFilterField } from '@/components/custom/data-table/filter-type';
 import { formats } from '@/lib/utils';
 import ITag from '@/types/tag';
 import { CheckIcon } from '@radix-ui/react-icons';
@@ -38,5 +39,24 @@ export const columns: ColumnDef<ITag, ITag>[] = [
     header: 'Lần cập nhật gần nhất',
     enableSorting: false,
     cell: ({ row }) => formats.date(row.original.modifiedAt || '', true),
+  },
+];
+
+export const filters: DataTableFilterField<ITag>[] = [
+  {
+    key: 'IsPremium',
+    label: 'Loại',
+    value: 'isPremium',
+    multiple: false,
+    options: [
+      {
+        key: 'false',
+        label: 'Thường',
+      },
+      {
+        key: 'true',
+        label: 'Premium',
+      },
+    ],
   },
 ];
