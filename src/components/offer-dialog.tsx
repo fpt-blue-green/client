@@ -111,7 +111,7 @@ interface OfferFormProps {
   campaign?: ICampaign;
   influencer?: IInfluencer;
   brand?: IBrand;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 const OfferForm: FC<OfferFormProps> = ({ data, campaign, influencer, brand, onClose }) => {
@@ -159,7 +159,7 @@ const OfferForm: FC<OfferFormProps> = ({ data, campaign, influencer, brand, onCl
     toast.promise(offerRequest.createOffer(values), {
       loading: 'Đang tải',
       success: () => {
-        onClose();
+        onClose?.();
         campaignMutate();
         jobsMutate();
         return 'Đã gửi lời đề nghị tham gia của bạn';

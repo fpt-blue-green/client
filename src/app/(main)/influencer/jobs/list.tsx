@@ -25,7 +25,14 @@ const List = () => {
   const [page, setPage] = useState(1);
   const [tab, setTab] = useState('1');
   const [filter, setFilter] = useState<JobFilter>({ jobs: [EJobStatus.Pending], from: ERole.Brand });
-  const { data, isLoading } = fetchRequest.influencer.jobs(page, PAGE_SIZE, filter.campaigns, filter.jobs, filter.from);
+  const { data, isLoading } = fetchRequest.influencer.jobs(
+    filter.campaigns,
+    filter.jobs,
+    filter.from,
+    undefined,
+    page,
+    PAGE_SIZE,
+  );
   const { data: statistical } = fetchRequest.job.statistical();
   const [pageCount, setPageCount] = useState(0);
 

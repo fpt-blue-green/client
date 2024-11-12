@@ -45,7 +45,7 @@ const Member = () => {
         setOfferStatuses([EOfferStatus.Done]);
         break;
       case 'fulfillment':
-        setJobStatuses([EJobStatus.Completed]);
+        setJobStatuses([EJobStatus.Completed, EJobStatus.Failed]);
         setOfferStatuses([]);
         break;
       case 'archived':

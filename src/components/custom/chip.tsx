@@ -29,7 +29,7 @@ const Chip: FC<ChipProps> = ({ label, icon, className, onDelete, ...props }) => 
   };
 
   return (
-    <Badge {...props} className={cn({ 'cursor-pointer hover:opacity-80': props.onClick }, className)}>
+    <Badge {...props} className={cn('text-center', { 'cursor-pointer hover:opacity-80': props.onClick }, className)}>
       <div className="flex items-center gap-1.5">
         {icon}
         <span className="leading-[1]">{label}</span>
