@@ -3,9 +3,11 @@
 import { DataTableFilterField } from '@/components/custom/data-table/filter-type';
 import Tooltip from '@/components/custom/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { convertRoleTypeToText } from '@/lib/constants';
 import { formats, functions } from '@/lib/utils';
 import IUserManagement, { IBanUserManagement } from '@/types/user-management';
 import { ColumnDef } from '@tanstack/react-table';
+import { CheckIcon } from 'lucide-react';
 
 export const columns: ColumnDef<IUserManagement, IUserManagement>[] = [
   {
@@ -39,21 +41,27 @@ export const columns: ColumnDef<IUserManagement, IUserManagement>[] = [
     id: 'role',
     accessorKey: 'role',
     header: 'Vai trò',
-    cell: ({ row }) => <div className="pl-4">{functions.convertRoleTypeToText(row.original.role)}</div>,
+    cell: ({ row }) => <div className="pl-4">{convertRoleTypeToText(row.original.role)}</div>,
+  },
+  {
+    id: 'isBanned',
+    accessorKey: 'isBanned',
+    header: 'Bị cấm',
+    cell: ({ row }) => <div className="pl-4">{row.original.isBanned ? <CheckIcon /> : <></>}</div>,
   },
   {
     id: 'createdAt',
     accessorKey: 'createdAt',
     header: 'Ngày đăng kí',
     enableSorting: true,
-    cell: ({ row }) => <div className="pl-4">{formats.date(row.original.createdAt)}</div>,
+    cell: ({ row }) => <div className="pl-4">{formats.date(row.original.createdAt, true)}</div>,
   },
   {
     id: 'modifiedAt',
     accessorKey: 'modifiedAt',
-    header: 'Cập nhật gần đây',
+    header: 'Cập nhật lúc',
     enableSorting: true,
-    cell: ({ row }) => <div className="pl-4">{formats.date(row.original.modifiedAt)}</div>,
+    cell: ({ row }) => <div className="pl-4">{formats.date(row.original.modifiedAt, true)}</div>,
   },
 ];
 
@@ -76,7 +84,7 @@ export const banUserColumns: ColumnDef<IBanUserManagement, IBanUserManagement>[]
     id: 'role',
     accessorKey: 'role',
     header: 'Vai trò',
-    cell: ({ row }) => <div className="pl-4">{functions.convertRoleTypeToText(row.original.user.role)}</div>,
+    cell: ({ row }) => <div className="pl-4">{convertRoleTypeToText(row.original.user.role)}</div>,
   },
   {
     id: 'reason',
@@ -96,11 +104,11 @@ export const banUserColumns: ColumnDef<IBanUserManagement, IBanUserManagement>[]
     cell: ({ row }) => <div className="pl-4">{formats.date(row.original.banDate)}</div>,
   },
   {
-    id: 'name',
-    accessorKey: 'name',
+    id: 'bannedBy',
+    accessorKey: 'bannedBy',
     header: 'Người cấm',
     enableSorting: true,
-    cell: ({ row }) => <div className="pl-4">{formats.date(row.original.bannedBy.name)}</div>,
+    cell: ({ row }) => <div className="pl-4">{row.original.bannedBy.name}</div>,
   },
 ];
 
