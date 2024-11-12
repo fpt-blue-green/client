@@ -68,6 +68,7 @@ const UserTable = () => {
   ];
   const [user, setUser] = useState<IUserManagement>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isBanOrUnBanForm, setIsBanOrUnBanForm] = useState<boolean>(false);
   const [isBan, setIsBan] = useState<boolean>(false);
   const tableRef = useRef<TableRef>(null);
   const reloadTable = async () => {
@@ -92,18 +93,21 @@ const UserTable = () => {
   const handleBan = (user: IUserManagement) => {
     setIsOpen(true);
     setUser(user);
+    setIsBanOrUnBanForm(true);
     setIsBan(true);
   };
 
   const handleOpen = (user?: IUserManagement) => {
     setIsOpen(true);
     setUser(user);
+    setIsBanOrUnBanForm(false);
     setIsBan(false);
   };
 
   const handleClose = () => {
     setIsOpen(false);
     setUser(undefined);
+    setIsBanOrUnBanForm(false);
     setIsBan(false);
   };
 
@@ -111,7 +115,13 @@ const UserTable = () => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <Table columns={columnsWithActions} url="/User" filters={filters} buttons={buttons} />
       <DialogContent>
-        <ActionForm handleClose={handleClose} item={user} reloadTable={reloadTable} isBan={isBan} />
+        <ActionForm
+          handleClose={handleClose}
+          item={user}
+          reloadTable={reloadTable}
+          isBanOrUnBanForm={isBanOrUnBanForm}
+          isBan={isBan}
+        />
       </DialogContent>
     </Dialog>
   );

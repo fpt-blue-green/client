@@ -10,15 +10,17 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { constants } from '@/lib/utils';
 import { userRequest } from '@/request';
-import IUserManagement from '@/types/user-management';
+import IUserManagement, { IBanUserManagement } from '@/types/user-management';
 import { EBanDate, ERole } from '@/types/enum';
 interface ActionFormProps {
   item?: IUserManagement;
+  banItem?: IBanUserManagement;
   handleClose: () => void;
   reloadTable: () => void;
+  isBanOrUnBanForm?: boolean;
   isBan?: boolean;
 }
-const ActionForm: FC<ActionFormProps> = ({ item, handleClose, reloadTable, isBan }) => {
+const ActionForm: FC<ActionFormProps> = ({ item, banItem, handleClose, reloadTable, isBanOrUnBanForm, isBan }) => {
   const [loading, setLoading] = useState(false);
   const form = useForm<GeneralBodyType>({
     resolver: zodResolver(generalSchema),
@@ -55,24 +57,24 @@ const ActionForm: FC<ActionFormProps> = ({ item, handleClose, reloadTable, isBan
 
   const handleBan = (values: BanBodyType) => {
     setLoading(true);
-    const caller = userRequest.ban(item?.id || '', values);
+    const caller = isBan ? userRequest.ban(item?.id || '', values) : userRequest.unBan(banItem?.userId || '', values);
     toast.promise(caller, {
       loading: 'Đang tải',
       success: () => {
         reloadTable();
         handleClose();
-        return 'Đã cấm người dùng thành công.';
+        return isBan ? 'Đã cấm người dùng thành công.' : 'Đã huỷ lệnh cấm người dùng thành công.';
       },
       error: (err) => err?.message || constants.sthWentWrong,
       finally: () => setLoading(false),
     });
   };
 
-  return isBan ? (
+  return isBanOrUnBanForm ? (
     <Form {...banForm}>
       <form onSubmit={banForm.handleSubmit(handleBan)}>
         <DialogHeader>
-          <DialogTitle>Cấm người dùng</DialogTitle>
+          <DialogTitle>{isBan ? 'Cấm người dùng' : 'Huỷ lệnh cấm người dùng'}</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-6">
@@ -94,23 +96,33 @@ const ActionForm: FC<ActionFormProps> = ({ item, handleClose, reloadTable, isBan
             name="bannedTime"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Cấm trong vòng</FormLabel>
-                <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value.toString()}>
+                <FormLabel>{isBan ? 'Cấm trong vòng' : 'Đề nghị'}</FormLabel>
+                <Select
+                  disabled={isBan ? false : true}
+                  onValueChange={(value) => field.onChange(parseInt(value))}
+                  value={isBan ? field.value.toString() : EBanDate.None.toString()}
+                >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Chọn vai trò" />
+                      <SelectValue placeholder="Chọn thời hạn cấm" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value={EBanDate.OneWeek.toString()}>1 Tuần</SelectItem>
-                    <SelectItem value={EBanDate.TwoWeeks.toString()}>2 Tuần</SelectItem>
-                    <SelectItem value={EBanDate.OneMonth.toString()}>1 Tháng</SelectItem>
-                    <SelectItem value={EBanDate.ThreeMonths.toString()}>3 Tháng</SelectItem>
-                    <SelectItem value={EBanDate.SixMonths.toString()}>6 Tháng</SelectItem>
-                    <SelectItem value={EBanDate.OneYear.toString()}>1 Năm</SelectItem>
-                    <SelectItem value={EBanDate.TwoYears.toString()}>2 Năm</SelectItem>
-                    <SelectItem value={EBanDate.indefinitely.toString()}>Vô thời hạn</SelectItem>
-                  </SelectContent>
+                  {isBan ? (
+                    <SelectContent>
+                      <SelectItem value={EBanDate.OneWeek.toString()}>1 Tuần</SelectItem>
+                      <SelectItem value={EBanDate.TwoWeeks.toString()}>2 Tuần</SelectItem>
+                      <SelectItem value={EBanDate.OneMonth.toString()}>1 Tháng</SelectItem>
+                      <SelectItem value={EBanDate.ThreeMonths.toString()}>3 Tháng</SelectItem>
+                      <SelectItem value={EBanDate.SixMonths.toString()}>6 Tháng</SelectItem>
+                      <SelectItem value={EBanDate.OneYear.toString()}>1 Năm</SelectItem>
+                      <SelectItem value={EBanDate.TwoYears.toString()}>2 Năm</SelectItem>
+                      <SelectItem value={EBanDate.indefinitely.toString()}>Vô thời hạn</SelectItem>
+                    </SelectContent>
+                  ) : (
+                    <SelectContent>
+                      <SelectItem value={EBanDate.None.toString()}>Huỷ bỏ lệnh cấm</SelectItem>
+                    </SelectContent>
+                  )}
                 </Select>
                 <FormMessage />
               </FormItem>

@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import UserTable from './table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FaPeopleGroup } from 'react-icons/fa6';
-import BanUserTable from './ban-table';
+import BanUserTable from './ban-user-table';
 
 export const metadata: Metadata = {
   title: 'Quản Lí Người Dùng',
