@@ -169,12 +169,12 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
                   {tags
                     ?.sort((a, b) => Number(a.isPremium) - Number(b.isPremium))
                     .map((t) => (
-                      <PremiumBadge key={t.id} invisible={!t.isPremium}>
+                      <PremiumBadge key={t.id} invisible={!t.isPremium || profile?.isPremium}>
                         <Toggle
                           variant="primary"
                           pressed={categories.includes(t.id)}
                           onPressedChange={handleToggleCategory(t.id)}
-                          disabled={t.isPremium}
+                          disabled={t.isPremium && !profile?.isPremium}
                         >
                           {t.name}
                         </Toggle>

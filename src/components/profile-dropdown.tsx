@@ -1,6 +1,6 @@
 'use client';
 
-import { PersonIcon } from '@radix-ui/react-icons';
+import { ExitIcon, HeartIcon, IdCardIcon, PersonIcon } from '@radix-ui/react-icons';
 import { Avatar, AvatarFallback } from './ui/avatar';
 import { Button } from './ui/button';
 import {
@@ -8,6 +8,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 import Link from 'next/link';
@@ -24,11 +25,14 @@ import {
 import Image from 'next/image';
 import { signIn, signOut } from 'next-auth/react';
 import { useAuthBrand, useAuthInfluencer } from '@/hooks';
+import { fetchRequest } from '@/request';
+import { formats } from '@/lib/utils';
 
 const ProfileDropdown = () => {
   const { session, profile: influencer } = useAuthInfluencer();
   const { profile: brand } = useAuthBrand();
   const user = session?.user;
+  const { data: wallet } = fetchRequest.user.payment(!!user);
 
   return (
     <DropdownMenu>
@@ -54,29 +58,50 @@ const ProfileDropdown = () => {
         </Button>
       </DropdownMenuTrigger>
       <Dialog>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent align="end" className="min-w-52">
           {user ? (
             <>
               <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
+              <DropdownMenuLabel className="font-normal">
+                Số dư: {formats.price(wallet?.currentAmount || 0)}
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href={config.routes.account}>Tài khoản</Link>
+                <Link href={config.routes.account}>
+                  <PersonIcon className="mr-2" />
+                  Tài khoản
+                </Link>
               </DropdownMenuItem>
               {influencer && (
                 <DropdownMenuItem asChild>
-                  <Link href={config.routes.influencers.details(influencer.slug)}>Trang cá nhân</Link>
+                  <Link href={config.routes.influencers.details(influencer.slug)}>
+                    <IdCardIcon className="mr-2" />
+                    Trang cá nhân
+                  </Link>
                 </DropdownMenuItem>
               )}
               {brand && (
                 <>
                   <DropdownMenuItem asChild>
-                    <Link href={config.routes.brands.details(brand.id)}>Trang cá nhân</Link>
+                    <Link href={config.routes.brands.details(brand.id)}>
+                      <IdCardIcon className="mr-2" />
+                      Trang cá nhân
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href={config.routes.brand.wishlist}>Yêu thích</Link>
+                    <Link href={config.routes.brand.wishlist}>
+                      <HeartIcon className="mr-2" />
+                      Yêu thích
+                    </Link>
                   </DropdownMenuItem>
                 </>
               )}
-              <DropdownMenuItem onClick={() => signOut({ callbackUrl: config.routes.home })}>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="text-destructive"
+                onClick={() => signOut({ callbackUrl: config.routes.home })}
+              >
+                <ExitIcon className="mr-2" />
                 Đăng xuất
               </DropdownMenuItem>
             </>

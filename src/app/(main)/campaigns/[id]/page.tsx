@@ -9,6 +9,8 @@ import Link from 'next/link';
 import { formats } from '@/lib/utils';
 import Contents from './contents';
 import { RiFacebookFill, RiInstagramFill, RiLink, RiTiktokFill, RiYoutubeFill } from 'react-icons/ri';
+import config from '@/config';
+import MyJobs from './my-jobs';
 
 const getCampaign = async (id: string): Promise<ICampaign> => {
   try {
@@ -47,10 +49,12 @@ const CampaignDetails: FC<CampaignDetailsProps> = async ({ params }) => {
           <div className="flex items-center gap-2">
             <Avatar className="size-16">
               <AvatarImage src={campaign.brand.avatar} alt={`Ảnh đại diện của nhãn hàng ${campaign.brand.name}`} />
-              <AvatarFallback>${campaign.brand.name}</AvatarFallback>
+              <AvatarFallback>{campaign.brand.name[0]}</AvatarFallback>
             </Avatar>
             <div>
-              <h5 className="font-semibold">{campaign.brand.name}</h5>
+              <Link href={config.routes.brands.details(campaign.brand.id)} className="font-semibold">
+                {campaign.brand.name}
+              </Link>
               <div className="flex items-center gap-3 mt-2">
                 {websiteUrl && (
                   <Link href={websiteUrl}>
@@ -93,6 +97,7 @@ const CampaignDetails: FC<CampaignDetailsProps> = async ({ params }) => {
               </li>
             </ul>
           </div>
+          <MyJobs />
           <div>
             <h3 className="text-xl font-semibold mb-6">Yêu cầu nội dung</h3>
             <Contents campaign={campaign} />
