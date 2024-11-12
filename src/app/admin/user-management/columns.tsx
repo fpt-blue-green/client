@@ -4,7 +4,7 @@ import { DataTableFilterField } from '@/components/custom/data-table/filter-type
 import Tooltip from '@/components/custom/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { convertRoleTypeToText } from '@/lib/constants';
-import { formats, functions } from '@/lib/utils';
+import { formats } from '@/lib/utils';
 import IUserManagement, { IBanUserManagement } from '@/types/user-management';
 import { ColumnDef } from '@tanstack/react-table';
 import { CheckIcon } from 'lucide-react';

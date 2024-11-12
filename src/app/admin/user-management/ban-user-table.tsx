@@ -1,6 +1,6 @@
 'use client';
 import Table, { TableRef } from '@/components/custom/data-table';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useRef, useState } from 'react';
 import { banUserColumns } from './columns';
 import { IBanUserManagement } from '@/types/user-management';

@@ -1,6 +1,5 @@
 import { FC, ReactNode } from 'react';
 import Paper from '@/components/custom/paper';
-import { functions } from '@/lib/utils';
 import { convertMetricTrendType } from '@/lib/constants';
 
 interface CardProps {
