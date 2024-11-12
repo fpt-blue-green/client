@@ -12,7 +12,7 @@ interface StatisticalProps {
 
 const chartConfig: ChartConfig = {
   totalReaction: {
-    label: 'Lượt tương tác',
+    label: 'Lượt tương tác:',
     color: 'hsl(var(--chart-1))',
   },
 };
@@ -29,7 +29,7 @@ const Statistical: FC<StatisticalProps> = ({ id }) => {
           dataKey="totalReaction"
           axisLine={false}
           tickLine={false}
-          tickFormatter={(value: number) => formats.bigNum(value)}
+          tickFormatter={(value: number) => formats.estimate(value)}
         />
         <ChartTooltip content={<ChartTooltipContent />} />
         <Line dataKey="totalReaction" type="monotone" stroke="var(--color-totalReaction)" strokeWidth={2} dot={false} />

@@ -10,6 +10,7 @@ import { IFilterList } from '@/types/filter-list';
 import IInfluencer from '@/types/influencer';
 import IInfluencerJobs from '@/types/influencer-jobs';
 import IJob from '@/types/job';
+import { IPaymentHistory } from '@/types/payment';
 import useSWR, { mutate as mutateGlobal } from 'swr';
 import useSWRImmutable from 'swr/immutable';
 
@@ -76,6 +77,11 @@ const fetchRequest = {
   chat: {
     list: () => useSWR<IChat[]>('/Contact/chat/contacts', fetcher),
     details: (id: string) => useSWRImmutable<IChat>(`/Contact/chat/contacts/${id}`, fetcher),
+  },
+  user: {
+    payment: (fetch?: boolean) =>
+      useSWR<{ currentAmount: number; spendAmount: number }>(fetch ? '/User/wallet' : null, fetcher),
+    paymentHistory: () => useSWRImmutable<IPaymentHistory>('/User/paymentHistory', fetcher),
   },
 };
 
