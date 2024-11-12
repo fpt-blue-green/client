@@ -157,7 +157,7 @@ const SocialMedias: FC<BrandDetailsProps> = ({ brand, mutate }) => {
             )}
           />
           <div className="flex justify-end">
-            <Button size="large" variant="gradient" loading={loading}>
+            <Button type="submit" size="large" variant="gradient" loading={loading}>
               Lưu thay đổi
             </Button>
           </div>
