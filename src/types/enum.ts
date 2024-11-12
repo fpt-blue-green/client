@@ -141,3 +141,15 @@ export enum EAdminActionType {
   ApproveUpdatePremium,
   RejectUpdatePremium,
 }
+
+export enum EBanDate {
+  None = 0,
+  OneWeek,
+  TwoWeeks,
+  OneMonth,
+  ThreeMonths,
+  SixMonths,
+  OneYear,
+  TwoYears,
+  indefinitely,
+}

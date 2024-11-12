@@ -13,6 +13,13 @@ export const generalSchema = z
   })
   .strict();
 
+export const banSchema = z
+  .object({
+    reason: z.string().min(2, 'Vui lòng nhập lí do ít nhất 2 kí tự'),
+    bannedTime: z.number().min(1, 'Vui lòng chọn thời hạn cấm'),
+  })
+  .strict();
+
 export const avatarSchema = z.object({
   avatar: z
     .instanceof(isBrowser ? FileList : Array)
@@ -51,3 +58,4 @@ export const changePasswordSchema = z
 export type AvatarBody = z.infer<typeof avatarSchema>;
 export type ChangePasswordBodyType = z.infer<typeof changePasswordSchema>;
 export type GeneralBodyType = z.infer<typeof generalSchema>;
+export type BanBodyType = z.infer<typeof banSchema>;
