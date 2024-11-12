@@ -46,11 +46,12 @@ const UserTable = () => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  handleDelete(user);
+                  handleBan(user);
                 }}
               >
-                Xóa
+                Cấm
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleDelete(user)}>Xóa</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -67,6 +68,7 @@ const UserTable = () => {
   ];
   const [user, setUser] = useState<IUserManagement>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isBan, setIsBan] = useState<boolean>(false);
   const tableRef = useRef<TableRef>(null);
   const reloadTable = async () => {
     await tableRef.current?.reload();
@@ -87,21 +89,29 @@ const UserTable = () => {
     });
   };
 
+  const handleBan = (user: IUserManagement) => {
+    setIsOpen(true);
+    setUser(user);
+    setIsBan(true);
+  };
+
   const handleOpen = (user?: IUserManagement) => {
     setIsOpen(true);
     setUser(user);
+    setIsBan(false);
   };
 
   const handleClose = () => {
     setIsOpen(false);
     setUser(undefined);
+    setIsBan(false);
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <Table columns={columnsWithActions} url="/User" filters={filters} buttons={buttons} />
       <DialogContent>
-        <ActionForm handleClose={handleClose} item={user} reloadTable={reloadTable} />
+        <ActionForm handleClose={handleClose} item={user} reloadTable={reloadTable} isBan={isBan} />
       </DialogContent>
     </Dialog>
   );

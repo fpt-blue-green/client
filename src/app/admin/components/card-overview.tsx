@@ -1,6 +1,7 @@
 import { FC, ReactNode } from 'react';
 import Paper from '@/components/custom/paper';
 import { functions } from '@/lib/utils';
+import { convertMetricTrendType } from '@/lib/constants';
 
 interface CardProps {
   item: {
@@ -17,7 +18,7 @@ const Card: FC<CardProps> = (props) => {
     <Paper>
       <div className="flex flex-col gap-2">
         <div className="pb-2 flex items-center justify-between">
-          <p className="text-sm font-medium">{functions.convertMetricTrendType(type)}</p>
+          <p className="text-sm font-medium">{convertMetricTrendType(type)}</p>
           {props.icon && props.icon}
         </div>
         <div className="pt-0">
