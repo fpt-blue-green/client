@@ -57,7 +57,7 @@ const Actions = () => {
           Kết thúc
         </Button>
       )}
-      <Button variant="outline" size="large" startIcon={<EyeOpenIcon />}>
+      <Button variant="outline" size="large" startIcon={<EyeOpenIcon />} asChild>
         <Link href={config.routes.campaigns.details(data.id)}>Xem chi tiết</Link>
       </Button>
     </div>

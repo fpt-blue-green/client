@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { constants, emitter, formats } from '@/lib/utils';
-import { offerRequest } from '@/request';
+import { fetchRequest, offerRequest } from '@/request';
 import { EOfferStatus, ERole, PlatformData } from '@/types/enum';
 import IInfluencerJobs from '@/types/influencer-jobs';
 import IJob from '@/types/job';
@@ -23,6 +23,8 @@ import { FC, useState } from 'react';
 import { FaReply } from 'react-icons/fa6';
 import { toast } from 'sonner';
 import JobOffer from './job-offer';
+import Link from 'next/link';
+import config from '@/config';
 
 interface InfluencerAccordionProps {
   item: IInfluencerJobs;
@@ -70,7 +72,9 @@ const InfluencerAccordion: FC<InfluencerAccordionProps> = ({ item, reload }) => 
                     </TableCell>
                     <TableCell>{job.offer.quantity}</TableCell>
                     <TableCell>{formats.price(job.offer.price)}</TableCell>
-                    <TableCell>{job.offer.targetReaction}</TableCell>
+                    <TableCell title={formats.bigNum(job.offer.targetReaction)}>
+                      {formats.estimate(job.offer.targetReaction)}
+                    </TableCell>
                     <TableCell>{job.offer.duration}</TableCell>
                     <TableCell>
                       <JobOffer offer={job.offer} reload={reload}>
@@ -98,6 +102,8 @@ const InfluencerAccordion: FC<InfluencerAccordionProps> = ({ item, reload }) => 
 const OfferAction = ({ job, reload }: { job: IJob; reload: () => Promise<void> }) => {
   const { offer } = job;
   const [open, setOpen] = useState(false);
+  const { mutate: mutatePayment } = fetchRequest.user.payment(true);
+  const { mutate } = fetchRequest.user.paymentHistory();
 
   const handleResponseOffer = (id: string, accept: boolean) => () => {
     setOpen(false);
@@ -107,8 +113,10 @@ const OfferAction = ({ job, reload }: { job: IJob; reload: () => Promise<void> }
         const caller = accept ? offerRequest.approveOffer(id) : offerRequest.rejectOffer(id);
         toast.promise(caller, {
           loading: 'Đang tải',
-          success: async () => {
-            await reload();
+          success: () => {
+            reload();
+            mutatePayment();
+            mutate();
             return `Lời đề nghị đã được ${accept ? 'chấp thuận' : 'từ chối'}`;
           },
           error: (err) => err?.message || constants.sthWentWrong,
@@ -117,9 +125,36 @@ const OfferAction = ({ job, reload }: { job: IJob; reload: () => Promise<void> }
     });
   };
 
+  const handlePayment = () => {
+    emitter.confirm({
+      content: 'Bạn có chắc sẽ thanh toán đặt cọc lời đề nghị này không?',
+      callback: () => {
+        toast.promise(offerRequest.payOffer(job.id), {
+          loading: 'Đang tải',
+          success: async () => {
+            await reload();
+
+            return 'Lời đề nghị đã được đặt cọc thành công';
+          },
+          error: (err) => {
+            const msg = err?.message || constants.sthWentWrong;
+            return (
+              <div>
+                {msg} Nạp tiền{' '}
+                <Link href={config.routes.account} className="font-semibold underline">
+                  tại đây
+                </Link>
+              </div>
+            );
+          },
+        });
+      },
+    });
+  };
+
   if (offer.status === EOfferStatus.WaitingPayment) {
     return (
-      <Button variant="outline" size="small">
+      <Button variant="outline" size="small" onClick={handlePayment}>
         Thanh toán
       </Button>
     );

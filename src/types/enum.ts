@@ -153,3 +153,18 @@ export enum EBanDate {
   TwoYears,
   indefinitely,
 }
+export enum EPaymentType {
+  BrandPayment, // Thanh toán từ brand
+  InfluencerPayment, // Thanh toán cho influencer
+  Refund, // Tiền hoàn trả cho Brand
+  WithDraw, // Rút tiền
+  Deposit, // Nạp tiền
+  BuyPremium,
+}
+
+export enum EPaymentStatus {
+  Pending, // Đang chờ xử lý
+  Rejected, // Bị từ chối
+  Done, // Đã phê duyệt
+  Error,
+}

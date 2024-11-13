@@ -10,6 +10,7 @@ import { IFilterList } from '@/types/filter-list';
 import IInfluencer from '@/types/influencer';
 import IInfluencerJobs from '@/types/influencer-jobs';
 import IJob from '@/types/job';
+import { IPaymentHistory } from '@/types/payment';
 import useSWR, { mutate as mutateGlobal } from 'swr';
 import useSWRImmutable from 'swr/immutable';
 
@@ -18,7 +19,7 @@ const fetchRequest = {
   campaign: {
     available: () => useSWRImmutable<IFilterList<ICampaign>>('/Campaigns', fetcher),
     getById: (id: string) => useSWRImmutable<ICampaign>(`/Campaigns/${id}`, fetcher),
-    currentBrand: (fetch = false, statuses?: ECampaignStatus[], page = 1, pageSize = 12) => {
+    currentBrand: (fetch = false, statuses?: ECampaignStatus[], page = 1, pageSize = 50) => {
       const searchParams = new URLSearchParams();
       searchParams.append('PageIndex', page.toString());
       searchParams.append('PageSize', pageSize.toString());
@@ -35,7 +36,7 @@ const fetchRequest = {
       jobStatuses?: EJobStatus[],
       offerStatuses?: EOfferStatus[],
       page = 1,
-      pageSize = 12,
+      pageSize = 50,
     ) => {
       const searchParams = new URLSearchParams();
       searchParams.append('PageIndex', page.toString());
@@ -56,10 +57,20 @@ const fetchRequest = {
       useSWR<{ date: string; totalReaction: number }[]>(`/Campaigns/${id}/jobDetailStatistic`, fetcher),
   },
   influencer: {
-    jobs: (page = 1, pageSize = 10, campaignStatus?: ECampaignStatus[], jobStatus?: EJobStatus[], from?: ERole) => {
+    jobs: (
+      campaignStatus?: ECampaignStatus[],
+      jobStatus?: EJobStatus[],
+      from?: ERole,
+      campaignId?: string,
+      page = 1,
+      pageSize = 50,
+    ) => {
       const searchParams = new URLSearchParams();
       searchParams.append('PageIndex', page.toString());
       searchParams.append('PageSize', pageSize.toString());
+      if (campaignId) {
+        searchParams.append('CampaignId', campaignId);
+      }
       campaignStatus?.forEach((status) => searchParams.append('CampaignStatuses', status.toString()));
       jobStatus?.forEach((status) => searchParams.append('JobStatuses', status.toString()));
       if (from) searchParams.append('From', from.toString());
@@ -76,6 +87,11 @@ const fetchRequest = {
   chat: {
     list: () => useSWR<IChat[]>('/Contact/chat/contacts', fetcher),
     details: (id: string) => useSWRImmutable<IChat>(`/Contact/chat/contacts/${id}`, fetcher),
+  },
+  user: {
+    payment: (fetch?: boolean) =>
+      useSWR<{ currentAmount: number; spendAmount: number }>(fetch ? '/User/wallet' : null, fetcher),
+    paymentHistory: () => useSWRImmutable<IPaymentHistory>('/User/paymentHistory', fetcher),
   },
 };
 

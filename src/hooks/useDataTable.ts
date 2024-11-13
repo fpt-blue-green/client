@@ -24,13 +24,9 @@ interface UseDataTableProps<TData, TValue> {
   data: TData[];
   columns: ColumnDef<TData, TValue>[];
   totalCount?: number;
-  state?: Omit<Partial<TableState>, 'sorting'> & {
-    sorting?: {
-      id: Extract<keyof TData, string>;
-      desc: boolean;
-    }[];
-  };
+  state?: TableState;
   filters?: DataTableFilterField<TData>[];
+  defaultSorting?: TableState['sorting'];
   onRowChecked?: (items: TData[]) => void;
 }
 
@@ -42,6 +38,7 @@ const useDataTable = <TData, TValue>({
   totalCount,
   state,
   filters,
+  defaultSorting,
   onRowChecked,
 }: UseDataTableProps<TData, TValue>) => {
   const [queryString, setQueryString] = useState('');
@@ -49,7 +46,7 @@ const useDataTable = <TData, TValue>({
   const [pageCount, setPageCount] = useState(0);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>(() => defaultSorting || []);
 
   const { searchFields, optionFields } = useMemo(() => {
     return {
@@ -84,8 +81,16 @@ const useDataTable = <TData, TValue>({
   useEffect(() => {
     searchParams.set('PageIndex', (pageIndex + 1).toString());
     searchParams.set('PageSize', pageSize.toString());
+    const firstSorting = sorting[0];
+    if (firstSorting) {
+      searchParams.set('SortBy', firstSorting.id);
+      searchParams.set('IsAscending', String(!firstSorting.desc));
+    } else {
+      searchParams.delete('SortBy');
+      searchParams.delete('IsAscending');
+    }
     setQueryString(searchParams.toString());
-  }, [pageIndex, pageSize]);
+  }, [pageIndex, pageSize, sorting]);
 
   useEffect(() => {
     if (totalCount !== undefined) {
@@ -110,22 +115,6 @@ const useDataTable = <TData, TValue>({
       setQueryString(searchParams.toString());
 
       return newPagination;
-    });
-  };
-
-  const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
-    setSorting((prevSorting) => {
-      const newSorting = typeof updater === 'function' ? updater(prevSorting) : updater;
-      const firstSorting = newSorting[0];
-      if (firstSorting) {
-        searchParams.set('SortBy', firstSorting.id);
-        searchParams.set('IsAscending', String(!firstSorting.desc));
-      } else {
-        searchParams.delete('SortBy');
-        searchParams.delete('IsAscending');
-      }
-      setQueryString(searchParams.toString());
-      return newSorting;
     });
   };
 
@@ -183,7 +172,7 @@ const useDataTable = <TData, TValue>({
     onPaginationChange: handlePaginationChange,
     onRowSelectionChange: handleRowSelection,
     onColumnFiltersChange: handleColumnFilters,
-    onSortingChange: handleSortingChange,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

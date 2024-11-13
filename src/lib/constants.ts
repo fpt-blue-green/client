@@ -1,4 +1,4 @@
-import { ECampaignStatus, EJobStatus, EOfferStatus, ERole } from '@/types/enum';
+import { ECampaignStatus, EJobStatus, EOfferStatus, EPaymentStatus, EPaymentType, ERole } from '@/types/enum';
 import { FaTimes } from 'react-icons/fa';
 import { FaCheck, FaHourglassHalf } from 'react-icons/fa6';
 import { IconType } from 'react-icons/lib';
@@ -10,6 +10,7 @@ interface EnumLabel {
   label: string;
   color: 'secondary' | 'warning' | 'info' | 'success' | 'destructive';
   backgroundColor?: 'bg-secondary' | 'bg-warning' | 'bg-info' | 'bg-success' | 'bg-destructive';
+  textColor?: 'text-secondary' | 'text-warning' | 'text-info' | 'text-success' | 'text-destructive';
 }
 
 interface EnumLabelWithIcon extends EnumLabel {
@@ -87,7 +88,7 @@ export const offerStatus: { [key: string]: EnumLabelWithIcon } = {
     description: 'Lời đề nghị đã bị từ chối',
   },
   [EOfferStatus.WaitingPayment]: {
-    label: 'Chấp thuận',
+    label: 'Chờ đặt cọc',
     color: 'info',
     Icon: GiPayMoney,
     description: 'Lời đề nghị đã chấp nhận và đang đợi nhãn hàng thanh toán đặt cọc',
@@ -136,4 +137,54 @@ export const convertMetricTrendType = (value: string): string => {
     default:
       return 'Khác';
   }
+};
+
+export const paymentStatus: { [key: string]: EnumLabel } = {
+  [EPaymentStatus.Pending]: {
+    label: 'Đang chờ',
+    color: 'warning',
+    textColor: 'text-warning',
+  },
+  [EPaymentStatus.Rejected]: {
+    label: 'Bị từ chối',
+    color: 'destructive',
+    textColor: 'text-destructive',
+  },
+  [EPaymentStatus.Done]: {
+    label: 'Thành công',
+    color: 'success',
+    textColor: 'text-success',
+  },
+  [EPaymentStatus.Error]: {
+    label: 'Thất bại',
+    color: 'destructive',
+    textColor: 'text-destructive',
+  },
+};
+
+export const paymentType: { [key: string]: EnumLabel } = {
+  [EPaymentType.BrandPayment]: {
+    label: 'Đặt cọc công việc',
+    color: 'warning',
+  },
+  [EPaymentType.InfluencerPayment]: {
+    label: 'Hoàn thành công việc',
+    color: 'success',
+  },
+  [EPaymentType.Refund]: {
+    label: 'Hoàn tiền đặt cọc',
+    color: 'info',
+  },
+  [EPaymentType.WithDraw]: {
+    label: 'Rút tiền',
+    color: 'info',
+  },
+  [EPaymentType.Deposit]: {
+    label: 'Nạp tiền',
+    color: 'info',
+  },
+  [EPaymentType.BuyPremium]: {
+    label: 'Nâng cấp tài khoản Premium',
+    color: 'info',
+  },
 };

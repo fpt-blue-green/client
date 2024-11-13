@@ -2,8 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { EventEmitter } from 'fbemitter';
 import { ConfirmBody } from '@/components/confirm-dialog';
-import { campaignStatus, jobStatus, offerStatus } from './constants';
-import { ERole } from '@/types/enum';
+import { campaignStatus, jobStatus, offerStatus, paymentStatus, paymentType } from './constants';
 import { formatDistanceToNow } from 'date-fns';
 import { vi } from 'date-fns/locale';
 
@@ -21,6 +20,8 @@ export const constants = {
   campaignStatus,
   jobStatus,
   offerStatus,
+  paymentStatus,
+  paymentType,
 };
 
 export const formats = {

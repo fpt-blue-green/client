@@ -2,7 +2,7 @@
 
 import { forwardRef, Ref, useImperativeHandle, useMemo, useState } from 'react';
 import { DataTable } from './table';
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, TableState } from '@tanstack/react-table';
 import useSWRImmutable from 'swr/immutable';
 import { fetcher } from '@/lib/http';
 import { DataTableColumnHeader } from './column-header';
@@ -18,6 +18,7 @@ import { IFilterList } from '@/types/filter-list';
 interface TableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   url: string;
+  defaultSorting?: TableState['sorting'];
   filters?: DataTableFilterField<TData>[];
   buttons?: ButtonProps[];
   onCheck?: (items: TData[]) => void;
@@ -30,7 +31,7 @@ export interface TableRef {
 
 // Sử dụng một hàm wrapper để khai báo generic và truyền vào `forwardRef`.
 function TableComponent<TData, TValue>(
-  { columns, url, filters, buttons, onCheck, headClassName }: TableProps<TData, TValue>,
+  { columns, url, defaultSorting, filters, buttons, onCheck, headClassName }: TableProps<TData, TValue>,
   ref: Ref<TableRef>,
 ) {
   const [urlQuery, setUrlQuery] = useState<string>();
@@ -79,6 +80,7 @@ function TableComponent<TData, TValue>(
     columns: mColumns,
     totalCount: data?.totalCount,
     filters,
+    defaultSorting,
     onRowChecked: onCheck,
   });
 
