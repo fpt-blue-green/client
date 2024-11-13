@@ -151,7 +151,7 @@ const OfferForm: FC<OfferFormProps> = ({ data, campaign, influencer, brand, onCl
     },
   });
 
-  const { mutate: campaignMutate } = fetchRequest.campaign.trackingInfluencers(form.getValues('job.campaignId'));
+  const { mutate: campaignMutate } = fetchRequest.campaign.members(form.getValues('job.campaignId'));
   const { mutate: jobsMutate } = fetchRequest.influencer.jobs();
 
   const onSubmit = (values: OfferBodyType) => {

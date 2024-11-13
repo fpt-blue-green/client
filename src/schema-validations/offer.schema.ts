@@ -45,5 +45,14 @@ export const reofferSchema = z.object({
   description: z.string().optional(),
 });
 
+export const jobLinksSchema = z.object({
+  links: z.array(
+    z.object({
+      value: z.string().url('Đường dẫn liên kết không hợp lệ'),
+    }),
+  ),
+});
+
 export type OfferBodyType = z.infer<typeof offerSchema>;
 export type ReofferBodyType = z.infer<typeof reofferSchema>;
+export type JobLinksBodyType = z.infer<typeof jobLinksSchema>;
