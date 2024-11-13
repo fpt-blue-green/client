@@ -31,13 +31,7 @@ const fetchRequest = {
         });
       return { ...swr, mutate };
     },
-    trackingInfluencers: (
-      id: string,
-      jobStatuses?: EJobStatus[],
-      offerStatuses?: EOfferStatus[],
-      page = 1,
-      pageSize = 50,
-    ) => {
+    members: (id: string, jobStatuses?: EJobStatus[], offerStatuses?: EOfferStatus[], page = 1, pageSize = 50) => {
       const searchParams = new URLSearchParams();
       searchParams.append('PageIndex', page.toString());
       searchParams.append('PageSize', pageSize.toString());
@@ -52,6 +46,7 @@ const fetchRequest = {
         );
       return { ...swr, mutate };
     },
+    memberStatistical: (id: string) => useSWR<{ [key: number]: number }>(`/Campaigns/${id}/jobStatusCount`, fetcher),
     trackingOverview: (id: string) => useSWR<ICampaignOverview>(`/Campaigns/${id}/jobDetailBase`, fetcher),
     statisticalChart: (id: string) =>
       useSWR<{ date: string; totalReaction: number }[]>(`/Campaigns/${id}/jobDetailStatistic`, fetcher),

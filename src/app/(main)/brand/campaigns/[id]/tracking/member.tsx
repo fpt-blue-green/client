@@ -17,7 +17,8 @@ const Member = () => {
   const status = searchParams.get('status') || 'pending';
   const [jobStatuses, setJobStatuses] = useState<EJobStatus[]>([EJobStatus.Pending]);
   const [offerStatuses, setOfferStatuses] = useState<EOfferStatus[]>([EOfferStatus.Offering]);
-  const { data, isLoading, mutate } = fetchRequest.campaign.trackingInfluencers(params.id, jobStatuses, offerStatuses);
+  const { data: statistical } = fetchRequest.campaign.memberStatistical(params.id);
+  const { data, isLoading, mutate } = fetchRequest.campaign.members(params.id, jobStatuses, offerStatuses);
   const styles = (active = false, isLast = false) =>
     cn('relative flex flex-col gap-2 py-4 px-8 bg-muted shadow-sm hover:z-1 hover:opacity-70 transition-opacity', {
       'after:absolute after:z-5 after:size-9 after:bg-muted after:rotate-45 after:top-1/2 after:right-0 after:translate-x-1/2 after:border-8 after:border-t-background after:border-r-background after:border-l-muted after:border-b-muted':
@@ -61,31 +62,23 @@ const Member = () => {
     <div>
       <div className="grid grid-cols-5 gap-2">
         <Link href="?tab=member&status=pending" className={styles(status === 'pending')}>
-          <span className="text-xl font-bold">1</span>
+          <span className="text-xl font-bold">{statistical?.[0] || 0}</span>
           <span className="text-sm">Chờ xác nhận</span>
         </Link>
         <Link href="?tab=member&status=budgeting" className={styles(status === 'budgeting')}>
-          <span className="text-xl font-bold">1</span>
+          <span className="text-xl font-bold">{statistical?.[1] || 0}</span>
           <span className="text-sm">Đặt cọc</span>
         </Link>
         <Link href="?tab=member&status=joined" className={styles(status === 'joined')}>
-          <span className="text-xl font-bold">1</span>
+          <span className="text-xl font-bold">{statistical?.[2] || 0}</span>
           <span className="text-sm">Đã tham gia</span>
         </Link>
-        {/* <Link href="?tab=member&status=product-send" className={styles(status === 'product-send')}>
-          <span className="text-xl font-bold">1</span>
-          <span className="text-sm">Gửi sản phẩm</span>
-        </Link>
-        <Link href="?tab=member&status=payment" className={styles(status === 'payment')}>
-          <span className="text-xl font-bold">1</span>
-          <span className="text-sm">Thanh toán</span>
-        </Link> */}
         <Link href="?tab=member&status=fulfillment" className={styles(status === 'fulfillment')}>
-          <span className="text-xl font-bold">1</span>
+          <span className="text-xl font-bold">{statistical?.[3] || 0}</span>
           <span className="text-sm">Hoàn thành</span>
         </Link>
         <Link href="?tab=member&status=archived" className={styles(status === 'archived', true)}>
-          <span className="text-xl font-bold">1</span>
+          <span className="text-xl font-bold">{statistical?.[4] || 0}</span>
           <span className="text-sm">Đã hủy</span>
         </Link>
       </div>
