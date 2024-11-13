@@ -13,15 +13,9 @@ const Footer = () => {
         <div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-1 gap-8 text-sm">
           <div className="lg:col-span-2 md:col-span-3 max-lg:items-center max-lg:text-center flex flex-col gap-4">
             <div>
-              <Link href={config.routes.home} className="relative inline-block font-bold text-lg">
+              <Link href={config.routes.home} className="flex items-center gap-1 font-bold text-lg">
+                <Image src="/logo.png" alt="adfusion" className="size-6" width={200} height={200} />
                 adfusion
-                <Image
-                  src="/logo.png"
-                  alt="adfusion"
-                  className="absolute -top-0.5 left-full size-6"
-                  width={200}
-                  height={200}
-                />
               </Link>
             </div>
             <p className="text-muted-foreground">
