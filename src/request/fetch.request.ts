@@ -80,6 +80,7 @@ const fetchRequest = {
   },
   job: {
     statistical: () => useSWR<{ jobStatus: EJobStatus; count: number }[]>('/Job/statistical', fetcher),
+    links: (id: string) => useSWRImmutable<string[]>(`/Job/${id}/link`, fetcher),
   },
   chat: {
     list: () => useSWR<IChat[]>('/Contact/chat/contacts', fetcher),

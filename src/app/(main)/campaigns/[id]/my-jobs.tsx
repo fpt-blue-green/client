@@ -4,7 +4,7 @@ import Paper from '@/components/custom/paper';
 import { Button } from '@/components/ui/button';
 import { useAuthInfluencer } from '@/hooks';
 import { cn, constants } from '@/lib/utils';
-import { fetchRequest } from '@/request';
+import { fetchRequest, offerRequest } from '@/request';
 import { ECampaignStatus, EJobStatus, EOfferStatus, ERole, PlatformData } from '@/types/enum';
 import { useParams } from 'next/navigation';
 import JobOffer from '../../influencer/jobs/job-offer';
@@ -26,6 +26,9 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import { JobLinksBodyType, jobLinksSchema } from '@/schema-validations/offer.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import IJob from '@/types/job';
+import { FC, useState } from 'react';
+import { toast } from 'sonner';
 
 const MyJobs = () => {
   const { profile } = useAuthInfluencer();
@@ -36,29 +39,6 @@ const MyJobs = () => {
 const JobsList = () => {
   const { id } = useParams<{ id: string }>();
   const { data } = fetchRequest.influencer.jobs([], [], undefined, id);
-  const form = useForm<JobLinksBodyType>({
-    resolver: zodResolver(jobLinksSchema),
-    defaultValues: {
-      links: [{ value: '' }],
-    },
-  });
-
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: 'links',
-  });
-
-  const addRow = () => {
-    append({ value: '' });
-  };
-
-  const removeRow = (index: number) => () => {
-    remove(index);
-  };
-
-  const handleSubmit = (values: JobLinksBodyType) => {
-    console.log('🚀 ~ handleSubmit ~ values:', values);
-  };
 
   return (
     <>
@@ -106,56 +86,8 @@ const JobsList = () => {
                           <DialogHeader>
                             <DialogTitle />
                             <DialogDescription />
+                            <LinkForm job={job} />
                           </DialogHeader>
-                          <Form {...form}>
-                            <form onSubmit={form.handleSubmit(handleSubmit)}>
-                              <Image src="/assets/img/social-bg.png" alt="Mạng xã hội" width={700} height={350} />
-                              <div className="space-y-3 mb-4">
-                                {fields.map((field, index) => (
-                                  <FormField
-                                    key={field.id}
-                                    control={form.control}
-                                    name={`links.${index}.value`}
-                                    render={({ field }) => (
-                                      <div className="flex items-center gap-2">
-                                        <FormItem className="flex-1">
-                                          <FormControl>
-                                            <Input
-                                              type="url"
-                                              placeholder="Nhập đường dẫn liên kết bài đăng của bạn"
-                                              fullWidth
-                                              {...field}
-                                            />
-                                          </FormControl>
-                                          <FormMessage />
-                                        </FormItem>
-                                        {fields.length > 1 && (
-                                          <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="text-destructive"
-                                            onClick={removeRow(index)}
-                                          >
-                                            <Cross2Icon />
-                                          </Button>
-                                        )}
-                                      </div>
-                                    )}
-                                  />
-                                ))}
-                                {fields.length < job.offer.quantity && (
-                                  <Button variant="ghost" onClick={addRow} startIcon={<PlusIcon />} size="small">
-                                    Thêm link
-                                  </Button>
-                                )}
-                              </div>
-                              <DialogFooter>
-                                <Button type="submit" variant="gradient" fullWidth>
-                                  Gửi
-                                </Button>
-                              </DialogFooter>
-                            </form>
-                          </Form>
                         </DialogContent>
                       </Dialog>
                     ) : (
@@ -194,6 +126,96 @@ const JobsList = () => {
         </div>
       )}
     </>
+  );
+};
+
+interface LinkFormProps {
+  job: IJob;
+  onSubmit?: () => void;
+}
+
+const LinkForm: FC<LinkFormProps> = ({ job, onSubmit }) => {
+  const [loading, setLoading] = useState(false);
+  const { data, mutate } = fetchRequest.job.links(job.id);
+  const form = useForm<JobLinksBodyType>({
+    resolver: zodResolver(jobLinksSchema),
+    defaultValues: {
+      links: [{ value: '' }],
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: 'links',
+  });
+
+  const addRow = () => {
+    append({ value: '' });
+  };
+
+  const removeRow = (index: number) => () => {
+    remove(index);
+  };
+
+  const handleSubmit = (values: JobLinksBodyType) => {
+    setLoading(true);
+    toast.promise(offerRequest.submitLinks(job.id, values), {
+      loading: 'Đang tải',
+      success: () => {
+        mutate();
+        return 'Đã gửi bài đăng thành công';
+      },
+      error: (err) => err?.message,
+      finally: () => {
+        setLoading(false);
+        onSubmit?.();
+      },
+    });
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)}>
+        <Image src="/assets/img/social-bg.png" alt="Mạng xã hội" width={700} height={350} />
+        <div className="space-y-3 mb-4">
+          {data?.map((link, index) => (
+            <Input key={index} type="url" defaultValue={link} fullWidth readOnly disabled />
+          ))}
+          {fields.map((field, index) => (
+            <FormField
+              key={field.id}
+              control={form.control}
+              name={`links.${index}.value`}
+              render={({ field }) => (
+                <div className="flex items-center gap-2">
+                  <FormItem className="flex-1">
+                    <FormControl>
+                      <Input type="url" placeholder="Nhập đường dẫn liên kết bài đăng của bạn" fullWidth {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                  {fields.length > 1 && (
+                    <Button variant="ghost" size="icon" className="text-destructive" onClick={removeRow(index)}>
+                      <Cross2Icon />
+                    </Button>
+                  )}
+                </div>
+              )}
+            />
+          ))}
+          {fields.length < job.offer.quantity && (
+            <Button variant="ghost" onClick={addRow} startIcon={<PlusIcon />} size="small">
+              Thêm link
+            </Button>
+          )}
+        </div>
+        <DialogFooter>
+          <Button type="submit" variant="gradient" fullWidth loading={loading}>
+            Gửi
+          </Button>
+        </DialogFooter>
+      </form>
+    </Form>
   );
 };
 
