@@ -1,8 +1,9 @@
 import config from '@/config';
-import { DashboardIcon, GlobeIcon } from '@radix-ui/react-icons';
+import { DashboardIcon } from '@radix-ui/react-icons';
 import { ReactNode } from 'react';
 import { FaProjectDiagram } from 'react-icons/fa';
 import { FaPeopleGroup, FaTag } from 'react-icons/fa6';
+import { GiExecutionerHood } from 'react-icons/gi';
 
 export interface SideBarItemModel {
   route: string;
@@ -18,18 +19,13 @@ export const items: SideBarItemModel[] = [
   },
   {
     route: config.routes.admin.action,
-    icon: <DashboardIcon />,
+    icon: <GiExecutionerHood />,
     content: 'Các Hoạt Động',
   },
   {
-    route: config.routes.admin.influencer,
-    icon: <GlobeIcon />,
-    content: 'Nhà Sáng Tạo',
-  },
-  {
-    route: config.routes.admin.brand,
+    route: config.routes.admin.user,
     icon: <FaPeopleGroup />,
-    content: 'Nhãn Hàng',
+    content: 'Người dùng',
   },
   {
     route: config.routes.admin.campaign,

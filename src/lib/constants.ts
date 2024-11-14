@@ -1,4 +1,4 @@
-import { ECampaignStatus, EJobStatus, EOfferStatus, EPaymentStatus, EPaymentType } from '@/types/enum';
+import { ECampaignStatus, EJobStatus, EOfferStatus, EPaymentStatus, EPaymentType, ERole } from '@/types/enum';
 import { FaTimes } from 'react-icons/fa';
 import { FaCheck, FaHourglassHalf } from 'react-icons/fa6';
 import { IconType } from 'react-icons/lib';
@@ -111,6 +111,32 @@ export const offerStatus: { [key: string]: EnumLabelWithIcon } = {
     Icon: FaCheck,
     description: 'Lời đề nghị hoàn tất và bạn đã tham gia vào chiến dịch',
   },
+};
+export const convertRoleTypeToText = (roleType: ERole): string => {
+  switch (roleType) {
+    case ERole.Admin:
+      return 'Quản trị viên';
+    case ERole.Influencer:
+      return 'Nhà sáng tạo';
+    case ERole.Brand:
+      return 'Nhãn hàng';
+    default:
+      return 'Khác';
+  }
+};
+export const convertMetricTrendType = (value: string): string => {
+  switch (value) {
+    case 'Revenue':
+      return 'Doanh Thu';
+    case 'NewUsers':
+      return 'Người dùng mới';
+    case 'ActiveUsers':
+      return 'Tài khoản đang hoạt động';
+    case 'ActiveCampaigns':
+      return 'Chiến dịch đang hoạt động';
+    default:
+      return 'Khác';
+  }
 };
 
 export const paymentStatus: { [key: string]: EnumLabel } = {

@@ -142,6 +142,17 @@ export enum EAdminActionType {
   RejectUpdatePremium,
 }
 
+export enum EBanDate {
+  None = 0,
+  OneWeek,
+  TwoWeeks,
+  OneMonth,
+  ThreeMonths,
+  SixMonths,
+  OneYear,
+  TwoYears,
+  indefinitely,
+}
 export enum EPaymentType {
   BrandPayment, // Thanh toán từ brand
   InfluencerPayment, // Thanh toán cho influencer

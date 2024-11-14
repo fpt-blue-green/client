@@ -1,18 +1,10 @@
-import { FaGlobe, FaPeopleGroup, FaSackDollar } from 'react-icons/fa6';
-import Card from './components/card-overview';
-import { FluctuationType, NumberType } from '@/types/enum';
-import { FaProjectDiagram } from 'react-icons/fa';
 import OverviewChart from './components/chart';
 import CardCampaign from './components/card-campaign';
 import Paper from '@/components/custom/paper';
+import { Metadata } from 'next';
+import AnalyticsCards from './analytics-cards';
 
 // Mock
-const overviewCardDetails = {
-  quantity: 1000000,
-  fluctuationValue: 20,
-  fluctuationType: FluctuationType.ASC,
-};
-
 const campaignCardDetails = {
   imageURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiU10iYCU6v7GfydlzEq30Ctqj85cZr-C4bg&s',
   title: 'MPA Project',
@@ -22,38 +14,16 @@ const campaignCardDetails = {
 };
 // Mock data
 
+export const metadata: Metadata = {
+  title: 'Số liệu thống kê',
+};
+
 const Overview = () => {
   return (
     <div className="container">
       <h1 className="text-xl font-bold">Chào Mừng Trở Lại!</h1>
       <p className="text-sm text-muted-foreground">Dưới đây là số liệu phân tích của hệ thống gần đây!</p>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
-        <Card
-          cardType={NumberType.Currency}
-          title="Doanh Thu"
-          icon={<FaSackDollar className="text-muted-foreground" />}
-          details={overviewCardDetails}
-        />
-
-        <Card
-          cardType={NumberType.Quantity}
-          title="Nhãn Hàng"
-          icon={<FaGlobe className="text-muted-foreground" />}
-          details={overviewCardDetails}
-        />
-        <Card
-          cardType={NumberType.Quantity}
-          title="Nhà Sáng Tạo"
-          icon={<FaPeopleGroup className="text-muted-foreground" />}
-          details={overviewCardDetails}
-        />
-        <Card
-          cardType={NumberType.Quantity}
-          title="Chiến Dịch"
-          icon={<FaProjectDiagram className="text-muted-foreground" />}
-          details={overviewCardDetails}
-        />
-      </div>
+      <AnalyticsCards />
       <div className="grid grid-cols-1 lg:grid-cols-11 mt-4 gap-4">
         <Paper className="md:col-span-6">
           <OverviewChart />

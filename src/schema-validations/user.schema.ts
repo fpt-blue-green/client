@@ -1,7 +1,24 @@
 import { constants } from '@/lib/utils';
+import { EGender } from '@/types/enum';
 import { z } from 'zod';
 
 const isBrowser = typeof window !== 'undefined';
+
+export const generalSchema = z
+  .object({
+    displayName: z.string().min(2, 'Vui lòng nhập tên ít nhất 2 kí tự'),
+    email: z.string().min(1, 'Vui lòng nhập email'),
+    role: z.number().min(1, 'Vui lòng cung cấp vai trò của bạn'),
+    wallet: z.number().min(1, 'Vui lòng nạp tiền'),
+  })
+  .strict();
+
+export const banSchema = z
+  .object({
+    reason: z.string().min(2, 'Vui lòng nhập lí do ít nhất 2 kí tự'),
+    bannedTime: z.number().min(1, 'Vui lòng chọn thời hạn cấm'),
+  })
+  .strict();
 
 export const avatarSchema = z.object({
   avatar: z
@@ -40,3 +57,5 @@ export const changePasswordSchema = z
 
 export type AvatarBody = z.infer<typeof avatarSchema>;
 export type ChangePasswordBodyType = z.infer<typeof changePasswordSchema>;
+export type GeneralBodyType = z.infer<typeof generalSchema>;
+export type BanBodyType = z.infer<typeof banSchema>;
