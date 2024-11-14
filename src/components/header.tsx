@@ -41,7 +41,7 @@ const Header = () => {
             <Button className="md:hidden" variant="ghost" size="icon">
               <HamburgerMenuIcon />
             </Button>
-            <Link href={config.routes.home} className="flex items-center gap-1 font-bold text-xl">
+            <Link href={config.routes.home} className="flex items-center gap-1 font-bold text-xl select-none">
               <Image src="/logo.png" alt="adfusion" className="size-7" width={200} height={200} />
               <span className={workSans.className}>adfusion</span>
             </Link>

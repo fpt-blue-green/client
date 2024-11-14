@@ -11,6 +11,7 @@ import IInfluencer from '@/types/influencer';
 import IInfluencerJobs from '@/types/influencer-jobs';
 import IJob from '@/types/job';
 import { IPaymentHistory } from '@/types/payment';
+import IUser from '@/types/user';
 import useSWR, { mutate as mutateGlobal } from 'swr';
 import useSWRImmutable from 'swr/immutable';
 
@@ -50,6 +51,7 @@ const fetchRequest = {
     trackingOverview: (id: string) => useSWR<ICampaignOverview>(`/Campaigns/${id}/jobDetailBase`, fetcher),
     statisticalChart: (id: string) =>
       useSWR<{ date: string; totalReaction: number }[]>(`/Campaigns/${id}/jobDetailStatistic`, fetcher),
+    participants: (id: string) => useSWR<IUser[]>(`/Campaigns/${id}/participant`, fetcher),
   },
   influencer: {
     jobs: (

@@ -4,12 +4,14 @@ import Paper from '@/components/custom/paper';
 import Tooltip from '@/components/custom/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { LuMoreHorizontal, LuPhone, LuVideo } from 'react-icons/lu';
+import { LuMoreHorizontal, LuUserPlus2, LuVideo } from 'react-icons/lu';
 import ChatContainer from './chat-container';
 import { fetchRequest } from '@/request';
 import { FC } from 'react';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
+import PeoplePickerPopup from '@/components/people-picker-popup';
+import { useAuthBrand } from '@/hooks';
 
 interface BoxChatProps {
   id: string;
@@ -18,6 +20,7 @@ interface BoxChatProps {
 }
 
 const BoxChat: FC<BoxChatProps> = ({ id, open, toggle }) => {
+  const { profile } = useAuthBrand();
   const { data } = fetchRequest.chat.details(id);
 
   return (
@@ -41,11 +44,15 @@ const BoxChat: FC<BoxChatProps> = ({ id, open, toggle }) => {
             <div className="overflow-hidden truncate text-nowrap font-medium">{data?.chatName}</div>
           </span>
           <div className="flex items-center gap-2 shrink-0">
-            <Tooltip label="Bắt đầu gọi thoại">
-              <Button variant="ghost" size="icon-sm">
-                <LuPhone className="text-xl" />
-              </Button>
-            </Tooltip>
+            {data?.isCampaign && profile && (
+              <Tooltip label="Thêm thành viên">
+                <PeoplePickerPopup>
+                  <Button variant="ghost" size="icon-sm">
+                    <LuUserPlus2 className="text-xl" />
+                  </Button>
+                </PeoplePickerPopup>
+              </Tooltip>
+            )}
             <Tooltip label="Bắt đầu gọi video">
               <Button variant="ghost" size="icon-sm">
                 <LuVideo className="text-xl" />
