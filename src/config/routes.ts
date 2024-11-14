@@ -3,6 +3,7 @@ const routes = {
   login: '/auth/login',
   forgot: '/auth/forgot-password',
   account: '/account',
+  pricing: '/pricing',
   influencer: {
     base: '/influencer',
     landing: '/landing/influencer',
