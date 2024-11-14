@@ -19,6 +19,7 @@ const Pricing = () => {
           Đăng chiến dịch tới 170,000 nhà sáng tạo, theo dõi số liệu bài đăng và mở khoá các tính năng lọc nâng cao.
         </p>
       </div>
+      <BilledCards />
       <div className="max-w-4xl mx-auto text-center mt-20">
         <h1 className="text-4xl font-semibold">
           Được bao gồm trong gói Pro
