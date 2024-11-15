@@ -1,5 +1,5 @@
 import http from '@/lib/http';
-import { OfferBodyType, ReofferBodyType } from '@/schema-validations/offer.schema';
+import { OfferBodyType, ReofferBodyType, JobLinksBodyType } from '@/schema-validations/offer.schema';
 
 const offerRequest = {
   createOffer: (body: OfferBodyType) => http.post('/Offer', body),
@@ -7,6 +7,8 @@ const offerRequest = {
   approveOffer: (id: string) => http.put(`/Offer/${id}/approveOffer`),
   rejectOffer: (id: string) => http.put(`/Offer/${id}/rejectOffer`),
   payOffer: (id: string) => http.put(`/Job/${id}/payment`),
+  submitLinks: (id: string, body: JobLinksBodyType) =>
+    http.put(`/Job/${id}/link`, { link: body.links.map((l) => l.value) }),
 };
 
 export default offerRequest;

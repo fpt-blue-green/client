@@ -11,6 +11,7 @@ import IInfluencer from '@/types/influencer';
 import IInfluencerJobs from '@/types/influencer-jobs';
 import IJob from '@/types/job';
 import { IPaymentHistory } from '@/types/payment';
+import IUser from '@/types/user';
 import useSWR, { mutate as mutateGlobal } from 'swr';
 import useSWRImmutable from 'swr/immutable';
 
@@ -31,13 +32,7 @@ const fetchRequest = {
         });
       return { ...swr, mutate };
     },
-    trackingInfluencers: (
-      id: string,
-      jobStatuses?: EJobStatus[],
-      offerStatuses?: EOfferStatus[],
-      page = 1,
-      pageSize = 50,
-    ) => {
+    members: (id: string, jobStatuses?: EJobStatus[], offerStatuses?: EOfferStatus[], page = 1, pageSize = 50) => {
       const searchParams = new URLSearchParams();
       searchParams.append('PageIndex', page.toString());
       searchParams.append('PageSize', pageSize.toString());
@@ -52,9 +47,11 @@ const fetchRequest = {
         );
       return { ...swr, mutate };
     },
+    memberStatistical: (id: string) => useSWR<{ [key: number]: number }>(`/Campaigns/${id}/jobStatusCount`, fetcher),
     trackingOverview: (id: string) => useSWR<ICampaignOverview>(`/Campaigns/${id}/jobDetailBase`, fetcher),
     statisticalChart: (id: string) =>
       useSWR<{ date: string; totalReaction: number }[]>(`/Campaigns/${id}/jobDetailStatistic`, fetcher),
+    participants: (id: string) => useSWR<IUser[]>(`/Campaigns/${id}/participant`, fetcher),
   },
   influencer: {
     jobs: (
@@ -83,9 +80,16 @@ const fetchRequest = {
   },
   job: {
     statistical: () => useSWR<{ jobStatus: EJobStatus; count: number }[]>('/Job/statistical', fetcher),
+    links: (id: string) => useSWRImmutable<string[]>(`/Job/${id}/link`, fetcher),
   },
   chat: {
-    list: () => useSWR<IChat[]>('/Contact/chat/contacts', fetcher),
+    list: (search?: string) => {
+      const searchParams = new URLSearchParams();
+      if (search) {
+        searchParams.append('searchValue', search);
+      }
+      return useSWR<IChat[]>(`/Contact/chat/contacts?${searchParams}`, fetcher);
+    },
     details: (id: string) => useSWRImmutable<IChat>(`/Contact/chat/contacts/${id}`, fetcher),
   },
   user: {

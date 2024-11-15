@@ -75,13 +75,22 @@ const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer }) => {
       )}
       <Link href={config.routes.influencers.details(data.slug)} className="space-y-1.5 text-sm">
         <div className="relative rounded-lg overflow-hidden group">
-          <Image
-            src={data.images[0]?.url}
-            alt={`Ảnh đại diện của ${data.fullName}`}
-            width={400}
-            height={600}
-            className="aspect-thumbnail object-cover transition-transform w-full group-hover:scale-110"
-          />
+          <div className="flex items-center transition-transform duration-300 group-hover:-translate-x-full">
+            <Image
+              src={data.images[0]?.url}
+              alt={`Ảnh đại diện của ${data.fullName}`}
+              width={400}
+              height={600}
+              className="aspect-thumbnail object-cover w-full"
+            />
+            <Image
+              src={data.images[1]?.url || data.images[0]?.url}
+              alt={`Ảnh đại diện của ${data.fullName}`}
+              width={400}
+              height={600}
+              className="aspect-thumbnail object-cover w-full"
+            />
+          </div>
           <div className="absolute left-0 top-0 right-0 bottom-0 bg-bg-gradient-to-b from-black/5 from-75% to-black"></div>
           <div className="absolute left-3 bottom-2 text-white">
             <div className="flex items-center gap-1">

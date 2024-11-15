@@ -23,7 +23,10 @@ const PriceInput = forwardRef<HTMLInputElement, PriceInputProps>(({ value, defau
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const caretPosition = e.target.selectionStart || 0;
-    const unformattedValue = unformatPrice(e.target.value);
+    let unformattedValue = unformatPrice(e.target.value);
+    if (inputValue === '0' && e.target.value.endsWith('0')) {
+      unformattedValue /= 10;
+    }
 
     // Định dạng lại giá trị
     const formattedValue = formatPrice(unformattedValue);

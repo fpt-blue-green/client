@@ -6,13 +6,13 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import config from '@/config';
-import { useAuthUser } from '@/hooks';
+import { useAuthUser, useDebounce } from '@/hooks';
 import { cn, formats } from '@/lib/utils';
 import { fetchRequest } from '@/request';
 import { MagnifyingGlassIcon, Pencil2Icon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FC, Fragment, useEffect } from 'react';
+import { FC, Fragment, useEffect, useState } from 'react';
 
 interface InboxListProps {
   id: string | null;
@@ -21,7 +21,9 @@ interface InboxListProps {
 
 const InboxList: FC<InboxListProps> = ({ id, toggle }) => {
   const { session } = useAuthUser();
-  const { data, isLoading } = fetchRequest.chat.list();
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 250);
+  const { data, isLoading } = fetchRequest.chat.list(debouncedSearch);
   const router = useRouter();
 
   useEffect(() => {
@@ -44,6 +46,8 @@ const InboxList: FC<InboxListProps> = ({ id, toggle }) => {
           startAdornment={<MagnifyingGlassIcon className="size-5" />}
           fullWidth
           placeholder="Tìm kiếm đoạn chat..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
       <div className="flex-1 overflow-auto">
