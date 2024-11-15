@@ -140,7 +140,7 @@ const LinkForm: FC<LinkFormProps> = ({ job, onSubmit }) => {
   const form = useForm<JobLinksBodyType>({
     resolver: zodResolver(jobLinksSchema),
     defaultValues: {
-      links: [{ value: '' }],
+      links: [],
     },
   });
 
@@ -203,7 +203,7 @@ const LinkForm: FC<LinkFormProps> = ({ job, onSubmit }) => {
               )}
             />
           ))}
-          {fields.length < job.offer.quantity && (
+          {(data?.length || 0) + fields.length < job.offer.quantity && (
             <Button variant="ghost" onClick={addRow} startIcon={<PlusIcon />} size="small">
               Thêm link
             </Button>

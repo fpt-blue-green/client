@@ -12,9 +12,9 @@ import { useSession } from 'next-auth/react';
 import { ERole } from '@/types/enum';
 import { useLayoutEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
-import { Work_Sans } from 'next/font/google';
+import { Lobster_Two } from 'next/font/google';
 
-const workSans = Work_Sans({ subsets: ['latin'] });
+const lobster = Lobster_Two({ weight: ['700'], subsets: ['latin'] });
 
 const Header = () => {
   const { data: session } = useSession();
@@ -41,9 +41,12 @@ const Header = () => {
             <Button className="md:hidden" variant="ghost" size="icon">
               <HamburgerMenuIcon />
             </Button>
-            <Link href={config.routes.home} className="flex items-center gap-1 font-bold text-xl select-none">
+            <Link
+              href={config.routes.home}
+              className="flex items-center gap-1 font-bold text-xl text-gradient select-none"
+            >
               <Image src="/logo.png" alt="adfusion" className="size-7" width={200} height={200} />
-              <span className={workSans.className}>adfusion</span>
+              <span className={lobster.className}>adfusion</span>
             </Link>
             <div className="flex items-center gap-4 ml-10 max-md:hidden">
               <MenuItem href={config.routes.influencers.list}>Khám phá</MenuItem>
