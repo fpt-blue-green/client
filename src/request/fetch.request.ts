@@ -83,7 +83,13 @@ const fetchRequest = {
     links: (id: string) => useSWRImmutable<string[]>(`/Job/${id}/link`, fetcher),
   },
   chat: {
-    list: () => useSWR<IChat[]>('/Contact/chat/contacts', fetcher),
+    list: (search?: string) => {
+      const searchParams = new URLSearchParams();
+      if (search) {
+        searchParams.append('searchValue', search);
+      }
+      return useSWR<IChat[]>(`/Contact/chat/contacts?${searchParams}`, fetcher);
+    },
     details: (id: string) => useSWRImmutable<IChat>(`/Contact/chat/contacts/${id}`, fetcher),
   },
   user: {
