@@ -17,7 +17,7 @@ import { KeyedMutator } from 'swr';
 interface ActionFormProps {
   item?: ISystemSetting;
   handleClose: () => void;
-  mutate: KeyedMutator<ISystemSetting>;
+  mutate: KeyedMutator<ISystemSetting[]>;
 }
 
 const ActionForm: FC<ActionFormProps> = ({ item, handleClose, mutate }) => {
