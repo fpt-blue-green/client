@@ -47,6 +47,7 @@ const routes = {
     campaign: '/admin/campaign-management',
     statistic: '/admin/statistic',
     tag: '/admin/tag-management',
+    setting: '/admin/setting-management',
   },
   chats: {
     base: '/chats/person',
