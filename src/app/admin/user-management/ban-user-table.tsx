@@ -12,8 +12,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import ActionForm from './action-form';
 import { ColumnDef } from '@tanstack/react-table';
-import { Button } from '@/components/ui/button';
-import { MoreHorizontal } from 'lucide-react';
+import { Button, ButtonProps } from '@/components/ui/button';
+import { DownloadIcon, MoreHorizontal } from 'lucide-react';
+import { adminRequest } from '@/request';
+import { formats } from '@/lib/utils';
 
 const BanUserTable = () => {
   const columnsWithActions: ColumnDef<IBanUserManagement, IBanUserManagement>[] = [
@@ -66,9 +68,30 @@ const BanUserTable = () => {
     setIsBanOrUnBanForm(false);
     setIsBan(false);
   };
+  const handleExport = () => {
+    adminRequest.adminBannedUserExport().then((res) => {
+      const url = window.URL.createObjectURL(res.data);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `BannedUserData_${formats.date(new Date(), true)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    });
+  };
+  const buttons: ButtonProps[] = [
+    {
+      children: 'Tải file',
+      variant: 'gradient',
+      onClick: handleExport,
+      startIcon: <DownloadIcon size={14} />,
+    },
+  ];
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <Table columns={columnsWithActions} url="/BanUser" />
+      <Table columns={columnsWithActions} url="/BanUser" buttons={buttons} />
       <DialogContent>
         <ActionForm
           handleClose={handleClose}
