@@ -29,11 +29,6 @@ export const items: SideBarItemModel[] = [
     content: 'Người dùng',
   },
   {
-    route: config.routes.admin.campaign,
-    icon: <FaProjectDiagram />,
-    content: 'Chiến Dịch',
-  },
-  {
     route: config.routes.admin.tag,
     icon: <FaTag />,
     content: 'Thẻ',

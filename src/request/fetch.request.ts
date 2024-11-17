@@ -11,6 +11,7 @@ import IInfluencer from '@/types/influencer';
 import IInfluencerJobs from '@/types/influencer-jobs';
 import IJob from '@/types/job';
 import { IPaymentHistory } from '@/types/payment';
+import { ISystemSetting } from '@/types/system-settings';
 import IUser from '@/types/user';
 import useSWR, { mutate as mutateGlobal } from 'swr';
 import useSWRImmutable from 'swr/immutable';
@@ -97,6 +98,7 @@ const fetchRequest = {
       useSWR<{ currentAmount: number; spendAmount: number }>(fetch ? '/User/wallet' : null, fetcher),
     paymentHistory: () => useSWRImmutable<IPaymentHistory>('/User/paymentHistory', fetcher),
   },
+  settings: () => useSWRImmutable<ISystemSetting[]>('/SystemSetting', fetcher),
 };
 
 export default fetchRequest;
