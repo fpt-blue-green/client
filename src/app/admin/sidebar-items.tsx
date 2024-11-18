@@ -1,5 +1,6 @@
 import config from '@/config';
 import { DashboardIcon } from '@radix-ui/react-icons';
+import { SettingsIcon } from 'lucide-react';
 import { ReactNode } from 'react';
 import { FaProjectDiagram } from 'react-icons/fa';
 import { FaPeopleGroup, FaTag } from 'react-icons/fa6';
@@ -28,13 +29,13 @@ export const items: SideBarItemModel[] = [
     content: 'Người dùng',
   },
   {
-    route: config.routes.admin.campaign,
-    icon: <FaProjectDiagram />,
-    content: 'Chiến Dịch',
-  },
-  {
     route: config.routes.admin.tag,
     icon: <FaTag />,
     content: 'Thẻ',
+  },
+  {
+    route: config.routes.admin.setting,
+    icon: <SettingsIcon size={16} />,
+    content: 'Cài đặt hệ thống',
   },
 ];
