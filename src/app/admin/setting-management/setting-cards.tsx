@@ -22,11 +22,13 @@ const SettingCards = () => {
     setItem(undefined);
   };
 
+  const reOrderData = data?.sort((a, b) => a.keyName.localeCompare(b.keyName));
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <div className="flex flex-col gap-4 my-8">
-        {!isLoading && data ? (
-          data.map((item, index) => (
+        {!isLoading && reOrderData ? (
+          reOrderData.map((item, index) => (
             <div key={index} className="flex justify-between items-center shadow-md border p-6">
               <div>
                 <h5 className="text-blue-400 mb-2">{item.keyName}</h5>
