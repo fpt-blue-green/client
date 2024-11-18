@@ -4,9 +4,9 @@ interface IChat {
   chatId: string;
   chatName: string;
   chatImage?: string;
-  sentAt: string;
-  lastMessage: string;
-  sender: IUser;
+  sentAt?: string;
+  lastMessage?: string;
+  sender?: IUser;
   isCampaign: boolean;
 }
 
