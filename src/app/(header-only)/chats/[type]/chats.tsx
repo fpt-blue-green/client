@@ -16,7 +16,7 @@ const Chats = () => {
   };
 
   return (
-    <div className="flex h-full gap-8 px-5 py-6">
+    <div className="flex h-full gap-6 px-5 py-6">
       <InboxList id={id} toggle={handleToggle} />
       {id ? (
         <BoxChat id={id} open={open} toggle={handleToggle} />
