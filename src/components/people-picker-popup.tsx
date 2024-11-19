@@ -10,25 +10,39 @@ import { cn } from '@/lib/utils';
 import IUser from '@/types/user';
 import { Button } from './ui/button';
 
-interface PeoplePickerPopupProps {
+interface PeoplePickerPopupProps extends PeoplePickerProps {
   children: ReactNode;
 }
 
-const PeoplePickerPopup: FC<PeoplePickerPopupProps> = ({ children }) => {
+const PeoplePickerPopup: FC<PeoplePickerPopupProps> = ({ children, campaignId, selectedIds, onSubmit }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleSubmit = (users: IUser[]) => {
+    setOpen(false);
+    onSubmit(users);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent onInteractOutside={(e) => e.preventDefault()}>
         <DialogTitle>Thêm người</DialogTitle>
         <DialogDescription></DialogDescription>
-        <PeoplePicker />
+        <PeoplePicker campaignId={campaignId} selectedIds={selectedIds} onSubmit={handleSubmit} />
       </DialogContent>
     </Dialog>
   );
 };
 
-const PeoplePicker = () => {
-  const { data } = fetchRequest.campaign.participants('f0ef395f-1d0c-4a95-848f-95f9f6a1a072');
+interface PeoplePickerProps {
+  campaignId: string;
+  selectedIds?: string[];
+  onSubmit: (users: IUser[]) => void;
+  onClose?: () => void;
+}
+
+const PeoplePicker = ({ campaignId, selectedIds, onSubmit }: PeoplePickerProps) => {
+  const { data } = fetchRequest.campaign.participants(campaignId);
   const [selected, setSelected] = useState<IUser[]>([]);
 
   const handleSelect = (user: IUser) => () => {
@@ -36,6 +50,13 @@ const PeoplePicker = () => {
       setSelected(selected.filter((i) => i.id !== user.id));
     } else {
       setSelected([...selected, user]);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (selected.length > 0) {
+      setSelected([]);
+      onSubmit(selected);
     }
   };
 
@@ -69,20 +90,27 @@ const PeoplePicker = () => {
         <CommandList>
           <CommandEmpty>Không tìm thấy người dùng nào</CommandEmpty>
           <CommandGroup>
-            {data?.map((user) => (
-              <CommandItem key={user.id} value={user.name} className="items-center gap-4" onSelect={handleSelect(user)}>
-                <Avatar className="size-9">
-                  <AvatarImage src={user.image} alt={user.name} />
-                  <AvatarFallback>{user.name[0]}</AvatarFallback>
-                </Avatar>
-                {user.name}
-                <CheckIcon className={cn('ml-auto size-4', selected.includes(user) ? 'opacity-100' : 'opacity-0')} />
-              </CommandItem>
-            ))}
+            {data
+              ?.filter((u) => !selectedIds?.includes(u.id))
+              .map((user) => (
+                <CommandItem
+                  key={user.id}
+                  value={user.name}
+                  className="items-center gap-4"
+                  onSelect={handleSelect(user)}
+                >
+                  <Avatar className="size-9">
+                    <AvatarImage src={user.image} alt={user.name} />
+                    <AvatarFallback>{user.name[0]}</AvatarFallback>
+                  </Avatar>
+                  {user.name}
+                  <CheckIcon className={cn('ml-auto size-4', selected.includes(user) ? 'opacity-100' : 'opacity-0')} />
+                </CommandItem>
+              ))}
           </CommandGroup>
         </CommandList>
       </Command>
-      <Button variant="gradient" fullWidth>
+      <Button variant="gradient" fullWidth onClick={handleSubmit} disabled={!selected.length}>
         Thêm người dùng
       </Button>
     </>

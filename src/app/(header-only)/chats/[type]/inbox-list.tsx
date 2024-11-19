@@ -85,10 +85,11 @@ const InboxList: FC<InboxListProps> = ({ id, toggle }) => {
                         <h6 className="font-medium">{chat.chatName}</h6>
                         <div className="flex items-center font-normal text-muted-foreground">
                           <p className="truncate max-w-full">
-                            {(chat.sender.id === session?.user.id ? 'Bạn: ' : `${chat.sender.name}: `) +
-                              chat.lastMessage}
+                            {chat.sender &&
+                              (chat.sender.id === session?.user.id ? 'Bạn: ' : `${chat.sender.name}: `) +
+                                chat.lastMessage}
                           </p>
-                          <span className="shrink-0">{` · ${formats.timeAgo(chat.sentAt)}`}</span>
+                          {chat.sentAt && <span className="shrink-0">{` · ${formats.timeAgo(chat.sentAt)}`}</span>}
                         </div>
                       </div>
                     </Link>
