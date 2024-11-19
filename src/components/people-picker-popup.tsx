@@ -12,23 +12,24 @@ import { Button } from './ui/button';
 
 interface PeoplePickerPopupProps {
   children: ReactNode;
+  campaignId: string;
 }
 
-const PeoplePickerPopup: FC<PeoplePickerPopupProps> = ({ children }) => {
+const PeoplePickerPopup: FC<PeoplePickerPopupProps> = ({ children, campaignId }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent onInteractOutside={(e) => e.preventDefault()}>
         <DialogTitle>Thêm người</DialogTitle>
         <DialogDescription></DialogDescription>
-        <PeoplePicker />
+        <PeoplePicker campaignId={campaignId} />
       </DialogContent>
     </Dialog>
   );
 };
 
-const PeoplePicker = () => {
-  const { data } = fetchRequest.campaign.participants('f0ef395f-1d0c-4a95-848f-95f9f6a1a072');
+const PeoplePicker = ({ campaignId }: { campaignId: string }) => {
+  const { data } = fetchRequest.campaign.participants(campaignId);
   const [selected, setSelected] = useState<IUser[]>([]);
 
   const handleSelect = (user: IUser) => () => {

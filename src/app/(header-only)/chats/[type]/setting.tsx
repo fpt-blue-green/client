@@ -31,7 +31,7 @@ const Setting: FC<SettingProps> = ({ chat }) => {
   const { data } = fetchRequest.chat.member(chat.chatId && chat.chatId);
 
   return (
-    <div className="w-full md:w-80">
+    <div className="h-full w-full md:w-80">
       <Paper className="h-full">
         <div className="flex flex-col items-center gap-2">
           <Avatar className="size-20">
@@ -98,7 +98,7 @@ const Setting: FC<SettingProps> = ({ chat }) => {
                     </div>
                   ))}
                   {profile && (
-                    <PeoplePickerPopup>
+                    <PeoplePickerPopup campaignId="5b7b8672-0f3d-417f-aae3-ff85f791fa6d">
                       <Button
                         variant="ghost"
                         size="large"
