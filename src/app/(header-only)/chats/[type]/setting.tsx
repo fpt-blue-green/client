@@ -16,11 +16,14 @@ import config from '@/config';
 import { useAuthBrand } from '@/hooks';
 import { formats } from '@/lib/utils';
 import { fetchRequest } from '@/request';
+import chatRequest from '@/request/chat.request';
 import IChat from '@/types/chat';
+import IUser from '@/types/user';
 import { ChatBubbleIcon, DotsHorizontalIcon, ExitIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { FC } from 'react';
 import { LuUserPlus2 } from 'react-icons/lu';
+import { toast } from 'sonner';
 
 interface SettingProps {
   chat: IChat;
@@ -28,7 +31,35 @@ interface SettingProps {
 
 const Setting: FC<SettingProps> = ({ chat }) => {
   const { session, profile } = useAuthBrand();
-  const { data } = fetchRequest.chat.member(chat.chatId && chat.chatId);
+  const { data, mutate } = fetchRequest.chat.member(chat.chatId && chat.chatId);
+
+  const handleAdd = (users: IUser[]) => {
+    toast.promise(
+      chatRequest.addMember(
+        chat.chatId,
+        users.map((u) => u.id),
+      ),
+      {
+        loading: 'Đang tải',
+        success: () => {
+          mutate();
+          return 'Thêm thành viên thành công';
+        },
+        error: (err) => err?.message,
+      },
+    );
+  };
+
+  const handleRemove = (user: IUser) => () => {
+    toast.promise(chatRequest.deleteMember(chat.chatId, user.id), {
+      loading: 'Đang tải',
+      success: () => {
+        mutate();
+        return 'Xoá thành viên thành công';
+      },
+      error: (err) => err?.message,
+    });
+  };
 
   return (
     <div className="h-full w-full md:w-80">
@@ -44,7 +75,7 @@ const Setting: FC<SettingProps> = ({ chat }) => {
           <AccordionItem value="info">
             <AccordionTrigger>Thông tin</AccordionTrigger>
           </AccordionItem>
-          {chat.isCampaign && (
+          {chat.isCampaign && chat.campaignId && (
             <AccordionItem value="member">
               <AccordionTrigger>Thành viên</AccordionTrigger>
               <AccordionContent>
@@ -80,13 +111,13 @@ const Setting: FC<SettingProps> = ({ chat }) => {
                                 </DropdownMenuItem>
                               )}
                               {session?.user.id === member.user.id && (
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={handleRemove(member.user)}>
                                   <ExitIcon className="mr-2" />
                                   <span>Rời nhóm</span>
                                 </DropdownMenuItem>
                               )}
                               {profile && (
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={handleRemove(member.user)}>
                                   <ExitIcon className="mr-2" />
                                   <span>Đuổi khỏi nhóm</span>
                                 </DropdownMenuItem>
@@ -98,7 +129,11 @@ const Setting: FC<SettingProps> = ({ chat }) => {
                     </div>
                   ))}
                   {profile && (
-                    <PeoplePickerPopup campaignId="5b7b8672-0f3d-417f-aae3-ff85f791fa6d">
+                    <PeoplePickerPopup
+                      campaignId={chat.campaignId}
+                      selectedIds={data?.map((m) => m.user.id)}
+                      onSubmit={handleAdd}
+                    >
                       <Button
                         variant="ghost"
                         size="large"

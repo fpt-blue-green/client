@@ -8,6 +8,7 @@ interface IChat {
   lastMessage?: string;
   sender?: IUser;
   isCampaign: boolean;
+  campaignId?: string;
 }
 
 export default IChat;
