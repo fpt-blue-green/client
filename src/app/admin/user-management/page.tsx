@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import UserTable from './table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FaPeopleGroup } from 'react-icons/fa6';
+import BanUserTable from './ban-user-table';
+
 export const metadata: Metadata = {
   title: 'Quản Lí Người Dùng',
 };
@@ -24,13 +26,13 @@ const InfluencerManagement = () => {
         <TabsContent value="general">
           <p className="text-sm text-muted-foreground">Dưới đây là danh sách toàn bộ người dùng của hệ thống!</p>
           <div className="mt-4">
-            <UserTable isGeneralTable={true} />
+            <UserTable />
           </div>
         </TabsContent>
         <TabsContent value="ban">
           <p className="text-sm text-muted-foreground">Dưới đây là danh sách toàn bộ người bị cấm dùng của hệ thống!</p>
           <div className="mt-4">
-            <UserTable isGeneralTable={false} />
+            <BanUserTable />
           </div>
         </TabsContent>
       </Tabs>

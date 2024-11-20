@@ -13,22 +13,22 @@ import { userRequest } from '@/request';
 import IUserManagement, { IBanUserManagement } from '@/types/user-management';
 import { EBanDate, ERole } from '@/types/enum';
 interface ActionFormProps {
-  user?: IUserManagement;
-  bannedUser?: IBanUserManagement;
+  item?: IUserManagement;
+  banItem?: IBanUserManagement;
   handleClose: () => void;
   reloadTable: () => void;
   isBanOrUnBanForm?: boolean;
-  isGeneralTable?: boolean;
+  isBan?: boolean;
 }
-const ActionForm: FC<ActionFormProps> = ({ user, bannedUser, handleClose, reloadTable, isBanOrUnBanForm }) => {
+const ActionForm: FC<ActionFormProps> = ({ item, banItem, handleClose, reloadTable, isBanOrUnBanForm, isBan }) => {
   const [loading, setLoading] = useState(false);
   const form = useForm<GeneralBodyType>({
     resolver: zodResolver(generalSchema),
     defaultValues: {
-      displayName: user?.displayName || '',
-      email: user?.email || '',
-      wallet: user?.wallet || 0,
-      role: user?.role || ERole.Influencer,
+      displayName: item?.displayName || '',
+      email: item?.email || '',
+      wallet: item?.wallet || 0,
+      role: item?.role || ERole.Influencer,
     },
   });
 
@@ -42,13 +42,13 @@ const ActionForm: FC<ActionFormProps> = ({ user, bannedUser, handleClose, reload
 
   const handleSubmit = (values: GeneralBodyType) => {
     setLoading(true);
-    const caller = user ? userRequest.updateUser(user?.id || '', values) : userRequest.addUser(values);
+    const caller = item ? userRequest.updateUser(item?.id || '', values) : userRequest.addUser(values);
     toast.promise(caller, {
       loading: 'Đang tải',
       success: () => {
         reloadTable();
         handleClose();
-        return user ? 'Cập nhật nhà sáng tạo thành công.' : 'Thêm nhà sáng tạo thành công.';
+        return item ? 'Cập nhật nhà sáng tạo thành công.' : 'Thêm nhà sáng tạo thành công.';
       },
       error: (err) => err?.message || constants.sthWentWrong,
       finally: () => setLoading(false),
@@ -57,15 +57,13 @@ const ActionForm: FC<ActionFormProps> = ({ user, bannedUser, handleClose, reload
 
   const handleBan = (values: BanBodyType) => {
     setLoading(true);
-    const caller = bannedUser
-      ? userRequest.unBan(bannedUser?.userId || '', values)
-      : userRequest.ban(user?.id || '', values);
+    const caller = isBan ? userRequest.ban(item?.id || '', values) : userRequest.unBan(banItem?.userId || '', values);
     toast.promise(caller, {
       loading: 'Đang tải',
       success: () => {
         reloadTable();
         handleClose();
-        return bannedUser ? 'Đã huỷ lệnh cấm người dùng thành công.' : 'Đã cấm người dùng thành công.';
+        return isBan ? 'Đã cấm người dùng thành công.' : 'Đã huỷ lệnh cấm người dùng thành công.';
       },
       error: (err) => err?.message || constants.sthWentWrong,
       finally: () => setLoading(false),
@@ -76,7 +74,7 @@ const ActionForm: FC<ActionFormProps> = ({ user, bannedUser, handleClose, reload
     <Form {...banForm}>
       <form onSubmit={banForm.handleSubmit(handleBan)}>
         <DialogHeader>
-          <DialogTitle>{bannedUser ? 'Huỷ lệnh cấm người dùng' : 'Cấm người dùng'}</DialogTitle>
+          <DialogTitle>{isBan ? 'Cấm người dùng' : 'Huỷ lệnh cấm người dùng'}</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-6">
@@ -98,22 +96,18 @@ const ActionForm: FC<ActionFormProps> = ({ user, bannedUser, handleClose, reload
             name="bannedTime"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{bannedUser ? 'Đề nghị' : 'Cấm trong vòng'}</FormLabel>
+                <FormLabel>{isBan ? 'Cấm trong vòng' : 'Đề nghị'}</FormLabel>
                 <Select
-                  disabled={bannedUser ? true : false}
+                  disabled={isBan ? false : true}
                   onValueChange={(value) => field.onChange(parseInt(value))}
-                  value={bannedUser ? EBanDate.None.toString() : field.value.toString()}
+                  value={isBan ? field.value.toString() : EBanDate.None.toString()}
                 >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Chọn thời hạn cấm" />
                     </SelectTrigger>
                   </FormControl>
-                  {bannedUser ? (
-                    <SelectContent>
-                      <SelectItem value={EBanDate.None.toString()}>Huỷ bỏ lệnh cấm</SelectItem>
-                    </SelectContent>
-                  ) : (
+                  {isBan ? (
                     <SelectContent>
                       <SelectItem value={EBanDate.OneWeek.toString()}>1 Tuần</SelectItem>
                       <SelectItem value={EBanDate.TwoWeeks.toString()}>2 Tuần</SelectItem>
@@ -123,6 +117,10 @@ const ActionForm: FC<ActionFormProps> = ({ user, bannedUser, handleClose, reload
                       <SelectItem value={EBanDate.OneYear.toString()}>1 Năm</SelectItem>
                       <SelectItem value={EBanDate.TwoYears.toString()}>2 Năm</SelectItem>
                       <SelectItem value={EBanDate.indefinitely.toString()}>Vô thời hạn</SelectItem>
+                    </SelectContent>
+                  ) : (
+                    <SelectContent>
+                      <SelectItem value={EBanDate.None.toString()}>Huỷ bỏ lệnh cấm</SelectItem>
                     </SelectContent>
                   )}
                 </Select>
@@ -147,7 +145,7 @@ const ActionForm: FC<ActionFormProps> = ({ user, bannedUser, handleClose, reload
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <DialogHeader>
-          <DialogTitle>{user ? 'Cập nhật thông tin' : 'Thêm người dùng'}</DialogTitle>
+          <DialogTitle>{item ? 'Cập nhật thông tin' : 'Thêm người dùng'}</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-6">
