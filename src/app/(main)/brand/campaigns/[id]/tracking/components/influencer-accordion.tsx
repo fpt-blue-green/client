@@ -25,13 +25,18 @@ import { toast } from 'sonner';
 import JobOffer from './job-offer';
 import Link from 'next/link';
 import config from '@/config';
+import { Toggle } from '@/components/ui/toggle';
+import { useSearchParams } from 'next/navigation';
 
 interface InfluencerAccordionProps {
   item: IInfluencerJobs;
   reload: () => Promise<void>;
+  isList?: boolean;
 }
 
-const InfluencerAccordion: FC<InfluencerAccordionProps> = ({ item, reload }) => {
+const InfluencerAccordion: FC<InfluencerAccordionProps> = ({ item, isList, reload }) => {
+  const searchParams = useSearchParams();
+
   return (
     <AccordionItem value={item.id}>
       <AccordionTrigger>
@@ -44,56 +49,78 @@ const InfluencerAccordion: FC<InfluencerAccordionProps> = ({ item, reload }) => 
         </div>
       </AccordionTrigger>
       <AccordionContent className="px-6">
-        <Paper>
-          <Table className="text-center">
-            <TableHeader>
-              <TableRow>
-                <TableHead>Loại nội dung</TableHead>
-                <TableHead className="text-center">Số lượng</TableHead>
-                <TableHead className="text-center">Giá</TableHead>
-                <TableHead className="text-center">Lượt tương tác</TableHead>
-                <TableHead className="text-center">Thời lượng</TableHead>
-                <TableHead className="text-center">Trạng thái</TableHead>
-                <TableHead className="text-center">Hành động</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {item.jobs.map((job) => {
-                const { logo, name, contentTypes } = PlatformData[job.offer.platform];
-                const { label, color } = constants.offerStatus[job.offer.status];
+        {isList ? (
+          <div className="flex flex-col -mx-6">
+            {item.jobs.map((job) => {
+              const { logo, name, contentTypes } = PlatformData[job.offer.platform];
 
-                return (
-                  <TableRow key={job.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-2 capitalize">
-                        <Image src={logo} alt={name} width={32} height={32} />
-                        {contentTypes[job.offer.contentType]}
-                      </div>
-                    </TableCell>
-                    <TableCell>{job.offer.quantity}</TableCell>
-                    <TableCell>{formats.price(job.offer.price)}</TableCell>
-                    <TableCell title={formats.bigNum(job.offer.targetReaction)}>
-                      {formats.estimate(job.offer.targetReaction)}
-                    </TableCell>
-                    <TableCell>{job.offer.duration}</TableCell>
-                    <TableCell>
-                      <JobOffer offer={job.offer} reload={reload}>
-                        <Chip
-                          label={label}
-                          variant={color}
-                          icon={job.offer.from === ERole.Brand ? <FaReply /> : undefined}
-                        />
-                      </JobOffer>
-                    </TableCell>
-                    <TableCell>
-                      <OfferAction job={job} reload={reload} />
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </Paper>
+              return (
+                <Toggle
+                  key={job.id}
+                  asChild
+                  className="justify-start"
+                  pressed={searchParams.get('selected') === job.id}
+                >
+                  <Link href={`?tab=content&selected=${job.id}`} className="flex items-center gap-2 capitalize">
+                    <Image src={logo} alt={name} width={24} height={24} />
+                    {job.offer.quantity} {contentTypes[job.offer.contentType]}
+                  </Link>
+                </Toggle>
+              );
+            })}
+          </div>
+        ) : (
+          <Paper>
+            <Table className="text-center">
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Loại nội dung</TableHead>
+                  <TableHead className="text-center">Số lượng</TableHead>
+                  <TableHead className="text-center">Giá</TableHead>
+                  <TableHead className="text-center">Lượt tương tác</TableHead>
+                  <TableHead className="text-center">Thời lượng</TableHead>
+                  <TableHead className="text-center">Trạng thái</TableHead>
+                  <TableHead className="text-center">Hành động</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {item.jobs.map((job) => {
+                  const { logo, name, contentTypes } = PlatformData[job.offer.platform];
+                  const { label, color } = constants.offerStatus[job.offer.status];
+
+                  return (
+                    <TableRow key={job.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-2 capitalize">
+                          <Image src={logo} alt={name} width={32} height={32} />
+                          {contentTypes[job.offer.contentType]}
+                        </div>
+                      </TableCell>
+                      <TableCell>{job.offer.quantity}</TableCell>
+                      <TableCell>{formats.price(job.offer.price)}</TableCell>
+                      <TableCell title={formats.bigNum(job.offer.targetReaction)}>
+                        {formats.estimate(job.offer.targetReaction)}
+                      </TableCell>
+                      <TableCell>{job.offer.duration}</TableCell>
+                      <TableCell>
+                        <JobOffer offer={job.offer} reload={reload}>
+                          <Chip
+                            label={label}
+                            variant={color}
+                            icon={job.offer.from === ERole.Brand ? <FaReply /> : undefined}
+                          />
+                        </JobOffer>
+                      </TableCell>
+                      <TableCell>
+                        <OfferAction job={job} reload={reload} />
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </Paper>
+        )}
       </AccordionContent>
     </AccordionItem>
   );

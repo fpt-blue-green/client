@@ -7,7 +7,7 @@ import { fetchRequest } from '@/request';
 import { ICampaignMemberOverview } from '@/types/campaign-tracking';
 import { ColumnDef } from '@tanstack/react-table';
 import { useParams } from 'next/navigation';
-import Statistical from './statistical';
+import Statistical from './components/statistical';
 import { LuBriefcase, LuEye, LuHeart, LuMessageSquare, LuSmile, LuTarget, LuWallet } from 'react-icons/lu';
 import { formats } from '@/lib/utils';
 
