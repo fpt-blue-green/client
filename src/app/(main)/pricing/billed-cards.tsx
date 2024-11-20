@@ -2,45 +2,74 @@
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { ProBenefits } from './pro-benefit';
-import { formats } from '@/lib/utils';
+import { constants, formats } from '@/lib/utils';
+import { paymentRequest, tagRequest } from '@/request';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import config from '@/config';
+import Badge from '@/components/custom/badge';
+
+interface IPackagePurchase {
+  redirectUrl: string;
+  numberMonthsRegis: number;
+}
 
 const BilledCards = () => {
   const [isMonthlyBilled, setIsMonthlyBilled] = useState<boolean>(true);
   const handleMonthlyBilledClick = () => {
     setIsMonthlyBilled(true);
   };
-  const handleYearlyBilledClick = () => {
+  const handleThreeMonthBilledClick = () => {
     setIsMonthlyBilled(false);
   };
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
+
+  const handleSubmit = (month: number) => {
+    const payload: IPackagePurchase = {
+      redirectUrl: 'http://localhost:7070/',
+      numberMonthsRegis: month,
+    };
+    setIsLoading(true);
+    const caller = paymentRequest.updatePremium(payload);
+    toast.promise(caller, {
+      loading: 'Đang tải',
+      success: (res) => {
+        router.push(res.data.shortLink);
+        return 'Bạn được chuyển đến trang thanh toán';
+      },
+      error: (err) => err?.message || constants.sthWentWrong,
+      finally: () => setIsLoading(false),
+    });
+  };
+
   return (
     <>
-      <div className="flex gap-2 items-center justify-center mb-12">
+      <div className="flex justify-center mb-6 ml-4">
         <Button
           onClick={handleMonthlyBilledClick}
           size="small"
           variant={isMonthlyBilled ? 'foreground' : 'ghost'}
-          className="h-8 rounded-2xl cursor-pointer text-base"
-          asChild
+          className="h-8 ml-4 rounded-2xl cursor-pointer text-base"
         >
-          <p>Giá gói tháng</p>
+          Một Tháng
         </Button>
         <Button
-          onClick={handleYearlyBilledClick}
+          onClick={handleThreeMonthBilledClick}
           size="small"
           variant={isMonthlyBilled ? 'ghost' : 'foreground'}
           className="h-8 rounded-2xl cursor-pointer text-base"
-          asChild
         >
-          <p>Giá gói năm</p>
+          Ba Tháng
         </Button>
-        <Button size="small" variant="gradient" className="h-6 rounded-2xl text-[10px]" asChild>
-          <p>Tiết kiệm 50%</p>
+        <Button size="icon" className="text-[6px] p-2 h-4 mb-6 mr-4" variant="gradient">
+          -15%
         </Button>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="border border-foreground col-span-1 px-8 py-5 rounded-md bg-card">
-          <h5 className="text-center text-base">Cơ bản</h5>
-          <h3 className="text-3xl my-6 text-center font-semibold">Miễn phí</h3>
+          <h5 className="text-center text-base">Cơ Bản</h5>
+          <h3 className="text-3xl my-6 text-center font-semibold">Miễn Phí</h3>
           <div className="flex flex-col gap-4 mb-12">
             <p>
               <span className="font-semibold">Tìm kiếm các nhà sáng tạo </span> trên thị trường
@@ -54,12 +83,13 @@ const BilledCards = () => {
               </p>
             ))}
           </div>
-          <h5 className="text-center text-lg font-semibold text-muted-foreground mb-12">Quyền lợi hiện có</h5>
+          <p className="text-xl font-semibold text-center text-muted-foreground">Quyền Lợi Hiện Tại</p>
         </div>
         <div className="border border-foreground col-span-1 px-8 py-5 rounded-md bg-card-foreground">
-          <h5 className="text-center text-base text-muted">Pro</h5>
+          <h5 className="text-center text-base text-muted">Premium</h5>
           <h3 className="text-3xl my-6 text-center font-semibold text-muted">
-            {isMonthlyBilled ? formats.price(1000000) : formats.price(700000)}
+            {isMonthlyBilled ? formats.price(469000) : formats.price(1416000)}
+            <span className="text-base">{isMonthlyBilled ? '/tháng' : '/3 tháng'}</span>
           </h3>
           <div className="flex flex-col gap-4 mb-12">
             <p className="font-semibold text-muted">Mọi quyền lời cơ bản</p>
@@ -69,10 +99,18 @@ const BilledCards = () => {
               </p>
             ))}
           </div>
-          <Button size="large" fullWidth variant="secondary" className="h-16 rounded-2xl cursor-pointer my-4" asChild>
-            <p className="text-xl font-semibold ">Nâng Cấp</p>
+          <Button
+            onClick={() => {
+              handleSubmit(isMonthlyBilled ? 1 : 3);
+            }}
+            size="large"
+            fullWidth
+            variant="secondary"
+            className="rounded-2xl mt-8 text-xl"
+            loading={isLoading}
+          >
+            Nâng Cấp
           </Button>
-          <p className="italic text-muted text-center text-xs">Có thể huỷ bất cứ lúc nào</p>
         </div>
       </div>
     </>

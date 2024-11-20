@@ -8,3 +8,4 @@ export { default as influencersRequest } from './influencers.request';
 export { default as offerRequest } from './offer.request';
 export { default as userRequest } from './user.request';
 export { default as tagRequest } from './tags.request';
+export { default as paymentRequest } from './payment.request';
