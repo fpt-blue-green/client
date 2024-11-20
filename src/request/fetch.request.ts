@@ -92,6 +92,8 @@ const fetchRequest = {
       return useSWR<IChat[]>(`/Contact/chat/contacts?${searchParams}`, fetcher);
     },
     details: (id: string) => useSWRImmutable<IChat>(`/Contact/chat/contacts/${id}`, fetcher),
+    member: (campaignId?: string) =>
+      useSWRImmutable<{ joinAt: string; user: IUser }[]>(campaignId ? `/Contact/member/${campaignId}` : null, fetcher),
   },
   user: {
     payment: (fetch?: boolean) =>
