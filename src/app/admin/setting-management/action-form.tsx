@@ -50,23 +50,10 @@ const ActionForm: FC<ActionFormProps> = ({ item, handleClose, mutate }) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <DialogHeader>
-          <DialogTitle>Cấu hình</DialogTitle>
+          <DialogTitle>Cấu hình {item?.keyName}</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-6">
-          <FormField
-            control={form.control}
-            name="keyName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Tên</FormLabel>
-                <FormControl className="w-full">
-                  <Input id="keyName" placeholder="Nhập tên..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <FormField
             control={form.control}
             name="keyValue"
