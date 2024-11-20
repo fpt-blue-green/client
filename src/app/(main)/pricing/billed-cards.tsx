@@ -6,8 +6,7 @@ import { constants, formats } from '@/lib/utils';
 import { paymentRequest, tagRequest } from '@/request';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import config from '@/config';
-import Badge from '@/components/custom/badge';
+import { useAuthBrand } from '@/hooks';
 
 interface IPackagePurchase {
   redirectUrl: string;
@@ -15,6 +14,7 @@ interface IPackagePurchase {
 }
 
 const BilledCards = () => {
+  const { profile: brand } = useAuthBrand();
   const [isMonthlyBilled, setIsMonthlyBilled] = useState<boolean>(true);
   const handleMonthlyBilledClick = () => {
     setIsMonthlyBilled(true);
@@ -25,9 +25,13 @@ const BilledCards = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
+  if (!brand) {
+    return;
+  }
+
   const handleSubmit = (month: number) => {
     const payload: IPackagePurchase = {
-      redirectUrl: 'http://localhost:7070/',
+      redirectUrl: window.location.origin,
       numberMonthsRegis: month,
     };
     setIsLoading(true);
@@ -35,8 +39,10 @@ const BilledCards = () => {
     toast.promise(caller, {
       loading: 'Đang tải',
       success: (res) => {
-        router.push(res.data.shortLink);
-        return 'Bạn được chuyển đến trang thanh toán';
+        if (res.data) {
+          router.push(res.data.shortLink);
+          return 'Bạn được chuyển đến trang thanh toán';
+        }
       },
       error: (err) => err?.message || constants.sthWentWrong,
       finally: () => setIsLoading(false),
@@ -83,7 +89,11 @@ const BilledCards = () => {
               </p>
             ))}
           </div>
-          <p className="text-xl font-semibold text-center text-muted-foreground">Quyền Lợi Hiện Tại</p>
+          {brand.isPremium ? (
+            <></>
+          ) : (
+            <p className="text-xl font-semibold text-center text-muted-foreground">Quyền Lợi Hiện Tại</p>
+          )}
         </div>
         <div className="border border-foreground col-span-1 px-8 py-5 rounded-md bg-card-foreground">
           <h5 className="text-center text-base text-muted">Premium</h5>
@@ -99,18 +109,22 @@ const BilledCards = () => {
               </p>
             ))}
           </div>
-          <Button
-            onClick={() => {
-              handleSubmit(isMonthlyBilled ? 1 : 3);
-            }}
-            size="large"
-            fullWidth
-            variant="secondary"
-            className="rounded-2xl mt-8 text-xl"
-            loading={isLoading}
-          >
-            Nâng Cấp
-          </Button>
+          {brand.isPremium ? (
+            <p className="text-xl font-semibold text-center text-muted-foreground">Quyền Lợi Hiện Tại</p>
+          ) : (
+            <Button
+              onClick={() => {
+                handleSubmit(isMonthlyBilled ? 1 : 3);
+              }}
+              size="large"
+              fullWidth
+              variant="secondary"
+              className="rounded-2xl mt-8 text-xl"
+              loading={isLoading}
+            >
+              Nâng Cấp
+            </Button>
+          )}
         </div>
       </div>
     </>
