@@ -2,7 +2,7 @@
 
 import { Accordion } from '@/components/ui/accordion';
 import { cn } from '@/lib/utils';
-import InfluencerAccordion from './influencer-accordion';
+import InfluencerAccordion from './components/influencer-accordion';
 import { fetchRequest } from '@/request';
 import { useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';

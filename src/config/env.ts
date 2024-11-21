@@ -2,10 +2,12 @@ import { z } from 'zod';
 
 const configSchema = z.object({
   API_ENDPOINT: z.string(),
+  HUB_ENDPOINT: z.string(),
 });
 
 const configProject = configSchema.safeParse({
   API_ENDPOINT: process.env.NEXT_PUBLIC_API_ENDPOINT,
+  HUB_ENDPOINT: process.env.NEXT_PUBLIC_HUB_ENDPOINT,
 });
 if (!configProject.success) {
   // eslint-disable-next-line no-console

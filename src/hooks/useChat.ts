@@ -6,6 +6,7 @@ import IMessage from '@/types/message';
 import { useSession } from 'next-auth/react';
 import { fetchRequest } from '@/request';
 import useThrottle from './useThrottle';
+import config from '@/config';
 
 const useChat = (chatId: string, isCampaign: boolean) => {
   const [connection, setConnection] = useState<HubConnection>();
@@ -18,7 +19,7 @@ const useChat = (chatId: string, isCampaign: boolean) => {
   }, 1000);
 
   useEffect(() => {
-    const url = isCampaign ? 'https://localhost:7100/groupchat' : 'https://localhost:7100/chat';
+    const url = isCampaign ? `${config.env.HUB_ENDPOINT}/groupchat` : `${config.env.HUB_ENDPOINT}/chat`;
     const newConnection = new HubConnectionBuilder()
       .withUrl(url)
       .withAutomaticReconnect()
