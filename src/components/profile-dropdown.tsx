@@ -34,24 +34,37 @@ const ProfileDropdown = () => {
   const user = session?.user;
   const { data: wallet } = fetchRequest.user.payment(!!user);
 
+  const isPremium = brand?.isPremium;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="icon" variant="ghost">
+        <Button size="icon" variant="ghost" className="relative">
           {user ? (
-            <Avatar className="size-7">
-              {user.image ? (
+            <>
+              <Avatar className="size-7">
+                {user.image ? (
+                  <Image
+                    src={user.image || ''}
+                    alt={`Ảnh đại diện của ${user.name}`}
+                    width={200}
+                    height={200}
+                    className="object-cover"
+                  />
+                ) : (
+                  <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
+                )}
+              </Avatar>
+              {isPremium && (
                 <Image
-                  src={user.image || ''}
-                  alt={`Ảnh đại diện của ${user.name}`}
-                  width={200}
-                  height={200}
-                  className="object-cover"
+                  src="https://cdn.iconscout.com/icon/free/png-256/free-premium-icon-download-in-svg-png-gif-file-formats--tag-badge-king-online-streaming-pack-multimedia-icons-1598007.png?f=webp&w=256"
+                  alt={`Icon premium của ${user.name}`}
+                  width={16}
+                  height={16}
+                  className="object-cover absolute top-0 -right-1"
                 />
-              ) : (
-                <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
               )}
-            </Avatar>
+            </>
           ) : (
             <PersonIcon className="size-5" />
           )}
