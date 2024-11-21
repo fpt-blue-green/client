@@ -3,7 +3,6 @@ const routes = {
   login: '/auth/login',
   forgot: '/auth/forgot-password',
   account: '/account',
-  pricing: '/pricing',
   influencer: {
     base: '/influencer',
     landing: '/landing/influencer',
@@ -25,6 +24,7 @@ const routes = {
       tracking: (id: string) => `/brand/campaigns/${id}/tracking`,
     },
     wishlist: '/brand/wishlist',
+    pricing: '/brand/pricing',
   },
   brands: {
     base: '/brands',
