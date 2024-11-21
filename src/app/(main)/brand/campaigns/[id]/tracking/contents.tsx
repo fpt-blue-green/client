@@ -1,7 +1,7 @@
 'use client';
 
 import Paper from '@/components/custom/paper';
-import { fetchRequest } from '@/request';
+import { fetchRequest, offerRequest } from '@/request';
 import { EJobStatus, EOfferStatus } from '@/types/enum';
 import { useParams, useSearchParams } from 'next/navigation';
 import InfluencerAccordion from './components/influencer-accordion';
@@ -15,18 +15,33 @@ import { Button } from '@/components/ui/button';
 import { EyeOpenIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import Tooltip from '@/components/custom/tooltip';
+import { toast } from 'sonner';
 
 const Contents = () => {
   const { id } = useParams<{ id: string }>();
   const searchParams = useSearchParams();
   const selected = searchParams.get('selected');
-  const { data, isLoading } = fetchRequest.campaign.members(
+  const { data, isLoading, mutate } = fetchRequest.campaign.members(
     id,
     [EJobStatus.Approved, EJobStatus.InProgress],
     [EOfferStatus.Done],
   );
   const { data: links } = fetchRequest.job.links(selected || '');
   const [link, setLink] = useState('all');
+
+  const handleComplete = (completed: boolean) => () => {
+    if (selected) {
+      const caller = completed ? offerRequest.complete(selected) : offerRequest.fail(selected);
+      toast.promise(caller, {
+        loading: 'Đang tải',
+        success: () => {
+          mutate();
+          return 'Thành công';
+        },
+        error: (err) => err?.message,
+      });
+    }
+  };
 
   return (
     <div className="grid grid-cols-3 gap-4">
@@ -69,6 +84,14 @@ const Contents = () => {
               )}
             </div>
             <Statistical id={id} jobId={selected} link={link === 'all' ? undefined : link} />
+            <div className="grid grid-cols-2 gap-6">
+              <Button variant="outline" onClick={handleComplete(false)}>
+                Không đạt
+              </Button>
+              <Button variant="gradient" onClick={handleComplete(true)}>
+                Đạt yêu cầu
+              </Button>
+            </div>
           </div>
         ) : (
           <NoData description="Vui lòng chọn công việc để hiển thị" />

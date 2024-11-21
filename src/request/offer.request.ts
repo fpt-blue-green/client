@@ -9,6 +9,8 @@ const offerRequest = {
   payOffer: (id: string) => http.put(`/Job/${id}/payment`),
   submitLinks: (id: string, body: JobLinksBodyType) =>
     http.put(`/Job/${id}/link`, { link: body.links.map((l) => l.value) }),
+  complete: (id: string) => http.put(`/Job/${id}/complete`),
+  fail: (id: string) => http.put(`/Job/${id}/fail`),
 };
 
 export default offerRequest;
