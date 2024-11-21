@@ -5,7 +5,7 @@ import { fetcher } from '@/lib/http';
 import ICampaign from '@/types/campaign';
 import { ICampaignOverview } from '@/types/campaign-tracking';
 import IChat from '@/types/chat';
-import { ECampaignStatus, EJobStatus, EOfferStatus, ERole } from '@/types/enum';
+import { ECampaignStatus, EJobStatus, EOfferStatus, EPlatform, ERole } from '@/types/enum';
 import { IFilterList } from '@/types/filter-list';
 import IInfluencer from '@/types/influencer';
 import IInfluencerJobs from '@/types/influencer-jobs';
@@ -52,6 +52,8 @@ const fetchRequest = {
     trackingOverview: (id: string) => useSWR<ICampaignOverview>(`/Campaigns/${id}/jobDetailBase`, fetcher),
     statisticalChart: (id: string) =>
       useSWR<{ date: string; totalReaction: number }[]>(`/Campaigns/${id}/jobDetailStatistic`, fetcher),
+    statisticalPlatform: (id: string) =>
+      useSWRImmutable<{ platform: EPlatform; value: number }[]>(`/Campaigns/${id}/jobDetailBasePlatform`, fetcher),
     participants: (id: string) => useSWR<IUser[]>(`/Campaigns/${id}/participant`, fetcher),
   },
   influencer: {
@@ -82,6 +84,16 @@ const fetchRequest = {
   job: {
     statistical: () => useSWR<{ jobStatus: EJobStatus; count: number }[]>('/Job/statistical', fetcher),
     links: (id: string) => useSWRImmutable<string[]>(`/Job/${id}/link`, fetcher),
+    statisticalChart: (id?: string, link?: string) => {
+      const searchParams = new URLSearchParams();
+      if (link) {
+        searchParams.append('link', link);
+      }
+      return useSWR<{ date: string; totalReaction: number }[]>(
+        id ? `/Job/${id}/JobDetails?` + searchParams : null,
+        fetcher,
+      );
+    },
   },
   chat: {
     list: (search?: string) => {

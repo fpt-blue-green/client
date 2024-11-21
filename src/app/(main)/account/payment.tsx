@@ -100,7 +100,12 @@ const Payment = () => {
                   onClick: () => setOpen(true),
                 },
               ]
-            : undefined
+            : [
+                {
+                  children: 'Rút tiền',
+                  onClick: () => setOpen(true),
+                },
+              ]
         }
       />
       <Dialog open={open} onOpenChange={setOpen}>
