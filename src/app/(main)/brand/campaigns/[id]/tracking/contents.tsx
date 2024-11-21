@@ -1,7 +1,7 @@
 'use client';
 
 import Paper from '@/components/custom/paper';
-import { fetchRequest } from '@/request';
+import { fetchRequest, offerRequest } from '@/request';
 import { EJobStatus, EOfferStatus } from '@/types/enum';
 import { useParams, useSearchParams } from 'next/navigation';
 import InfluencerAccordion from './components/influencer-accordion';
@@ -10,24 +10,45 @@ import { Skeleton } from '@/components/ui/skeleton';
 import NoData from '@/components/no-data';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Statistical from './components/statistical';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { EyeOpenIcon } from '@radix-ui/react-icons';
+import Link from 'next/link';
+import Tooltip from '@/components/custom/tooltip';
+import { toast } from 'sonner';
 
 const Contents = () => {
   const { id } = useParams<{ id: string }>();
   const searchParams = useSearchParams();
   const selected = searchParams.get('selected');
-  const { data, isLoading } = fetchRequest.campaign.members(
+  const { data, isLoading, mutate } = fetchRequest.campaign.members(
     id,
     [EJobStatus.Approved, EJobStatus.InProgress],
     [EOfferStatus.Done],
   );
   const { data: links } = fetchRequest.job.links(selected || '');
+  const [link, setLink] = useState('all');
+
+  const handleComplete = (completed: boolean) => () => {
+    if (selected) {
+      const caller = completed ? offerRequest.complete(selected) : offerRequest.fail(selected);
+      toast.promise(caller, {
+        loading: 'Đang tải',
+        success: () => {
+          mutate();
+          return 'Thành công';
+        },
+        error: (err) => err?.message,
+      });
+    }
+  };
 
   return (
     <div className="grid grid-cols-3 gap-4">
       <Paper>
         <Accordion type="multiple">
           {isLoading
-            ? Array.from({ length: 5 }).map((_, index) => <Skeleton key={index} className="h-16" />)
+            ? Array.from({ length: 5 }).map((_, index) => <Skeleton key={index} className="h-16 mt-4" />)
             : data?.items.map((item) => (
                 <InfluencerAccordion key={item.id} item={item} reload={async () => {}} isList />
               ))}
@@ -36,22 +57,41 @@ const Contents = () => {
       <Paper className="col-span-2">
         {selected ? (
           <div className="space-y-6">
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Chọn một đường dẫn" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="all">Tất cả</SelectItem>
-                  {links?.map((link, index) => (
-                    <SelectItem key={index} value={link}>
-                      {link}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Statistical id={id} />
+            <div className="flex items-center gap-4">
+              <Select value={link} onValueChange={(v) => setLink(v)}>
+                <SelectTrigger className="flex-1">
+                  <SelectValue placeholder="Chọn một đường dẫn" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="all">Tất cả</SelectItem>
+                    {links?.map((link, index) => (
+                      <SelectItem key={index} value={link}>
+                        {link}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {link !== 'all' && (
+                <Tooltip label="Xem bài đăng">
+                  <Button variant="outline" size="icon" asChild>
+                    <Link target="_blank" href={link}>
+                      <EyeOpenIcon />
+                    </Link>
+                  </Button>
+                </Tooltip>
+              )}
+            </div>
+            <Statistical id={id} jobId={selected} link={link === 'all' ? undefined : link} />
+            <div className="grid grid-cols-2 gap-6">
+              <Button variant="outline" onClick={handleComplete(false)}>
+                Không đạt
+              </Button>
+              <Button variant="gradient" onClick={handleComplete(true)}>
+                Đạt yêu cầu
+              </Button>
+            </div>
           </div>
         ) : (
           <NoData description="Vui lòng chọn công việc để hiển thị" />

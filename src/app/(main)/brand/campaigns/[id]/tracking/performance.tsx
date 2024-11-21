@@ -10,6 +10,7 @@ import { useParams } from 'next/navigation';
 import Statistical from './components/statistical';
 import { LuBriefcase, LuEye, LuHeart, LuMessageSquare, LuSmile, LuTarget, LuWallet } from 'react-icons/lu';
 import { formats } from '@/lib/utils';
+import SocialPieChart from './components/social-pie-chart';
 
 const Performance = () => {
   const { id } = useParams<{ id: string }>();
@@ -89,10 +90,16 @@ const Performance = () => {
           <span className="text-sm text-muted-foreground">Chi phí</span>
         </Paper>
       </div>
-      <Paper className="overflow-auto">
-        <h3 className="mb-8 font-semibold">Hiệu suất theo ngày</h3>
-        <Statistical id={id} />
-      </Paper>
+      <div className="grid grid-cols-5 gap-6">
+        <Paper className="overflow-auto col-span-3">
+          <h3 className="mb-8 font-semibold">Hiệu suất theo ngày</h3>
+          <Statistical id={id} />
+        </Paper>
+        <Paper className="col-span-2">
+          <h3 className="mb-8 font-semibold">Hiệu suất theo nền tảng</h3>
+          <SocialPieChart id={id} />
+        </Paper>
+      </div>
       <Paper>
         <Table url={`/Campaigns/${id}/jobDetails`} columns={columns} headClassName="text-right first:text-left" />
       </Paper>

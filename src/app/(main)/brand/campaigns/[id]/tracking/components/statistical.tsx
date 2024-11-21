@@ -9,6 +9,8 @@ import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
 
 interface StatisticalProps {
   id: string;
+  jobId?: string;
+  link?: string;
 }
 
 const chartConfig: ChartConfig = {
@@ -18,14 +20,17 @@ const chartConfig: ChartConfig = {
   },
 };
 
-const Statistical: FC<StatisticalProps> = ({ id }) => {
+const Statistical: FC<StatisticalProps> = ({ id, jobId, link }) => {
   const { data } = fetchRequest.campaign.statisticalChart(id);
+  const { data: jobData } = fetchRequest.job.statisticalChart(jobId, link);
+
+  const chartData = jobId ? jobData : data;
 
   return (
     <>
-      {data && data.length > 0 ? (
+      {chartData && chartData.length > 0 ? (
         <ChartContainer config={chartConfig} className="min-h-60">
-          <LineChart accessibilityLayer data={data}>
+          <LineChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis dataKey="date" tickMargin={8} tickFormatter={(value: string) => value.slice(0, 5)} />
             <YAxis
