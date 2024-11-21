@@ -27,6 +27,7 @@ import { signIn, signOut } from 'next-auth/react';
 import { useAuthBrand, useAuthInfluencer } from '@/hooks';
 import { fetchRequest } from '@/request';
 import { formats } from '@/lib/utils';
+import { GiUpgrade } from 'react-icons/gi';
 
 const ProfileDropdown = () => {
   const { session, profile: influencer } = useAuthInfluencer();
@@ -95,6 +96,14 @@ const ProfileDropdown = () => {
               )}
               {brand && (
                 <>
+                  {!isPremium && (
+                    <DropdownMenuItem asChild>
+                      <Link href={config.routes.brand.pricing}>
+                        <GiUpgrade className="mr-2" />
+                        Nâng cấp Premium
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem asChild>
                     <Link href={config.routes.brands.details(brand.id)}>
                       <IdCardIcon className="mr-2" />

@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
-import Banner from '../(home)/banner';
 import BilledCards from './billed-cards';
+import Banner from '../../(home)/banner';
 
 export const metadata: Metadata = {
   title: 'Định Giá',

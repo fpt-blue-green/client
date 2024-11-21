@@ -1,6 +1,6 @@
 export const ProBenefits: { benefit: string; appendText: string }[] = [
   {
-    benefit: 'Có quyền tạo nhiều chiến dịch dịc',
+    benefit: 'Có quyền tạo nhiều chiến dịch',
     appendText: 'mỗi tháng',
   },
   {
