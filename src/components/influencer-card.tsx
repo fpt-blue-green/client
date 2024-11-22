@@ -6,13 +6,15 @@ import { constants, formats } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Skeleton } from './ui/skeleton';
-import { HeartFilledIcon, HeartIcon, StarFilledIcon } from '@radix-ui/react-icons';
+import { HeartFilledIcon, HeartIcon } from '@radix-ui/react-icons';
 import { Button } from './ui/button';
 import IInfluencer from '@/types/influencer';
 import { PlatformData } from '@/types/enum';
 import { brandRequest, fetchRequest } from '@/request';
 import { toast } from 'sonner';
 import { useAuthBrand, useThrottle } from '@/hooks';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import Rating from './custom/rating';
 
 const mockInfluencer: IInfluencer = {
   id: 'fakeId',
@@ -65,7 +67,7 @@ const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer }) => {
   }, 750);
 
   return (
-    <div className="relative">
+    <div className="relative bg-popover shadow-md rounded-lg overflow-hidden">
       {profile && (
         <div className="absolute top-3 right-3 z-10">
           <Button variant="secondary" className="h-7 p-1 rounded-full" onClick={handleFavorite}>
@@ -73,8 +75,8 @@ const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer }) => {
           </Button>
         </div>
       )}
-      <Link href={config.routes.influencers.details(data.slug)} className="space-y-1.5 text-sm">
-        <div className="relative rounded-lg overflow-hidden group">
+      <Link href={config.routes.influencers.details(data.slug)} className="text-sm">
+        {/* <div className="relative rounded-lg overflow-hidden group">
           <div className="flex items-center transition-transform duration-300 group-hover:-translate-x-full">
             <Image
               src={data.images[0]?.url}
@@ -114,7 +116,51 @@ const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer }) => {
           </div>
           <span className="font-bold">{formats.price(data.averagePrice)}</span>
         </div>
-        <div className="text-xs">{data.summarise}</div>
+        <div className="text-xs">{data.summarise}</div> */}
+        <div className="relative group">
+          <div className="flex items-center transition-transform duration-300 group-hover:-translate-x-full">
+            <Image
+              src={data.images[0]?.url}
+              alt={`Ảnh đại diện của ${data.fullName}`}
+              width={500}
+              height={500}
+              className="aspect-square object-cover w-full"
+            />
+            <Image
+              src={data.images[1]?.url || data.images[0]?.url}
+              alt={`Ảnh đại diện của ${data.fullName}`}
+              width={500}
+              height={500}
+              className="aspect-square object-cover w-full"
+            />
+          </div>
+          <div className="absolute left-0 top-0 right-0 bottom-0 bg-bg-gradient-to-b from-black/10 from-70% to-black"></div>
+          <div className="absolute p-1 bg-white border border-dashed border-muted bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 rounded-full">
+            <Avatar>
+              <AvatarImage src={data.avatar} alt={`Ảnh đại diện của ${data.fullName}`} />
+              <AvatarFallback>{data.fullName[0]}</AvatarFallback>
+            </Avatar>
+          </div>
+          <h5 className="absolute bottom-8 left-1/2 -translate-x-1/2 font-semibold text-white flex flex-col items-center">
+            {data.fullName}
+            <Rating defaultValue={data.rateAverage} precision={0.25} readOnly size={16} />
+          </h5>
+        </div>
+        <div className="p-4 mt-6">
+          <div className="flex justify-center items-center gap-4">
+            {data.channels.map((c) => {
+              const { name, logo, followerText } = PlatformData[c.platform];
+              return (
+                <div key={c.id} className="flex flex-col items-center gap-1">
+                  <Image src={logo} alt={name} width={30} height={30} />
+                  <span className="font-semibold text-base">{formats.estimate(c.followersCount)}</span>
+                  <span className="text-xs text-muted-foreground">{followerText.substring(6)}</span>
+                </div>
+              );
+            })}
+          </div>
+          <div className="text-center text-lg font-bold mt-2">{formats.price(data.averagePrice)}</div>
+        </div>
       </Link>
     </div>
   );
