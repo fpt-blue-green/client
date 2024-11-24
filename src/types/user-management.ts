@@ -23,6 +23,7 @@ export interface IBanUserManagement {
   unbanDate: string;
   user: IUser;
   bannedBy: IUser;
+  isActive: boolean;
 }
 
 export default IUserManagement;
