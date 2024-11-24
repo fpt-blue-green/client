@@ -6,6 +6,7 @@ import PriceInput from '@/components/custom/price-input';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import config from '@/config';
 import { useAuthUser } from '@/hooks';
 import { constants, formats } from '@/lib/utils';
@@ -22,10 +23,19 @@ import { z } from 'zod';
 
 const amountSchema = z.object({ amount: z.number().min(10_000, 'Tối thiểu 10.000 ₫') }).strict();
 
+const depositSchema = amountSchema.extend({
+  bankId: z.string({ required_error: 'Chọn ngân hàng của bạn' }),
+  accountNo: z.string().regex(/^\d+$/, {
+    message: 'Số tài khoản không hợp lệ.',
+  }),
+});
+
 const Payment = () => {
   const { session } = useAuthUser();
   const { data } = fetchRequest.user.payment(!!session);
+  const { data: banks } = fetchRequest.payments.banks();
   const [open, setOpen] = useState(false);
+  const [openWithdraw, setOpenWithdraw] = useState(false);
   const form = useForm<z.infer<typeof amountSchema>>({
     resolver: zodResolver(amountSchema),
     defaultValues: { amount: 0 },
@@ -67,7 +77,7 @@ const Payment = () => {
     },
   ];
 
-  const handleSubmit = (values: z.infer<typeof amountSchema>) => {
+  const handleWithdraw = (values: z.infer<typeof amountSchema>) => {
     userRequest
       .deposit(window.location.origin + config.routes.account, values.amount)
       .then((res) => {
@@ -103,7 +113,7 @@ const Payment = () => {
             : [
                 {
                   children: 'Rút tiền',
-                  onClick: () => setOpen(true),
+                  onClick: () => setOpenWithdraw(true),
                 },
               ]
         }
@@ -113,7 +123,7 @@ const Payment = () => {
           <DialogTitle>Bạn muốn nạp bao nhiêu tiền?</DialogTitle>
           <DialogDescription />
           <Form {...form}>
-            <form className="space-y-4" onSubmit={form.handleSubmit(handleSubmit)}>
+            <form className="space-y-4" onSubmit={form.handleSubmit(handleWithdraw)}>
               <FormField
                 control={form.control}
                 name="amount"
@@ -121,6 +131,42 @@ const Payment = () => {
                   <FormItem>
                     <FormControl>
                       <PriceInput {...field} fullWidth />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" variant="gradient" fullWidth>
+                Tiếp tục
+              </Button>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={openWithdraw} onOpenChange={setOpenWithdraw}>
+        <DialogContent>
+          <DialogTitle>Bạn muốn rút bao nhiêu tiền?</DialogTitle>
+          <DialogDescription />
+          <Form {...form}>
+            <form className="space-y-4" onSubmit={form.handleSubmit(handleWithdraw)}>
+              <FormField
+                control={form.control}
+                name="amount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Select>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Chọn ngân hàng" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {banks?.data.map((bank) => (
+                            <SelectItem key={bank.id} value={bank.bin}>
+                              {bank.shortName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

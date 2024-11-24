@@ -2,6 +2,7 @@
 'use client';
 
 import { fetcher } from '@/lib/http';
+import IBank from '@/types/bank';
 import ICampaign from '@/types/campaign';
 import { ICampaignOverview } from '@/types/campaign-tracking';
 import IChat from '@/types/chat';
@@ -113,6 +114,9 @@ const fetchRequest = {
     paymentHistory: () => useSWRImmutable<IPaymentHistory>('/User/paymentHistory', fetcher),
   },
   settings: () => useSWRImmutable<ISystemSetting[]>('/SystemSetting', fetcher),
+  payments: {
+    banks: () => useSWRImmutable<{ data: IBank[] }>('https://api.vietqr.io/v2/banks', fetcher),
+  },
 };
 
 export default fetchRequest;
