@@ -52,6 +52,7 @@ const GeneralInfo: FC<IGeneralInfo> = ({ brand }) => {
       </div>
       <div>
         <h5 className="text-center font-semibold text-xl">{brand.name}</h5>
+        <h2 className="mt-10 mb-4 text-xl font-semibold">Mô tả</h2>
         <p className="mt-3 font-light text-sm text-center md:text-start">
           {brand.description || ''}
           {isCurrentUserAllowed && (

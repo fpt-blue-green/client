@@ -14,7 +14,7 @@ const Campaigns = () => {
     <div className="mb-10">
       <h2 className="mt-10 mb-4 text-xl font-semibold">Chiến dịch</h2>
       {campaigns && campaigns.items.length > 0 ? (
-        <div className="grid grid-col1 md:grid-cols-2 gap-4">
+        <div className="grid grid-col1 md:grid-cols-3 gap-4">
           {campaigns.items?.map((item) => (
             <CampaignCard key={item.id} data={item} />
           ))}

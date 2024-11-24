@@ -39,10 +39,6 @@ const BrandDetails: FC<BrandDetailsProps> = async ({ params }) => {
     <div className="container my-8">
       <GeneralInfo brand={brand} />
       <Campaigns />
-      <div>
-        <h2 className="mt-10 mb-4 text-xl font-semibold">Lượt đánh giá</h2>
-        <p className="text-sm font-light">Bạn chưa có lượt đánh giá nào.</p>
-      </div>
     </div>
   );
 };
