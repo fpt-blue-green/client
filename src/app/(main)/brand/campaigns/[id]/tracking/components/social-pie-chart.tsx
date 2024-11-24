@@ -12,44 +12,16 @@ import {
 import { formats } from '@/lib/utils';
 import { fetchRequest } from '@/request';
 import { EPlatform, PlatformData } from '@/types/enum';
-import { FC, useMemo } from 'react';
+import { FC } from 'react';
 import { Label, Pie, PieChart } from 'recharts';
 
 interface SocialPieChartProps {
   id: string;
+  total?: number;
 }
 
-// const chartData = [
-//   { browser: 'chrome', visitors: 275, fill: 'var(--color-chrome)' },
-//   { browser: 'safari', visitors: 200, fill: 'var(--color-safari)' },
-//   { browser: 'firefox', visitors: 187, fill: 'var(--color-firefox)' },
-// ];
-
-// const chartConfig = {
-//   visitors: {
-//     label: 'Visitors',
-//   },
-//   chrome: {
-//     label: 'Chrome',
-//     color: 'hsl(var(--chart-1))',
-//   },
-//   safari: {
-//     label: 'Safari',
-//     color: 'hsl(var(--chart-2))',
-//   },
-//   firefox: {
-//     label: 'Firefox',
-//     color: 'hsl(var(--chart-3))',
-//   },
-// } satisfies ChartConfig;
-
-const SocialPieChart: FC<SocialPieChartProps> = ({ id }) => {
+const SocialPieChart: FC<SocialPieChartProps> = ({ id, total = 0 }) => {
   const { data } = fetchRequest.campaign.statisticalPlatform(id);
-
-  const totalReaction = useMemo(() => {
-    if (!data) return 0;
-    return data.reduce((acc, curr) => acc + curr.value, 0);
-  }, [data]);
 
   const chartData = data?.map((i) => {
     return {
@@ -91,7 +63,7 @@ const SocialPieChart: FC<SocialPieChartProps> = ({ id }) => {
                     return (
                       <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
                         <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
-                          {formats.estimate(totalReaction)}
+                          {formats.estimate(total)}
                         </tspan>
                         <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
                           tương tác

@@ -97,13 +97,13 @@ const Step6: FC<DetailStepProps> = ({ id, campaign, mutate }) => {
           loading: 'Đang tải',
           success: () => {
             mutate();
-            router.push(config.routes.brand.campaigns.base);
+            router.push(config.routes.brand.campaigns.tracking(campaign.id));
             return 'Chiến dịch đã được công khai.';
           },
           error: (err) => err?.message || constants.sthWentWrong,
         });
       } else {
-        router.push(config.routes.brand.campaigns.tracking(campaign.id));
+        router.push(config.routes.brand.campaigns.base);
       }
     }
   };

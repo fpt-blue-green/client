@@ -16,6 +16,23 @@ const Actions = () => {
 
   if (!data) return;
 
+  const handleEnđ = () => {
+    emitter.confirm({
+      description: 'Các nhà sáng tạo nội dung không thể tìm kiếm và thực hiện công việc trong chiến dịch này nữa.',
+      content: `Bạn có chắc kết thúc chiến dịch ${data.title} không?`,
+      callback: () => {
+        toast.promise(campaignsRequest.end(data.id), {
+          loading: 'Đang tải',
+          success: () => {
+            mutate();
+            return 'Chiến dịch đã kết thúc.';
+          },
+          error: (err) => err?.message || constants.sthWentWrong,
+        });
+      },
+    });
+  };
+
   const handleStart = () => {
     emitter.confirm({
       description:
@@ -47,13 +64,7 @@ const Actions = () => {
         </>
       )}
       {data.status === ECampaignStatus.Active && (
-        <Button
-          variant="destructive"
-          size="large"
-          onClick={handleStart}
-          startIcon={<StopIcon />}
-          disabled={new Date() < new Date(data.endDate)}
-        >
+        <Button variant="destructive" size="large" onClick={handleEnđ} startIcon={<StopIcon />}>
           Kết thúc
         </Button>
       )}

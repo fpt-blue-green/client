@@ -32,9 +32,10 @@ interface InfluencerAccordionProps {
   item: IInfluencerJobs;
   reload: () => Promise<void>;
   isList?: boolean;
+  view?: boolean;
 }
 
-const InfluencerAccordion: FC<InfluencerAccordionProps> = ({ item, isList, reload }) => {
+const InfluencerAccordion: FC<InfluencerAccordionProps> = ({ item, isList, view, reload }) => {
   const searchParams = useSearchParams();
 
   return (
@@ -80,7 +81,7 @@ const InfluencerAccordion: FC<InfluencerAccordionProps> = ({ item, isList, reloa
                   <TableHead className="text-center">Lượt tương tác</TableHead>
                   <TableHead className="text-center">Thời lượng</TableHead>
                   <TableHead className="text-center">Trạng thái</TableHead>
-                  <TableHead className="text-center">Hành động</TableHead>
+                  {!view && <TableHead className="text-center">Hành động</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -111,9 +112,11 @@ const InfluencerAccordion: FC<InfluencerAccordionProps> = ({ item, isList, reloa
                           />
                         </JobOffer>
                       </TableCell>
-                      <TableCell>
-                        <OfferAction job={job} reload={reload} />
-                      </TableCell>
+                      {!view && (
+                        <TableCell>
+                          <OfferAction job={job} reload={reload} />
+                        </TableCell>
+                      )}
                     </TableRow>
                   );
                 })}

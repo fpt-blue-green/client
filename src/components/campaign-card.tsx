@@ -30,7 +30,7 @@ const CampaignCard: FC<CampaignCardProps> = ({ data, canEdit, reload }) => {
   const firstImage = data.images[0]?.url;
   const link = canEdit
     ? data.status === ECampaignStatus.Draft
-      ? config.routes.brand.campaigns.edit(data.id, 1)
+      ? config.routes.brand.campaigns.edit(data.id, 4)
       : config.routes.brand.campaigns.tracking(data.id)
     : config.routes.campaigns.details(data.id);
 

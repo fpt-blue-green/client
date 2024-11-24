@@ -20,6 +20,7 @@ const campaignsRequest = {
   delete: (id: string) => http.delete(`/Campaigns/${id}`),
   publish: (id: string) => http.put(`/Campaigns/${id}/publish`),
   start: (id: string) => http.put(`/Campaigns/${id}/start`),
+  end: (id: string) => http.put(`/Campaigns/${id}/end`),
 };
 
 export default campaignsRequest;

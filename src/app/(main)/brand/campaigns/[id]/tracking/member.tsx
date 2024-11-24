@@ -6,7 +6,7 @@ import InfluencerAccordion from './components/influencer-accordion';
 import { fetchRequest } from '@/request';
 import { useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { EJobStatus, EOfferStatus } from '@/types/enum';
+import { ECampaignStatus, EJobStatus, EOfferStatus } from '@/types/enum';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import NoData from '@/components/no-data';
@@ -17,7 +17,8 @@ const Member = () => {
   const status = searchParams.get('status') || 'pending';
   const [jobStatuses, setJobStatuses] = useState<EJobStatus[]>([EJobStatus.Pending]);
   const [offerStatuses, setOfferStatuses] = useState<EOfferStatus[]>([EOfferStatus.Offering]);
-  const { data: statistical } = fetchRequest.campaign.memberStatistical(params.id);
+  const { data: campaign } = fetchRequest.campaign.getById(params.id);
+  const { data: statistical, mutate: statisticalMutate } = fetchRequest.campaign.memberStatistical(params.id);
   const { data, isLoading, mutate } = fetchRequest.campaign.members(params.id, jobStatuses, offerStatuses);
   const styles = (active = false, isLast = false) =>
     cn('relative flex flex-col gap-2 py-4 px-8 bg-muted shadow-sm hover:z-1 hover:opacity-70 transition-opacity', {
@@ -28,7 +29,8 @@ const Member = () => {
     });
 
   const reload = async () => {
-    await mutate();
+    mutate();
+    statisticalMutate();
   };
 
   useEffect(() => {
@@ -87,7 +89,14 @@ const Member = () => {
           {isLoading ? (
             Array(5).map((_, index) => <Skeleton key={index} className="h-12" />)
           ) : data && data.items.length > 0 ? (
-            data.items.map((item) => <InfluencerAccordion key={item.id} item={item} reload={reload} />)
+            data.items.map((item) => (
+              <InfluencerAccordion
+                key={item.id}
+                item={item}
+                reload={reload}
+                view={campaign?.status === ECampaignStatus.Completed || campaign?.status === ECampaignStatus.Expired}
+              />
+            ))
           ) : (
             <NoData />
           )}
