@@ -60,7 +60,7 @@ const JobOffer: FC<JobOfferProps> = ({ offer, children, reload }) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger>{children}</DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle className="sr-only">Lời đề nghị</DialogTitle>

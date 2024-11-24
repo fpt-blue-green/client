@@ -17,6 +17,7 @@ import Member from './member';
 import Performance from './performance';
 import Actions from './components/actions';
 import Contents from './contents';
+import { ECampaignStatus } from '@/types/enum';
 
 interface TrackingProps {
   params: { id: string };
@@ -58,12 +59,14 @@ const Tracking: FC<TrackingProps> = async ({ params, searchParams }) => {
                   Xem chi tiết
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href={config.routes.brand.campaigns.edit(params.id, 1)} className="flex items-center gap-2">
-                  <Pencil2Icon />
-                  Chỉnh sửa
-                </Link>
-              </DropdownMenuItem>
+              {[ECampaignStatus.Draft, ECampaignStatus.Published].includes(campaign.status) && (
+                <DropdownMenuItem asChild>
+                  <Link href={config.routes.brand.campaigns.edit(params.id, 1)} className="flex items-center gap-2">
+                    <Pencil2Icon />
+                    Chỉnh sửa
+                  </Link>
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

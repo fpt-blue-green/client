@@ -41,15 +41,12 @@ const StepGeneral: FC<DetailStepProps> = ({ campaign }) => {
       ? campaignsRequest.updateCampaign(campaign.id, values)
       : campaignsRequest.createCampaign(values);
     setLoading(true);
-    toast.promise(caller, {
-      loading: 'Đang tải',
-      success: (res) => {
+    caller
+      .then((res) => {
         if (res.data) router.push(config.routes.brand.campaigns.edit(res.data.substring(1, res.data.length - 1), 2));
-        return (campaign ? 'Chỉnh sửa' : 'Tạo') + ' chiến dịch thành công';
-      },
-      error: (err) => toast.error(err?.message || constants.sthWentWrong),
-      finally: () => setLoading(false),
-    });
+      })
+      .catch((err: any) => toast.error(err?.message || constants.sthWentWrong))
+      .finally(() => setLoading(false));
   };
 
   return (

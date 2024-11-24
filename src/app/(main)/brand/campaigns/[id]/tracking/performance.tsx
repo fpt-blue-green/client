@@ -97,10 +97,11 @@ const Performance = () => {
         </Paper>
         <Paper className="col-span-2">
           <h3 className="mb-8 font-semibold">Hiệu suất theo nền tảng</h3>
-          <SocialPieChart id={id} />
+          <SocialPieChart id={id} total={data?.totalReaction} />
         </Paper>
       </div>
       <Paper>
+        <h3 className="mb-8 font-semibold">Tiến độ thành viên</h3>
         <Table url={`/Campaigns/${id}/jobDetails`} columns={columns} headClassName="text-right first:text-left" />
       </Paper>
     </div>
