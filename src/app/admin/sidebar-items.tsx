@@ -2,7 +2,6 @@ import config from '@/config';
 import { DashboardIcon } from '@radix-ui/react-icons';
 import { SettingsIcon } from 'lucide-react';
 import { ReactNode } from 'react';
-import { FaProjectDiagram } from 'react-icons/fa';
 import { FaPeopleGroup, FaTag } from 'react-icons/fa6';
 import { GiExecutionerHood } from 'react-icons/gi';
 

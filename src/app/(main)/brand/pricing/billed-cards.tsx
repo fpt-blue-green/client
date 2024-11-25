@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { ProBenefits } from './pro-benefit';
 import { constants, formats } from '@/lib/utils';
-import { paymentRequest, tagRequest } from '@/request';
+import { paymentRequest } from '@/request';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useAuthBrand } from '@/hooks';

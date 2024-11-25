@@ -1,5 +1,4 @@
 import { constants } from '@/lib/utils';
-import { EGender } from '@/types/enum';
 import { z } from 'zod';
 
 const isBrowser = typeof window !== 'undefined';
