@@ -1,16 +1,13 @@
 interface IBank {
-  id: number;
+  id: string;
   name: string;
   code: string;
-  bin: string;
-  shortName: string;
-  logo: string;
-  transferSupported: number;
-  lookupSupported: number;
+  bin: number;
   short_name: string;
-  support: number;
-  isTransfer: number;
+  logo_url: string;
+  icon_url: string;
   swift_code: string;
+  lookup_supported: boolean;
 }
 
 export default IBank;

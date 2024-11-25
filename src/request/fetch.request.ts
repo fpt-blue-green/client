@@ -115,7 +115,7 @@ const fetchRequest = {
   },
   settings: () => useSWRImmutable<ISystemSetting[]>('/SystemSetting', fetcher),
   payments: {
-    banks: () => useSWRImmutable<{ data: IBank[] }>('https://api.vietqr.io/v2/banks', fetcher),
+    banks: () => useSWRImmutable<{ data: IBank[] }>('https://api.httzip.com/api/bank/list', fetcher),
   },
 };
 

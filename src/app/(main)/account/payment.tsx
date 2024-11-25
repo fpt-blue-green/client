@@ -3,18 +3,29 @@
 import Table from '@/components/custom/data-table';
 import Paper from '@/components/custom/paper';
 import PriceInput from '@/components/custom/price-input';
+import NoData from '@/components/no-data';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import config from '@/config';
 import { useAuthUser } from '@/hooks';
-import { constants, formats } from '@/lib/utils';
+import { constants, formats, functions } from '@/lib/utils';
 import { fetchRequest, userRequest } from '@/request';
+import IBank from '@/types/bank';
 import { EPaymentType, ERole } from '@/types/enum';
 import { IPaymentHistory } from '@/types/payment';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { ColumnDef } from '@tanstack/react-table';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
@@ -25,7 +36,7 @@ import { z } from 'zod';
 const amountSchema = z.object({ amount: z.number().min(10_000, 'Tối thiểu 10.000 ₫') }).strict();
 
 const withdrawSchema = amountSchema.extend({
-  bankId: z.string({ required_error: 'Chọn ngân hàng của bạn' }),
+  bankId: z.number({ required_error: 'Chọn ngân hàng của bạn' }),
   accountNo: z.string().regex(/^\d+$/, {
     message: 'Số tài khoản không hợp lệ.',
   }),
@@ -171,8 +182,10 @@ const DepositForm = () => {
 
 const WithdrawForm = ({ onClose }: { onClose: () => void }) => {
   const { data: banks } = fetchRequest.payments.banks();
-
-  const withdrawForm = useForm<z.infer<typeof withdrawSchema>>({
+  const [bank, setBank] = useState<IBank>();
+  const [bankColor, setBankColor] = useState<string>();
+  const [open, setOpen] = useState(true);
+  const form = useForm<z.infer<typeof withdrawSchema>>({
     resolver: zodResolver(withdrawSchema),
     defaultValues: { amount: 0, accountNo: '' },
   });
@@ -182,60 +195,97 @@ const WithdrawForm = ({ onClose }: { onClose: () => void }) => {
     onClose();
   };
 
+  const handleChangeBank = (bank: IBank) => {
+    functions
+      .getDominantColor(bank.logo_url || '')
+      .then((color) => {
+        setBank(bank);
+        form.setValue('bankId', bank.bin);
+        setOpen(false);
+        setBankColor(color);
+      })
+      .catch(() => {});
+  };
+
   return (
-    <Form {...withdrawForm}>
-      <form className="space-y-4" onSubmit={withdrawForm.handleSubmit(handleWithdraw)}>
-        <FormField
-          control={withdrawForm.control}
-          name="bankId"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Select>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Chọn ngân hàng" {...field} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {banks?.data.map((bank) => (
-                      <SelectItem key={bank.id} value={bank.bin}>
-                        {bank.shortName}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={withdrawForm.control}
-          name="accountNo"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input {...field} placeholder="Nhập số tài khoản" fullWidth />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={withdrawForm.control}
-          name="amount"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <PriceInput {...field} placeholder="Nhập số tiền muốn rút" fullWidth />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" variant="gradient" fullWidth>
-          Tiếp tục
-        </Button>
-      </form>
+    <Form {...form}>
+      {bank && (
+        <form className="space-y-4" onSubmit={form.handleSubmit(handleWithdraw)}>
+          <div className="rounded-lg overflow-hidden border" style={{ borderColor: bankColor }}>
+            <div
+              className="flex items-center justify-between gap-2 p-4 transition-opacity cursor-pointer hover:opacity-80"
+              style={{ background: bankColor }}
+              onClick={() => setOpen(true)}
+            >
+              <div className="flex items-center gap-2">
+                <Avatar className="bg-white">
+                  <AvatarImage src={bank.icon_url} alt={bank.short_name} />
+                  <AvatarFallback>{bank.short_name[0]}</AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col">
+                  <span className="font-semibold text-foreground">{`${bank.short_name} (${bank.code})`}</span>
+                  <span className="text-xs">{bank.name}</span>
+                </div>
+              </div>
+              <ChevronRightIcon className="justify-self-end" />
+            </div>
+            <div className="space-y-4 p-4">
+              <FormField
+                control={form.control}
+                name="accountNo"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input {...field} placeholder="Nhập số tài khoản" fullWidth />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="amount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <PriceInput {...field} placeholder="Nhập số tiền muốn rút" fullWidth />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+          <Button type="submit" variant="gradient" fullWidth>
+            Tiếp tục
+          </Button>
+        </form>
+      )}
+
+      {open && (
+        <CommandDialog open={open} onOpenChange={setOpen} className="max-w-screen-md">
+          <CommandInput placeholder="Tìm theo tên ngân hàng" />
+          <CommandList>
+            <CommandEmpty>
+              <NoData description="Không có ngân hàng trong danh sách" />
+            </CommandEmpty>
+            <CommandGroup heading="Ngân hàng">
+              {banks?.data.map((bank) => (
+                <CommandItem key={bank.bin} className="gap-2 cursor-pointer" onSelect={() => handleChangeBank(bank)}>
+                  <Avatar className="border bg-white">
+                    <AvatarImage src={bank.icon_url} alt={bank.short_name} />
+                    <AvatarFallback>{bank.short_name[0]}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col">
+                    <span className="font-semibold text-foreground">{`${bank.short_name} (${bank.code})`}</span>
+                    <span className="text-xs text-muted-foreground">{bank.name}</span>
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </CommandDialog>
+      )}
     </Form>
   );
 };
