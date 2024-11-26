@@ -3,6 +3,7 @@
 import Table from '@/components/custom/data-table';
 import Paper from '@/components/custom/paper';
 import PriceInput from '@/components/custom/price-input';
+import Tooltip from '@/components/custom/tooltip';
 import NoData from '@/components/no-data';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -19,8 +20,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import config from '@/config';
 import { useAuthUser } from '@/hooks';
-import { constants, formats, functions } from '@/lib/utils';
-import { fetchRequest, userRequest } from '@/request';
+import { constants, emitter, formats, functions } from '@/lib/utils';
+import { fetchRequest, paymentRequest } from '@/request';
+import { DepositBodyType, depositSchema, WithdrawBodyType, withdrawSchema } from '@/schema-validations/user.schema';
 import IBank from '@/types/bank';
 import { EPaymentType, ERole } from '@/types/enum';
 import { IPaymentHistory } from '@/types/payment';
@@ -30,17 +32,8 @@ import { ColumnDef } from '@tanstack/react-table';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { LuCheckSquare } from 'react-icons/lu';
 import { toast } from 'sonner';
-import { z } from 'zod';
-
-const amountSchema = z.object({ amount: z.number().min(10_000, 'Tối thiểu 10.000 ₫') }).strict();
-
-const withdrawSchema = amountSchema.extend({
-  bankId: z.number({ required_error: 'Chọn ngân hàng của bạn' }),
-  accountNo: z.string().regex(/^\d+$/, {
-    message: 'Số tài khoản không hợp lệ.',
-  }),
-});
 
 const Payment = () => {
   const { session } = useAuthUser();
@@ -142,14 +135,14 @@ const Payment = () => {
 };
 
 const DepositForm = () => {
-  const form = useForm<z.infer<typeof amountSchema>>({
-    resolver: zodResolver(amountSchema),
+  const form = useForm<DepositBodyType>({
+    resolver: zodResolver(depositSchema),
     defaultValues: { amount: 0 },
   });
   const router = useRouter();
 
-  const handleDeposit = (values: z.infer<typeof amountSchema>) => {
-    userRequest
+  const handleDeposit = (values: DepositBodyType) => {
+    paymentRequest
       .deposit(window.location.origin + config.routes.account, values.amount)
       .then((res) => {
         if (res.data) router.push(res.data?.shortLink);
@@ -185,19 +178,41 @@ const WithdrawForm = ({ onClose }: { onClose: () => void }) => {
   const [bank, setBank] = useState<IBank>();
   const [bankColor, setBankColor] = useState<string>();
   const [open, setOpen] = useState(true);
-  const form = useForm<z.infer<typeof withdrawSchema>>({
+  const [loading, setLoading] = useState(false);
+
+  const form = useForm<WithdrawBodyType>({
     resolver: zodResolver(withdrawSchema),
-    defaultValues: { amount: 0, accountNo: '' },
+    defaultValues: {
+      amount: 0,
+      accountNo: '',
+    },
   });
 
-  const handleWithdraw = (values: z.infer<typeof withdrawSchema>) => {
-    console.log(values);
-    onClose();
+  const handleWithdraw = (values: WithdrawBodyType) => {
+    const callback = () => {
+      toast.promise(paymentRequest.withdraw(values), {
+        loading: 'Đang tải',
+        success: () => {
+          return 'Tạo yêu cầu rút thành công. Bạn có thể nhận được tiền sau 2 - 3 ngày.';
+        },
+        error: (err) => err?.message,
+      });
+      onClose();
+    };
+    if (values.accountName) {
+      callback();
+    } else {
+      emitter.confirm({
+        callback,
+        content: 'Bạn chưa kiểm tra tài khoản. Bạn có chắn chắn số tài khoản là của bạn?',
+      });
+    }
   };
 
   const handleChangeBank = (bank: IBank) => {
     setBank(bank);
-    form.setValue('bankId', bank.bin);
+    form.setValue('bankId', bank.bin.toString());
+    form.setValue('accountName', '');
     setOpen(false);
     functions
       .getDominantColor(bank.logo_url || '')
@@ -205,6 +220,27 @@ const WithdrawForm = ({ onClose }: { onClose: () => void }) => {
         setBankColor(color);
       })
       .catch(() => {});
+  };
+
+  const handleOpenBankList = (open: boolean) => {
+    if (!open && !bank) {
+      onClose();
+    }
+    setOpen(open);
+  };
+
+  const checkBank = () => {
+    const { accountNo } = form.getValues();
+    if (bank) {
+      setLoading(true);
+      paymentRequest
+        .lookBank(bank.code, accountNo)
+        .then((res) => {
+          form.setValue('accountName', res.data?.data?.ownerName || '');
+        })
+        .catch(() => toast.error('Không tìm thấy tài khoản của ngân hàng'))
+        .finally(() => setLoading(false));
+    }
   };
 
   return (
@@ -237,12 +273,41 @@ const WithdrawForm = ({ onClose }: { onClose: () => void }) => {
                   <FormItem>
                     <FormLabel required>Số tài khoản</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="Nhập số tài khoản" fullWidth />
+                      <Input
+                        {...field}
+                        onChange={(e) => {
+                          form.setValue('accountName', '');
+                          field.onChange(e);
+                        }}
+                        placeholder="Nhập số tài khoản"
+                        fullWidth
+                        endAdornment={
+                          <Tooltip label="Kiểm tra tài khoản">
+                            <Button variant="ghost" size="icon-sm" onClick={checkBank} loading={loading}>
+                              <LuCheckSquare />
+                            </Button>
+                          </Tooltip>
+                        }
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              {form.getValues('accountName') && (
+                <FormField
+                  control={form.control}
+                  name="accountName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Tên tài khoản</FormLabel>
+                      <FormControl>
+                        <Input {...field} fullWidth disabled />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              )}
               <FormField
                 control={form.control}
                 name="amount"
@@ -258,14 +323,14 @@ const WithdrawForm = ({ onClose }: { onClose: () => void }) => {
               />
             </div>
           </div>
-          <Button type="submit" variant="gradient" fullWidth>
+          <Button type="submit" variant="gradient" fullWidth loading={loading}>
             Tiếp tục
           </Button>
         </form>
       )}
 
       {open && (
-        <CommandDialog open={open} onOpenChange={setOpen} className="max-w-screen-md">
+        <CommandDialog open={open} onOpenChange={handleOpenBankList} className="max-w-screen-md">
           <CommandInput placeholder="Tìm theo tên ngân hàng" />
           <CommandList>
             <CommandEmpty>

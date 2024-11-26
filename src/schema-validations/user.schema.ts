@@ -54,7 +54,23 @@ export const changePasswordSchema = z
     path: ['newPassword'],
   });
 
+export const depositSchema = z.object({ amount: z.number().min(10_000, 'Tối thiểu 10.000 ₫') }).strict();
+
+export const withdrawSchema = z.object({
+  amount: z
+    .number()
+    .min(100_000, 'Số tiền phải lớn hơn 100.000 ₫')
+    .max(50_000_000, 'Số tiền không vượt quá 50.000.000 ₫'),
+  bankId: z.string({ required_error: 'Chọn ngân hàng của bạn' }),
+  accountNo: z.string().regex(/^\d+$/, {
+    message: 'Số tài khoản không hợp lệ.',
+  }),
+  accountName: z.string().optional(),
+});
+
 export type AvatarBody = z.infer<typeof avatarSchema>;
 export type ChangePasswordBodyType = z.infer<typeof changePasswordSchema>;
 export type GeneralBodyType = z.infer<typeof generalSchema>;
 export type BanBodyType = z.infer<typeof banSchema>;
+export type DepositBodyType = z.infer<typeof depositSchema>;
+export type WithdrawBodyType = z.infer<typeof withdrawSchema>;
