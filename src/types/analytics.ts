@@ -4,4 +4,9 @@ interface IMetricTrend {
   data: string;
 }
 
+export interface IPieChartDate {
+  label: string;
+  value: number;
+}
+
 export default IMetricTrend;

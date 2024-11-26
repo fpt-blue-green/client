@@ -3,8 +3,8 @@ import CardCampaign from './components/card-campaign';
 import Paper from '@/components/custom/paper';
 import { Metadata } from 'next';
 import AnalyticsCards from './analytics-cards';
-import { PieChartsRoleCount } from './piechart-role-count';
-import { PieChartsJobStatusCount } from './piechart-jobstatus-count';
+import { PieChartRoleCount } from './piechart-role-count';
+import { PieChartJobStatus } from './piechart-jobstatus-count';
 
 // Mock
 const campaignCardDetails = {
@@ -31,7 +31,7 @@ const Overview = () => {
           <OverviewChart />
         </Paper>
         <Paper className="md:col-span-4">
-          <PieChartsJobStatusCount />
+          <PieChartJobStatus />
         </Paper>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-11 my-8 gap-4">
@@ -47,7 +47,7 @@ const Overview = () => {
           </div>
         </Paper>
         <Paper className="md:col-span-4">
-          <PieChartsRoleCount />
+          <PieChartRoleCount />
         </Paper>
       </div>
     </div>
