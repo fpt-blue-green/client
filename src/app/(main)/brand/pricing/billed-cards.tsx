@@ -98,8 +98,8 @@ const BilledCards = () => {
         <div className="border border-foreground col-span-1 px-8 py-5 rounded-md bg-card-foreground">
           <h5 className="text-center text-base text-muted">Premium</h5>
           <h3 className="text-3xl my-6 text-center font-semibold text-muted">
-            {isMonthlyBilled ? formats.price(469000) : formats.price(1416000)}
-            <span className="text-base">{isMonthlyBilled ? '/tháng' : '/3 tháng'}</span>
+            {isMonthlyBilled ? formats.price(469000) : formats.price(1195950)}
+            <span className="text-base">{isMonthlyBilled ? '/tháng' : '/quý'}</span>
           </h3>
           <div className="flex flex-col gap-4 mb-12">
             <p className="font-semibold text-muted">Mọi quyền lời cơ bản</p>

@@ -3,6 +3,8 @@ import CardCampaign from './components/card-campaign';
 import Paper from '@/components/custom/paper';
 import { Metadata } from 'next';
 import AnalyticsCards from './analytics-cards';
+import { PieChartRoleCount } from './piechart-role-count';
+import { PieChartJobStatus } from './piechart-jobstatus-count';
 
 // Mock
 const campaignCardDetails = {
@@ -25,11 +27,16 @@ const Overview = () => {
       <p className="text-sm text-muted-foreground">Dưới đây là số liệu phân tích của hệ thống gần đây!</p>
       <AnalyticsCards />
       <div className="grid grid-cols-1 lg:grid-cols-11 mt-4 gap-4">
-        <Paper className="md:col-span-6">
+        <Paper className="md:col-span-7">
           <OverviewChart />
         </Paper>
-        <Paper className="md:col-span-5">
-          <h3 className="font-semibold">Chiến dịch gần đây</h3>
+        <Paper className="md:col-span-4">
+          <PieChartJobStatus />
+        </Paper>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-11 my-8 gap-4">
+        <Paper className="md:col-span-7">
+          <h3 className="font-semibold">Danh sách người dùng có doanh thu hàng đầu</h3>
           <p className="text-muted-foreground text-sm">Khoảng 110 chiến dịch tháng này.</p>
           <div className="mt-8 flex flex-col gap-8">
             <CardCampaign details={campaignCardDetails} />
@@ -38,6 +45,9 @@ const Overview = () => {
             <CardCampaign details={campaignCardDetails} />
             <CardCampaign details={campaignCardDetails} />
           </div>
+        </Paper>
+        <Paper className="md:col-span-4">
+          <PieChartRoleCount />
         </Paper>
       </div>
     </div>

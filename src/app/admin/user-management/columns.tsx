@@ -103,6 +103,7 @@ export const banUserColumns: ColumnDef<IBanUserManagement, IBanUserManagement>[]
     enableSorting: true,
     cell: ({ row }) => <div className="pl-4">{formats.date(row.original.banDate)}</div>,
   },
+
   {
     id: 'bannedBy',
     accessorKey: 'bannedBy',

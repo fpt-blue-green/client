@@ -4,7 +4,7 @@ import Table, { TableRef } from '@/components/custom/data-table';
 import { columns, filters } from './columns';
 import { Button, ButtonProps } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { useRef, useState } from 'react';
+import { forwardRef, useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +19,11 @@ import ActionForm from './action-form';
 import { userRequest } from '@/request';
 import IUserManagement from '@/types/user-management';
 
-const UserTable = () => {
+interface IUserTableProps {
+  reloadTable: () => void;
+}
+
+const UserTable = forwardRef<TableRef, IUserTableProps>((props, ref) => {
   const columnsWithActions: ColumnDef<IUserManagement, IUserManagement>[] = [
     ...columns,
     {
@@ -70,10 +74,7 @@ const UserTable = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isBanOrUnBanForm, setIsBanOrUnBanForm] = useState<boolean>(false);
   const [isBan, setIsBan] = useState<boolean>(false);
-  const tableRef = useRef<TableRef>(null);
-  const reloadTable = async () => {
-    await tableRef.current?.reload();
-  };
+
   const handleDelete = (user: IUserManagement) => () => {
     const userDeletion = userRequest.delete(user.id);
     emitter.confirm({
@@ -82,7 +83,7 @@ const UserTable = () => {
         toast.promise(userDeletion, {
           loading: 'Đang tải',
           success: () => {
-            reloadTable();
+            props.reloadTable();
             return 'Đã xóa người dùng thành công.';
           },
           error: (err) => err?.message || constants.sthWentWrong,
@@ -113,17 +114,20 @@ const UserTable = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <Table columns={columnsWithActions} url="/User" filters={filters} buttons={buttons} />
+      <Table columns={columnsWithActions} url="/User" filters={filters} buttons={buttons} ref={ref} />
       <DialogContent>
         <ActionForm
           handleClose={handleClose}
           item={user}
-          reloadTable={reloadTable}
+          reloadTable={props.reloadTable}
           isBanOrUnBanForm={isBanOrUnBanForm}
           isBan={isBan}
         />
       </DialogContent>
     </Dialog>
   );
-};
+});
+
+UserTable.displayName = 'UserTable';
+
 export default UserTable;
