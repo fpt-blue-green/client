@@ -15,7 +15,7 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import config from '@/config';
 import { useAuthUser } from '@/hooks';
@@ -196,12 +196,12 @@ const WithdrawForm = ({ onClose }: { onClose: () => void }) => {
   };
 
   const handleChangeBank = (bank: IBank) => {
+    setBank(bank);
+    form.setValue('bankId', bank.bin);
+    setOpen(false);
     functions
       .getDominantColor(bank.logo_url || '')
       .then((color) => {
-        setBank(bank);
-        form.setValue('bankId', bank.bin);
-        setOpen(false);
         setBankColor(color);
       })
       .catch(() => {});
@@ -235,6 +235,7 @@ const WithdrawForm = ({ onClose }: { onClose: () => void }) => {
                 name="accountNo"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel required>Số tài khoản</FormLabel>
                     <FormControl>
                       <Input {...field} placeholder="Nhập số tài khoản" fullWidth />
                     </FormControl>
@@ -247,6 +248,7 @@ const WithdrawForm = ({ onClose }: { onClose: () => void }) => {
                 name="amount"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel required>Số tiền</FormLabel>
                     <FormControl>
                       <PriceInput {...field} placeholder="Nhập số tiền muốn rút" fullWidth />
                     </FormControl>

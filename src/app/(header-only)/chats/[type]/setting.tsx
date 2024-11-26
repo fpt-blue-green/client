@@ -35,7 +35,7 @@ const Setting: FC<SettingProps> = ({ chat }) => {
 
   const handleAdd = (users: IUser[]) => {
     toast.promise(
-      chatRequest.addMember(
+      chatRequest.addMembers(
         chat.chatId,
         users.map((u) => u.id),
       ),

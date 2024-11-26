@@ -4,15 +4,17 @@ import { Button } from '@/components/ui/button';
 import config from '@/config';
 import { constants, emitter } from '@/lib/utils';
 import { campaignsRequest, fetchRequest } from '@/request';
+import chatRequest from '@/request/chat.request';
 import { ECampaignStatus } from '@/types/enum';
 import { EyeOpenIcon, Pencil1Icon, PlayIcon, StopIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 const Actions = () => {
   const { id } = useParams<{ id: string }>();
   const { data, mutate } = fetchRequest.campaign.getById(id);
+  const router = useRouter();
 
   if (!data) return;
 
@@ -51,6 +53,29 @@ const Actions = () => {
     });
   };
 
+  const handleChat = () => {
+    campaignsRequest.getChat(data.id).then((res) => {
+      if (res.data?.id) {
+        router.push(config.routes.chats.details(true, res.data.id));
+      } else {
+        campaignsRequest
+          .createChat(data.id)
+          .then((resp) => {
+            const chatId = resp.data?.id;
+            if (chatId) {
+              // Thêm thành viên sau khi tạo
+              campaignsRequest.participants(chatId).then((res) => {
+                const members = res.data?.map((mem) => mem.id);
+                chatRequest.addMembers(chatId, members || []);
+              });
+              router.push(config.routes.chats.details(true, chatId));
+            }
+          })
+          .catch((err) => toast.error(err?.message));
+      }
+    });
+  };
+
   return (
     <div className="flex max-md:flex-col-reverse items-center max-md:items-stretch gap-2 pt-4">
       {data.status === ECampaignStatus.Published && (
@@ -68,8 +93,8 @@ const Actions = () => {
           Kết thúc
         </Button>
       )}
-      <Button variant="outline" size="large" startIcon={<EyeOpenIcon />} asChild>
-        <Link href={config.routes.campaigns.details(data.id)}>Xem chi tiết</Link>
+      <Button variant="outline" size="large" startIcon={<EyeOpenIcon />} onClick={handleChat}>
+        Nhóm chat
       </Button>
     </div>
   );
