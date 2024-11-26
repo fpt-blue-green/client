@@ -6,7 +6,7 @@ import { constants, emitter } from '@/lib/utils';
 import { campaignsRequest, fetchRequest } from '@/request';
 import chatRequest from '@/request/chat.request';
 import { ECampaignStatus } from '@/types/enum';
-import { EyeOpenIcon, Pencil1Icon, PlayIcon, StopIcon } from '@radix-ui/react-icons';
+import { ChatBubbleIcon, Pencil1Icon, PlayIcon, StopIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -64,7 +64,7 @@ const Actions = () => {
             const chatId = resp.data?.id;
             if (chatId) {
               // Thêm thành viên sau khi tạo
-              campaignsRequest.participants(chatId).then((res) => {
+              campaignsRequest.participants(data.id).then((res) => {
                 const members = res.data?.map((mem) => mem.id);
                 chatRequest.addMembers(chatId, members || []);
               });
@@ -93,7 +93,7 @@ const Actions = () => {
           Kết thúc
         </Button>
       )}
-      <Button variant="outline" size="large" startIcon={<EyeOpenIcon />} onClick={handleChat}>
+      <Button variant="outline" size="large" startIcon={<ChatBubbleIcon />} onClick={handleChat}>
         Nhóm chat
       </Button>
     </div>

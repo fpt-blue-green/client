@@ -85,6 +85,18 @@ export const contentsSchema = z
     });
   });
 
+export const meetingSchema = z.object({
+  roomName: z
+    .string()
+    .min(1, 'Vui lòng nhập tên phòng')
+    .regex(/[^A-Za-z0-9_-]/g, 'Tên phòng không hợp lệ'),
+  startAt: z.date({ required_error: 'Vui lòng chọn thời gian bắt đầu' }),
+  endAt: z.date({ required_error: 'Vui lòng chọn thời gian kết thúc' }),
+  participators: z.array(z.string()),
+  description: z.string(),
+});
+
 export type BasicBodyType = z.infer<typeof basicSchema>;
 export type ContentBodyType = z.infer<typeof contentSchema>;
 export type ContentsBodyType = z.infer<typeof contentsSchema>;
+export type MeetingBodyType = z.infer<typeof meetingSchema>;

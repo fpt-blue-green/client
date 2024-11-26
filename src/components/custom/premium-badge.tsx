@@ -14,6 +14,7 @@ import {
 } from '../ui/dialog';
 import { Button } from '../ui/button';
 import Link from 'next/link';
+import config from '@/config';
 
 interface PremiumBadgeProps extends BadgeProps {
   title?: string;
@@ -48,7 +49,7 @@ const PremiumBadge: FC<PremiumBadgeProps> = ({
           <div className="mx-8 bg-gradient rounded-lg py-8 text-8xl text-center">🔒</div>
           <DialogFooter>
             <Button variant="foreground" size="large" fullWidth asChild>
-              <Link href="#">Khám phá</Link>
+              <Link href={config.routes.brand.pricing}>Khám phá</Link>
             </Button>
           </DialogFooter>
         </DialogContent>
