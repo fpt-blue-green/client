@@ -1,6 +1,7 @@
 import http from '@/lib/http';
 import { BasicBodyType, ContentBodyType } from '@/schema-validations/campaign.schema';
 import ICampaign from '@/types/campaign';
+import IUser from '@/types/user';
 
 const campaignsRequest = {
   getCampaignById: (id: string) =>
@@ -21,6 +22,9 @@ const campaignsRequest = {
   publish: (id: string) => http.put(`/Campaigns/${id}/publish`),
   start: (id: string) => http.put(`/Campaigns/${id}/start`),
   end: (id: string) => http.put(`/Campaigns/${id}/end`),
+  getChat: (id: string) => http.get<{ id: string }>(`/Campaigns/${id}/chat`),
+  createChat: (id: string) => http.post<{ id: string }>('/Contact/campaignChat/create', { campaignId: id }),
+  participants: (id: string) => http.get<IUser[]>(`/Campaigns/${id}/participant`),
 };
 
 export default campaignsRequest;
