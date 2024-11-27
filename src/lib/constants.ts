@@ -124,6 +124,7 @@ export const convertRoleTypeToText = (roleType: ERole): string => {
       return 'Khác';
   }
 };
+
 export const convertMetricTrendType = (value: string): string => {
   switch (value) {
     case 'Revenue':
@@ -187,4 +188,38 @@ export const paymentType: { [key: string]: EnumLabel } = {
     label: 'Nâng cấp tài khoản Premium',
     color: 'info',
   },
+};
+
+export const convertReportReason = (reason: number): string => {
+  switch (reason) {
+    case 0:
+      return 'Lí do khác';
+    case 1:
+      return 'Nội dung không phù hợp';
+    case 2:
+      return 'Ngôn từ thù địch';
+    case 3:
+      return 'Gian lận';
+    case 4:
+      return 'Nội dung giảm mạo';
+    case 5:
+      return 'Không hoàn thành công việc';
+    case 6:
+      return 'Vi phạm điều khoản hợp đồng';
+    default:
+      return 'Khác';
+  }
+};
+
+export const convertReportStatus = (status: number): string => {
+  switch (status) {
+    case 0:
+      return 'Chờ xử lí';
+    case 1:
+      return 'Bị từ chối';
+    case 2:
+      return 'Được chấp thuận';
+    default:
+      return 'Khác';
+  }
 };
