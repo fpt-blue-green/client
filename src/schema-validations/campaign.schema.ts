@@ -85,16 +85,35 @@ export const contentsSchema = z
     });
   });
 
-export const meetingSchema = z.object({
-  roomName: z
-    .string()
-    .min(1, 'Vui lòng nhập tên phòng')
-    .regex(/[^A-Za-z0-9_-]/g, 'Tên phòng không hợp lệ'),
-  startAt: z.date({ required_error: 'Vui lòng chọn thời gian bắt đầu' }),
-  endAt: z.date({ required_error: 'Vui lòng chọn thời gian kết thúc' }),
-  participators: z.array(z.string()),
-  description: z.string(),
-});
+export const meetingSchema = z
+  .object({
+    roomName: z
+      .string()
+      .min(1, 'Vui lòng nhập tên phòng')
+      .regex(/^[A-Za-z0-9_-]+$/, 'Tên phòng chỉ được chứa chữ cái, chữ số, _, -'),
+    startAt: z
+      .date({ required_error: 'Vui lòng chọn thời gian bắt đầu' })
+      .min(new Date(), 'Thời gian phải lớn hơn thời gian hiện tại'),
+    endAt: z
+      .date({ required_error: 'Vui lòng chọn thời gian kết thúc' })
+      .min(new Date(), 'Thời gian phải lớn hơn thời gian hiện tại'),
+    participators: z.array(z.string()).min(1, 'Phải có ít nhất một người tham gia'),
+    description: z.string(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.startAt >= data.endAt) {
+      ctx.addIssue({
+        path: ['startAt'],
+        code: 'custom',
+        message: 'Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc',
+      });
+      ctx.addIssue({
+        path: ['endAt'],
+        code: 'custom',
+        message: 'Thời gian kết thúc phải lớn hơn thời gian bắt đầu',
+      });
+    }
+  });
 
 export type BasicBodyType = z.infer<typeof basicSchema>;
 export type ContentBodyType = z.infer<typeof contentSchema>;

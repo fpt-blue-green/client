@@ -18,6 +18,7 @@ import Performance from './performance';
 import Actions from './components/actions';
 import Contents from './contents';
 import { ECampaignStatus } from '@/types/enum';
+import Meetings from './meetings';
 
 interface TrackingProps {
   params: { id: string };
@@ -72,12 +73,15 @@ const Tracking: FC<TrackingProps> = async ({ params, searchParams }) => {
         </div>
       </div>
       <Tabs defaultValue={searchParams.tab || 'member'}>
-        <TabsList className="grid w-full grid-cols-3 *:flex *:max-lg:flex-col *:items-center *:gap-2">
+        <TabsList className="grid w-full md:grid-cols-4 grid-cols-2 *:flex *:max-lg:flex-col *:items-center *:gap-2">
           <TabsTrigger value="member" className="flex items-center gap-2 py-2" asChild>
             <Link href="?tab=member">Người tham gia</Link>
           </TabsTrigger>
           <TabsTrigger value="content" className="flex items-center gap-2 py-2" asChild>
             <Link href="?tab=content">Nội dung đăng tải</Link>
+          </TabsTrigger>
+          <TabsTrigger value="meetings" className="flex items-center gap-2 py-2" asChild>
+            <Link href="?tab=meetings">Phòng họp</Link>
           </TabsTrigger>
           <TabsTrigger value="performance" className="flex items-center gap-2 py-2" asChild>
             <Link href="?tab=performance">Hiệu suất</Link>
@@ -91,6 +95,9 @@ const Tracking: FC<TrackingProps> = async ({ params, searchParams }) => {
         </TabsContent>
         <TabsContent value="content">
           <Contents />
+        </TabsContent>
+        <TabsContent value="meetings">
+          <Meetings />
         </TabsContent>
       </Tabs>
     </div>

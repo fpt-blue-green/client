@@ -1,5 +1,5 @@
 import http from '@/lib/http';
-import { BasicBodyType, ContentBodyType } from '@/schema-validations/campaign.schema';
+import { BasicBodyType, ContentBodyType, MeetingBodyType } from '@/schema-validations/campaign.schema';
 import ICampaign from '@/types/campaign';
 import IUser from '@/types/user';
 
@@ -25,6 +25,7 @@ const campaignsRequest = {
   getChat: (id: string) => http.get<{ id: string }>(`/Campaigns/${id}/chat`),
   createChat: (id: string) => http.post<{ id: string }>('/Contact/campaignChat/create', { campaignId: id }),
   participants: (id: string) => http.get<IUser[]>(`/Campaigns/${id}/participant`),
+  createMeeting: (id: string, body: MeetingBodyType) => http.post('/Utility/meetingRoom', { campaignId: id, ...body }),
 };
 
 export default campaignsRequest;

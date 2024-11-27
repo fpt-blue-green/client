@@ -11,6 +11,7 @@ import { IFilterList } from '@/types/filter-list';
 import IInfluencer from '@/types/influencer';
 import IInfluencerJobs from '@/types/influencer-jobs';
 import IJob from '@/types/job';
+import IMeeting from '@/types/meeting';
 import { IPaymentHistory } from '@/types/payment';
 import { ISystemSetting } from '@/types/system-settings';
 import IUser from '@/types/user';
@@ -56,6 +57,7 @@ const fetchRequest = {
     statisticalPlatform: (id: string) =>
       useSWRImmutable<{ platform: EPlatform; value: number }[]>(`/Campaigns/${id}/jobDetailBasePlatform`, fetcher),
     participants: (id: string) => useSWR<IUser[]>(`/Campaigns/${id}/participant`, fetcher),
+    meetings: (id: string) => useSWRImmutable<IMeeting[]>(`/Campaigns/${id}/meetingRoom`),
   },
   influencer: {
     jobs: (

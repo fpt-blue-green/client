@@ -9,6 +9,7 @@ import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import IUser from '@/types/user';
 import { Button } from './ui/button';
+import NoData from './no-data';
 
 interface PeoplePickerPopupProps extends PeoplePickerProps {
   children: ReactNode;
@@ -88,7 +89,9 @@ const PeoplePicker = ({ campaignId, selectedIds, onSubmit }: PeoplePickerProps) 
       <Command>
         <CommandInput placeholder="Nhập tên người dùng" />
         <CommandList>
-          <CommandEmpty>Không tìm thấy người dùng nào</CommandEmpty>
+          <CommandEmpty>
+            <NoData description="Không tìm thấy người dùng nào" />
+          </CommandEmpty>
           <CommandGroup>
             {data
               ?.filter((u) => !selectedIds?.includes(u.id))
