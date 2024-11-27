@@ -96,12 +96,13 @@ export const meetingSchema = z
       .min(new Date(), 'Thời gian phải lớn hơn thời gian hiện tại'),
     endAt: z
       .date({ required_error: 'Vui lòng chọn thời gian kết thúc' })
-      .min(new Date(), 'Thời gian phải lớn hơn thời gian hiện tại'),
+      .min(new Date(), 'Thời gian phải lớn hơn thời gian hiện tại')
+      .optional(),
     participators: z.array(z.string()).min(1, 'Phải có ít nhất một người tham gia'),
     description: z.string(),
   })
   .superRefine((data, ctx) => {
-    if (data.startAt >= data.endAt) {
+    if (data.endAt && data.startAt >= data.endAt) {
       ctx.addIssue({
         path: ['startAt'],
         code: 'custom',

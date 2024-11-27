@@ -24,6 +24,7 @@ import Link from 'next/link';
 import { FC } from 'react';
 import { LuUserPlus2 } from 'react-icons/lu';
 import { toast } from 'sonner';
+import Meetings from './meetings';
 
 interface SettingProps {
   chat: IChat;
@@ -75,6 +76,14 @@ const Setting: FC<SettingProps> = ({ chat }) => {
           <AccordionItem value="info">
             <AccordionTrigger>Thông tin</AccordionTrigger>
           </AccordionItem>
+          {chat.isCampaign && chat.campaignId && (
+            <AccordionItem value="meetings">
+              <AccordionTrigger>Phòng họp</AccordionTrigger>
+              <AccordionContent>
+                <Meetings campaignId={chat.campaignId} />
+              </AccordionContent>
+            </AccordionItem>
+          )}
           {chat.isCampaign && chat.campaignId && (
             <AccordionItem value="member">
               <AccordionTrigger>Thành viên</AccordionTrigger>

@@ -57,7 +57,7 @@ const fetchRequest = {
     statisticalPlatform: (id: string) =>
       useSWRImmutable<{ platform: EPlatform; value: number }[]>(`/Campaigns/${id}/jobDetailBasePlatform`, fetcher),
     participants: (id: string) => useSWR<IUser[]>(`/Campaigns/${id}/participant`, fetcher),
-    meetings: (id: string) => useSWRImmutable<IMeeting[]>(`/Campaigns/${id}/meetingRoom`),
+    meetings: (id: string) => useSWRImmutable<IFilterList<IMeeting>>(`/Campaigns/${id}/meetingRoom`, fetcher),
   },
   influencer: {
     jobs: (

@@ -122,7 +122,7 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
               Bộ lọc
             </Button>
           </SheetTrigger>
-          <SheetContent hideCloseBtn>
+          <SheetContent className="overflow-y-scroll" hideCloseBtn>
             <SheetHeader className="border-b">
               <SheetTitle className="flex items-center justify-between">
                 Bộ lọc

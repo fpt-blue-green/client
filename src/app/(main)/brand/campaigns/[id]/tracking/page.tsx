@@ -18,7 +18,6 @@ import Performance from './performance';
 import Actions from './components/actions';
 import Contents from './contents';
 import { ECampaignStatus } from '@/types/enum';
-import Meetings from './meetings';
 
 interface TrackingProps {
   params: { id: string };
@@ -95,9 +94,6 @@ const Tracking: FC<TrackingProps> = async ({ params, searchParams }) => {
         </TabsContent>
         <TabsContent value="content">
           <Contents />
-        </TabsContent>
-        <TabsContent value="meetings">
-          <Meetings />
         </TabsContent>
       </Tabs>
     </div>
