@@ -86,7 +86,7 @@ const fetchRequest = {
   },
   job: {
     statistical: () => useSWR<{ jobStatus: EJobStatus; count: number }[]>('/Job/statistical', fetcher),
-    links: (id: string) => useSWRImmutable<string[]>(`/Job/${id}/link`, fetcher),
+    links: (id: string) => useSWRImmutable<{ link: string; isApprove: boolean }[]>(`/Job/${id}/link`, fetcher),
     statisticalChart: (id?: string, link?: string) => {
       const searchParams = new URLSearchParams();
       if (link) {

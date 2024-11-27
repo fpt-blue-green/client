@@ -23,7 +23,7 @@ const Contents = () => {
   const selected = searchParams.get('selected');
   const { data, isLoading, mutate } = fetchRequest.campaign.members(
     id,
-    [EJobStatus.Approved, EJobStatus.InProgress],
+    [EJobStatus.Approved, EJobStatus.InProgress, EJobStatus.Failed, EJobStatus.Completed],
     [EOfferStatus.Done],
   );
   const { data: links } = fetchRequest.job.links(selected || '');
@@ -65,7 +65,7 @@ const Contents = () => {
                 <SelectContent>
                   <SelectGroup>
                     <SelectItem value="all">Tất cả</SelectItem>
-                    {links?.map((link, index) => (
+                    {links?.map(({ link }, index) => (
                       <SelectItem key={index} value={link}>
                         {link}
                       </SelectItem>

@@ -36,7 +36,7 @@ const Meetings = () => {
     <>
       <Table
         columns={columns}
-        url={`/Campaigns/${id}/meetingRooms`}
+        url={`/Campaigns/${id}/meetingRoom`}
         buttons={[
           {
             children: 'Tạo phòng',
