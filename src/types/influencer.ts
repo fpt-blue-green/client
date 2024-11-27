@@ -32,5 +32,34 @@ interface IInfluencer {
   packages: IPackage[];
   images: IImage[];
 }
+interface IInfluencer {
+  id: string;
+  userId: string;
+  fullName: string;
+  nickName: string;
+  slug: string;
+  avatar: string;
+  gender: EGender;
+  summarise: string;
+  description?: string;
+  address: string;
+  phone: string;
+  createdAt?: string;
+  modifiedAt?: string;
+  rateAverage: number;
+  averagePrice: number;
+  isPublish: boolean;
+  channels: IChannel[];
+  tags: ITag[];
+  packages: IPackage[];
+  images: IImage[];
+}
+
+export interface IUserTopRevenue {
+  displayName: string;
+  email: string;
+  avatar: string;
+  amount: number;
+}
 
 export default IInfluencer;
