@@ -4,41 +4,41 @@ import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle
 import { Button } from '@/components/ui/button';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import ITag from '@/types/tag';
-import { BasicBodyType, basicSchema } from '@/schema-validations/tag.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { tagRequest } from '@/request';
+import { adminRequest } from '@/request';
 import { toast } from 'sonner';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { constants } from '@/lib/utils';
+import IReport from '@/types/report';
+import { BanBodyType, banSchema } from '@/schema-validations/user.schema';
+import { EBanDate } from '@/types/enum';
 
 interface ActionFormProps {
-  item?: ITag;
+  item?: IReport;
   reload: () => Promise<void>;
   handleClose: () => void;
 }
 
 const ActionForm: FC<ActionFormProps> = ({ item, reload, handleClose }) => {
   const [loading, setLoading] = useState(false);
-  const form = useForm<BasicBodyType>({
-    resolver: zodResolver(basicSchema),
+  const form = useForm<BanBodyType>({
+    resolver: zodResolver(banSchema),
     defaultValues: {
-      name: item?.name || '',
-      isPremium: item?.isPremium || false,
+      reason: '',
+      bannedTime: EBanDate.OneWeek,
     },
   });
-
-  const handleSubmit = (values: BasicBodyType) => {
+  const handleSubmit = (values: BanBodyType) => {
     setLoading(true);
-    const caller = item ? tagRequest.updateTag(item?.id || '', values) : tagRequest.createTag(values);
+    const caller = adminRequest.approveReport(item?.id || '', values);
     toast.promise(caller, {
       loading: 'Đang tải',
       success: () => {
         reload();
         handleClose();
-        return item ? 'Cập nhật thẻ thành công.' : 'Tạo thẻ thành công.';
+        return 'Đã chấp thuận đơn tố cáo thành công.';
       },
       error: (err) => err?.message || constants.sthWentWrong,
       finally: () => setLoading(false),
@@ -49,18 +49,18 @@ const ActionForm: FC<ActionFormProps> = ({ item, reload, handleClose }) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <DialogHeader>
-          <DialogTitle>{item ? 'Chỉnh sửa thẻ' : 'Thêm thẻ'}</DialogTitle>
+          <DialogTitle>Chấp thuận đơn tố cáo</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-6">
           <FormField
             control={form.control}
-            name="name"
+            name="reason"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Tên thẻ</FormLabel>
+                <FormLabel>Lí do</FormLabel>
                 <FormControl className="w-full">
-                  <Input id="name" placeholder="Tên thẻ" {...field} />
+                  <Input id="reason" placeholder="Nhập lí do..." {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -68,19 +68,22 @@ const ActionForm: FC<ActionFormProps> = ({ item, reload, handleClose }) => {
           />
           <FormField
             control={form.control}
-            name="isPremium"
+            name="bannedTime"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Loại thẻ</FormLabel>
-                <Select onValueChange={(value) => field.onChange(value === 'true')} value={String(field.value)}>
+                <FormLabel>{'Tố cáo trong vòng'}</FormLabel>
+                <Select
+                  disabled={true}
+                  onValueChange={(value) => field.onChange(parseInt(value))}
+                  value={EBanDate.None.toString()}
+                >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Chọn hạng thẻ" />
+                      <SelectValue placeholder="Chọn thời hạn tố cáo" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="true">Premium</SelectItem>
-                    <SelectItem value="false">Thông thường</SelectItem>
+                    <SelectItem value={EBanDate.None.toString()}>Vô thời hạn</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
