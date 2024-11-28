@@ -37,6 +37,7 @@ const PeoplePickerPopup: FC<PeoplePickerPopupProps> = ({
         const users = data.filter((u) => selectedEmails?.includes(u.email) || selectedIds?.includes(u.id));
         onSubmit(users);
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   return (
