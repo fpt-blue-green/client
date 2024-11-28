@@ -37,15 +37,15 @@ const SocialPieChart: FC<SocialPieChartProps> = ({ id, total = 0 }) => {
     },
     [EPlatform.TitTok]: {
       label: PlatformData[EPlatform.TitTok].name,
-      color: 'hsl(var(--foreground))',
+      color: 'hsl(var(--chart-1))',
     },
     [EPlatform.Instagram]: {
       label: PlatformData[EPlatform.Instagram].name,
-      color: '#833AB4',
+      color: 'hsl(var(--chart-3))',
     },
     [EPlatform.YouTube]: {
       label: PlatformData[EPlatform.YouTube].name,
-      color: '#FF0000',
+      color: 'hsl(var(--chart-5))',
     },
   } satisfies ChartConfig;
 

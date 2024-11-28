@@ -24,7 +24,7 @@ const AdminMenuItem: FC<AdminMenuItemProps> = ({ item, collapse }) => {
           { 'text-foreground bg-accent font-semibold': pathname === item.route, 'px-0 justify-center': collapse },
         )}
       >
-        <span className="size-4">{item.icon}</span>
+        <span className="text-base">{item.icon}</span>
         <span className={cn({ 'sr-only': collapse })}>{item.content}</span>
       </Link>
     </Tooltip>

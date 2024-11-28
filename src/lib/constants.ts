@@ -147,7 +147,7 @@ export const paymentStatus: { [key: string]: EnumLabel } = {
     textColor: 'text-warning',
   },
   [EPaymentStatus.Rejected]: {
-    label: 'Bị từ chối',
+    label: 'Từ chối',
     color: 'destructive',
     textColor: 'text-destructive',
   },
@@ -185,7 +185,7 @@ export const paymentType: { [key: string]: EnumLabel } = {
     color: 'info',
   },
   [EPaymentType.BuyPremium]: {
-    label: 'Nâng cấp tài khoản Premium',
+    label: 'Nâng cấp Premium',
     color: 'info',
   },
 };
