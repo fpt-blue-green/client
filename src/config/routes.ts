@@ -46,6 +46,7 @@ const routes = {
     user: '/admin/user-management',
     statistic: '/admin/statistic',
     tag: '/admin/tag-management',
+    report: '/admin/report-management',
     setting: '/admin/setting-management',
   },
   chats: {

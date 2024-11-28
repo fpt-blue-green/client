@@ -1,9 +1,10 @@
 import config from '@/config';
-import { DashboardIcon } from '@radix-ui/react-icons';
+import { DashboardIcon, PaperPlaneIcon } from '@radix-ui/react-icons';
 import { SettingsIcon } from 'lucide-react';
 import { ReactNode } from 'react';
 import { FaPeopleGroup, FaTag } from 'react-icons/fa6';
 import { GiExecutionerHood } from 'react-icons/gi';
+import { PiNotificationFill } from 'react-icons/pi';
 
 export interface SideBarItemModel {
   route: string;
@@ -31,6 +32,11 @@ export const items: SideBarItemModel[] = [
     route: config.routes.admin.tag,
     icon: <FaTag />,
     content: 'Thẻ',
+  },
+  {
+    route: config.routes.admin.report,
+    icon: <PaperPlaneIcon />,
+    content: 'Báo cáo',
   },
   {
     route: config.routes.admin.setting,
