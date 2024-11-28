@@ -39,6 +39,19 @@ const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(defaultSelected);
 
     const handleSelect = (value?: Date) => {
+      const date = selected || selectedDate;
+      if (hasTime && date && value) {
+        if (
+          value.getFullYear() !== date.getFullYear() ||
+          value.getMonth() !== date.getMonth() ||
+          value.getDate() !== date.getDate()
+        ) {
+          // Giữ lại giờ, phút, giây từ `date`
+          value.setHours(date.getHours());
+          value.setMinutes(date.getMinutes());
+          value.setSeconds(date.getSeconds());
+        }
+      }
       setSelectedDate(value);
       setInputValue(value ? formats.date(value, hasTime) : '');
       onChange?.(value as any);
@@ -76,9 +89,9 @@ const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
           {hasTime && (
             <div className="flex items-center gap-1">
               <Label className="mr-4">Thời gian</Label>
-              <TimeInput picker="hours" date={selectedDate} setDate={handleSelect} />
-              <TimeInput picker="minutes" date={selectedDate} setDate={handleSelect} />
-              <TimeInput picker="seconds" date={selectedDate} setDate={handleSelect} />
+              <TimeInput picker="hours" date={selected || selectedDate} setDate={handleSelect} />
+              <TimeInput picker="minutes" date={selected || selectedDate} setDate={handleSelect} />
+              <TimeInput picker="seconds" date={selected || selectedDate} setDate={handleSelect} />
             </div>
           )}
         </PopoverContent>

@@ -1,4 +1,5 @@
 import { EContentType, EPlatform } from '@/types/enum';
+import { differenceInHours, isBefore } from 'date-fns';
 import { z } from 'zod';
 
 export const basicSchema = z
@@ -96,13 +97,13 @@ export const meetingSchema = z
       .min(new Date(), 'Thời gian phải lớn hơn thời gian hiện tại'),
     endAt: z
       .date({ required_error: 'Vui lòng chọn thời gian kết thúc' })
-      .min(new Date(), 'Thời gian phải lớn hơn thời gian hiện tại')
-      .optional(),
+      .min(new Date(), 'Thời gian phải lớn hơn thời gian hiện tại'),
     participators: z.array(z.string()).min(1, 'Phải có ít nhất một người tham gia'),
     description: z.string(),
   })
   .superRefine((data, ctx) => {
-    if (data.endAt && data.startAt >= data.endAt) {
+    const { startAt, endAt } = data;
+    if (isBefore(endAt, startAt)) {
       ctx.addIssue({
         path: ['startAt'],
         code: 'custom',
@@ -112,6 +113,12 @@ export const meetingSchema = z
         path: ['endAt'],
         code: 'custom',
         message: 'Thời gian kết thúc phải lớn hơn thời gian bắt đầu',
+      });
+    } else if (differenceInHours(endAt, startAt) < 2) {
+      ctx.addIssue({
+        path: ['endAt'],
+        code: 'custom',
+        message: 'Thời gian kết thúc phải cách thời gian bắt đầu ít nhất 2 tiếng',
       });
     }
   });

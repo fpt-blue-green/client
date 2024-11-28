@@ -17,9 +17,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useAuthBrand } from '@/hooks';
-import { formats } from '@/lib/utils';
+import { emitter, formats } from '@/lib/utils';
 import { campaignsRequest, fetchRequest } from '@/request';
 import { MeetingBodyType, meetingSchema } from '@/schema-validations/campaign.schema';
+import { ERole } from '@/types/enum';
 import IMeeting from '@/types/meeting';
 import IUser from '@/types/user';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,7 +31,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 const Meetings = ({ campaignId }: { campaignId: string; reload?: () => void }) => {
-  const { profile } = useAuthBrand();
+  const { session, profile } = useAuthBrand();
   const { data, mutate } = fetchRequest.campaign.meetings(campaignId);
   const [open, setOpen] = useState(false);
   const [meeting, setMeeting] = useState<IMeeting>();
@@ -45,31 +46,48 @@ const Meetings = ({ campaignId }: { campaignId: string; reload?: () => void }) =
     setOpen(true);
   };
 
+  const handleOpenMeeting = (name: string) => () => {
+    campaignsRequest.meeting
+      .open(name)
+      .then((res) => {
+        if (res.data) window.open(res.data, '_blank', 'noopener,noreferrer');
+      })
+      .catch((err) => toast.error(err?.message));
+  };
+
   return (
     <div className="flex flex-col gap-3">
-      {data?.items.map((meeting) => (
-        <div key={meeting.id} className="relative flex flex-col gap-1 group">
-          <Link href="#" className="truncate font-medium hover:text-sky-500">
-            {meeting.roomName}
-          </Link>
-          <p className="text-xs text-muted-foreground">
-            {formats.date(meeting.startAt, true, {
-              second: undefined,
-            })}
-            {meeting.endAt && ` - ${formats.date(meeting.endAt, true, { second: undefined })}`}
-          </p>
-          {profile && (
-            <Button
-              className="absolute top-1/2 right-0 -translate-y-1/2 hidden group-hover:flex"
-              variant="outline"
-              size="icon-sm"
-              onClick={handleEdit(meeting)}
+      {data?.items
+        .filter(
+          (m) =>
+            session &&
+            (session.user.role === ERole.Brand || m.isFirstTime || m.participants.includes(session.user.email)),
+        )
+        .map((meeting) => (
+          <div key={meeting.id} className="relative flex flex-col gap-1 group">
+            <Link
+              href="#"
+              className="truncate font-medium hover:text-sky-500"
+              onClick={handleOpenMeeting(meeting.roomName)}
             >
-              <Pencil1Icon />
-            </Button>
-          )}
-        </div>
-      ))}
+              {meeting.roomName}
+            </Link>
+            <p className="text-xs text-muted-foreground">
+              {formats.date(meeting.startAt, true, { second: undefined, year: undefined })}
+              {meeting.endAt && ` - ${formats.date(meeting.endAt, true, { second: undefined, year: undefined })}`}
+            </p>
+            {profile && (
+              <Button
+                className="absolute top-1/2 right-0 -translate-y-1/2 hidden group-hover:flex"
+                variant="outline"
+                size="icon-sm"
+                onClick={handleEdit(meeting)}
+              >
+                <Pencil1Icon />
+              </Button>
+            )}
+          </div>
+        ))}
       {profile && (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
@@ -86,7 +104,7 @@ const Meetings = ({ campaignId }: { campaignId: string; reload?: () => void }) =
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <DialogTitle>Thêm phòng họp</DialogTitle>
+            <DialogTitle>{meeting ? 'Chỉnh sửa phòng họp' : 'Thêm phòng họp'}</DialogTitle>
             <DialogDescription />
             <MeetingForm campaignId={campaignId} meeting={meeting} reload={handleReload} />
           </DialogContent>
@@ -120,15 +138,38 @@ const MeetingForm = ({
 
   const handleSubmit = (values: MeetingBodyType) => {
     setLoading(true);
-    toast.promise(campaignsRequest.createMeeting(campaignId, values), {
+    const caller = meeting
+      ? campaignsRequest.meeting.edit(values)
+      : campaignsRequest.meeting.create(campaignId, values);
+    toast.promise(caller, {
       loading: 'Đang tải',
       success: () => {
         reload();
-        return 'Tạo phòng họp thành công';
+        return meeting ? 'Chỉnh sửa phòng họp thành công' : 'Tạo phòng họp thành công';
       },
       error: (err) => err?.message,
       finally: () => setLoading(false),
     });
+  };
+
+  const handleDelete = () => {
+    if (meeting) {
+      emitter.confirm({
+        callback: () => {
+          setLoading(true);
+          toast.promise(campaignsRequest.meeting.delete(meeting.roomName), {
+            loading: 'Đang tải',
+            success: () => {
+              reload();
+              return 'Xóa phòng thành công';
+            },
+            error: (err) => err?.message,
+            finally: () => setLoading(false),
+          });
+        },
+        content: 'Người dùng sẽ không thấy và tham gia vào phòng họp nữa. Bạn có chắc sẽ xóa phòng họp này?',
+      });
+    }
   };
 
   const handleChangeParticipators = (users: IUser[]) => {
@@ -150,7 +191,7 @@ const MeetingForm = ({
             <FormItem>
               <FormLabel required>Tên phòng</FormLabel>
               <FormControl>
-                <Input placeholder="Ví dụ: Ten_Phong_Hop" {...field} fullWidth />
+                <Input placeholder="Ví dụ: Ten_Phong_Hop" {...field} fullWidth disabled={!!meeting} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -181,7 +222,7 @@ const MeetingForm = ({
           name="endAt"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Thời gian kết thúc</FormLabel>
+              <FormLabel required>Thời gian kết thúc</FormLabel>
               <FormControl>
                 <DatePicker
                   hasTime
@@ -221,6 +262,7 @@ const MeetingForm = ({
                 <PeoplePickerPopup
                   campaignId={campaignId}
                   selectedIds={selectedUsers.map((u) => u.id)}
+                  selectedEmails={meeting?.participants}
                   onSubmit={(users) => handleChangeParticipators([...selectedUsers, ...users])}
                 >
                   <Button variant="ghost" size="small" startIcon={<PlusIcon />}>
@@ -249,8 +291,13 @@ const MeetingForm = ({
           <DialogClose asChild>
             <Button variant="secondary">Hủy</Button>
           </DialogClose>
+          {meeting && (
+            <Button variant="destructive" loading={loading} onClick={handleDelete}>
+              Xóa
+            </Button>
+          )}
           <Button variant="gradient" type="submit" loading={loading}>
-            Tạo
+            Gửi
           </Button>
         </div>
       </form>

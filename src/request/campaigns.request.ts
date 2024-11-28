@@ -25,7 +25,12 @@ const campaignsRequest = {
   getChat: (id: string) => http.get<{ id: string }>(`/Campaigns/${id}/chat`),
   createChat: (id: string) => http.post<{ id: string }>('/Contact/campaignChat/create', { campaignId: id }),
   participants: (id: string) => http.get<IUser[]>(`/Campaigns/${id}/participant`),
-  createMeeting: (id: string, body: MeetingBodyType) => http.post('/Utility/meetingRoom', { campaignId: id, ...body }),
+  meeting: {
+    open: (name: string) => http.get<string>(`/Utility/meetingRoom/${name}/token`),
+    create: (id: string, body: MeetingBodyType) => http.post('/Utility/meetingRoom', { campaignId: id, ...body }),
+    edit: (body: MeetingBodyType) => http.put('/Utility/meetingRoom', body),
+    delete: (name: string) => http.delete<string>(`/Utility/meetingRoom/${name}`),
+  },
 };
 
 export default campaignsRequest;
