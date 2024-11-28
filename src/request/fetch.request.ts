@@ -11,6 +11,7 @@ import { IFilterList } from '@/types/filter-list';
 import IInfluencer from '@/types/influencer';
 import IInfluencerJobs from '@/types/influencer-jobs';
 import IJob from '@/types/job';
+import IMeeting from '@/types/meeting';
 import { IPaymentHistory } from '@/types/payment';
 import { ISystemSetting } from '@/types/system-settings';
 import IUser from '@/types/user';
@@ -56,6 +57,7 @@ const fetchRequest = {
     statisticalPlatform: (id: string) =>
       useSWRImmutable<{ platform: EPlatform; value: number }[]>(`/Campaigns/${id}/jobDetailBasePlatform`, fetcher),
     participants: (id: string) => useSWR<IUser[]>(`/Campaigns/${id}/participant`, fetcher),
+    meetings: (id: string) => useSWRImmutable<IFilterList<IMeeting>>(`/Campaigns/${id}/meetingRoom`, fetcher),
   },
   influencer: {
     jobs: (
@@ -84,7 +86,7 @@ const fetchRequest = {
   },
   job: {
     statistical: () => useSWR<{ jobStatus: EJobStatus; count: number }[]>('/Job/statistical', fetcher),
-    links: (id: string) => useSWRImmutable<string[]>(`/Job/${id}/link`, fetcher),
+    links: (id: string) => useSWRImmutable<{ link: string; isApprove: boolean }[]>(`/Job/${id}/link`, fetcher),
     statisticalChart: (id?: string, link?: string) => {
       const searchParams = new URLSearchParams();
       if (link) {

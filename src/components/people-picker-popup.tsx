@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, ReactNode, useState } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from './ui/dialog';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './ui/command';
 import { fetchRequest } from '@/request';
@@ -9,12 +9,21 @@ import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import IUser from '@/types/user';
 import { Button } from './ui/button';
+import NoData from './no-data';
 
 interface PeoplePickerPopupProps extends PeoplePickerProps {
   children: ReactNode;
+  campaignId: string;
 }
 
-const PeoplePickerPopup: FC<PeoplePickerPopupProps> = ({ children, campaignId, selectedIds, onSubmit }) => {
+const PeoplePickerPopup: FC<PeoplePickerPopupProps> = ({
+  children,
+  campaignId,
+  selectedIds,
+  selectedEmails,
+  onSubmit,
+}) => {
+  const { data } = fetchRequest.campaign.participants(campaignId);
   const [open, setOpen] = useState(false);
 
   const handleSubmit = (users: IUser[]) => {
@@ -22,27 +31,35 @@ const PeoplePickerPopup: FC<PeoplePickerPopupProps> = ({ children, campaignId, s
     onSubmit(users);
   };
 
+  useEffect(() => {
+    if ((selectedEmails && selectedEmails.length > 0) || (selectedIds && selectedIds.length > 0))
+      if (data) {
+        const users = data.filter((u) => selectedEmails?.includes(u.email) || selectedIds?.includes(u.id));
+        onSubmit(users);
+      }
+  }, [data]);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent onInteractOutside={(e) => e.preventDefault()}>
         <DialogTitle>Thêm người</DialogTitle>
         <DialogDescription></DialogDescription>
-        <PeoplePicker campaignId={campaignId} selectedIds={selectedIds} onSubmit={handleSubmit} />
+        <PeoplePicker users={data} selectedIds={selectedIds} selectedEmails={selectedEmails} onSubmit={handleSubmit} />
       </DialogContent>
     </Dialog>
   );
 };
 
 interface PeoplePickerProps {
-  campaignId: string;
+  users?: IUser[];
   selectedIds?: string[];
+  selectedEmails?: string[];
   onSubmit: (users: IUser[]) => void;
   onClose?: () => void;
 }
 
-const PeoplePicker = ({ campaignId, selectedIds, onSubmit }: PeoplePickerProps) => {
-  const { data } = fetchRequest.campaign.participants(campaignId);
+const PeoplePicker = ({ users, selectedIds, onSubmit }: PeoplePickerProps) => {
   const [selected, setSelected] = useState<IUser[]>([]);
 
   const handleSelect = (user: IUser) => () => {
@@ -88,9 +105,11 @@ const PeoplePicker = ({ campaignId, selectedIds, onSubmit }: PeoplePickerProps) 
       <Command>
         <CommandInput placeholder="Nhập tên người dùng" />
         <CommandList>
-          <CommandEmpty>Không tìm thấy người dùng nào</CommandEmpty>
+          <CommandEmpty>
+            <NoData description="Không tìm thấy người dùng nào" />
+          </CommandEmpty>
           <CommandGroup>
-            {data
+            {users
               ?.filter((u) => !selectedIds?.includes(u.id))
               .map((user) => (
                 <CommandItem

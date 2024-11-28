@@ -178,7 +178,7 @@ const LinkForm: FC<LinkFormProps> = ({ job, onSubmit }) => {
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <Image src="/assets/img/social-bg.png" alt="Mạng xã hội" width={700} height={350} />
         <div className="space-y-3 mb-4">
-          {data?.map((link, index) => (
+          {data?.map(({ link }, index) => (
             <Input key={index} type="url" defaultValue={link} fullWidth readOnly disabled />
           ))}
           {fields.map((field, index) => (
