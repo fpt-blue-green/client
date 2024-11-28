@@ -18,6 +18,7 @@ import Performance from './performance';
 import Actions from './components/actions';
 import Contents from './contents';
 import { ECampaignStatus } from '@/types/enum';
+import { LuAreaChart, LuPlaySquare, LuUserSquare } from 'react-icons/lu';
 
 interface TrackingProps {
   params: { id: string };
@@ -73,14 +74,23 @@ const Tracking: FC<TrackingProps> = async ({ params, searchParams }) => {
       </div>
       <Tabs defaultValue={searchParams.tab || 'member'}>
         <TabsList className="grid w-full md:grid-cols-3 grid-cols-2 *:flex *:max-lg:flex-col *:items-center *:gap-2">
-          <TabsTrigger value="member" className="flex items-center gap-2 py-2" asChild>
-            <Link href="?tab=member">Người tham gia</Link>
+          <TabsTrigger value="member" asChild>
+            <Link href="?tab=member" className="flex items-center gap-2">
+              <LuUserSquare className="size-5" />
+              Người tham gia
+            </Link>
           </TabsTrigger>
-          <TabsTrigger value="content" className="flex items-center gap-2 py-2" asChild>
-            <Link href="?tab=content">Nội dung đăng tải</Link>
+          <TabsTrigger value="content" asChild>
+            <Link href="?tab=content" className="flex items-center gap-2">
+              <LuPlaySquare className="size-5" />
+              Nội dung đăng tải
+            </Link>
           </TabsTrigger>
-          <TabsTrigger value="performance" className="flex items-center gap-2 py-2" asChild>
-            <Link href="?tab=performance">Hiệu suất</Link>
+          <TabsTrigger value="performance" asChild>
+            <Link href="?tab=performance" className="flex items-center gap-2">
+              <LuAreaChart className="size-5" />
+              Số liệu phân tích
+            </Link>
           </TabsTrigger>
         </TabsList>
         <TabsContent value="member">

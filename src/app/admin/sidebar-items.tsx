@@ -4,7 +4,6 @@ import { SettingsIcon } from 'lucide-react';
 import { ReactNode } from 'react';
 import { FaPeopleGroup, FaTag } from 'react-icons/fa6';
 import { GiExecutionerHood } from 'react-icons/gi';
-import { PiNotificationFill } from 'react-icons/pi';
 
 export interface SideBarItemModel {
   route: string;

@@ -11,6 +11,7 @@ const offerRequest = {
     http.put(`/Job/${id}/link`, { link: body.links.map((l) => l.value) }),
   complete: (id: string) => http.put(`/Job/${id}/complete`),
   fail: (id: string) => http.put(`/Job/${id}/fail`),
+  approveLink: (id: string, link: string) => http.put(`/Job/${id}/approveLink`, link),
 };
 
 export default offerRequest;
