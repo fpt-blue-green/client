@@ -111,7 +111,7 @@ const fetchRequest = {
       useSWRImmutable<{ joinAt: string; user: IUser }[]>(campaignId ? `/Contact/member/${campaignId}` : null, fetcher),
   },
   user: {
-    payment: (fetch?: boolean) =>
+    wallet: (fetch?: boolean) =>
       useSWR<{ currentAmount: number; spendAmount: number }>(fetch ? '/User/wallet' : null, fetcher),
     paymentHistory: () => useSWRImmutable<IPaymentHistory>('/User/paymentHistory', fetcher),
   },

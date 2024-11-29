@@ -37,7 +37,7 @@ import { toast } from 'sonner';
 
 const Payment = () => {
   const { session } = useAuthUser();
-  const { data } = fetchRequest.user.payment(!!session);
+  const { data } = fetchRequest.user.wallet(!!session);
   const [open, setOpen] = useState(false);
   const [openWithdraw, setOpenWithdraw] = useState(false);
 
@@ -175,6 +175,7 @@ const DepositForm = () => {
 
 const WithdrawForm = ({ onClose }: { onClose: () => void }) => {
   const { data: banks } = fetchRequest.payments.banks();
+  const { mutate } = fetchRequest.user.wallet();
   const [bank, setBank] = useState<IBank>();
   const [bankColor, setBankColor] = useState<string>();
   const [open, setOpen] = useState(true);
@@ -193,6 +194,7 @@ const WithdrawForm = ({ onClose }: { onClose: () => void }) => {
       toast.promise(paymentRequest.withdraw(values), {
         loading: 'Đang tải',
         success: () => {
+          mutate();
           return 'Tạo yêu cầu rút thành công. Bạn có thể nhận được tiền sau 2 - 3 ngày.';
         },
         error: (err) => err?.message,

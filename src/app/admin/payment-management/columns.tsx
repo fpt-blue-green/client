@@ -47,7 +47,7 @@ export const columns: ColumnDef<IPaymentManagement, IPaymentManagement>[] = [
     accessorKey: 'amount',
     header: 'Số tiền',
     enableSorting: false,
-    cell: ({ row }) => formats.price(row.getValue('amount')),
+    cell: ({ row }) => <div className="text-right">{formats.price(row.getValue('amount'))}</div>,
   },
 ];
 

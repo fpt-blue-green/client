@@ -33,7 +33,7 @@ const ProfileDropdown = () => {
   const { session, profile: influencer } = useAuthInfluencer();
   const { profile: brand } = useAuthBrand();
   const user = session?.user;
-  const { data: wallet } = fetchRequest.user.payment(!!user);
+  const { data: wallet } = fetchRequest.user.wallet(!!user);
 
   const isPremium = brand?.isPremium;
 

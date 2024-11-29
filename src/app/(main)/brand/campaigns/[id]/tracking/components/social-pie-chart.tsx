@@ -12,8 +12,8 @@ import {
 import { formats } from '@/lib/utils';
 import { fetchRequest } from '@/request';
 import { EPlatform, PlatformData } from '@/types/enum';
-import { FC } from 'react';
-import { Label, Pie, PieChart } from 'recharts';
+import { FC, useState } from 'react';
+import { Label, Pie, PieChart, Sector } from 'recharts';
 
 interface SocialPieChartProps {
   id: string;
@@ -22,6 +22,7 @@ interface SocialPieChartProps {
 
 const SocialPieChart: FC<SocialPieChartProps> = ({ id, total = 0 }) => {
   const { data } = fetchRequest.campaign.statisticalPlatform(id);
+  const [activeIndex, setActiveIndex] = useState<number>();
 
   const chartData = data?.map((i) => {
     return {
@@ -31,21 +32,36 @@ const SocialPieChart: FC<SocialPieChartProps> = ({ id, total = 0 }) => {
     };
   });
 
+  const renderActiveShape = (props: any) => {
+    const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
+    return (
+      <Sector
+        cx={cx}
+        cy={cy}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius + 15} // Tăng kích thước khi hover
+        startAngle={startAngle}
+        endAngle={endAngle}
+        fill={fill}
+      />
+    );
+  };
+
   const chartConfig = {
     value: {
       label: 'Lượt tương tác',
     },
     [EPlatform.TitTok]: {
       label: PlatformData[EPlatform.TitTok].name,
-      color: 'hsl(var(--chart-1))',
+      color: 'hsl(var(--foreground))',
     },
     [EPlatform.Instagram]: {
       label: PlatformData[EPlatform.Instagram].name,
-      color: 'hsl(var(--chart-3))',
+      color: '#833AB4',
     },
     [EPlatform.YouTube]: {
       label: PlatformData[EPlatform.YouTube].name,
-      color: 'hsl(var(--chart-5))',
+      color: '#FF0000',
     },
   } satisfies ChartConfig;
 
@@ -55,8 +71,16 @@ const SocialPieChart: FC<SocialPieChartProps> = ({ id, total = 0 }) => {
         <ChartContainer config={chartConfig} className="max-w-full min-h-80">
           <PieChart>
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-
-            <Pie data={chartData} dataKey="value" nameKey="platform" innerRadius={60}>
+            <Pie
+              data={chartData}
+              dataKey="value"
+              nameKey="platform"
+              innerRadius={70}
+              activeIndex={activeIndex}
+              activeShape={renderActiveShape}
+              onMouseEnter={(_, index) => setActiveIndex(index)}
+              onMouseLeave={() => setActiveIndex(undefined)}
+            >
               <Label
                 content={({ viewBox }) => {
                   if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
