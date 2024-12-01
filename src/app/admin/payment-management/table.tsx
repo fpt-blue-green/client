@@ -7,10 +7,18 @@ import { IPaymentManagement } from '@/types/payment';
 import { Button } from '@/components/ui/button';
 import { EPaymentStatus, EPaymentType } from '@/types/enum';
 import { paymentRequest } from '@/request';
-import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { useMemo, useRef, useState } from 'react';
 import QRDialog from './qr-dialog';
 import { emitter } from '@/lib/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { MoreHorizontal } from 'lucide-react';
+import RejectForm from './reject-form';
 
 const PaymentTable = () => {
   const [payment, setPayment] = useState<IPaymentManagement>();
@@ -30,11 +38,18 @@ const PaymentTable = () => {
             <>
               {payment.status === EPaymentStatus.Pending && payment.type === EPaymentType.WithDraw && (
                 <div className="text-center">
-                  <DialogTrigger asChild>
-                    <Button variant="outline" size="small" onClick={() => handleWithdraw(payment)}>
-                      Thanh toán
-                    </Button>
-                  </DialogTrigger>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon-sm">
+                        <span className="sr-only">Open menu</span>
+                        <MoreHorizontal className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="flex flex-col gap-1">
+                      <DropdownMenuItem onClick={() => handleWithdraw(payment, true)}>Thanh toán</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleWithdraw(payment, false)}>Từ chối</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               )}
             </>
@@ -46,31 +61,40 @@ const PaymentTable = () => {
     [],
   );
 
-  const handleWithdraw = (payment: IPaymentManagement) => {
+  const handleWithdraw = (payment: IPaymentManagement, isApprove: boolean) => {
     if (flag.current) {
       flag.current = false;
-      paymentRequest
-        .withdrawQr(payment.id)
-        .then((res) => {
-          if (res.data) {
-            setPayment(payment);
-            setQr(res.data);
-          }
-        })
-        .catch((err) => err?.message)
-        .finally(() => (flag.current = true));
+      if (isApprove) {
+        paymentRequest
+          .withdrawQr(payment.id)
+          .then((res) => {
+            if (res.data) {
+              setPayment(payment);
+              setQr(res.data);
+            }
+          })
+          .catch((err) => err?.message)
+          .finally(() => (flag.current = true));
+      } else {
+        setPayment(payment);
+        flag.current = true;
+      }
     }
   };
 
   const handleClose = (open: boolean) => {
     if (!open) {
-      emitter.confirm({
-        callback: () => {
-          setPayment(undefined);
-          setQr(undefined);
-        },
-        content: 'Bạn có chắc không thực hiện thanh toán sau khi tắt đi?',
-      });
+      if (qr) {
+        emitter.confirm({
+          callback: () => {
+            setPayment(undefined);
+            setQr(undefined);
+          },
+          content: 'Bạn có chắc không thực hiện thanh toán sau khi tắt đi?',
+        });
+      } else {
+        setPayment(undefined);
+      }
     }
   };
 
@@ -81,7 +105,7 @@ const PaymentTable = () => {
   };
 
   return (
-    <Dialog open={!!qr} onOpenChange={handleClose}>
+    <Dialog open={!!payment} onOpenChange={handleClose}>
       <Table
         url="/Payment"
         columns={columnsWithActions}
@@ -89,11 +113,20 @@ const PaymentTable = () => {
         ref={tableRef}
         defaultSorting={[{ id: 'createdAt', desc: true }]}
       />
-      {payment && qr && (
-        <DialogContent onInteractOutside={(e) => e.preventDefault()}>
+      {payment && (
+        <DialogContent className="max-w-xl" onInteractOutside={(e) => e.preventDefault()}>
           <DialogTitle>Yêu cẩu rút tiền của {payment.user.name}</DialogTitle>
-          <DialogDescription>VUI LÒNG KHÔNG TẮT ĐI KHI ĐANG THỰC HIỆN THANH TOÁN</DialogDescription>
-          <QRDialog payment={payment} qr={qr} onSuccess={handleWithdrawSuccess} />
+          {qr ? (
+            <>
+              <DialogDescription>VUI LÒNG KHÔNG TẮT ĐI KHI ĐANG THỰC HIỆN THANH TOÁN</DialogDescription>
+              <QRDialog payment={payment} qr={qr} onSuccess={handleWithdrawSuccess} />
+            </>
+          ) : (
+            <>
+              <DialogDescription></DialogDescription>
+              <RejectForm payment={payment} onSuccess={handleWithdrawSuccess} />
+            </>
+          )}
         </DialogContent>
       )}
     </Dialog>

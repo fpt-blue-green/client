@@ -12,7 +12,7 @@ const QRDialog = ({ payment, qr, onSuccess }: { payment: IPaymentManagement; qr:
 
   useEffect(() => {
     const timer = setInterval(() => {
-      paymentRequest.withdrawResponse(payment.id).then((res) => {
+      paymentRequest.withdrawResponse(payment.id, true).then((res) => {
         if (res.data) {
           setSuccess(true);
         }

@@ -70,7 +70,7 @@ const List = () => {
       <div className="lg:order-last">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-4">
           {statistical?.map((item, index) => (
-            <Paper className={cn('p-0 text-center font-semibold cursor-pointer')} key={index}>
+            <Paper className={cn('p-0 text-center font-semibold')} key={index}>
               <div className={cn('p-3 text-sm', constants.jobStatus[item.jobStatus].backgroundColor)}>
                 {constants.jobStatus[item.jobStatus].label}
               </div>

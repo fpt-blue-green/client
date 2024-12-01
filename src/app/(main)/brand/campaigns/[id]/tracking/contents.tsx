@@ -40,7 +40,7 @@ const Contents = () => {
 
   return (
     <div className="grid grid-cols-3 gap-4">
-      <Paper className="h-[640px]">
+      <Paper className="min-h-[640px]">
         <ScrollArea>
           <Accordion type="multiple">
             {isLoading
@@ -118,19 +118,19 @@ const JobDetails = ({ item, reload }: { item: IJob; reload: () => void }) => {
     return data?.filter((l) => !l.isApprove).length;
   }, [data]);
 
-  // const handleComplete = (completed: boolean) => () => {
-  //   if (item) {
-  //     const caller = completed ? offerRequest.complete(item.id) : offerRequest.fail(item.id);
-  //     toast.promise(caller, {
-  //       loading: 'Đang tải',
-  //       success: () => {
-  //         reload();
-  //         return 'Thành công';
-  //       },
-  //       error: (err) => err?.message,
-  //     });
-  //   }
-  // };
+  const handleComplete = (completed: boolean) => () => {
+    if (item) {
+      const caller = completed ? offerRequest.complete(item.id) : offerRequest.fail(item.id);
+      toast.promise(caller, {
+        loading: 'Đang tải',
+        success: () => {
+          reload();
+          return 'Thành công';
+        },
+        error: (err) => err?.message,
+      });
+    }
+  };
 
   const handleApprove = () => {
     emitter.confirm({
@@ -200,16 +200,11 @@ const JobDetails = ({ item, reload }: { item: IJob; reload: () => void }) => {
       ) : (
         <NoData description="Chưa có bài đăng nào được xác thực" />
       )}
-      {/* {item.status === EJobStatus.InProgress && data?.some((l) => l.isApprove) && (
-        <div className="grid grid-cols-2 gap-6">
-          <Button variant="outline" onClick={handleComplete(false)}>
-            Không đạt
-          </Button>
-          <Button variant="gradient" onClick={handleComplete(true)}>
-            Đạt yêu cầu
-          </Button>
-        </div>
-      )} */}
+      {item.status === EJobStatus.InProgress && data?.some((l) => l.isApprove) && (
+        <Button variant="gradient" onClick={handleComplete(true)} fullWidth>
+          Đánh dấu đạt yêu cầu
+        </Button>
+      )}
     </div>
   );
 };

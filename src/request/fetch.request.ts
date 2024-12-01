@@ -21,7 +21,18 @@ import useSWRImmutable from 'swr/immutable';
 const fetchRequest = {
   favorites: (fetch = false) => useSWRImmutable<IInfluencer[]>(fetch ? '/Brand/favorites' : null, fetcher),
   campaign: {
-    available: () => useSWRImmutable<IFilterList<ICampaign>>('/Campaigns', fetcher),
+    available: (page = 1, pageSize = 50) => {
+      const searchParams = new URLSearchParams();
+      searchParams.append('PageIndex', page.toString());
+      searchParams.append('PageSize', pageSize.toString());
+      const swr = useSWRImmutable<IFilterList<ICampaign>>('/Campaigns?' + searchParams, fetcher);
+      const mutate = () => {
+        mutateGlobal<IFilterList<ICampaign>>((key: string) => key.startsWith('/Campaigns'), undefined, {
+          revalidate: true,
+        });
+      };
+      return { ...swr, mutate };
+    },
     getById: (id: string) => useSWRImmutable<ICampaign>(`/Campaigns/${id}`, fetcher),
     currentBrand: (fetch = false, statuses?: ECampaignStatus[], page = 1, pageSize = 50) => {
       const searchParams = new URLSearchParams();
