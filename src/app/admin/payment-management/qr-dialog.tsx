@@ -3,6 +3,7 @@
 
 import { paymentRequest } from '@/request';
 import { IPaymentManagement } from '@/types/payment';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { FaCheckCircle } from 'react-icons/fa';
 
@@ -16,7 +17,7 @@ const QRDialog = ({ payment, qr, onSuccess }: { payment: IPaymentManagement; qr:
           setSuccess(true);
         }
       });
-    }, 5_000);
+    }, 3_000);
 
     return () => clearInterval(timer);
   }, [payment.id, onSuccess]);
@@ -26,7 +27,7 @@ const QRDialog = ({ payment, qr, onSuccess }: { payment: IPaymentManagement; qr:
     if (success) {
       timer = setTimeout(() => {
         onSuccess();
-      }, 5_000);
+      }, 3_000);
     }
 
     return () => clearTimeout(timer);
@@ -36,11 +37,11 @@ const QRDialog = ({ payment, qr, onSuccess }: { payment: IPaymentManagement; qr:
     <div>
       {success ? (
         <div className="flex flex-col items-center justify-center gap-2 p-8">
-          <FaCheckCircle className="text-2xl text-success" />
+          <FaCheckCircle className="text-8xl text-success" />
           <h5 className="font-semibold">Thanh toán giao dịch thành công!</h5>
         </div>
       ) : (
-        <img src={qr} alt={`QR của ${payment.user.name}`} className="w-full" />
+        <Image src={qr} alt={`QR của ${payment.user.name}`} width={450} height={560} className="w-full" />
       )}
     </div>
   );

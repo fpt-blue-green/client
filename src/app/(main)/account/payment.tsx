@@ -18,6 +18,7 @@ import {
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
 import config from '@/config';
 import { useAuthUser } from '@/hooks';
 import { constants, emitter, formats, functions } from '@/lib/utils';
@@ -174,7 +175,7 @@ const DepositForm = () => {
 };
 
 const WithdrawForm = ({ onClose }: { onClose: () => void }) => {
-  const { data: banks } = fetchRequest.payments.banks();
+  const { data: banks, isLoading } = fetchRequest.payments.banks();
   const { mutate } = fetchRequest.user.wallet();
   const [bank, setBank] = useState<IBank>();
   const [bankColor, setBankColor] = useState<string>();
@@ -336,9 +337,9 @@ const WithdrawForm = ({ onClose }: { onClose: () => void }) => {
           <CommandInput placeholder="Tìm theo tên ngân hàng" />
           <CommandList>
             <CommandEmpty>
-              <NoData description="Không có ngân hàng trong danh sách" />
+              {isLoading ? <Skeleton className="h-96" /> : <NoData description="Không có ngân hàng trong danh sách" />}
             </CommandEmpty>
-            <CommandGroup heading="Ngân hàng">
+            <CommandGroup heading={loading ? undefined : 'Ngân hàng'}>
               {banks?.data.map((bank) => (
                 <CommandItem key={bank.bin} className="gap-2 cursor-pointer" onSelect={() => handleChangeBank(bank)}>
                   <Avatar className="border bg-white">

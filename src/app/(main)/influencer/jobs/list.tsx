@@ -13,7 +13,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FaChartSimple, FaHandshake, FaSuitcase, FaUserPlus } from 'react-icons/fa6';
 import { RiCalendarScheduleFill } from 'react-icons/ri';
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 4;
 
 interface JobFilter {
   campaigns?: ECampaignStatus[];

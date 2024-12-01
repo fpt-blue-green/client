@@ -30,7 +30,7 @@ const PaymentTable = () => {
             <>
               {payment.status === EPaymentStatus.Pending && payment.type === EPaymentType.WithDraw && (
                 <div className="text-center">
-                  <DialogTrigger>
+                  <DialogTrigger asChild>
                     <Button variant="outline" size="small" onClick={() => handleWithdraw(payment)}>
                       Thanh toán
                     </Button>
