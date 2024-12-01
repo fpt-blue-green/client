@@ -14,6 +14,7 @@ import NoData from './no-data';
 interface PeoplePickerPopupProps extends PeoplePickerProps {
   children: ReactNode;
   campaignId: string;
+  onInit?: (user: IUser[]) => void;
 }
 
 const PeoplePickerPopup: FC<PeoplePickerPopupProps> = ({
@@ -21,6 +22,7 @@ const PeoplePickerPopup: FC<PeoplePickerPopupProps> = ({
   campaignId,
   selectedIds,
   selectedEmails,
+  onInit,
   onSubmit,
 }) => {
   const { data } = fetchRequest.campaign.participants(campaignId);
@@ -35,7 +37,7 @@ const PeoplePickerPopup: FC<PeoplePickerPopupProps> = ({
     if ((selectedEmails && selectedEmails.length > 0) || (selectedIds && selectedIds.length > 0))
       if (data) {
         const users = data.filter((u) => selectedEmails?.includes(u.email) || selectedIds?.includes(u.id));
-        onSubmit(users);
+        onInit?.(users);
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);

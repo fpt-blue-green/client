@@ -105,7 +105,7 @@ const InfluencerAccordion: FC<InfluencerAccordionProps> = ({ item, view, reload 
 const OfferAction = ({ job, reload }: { job: IJob; reload: () => Promise<void> }) => {
   const { offer } = job;
   const [open, setOpen] = useState(false);
-  const { mutate: mutatePayment } = fetchRequest.user.payment(true);
+  const { mutate: mutatePayment } = fetchRequest.user.wallet(true);
   const { mutate } = fetchRequest.user.paymentHistory();
 
   const handleResponseOffer = (id: string, accept: boolean) => () => {

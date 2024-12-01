@@ -59,7 +59,7 @@ export const depositSchema = z.object({ amount: z.number().min(10_000, 'Tối th
 export const withdrawSchema = z.object({
   amount: z
     .number()
-    .min(100_000, 'Số tiền phải lớn hơn 100.000 ₫')
+    .min(10_000, 'Số tiền tối thiểu là 10.000 ₫')
     .max(50_000_000, 'Số tiền không vượt quá 50.000.000 ₫'),
   bankId: z.string({ required_error: 'Chọn ngân hàng của bạn' }),
   accountNo: z.string().regex(/^\d+$/, {

@@ -14,6 +14,9 @@ const paymentRequest = {
       { bank, account },
       { headers: { 'x-api-key': config.env.BANK_LOOKUP_KEY, 'x-api-secret': config.env.BANK_LOOKUP_SECRET } },
     ),
+  withdrawQr: (id: string) => http.post<string>(`/Payment/vietQR/${id}`),
+  withdrawResponse: (id: string, isApprove: boolean, adminMessage?: string) =>
+    http.post<boolean>(`/Payment/responseWithdraw/${id}`, { isApprove, adminMessage }),
 };
 
 export default paymentRequest;

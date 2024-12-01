@@ -56,11 +56,28 @@ const Home = () => {
         </div>
       </div>
       <div className="container mt-8 mb-16 space-y-20">
-        <InfluencerList title="Nổi bật" subtitle="Thuê những người có ảnh hưởng hàng đầu trên tất cả nền tảng" />
-        <InfluencerList title="Instagram" subtitle="Thuê những người có ảnh hưởng trên Instagram" />
-        <InfluencerList title="TikTok" subtitle="Thuê những người có ảnh hưởng trên TikTok" />
+        <InfluencerList
+          url="/Influencers/top"
+          title="Nổi bật"
+          subtitle="Thuê những người có ảnh hưởng hàng đầu trên tất cả nền tảng"
+        />
+        <InfluencerList
+          url="/Influencers/top/tiktok"
+          title="TikTok"
+          subtitle="Thuê những người có ảnh hưởng trên TikTok"
+        />
 
         <HowItWork />
+        <InfluencerList
+          url="/Influencers/top/instagram"
+          title="Instagram"
+          subtitle="Thuê những người có ảnh hưởng trên Instagram"
+        />
+        <InfluencerList
+          url="/Influencers/top/youtube"
+          title="YouTube"
+          subtitle="Thuê những người có ảnh hưởng trên YouTube"
+        />
         <Banner />
       </div>
     </>

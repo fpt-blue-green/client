@@ -50,7 +50,7 @@ export const formats = {
     const date = typeof input === 'string' ? new Date(input) : input;
 
     // Kiểm tra xem date có hợp lệ hay không
-    if (isNaN(date.getTime())) {
+    if (!date || isNaN(date.getTime())) {
       return '';
     }
     const defaultDateOptions: Intl.DateTimeFormatOptions = {

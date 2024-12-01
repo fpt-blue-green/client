@@ -47,6 +47,7 @@ const routes = {
     statistic: '/admin/statistic',
     tag: '/admin/tag-management',
     report: '/admin/report-management',
+    payment: '/admin/payment-management',
     setting: '/admin/setting-management',
   },
   chats: {

@@ -43,14 +43,16 @@ const Comments: FC<CommentsProps> = ({ influencer, user }) => {
     fetcher,
   );
   const [comment, setComment] = useState<IFeedback>();
+  const [open, setOpen] = useState(false);
 
   const reload = async () => {
     await Promise.all([mutate(), mutateCount()]);
+    setOpen(false);
   };
 
   return (
     <div className="space-y-6">
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <div className="flex items-center justify-center gap-4">
           {influencer.rateAverage > 0 ? (
             <>
@@ -93,7 +95,7 @@ const Comments: FC<CommentsProps> = ({ influencer, user }) => {
             </div>
             <div className="flex flex-col gap-2 flex-1">
               <div className="flex items-center justify-between">
-                <Rating defaultValue={comment.rating} precision={0.25} readOnly size={20} />
+                <Rating value={comment.rating} precision={0.25} readOnly size={20} />
                 {session?.user.id === comment.user.id && (
                   <DialogTrigger asChild>
                     <Button variant="ghost" size="icon" onClick={() => setComment(comment)}>

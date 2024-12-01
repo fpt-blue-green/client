@@ -263,6 +263,7 @@ const MeetingForm = ({
                   campaignId={campaignId}
                   selectedIds={selectedUsers.map((u) => u.id)}
                   selectedEmails={meeting?.participants}
+                  onInit={handleChangeParticipators}
                   onSubmit={(users) => handleChangeParticipators([...selectedUsers, ...users])}
                 >
                   <Button variant="ghost" size="small" startIcon={<PlusIcon />}>

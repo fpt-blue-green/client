@@ -1,10 +1,24 @@
 import { EPaymentStatus, EPaymentType } from './enum';
+import IUser from './user';
 
 export interface IPaymentHistory {
   amount: number;
   status: EPaymentStatus;
   type: EPaymentType;
   created: string;
+}
+
+export interface IPaymentManagement {
+  id: string;
+  user: IUser;
+  netAmount: number;
+  amount: number;
+  status: EPaymentStatus;
+  type: EPaymentType;
+  bankInformation: string;
+  createdAt: string;
+  responseAt: string;
+  adminMessage?: string;
 }
 
 export interface IPaymentResponse {
