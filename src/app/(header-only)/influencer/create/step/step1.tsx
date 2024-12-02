@@ -17,14 +17,16 @@ import { influencerRequest } from '@/request';
 import { useRouter } from 'next/navigation';
 import config from '@/config';
 import { toast } from 'sonner';
+import { useSession } from 'next-auth/react';
 
 const Step1: FC<DetailStepProps> = ({ profile, mutate }) => {
+  const { data: session, update } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const form = useForm<GeneralBodyType>({
     resolver: zodResolver(generalSchema),
     defaultValues: {
-      fullName: profile.fullName || '',
+      fullName: profile.fullName || session?.user.name,
       address: profile.address || '',
       summarise: profile.summarise || '',
       slug: profile.slug || '',
@@ -38,6 +40,13 @@ const Step1: FC<DetailStepProps> = ({ profile, mutate }) => {
     influencerRequest
       .updateGeneralInfo(values)
       .then(() => {
+        update({
+          ...session,
+          user: {
+            ...session?.user,
+            name: values.fullName,
+          },
+        });
         mutate().then(() => router.push(config.routes.influencer.create(2)));
       })
       .catch((err) => toast.error(err.message))

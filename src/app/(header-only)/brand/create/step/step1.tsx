@@ -15,14 +15,16 @@ import { brandRequest } from '@/request';
 import { useRouter } from 'next/navigation';
 import config from '@/config';
 import { toast } from 'sonner';
+import { useSession } from 'next-auth/react';
 
 const Step1: FC<DetailStepProps> = ({ profile, mutate }) => {
+  const { data: session, update } = useSession();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const form = useForm<BasicBodyType>({
     resolver: zodResolver(basicSchema),
     defaultValues: {
-      name: profile.name || '',
+      name: profile.name || session?.user.name,
       address: profile.address || '',
       description: profile.description,
     },
@@ -32,7 +34,15 @@ const Step1: FC<DetailStepProps> = ({ profile, mutate }) => {
     setLoading(true);
     brandRequest
       .updateGeneralInfo(value)
-      .then(() => mutate().then(() => router.push(config.routes.brand.create(2))))
+      .then(() =>
+        mutate().then(() => {
+          update({
+            ...session,
+            name: value.name,
+          });
+          router.push(config.routes.brand.create(2));
+        }),
+      )
       .catch((err) => toast.error(err.message))
       .finally(() => setLoading(false));
   };

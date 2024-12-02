@@ -1,12 +1,11 @@
 'use client';
 import CampaignCard from '@/components/campaign-card';
 import NoData from '@/components/no-data';
-import { useAuthBrand } from '@/hooks';
 import { fetchRequest } from '@/request';
+import IBrand from '@/types/brand';
 
-const Campaigns = () => {
-  const { profile } = useAuthBrand();
-  const { data: campaigns } = fetchRequest.campaigns(profile?.id || '');
+const Campaigns = ({ brand }: { brand: IBrand }) => {
+  const { data: campaigns } = fetchRequest.campaign.listByBrand(brand.id);
 
   return (
     <div className="mb-10">

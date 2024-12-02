@@ -68,6 +68,13 @@ const Details = ({}) => {
     influencerRequest
       .updateGeneralInfo(values)
       .then(() => {
+        update({
+          ...session,
+          user: {
+            ...session?.user,
+            name: values.fullName,
+          },
+        });
         refreshProfile().then(() => toast.success('Cập nhật thông tin cá nhân thành công'));
       })
       .catch((err) => toast.error(err.message))
