@@ -210,16 +210,3 @@ export const convertReportReason = (reason: number): string => {
       return 'Khác';
   }
 };
-
-export const convertReportStatus = (status: number): string => {
-  switch (status) {
-    case 0:
-      return 'Chờ xử lí';
-    case 1:
-      return 'Bị từ chối';
-    case 2:
-      return 'Được chấp thuận';
-    default:
-      return 'Khác';
-  }
-};
