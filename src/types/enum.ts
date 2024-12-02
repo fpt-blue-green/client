@@ -178,3 +178,9 @@ export enum EReportReason {
   UncompletedTask,
   ViolationOfTerms,
 }
+
+export enum EReportStatus {
+  Pending = 0,
+  Rejected,
+  Approved,
+}

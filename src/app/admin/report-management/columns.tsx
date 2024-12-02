@@ -46,7 +46,7 @@ export const columns: ColumnDef<IReport, IReport>[] = [
     accessorKey: 'reportStatus',
     header: 'Trạng thái',
     cell: ({ row }) => {
-      const status = constants.paymentStatus[row.original.reportStatus];
+      const status = constants.reportStatus[row.original.reportStatus];
       return <div className={cn('pl-4', status.textColor)}>{status.label}</div>;
     },
   },
