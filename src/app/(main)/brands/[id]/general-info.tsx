@@ -46,7 +46,7 @@ const GeneralInfo: FC<IGeneralInfo> = ({ brand }) => {
             alt="Brand_avatar"
             width={100}
             height={100}
-            className="w-28 h-28 rounded-full"
+            className="w-28 h-28 rounded-full object-cover"
           />
         </div>
       </div>
