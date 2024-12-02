@@ -26,8 +26,9 @@ const Packages: FC<PackagesProps> = ({ influencer }) => {
           {Object.entries(PlatformData)
             .filter(([key]) => influencer.packages.some((p) => p.platform === +key))
             .map(([key, value]) => (
-              <TabsTrigger key={key} value={key} className="py-2 px-5">
-                {value.name}
+              <TabsTrigger key={key} value={key} className="flex items-center gap-2 py-2 px-5">
+                <Image src={value.logo} alt={value.name} width={40} height={40} className="size-6" />
+                <span className="max-md:sr-only">{value.name}</span>
               </TabsTrigger>
             ))}
         </TabsList>
