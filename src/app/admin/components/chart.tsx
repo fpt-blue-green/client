@@ -4,11 +4,9 @@ import { FaMoneyBill } from 'react-icons/fa6';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 import { ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { ChartLegend, ChartLegendContent } from '@/components/ui/chart';
-import useSWRImmutable from 'swr/immutable';
-import { IPieChartDate } from '@/types/analytics';
-import { fetcher } from '@/lib/http';
+import { fetchRequest } from '@/request';
 const OverviewChart = () => {
-  const { data } = useSWRImmutable<IPieChartDate[]>('/AdminStatistic/revenue', fetcher);
+  const { data } = fetchRequest.revenue();
   const chartData = data?.map((item) => ({
     month: item.label,
     revenue: item.value,

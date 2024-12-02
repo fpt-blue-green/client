@@ -58,8 +58,6 @@ const ReportTable = () => {
     },
   ];
 
-  console.log('isopen: ', open);
-
   const handleOpen = (report?: IReport) => () => {
     setReport(report);
     setIsOpen(true);
