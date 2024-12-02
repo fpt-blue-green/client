@@ -27,7 +27,7 @@ const ReportTable = () => {
     await tableRef.current?.reload();
   };
 
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [report, setReport] = useState<IReport>();
 
   const columnsWithActions: ColumnDef<IReport, IReport>[] = [
@@ -45,12 +45,10 @@ const ReportTable = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="flex flex-col gap-1">
-              <DropdownMenuItem>
-                <DialogTrigger onClick={handleOpen(report)}>Chấp thuận</DialogTrigger>
+              <DropdownMenuItem asChild>
+                <DialogTrigger onClick={() => handleOpen(report)}>Chấp thuận</DialogTrigger>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <DialogTrigger onClick={() => handleReject(report)}>Từ chối</DialogTrigger>
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleReject()}>Từ chối</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
@@ -60,13 +58,15 @@ const ReportTable = () => {
     },
   ];
 
+  console.log('isopen: ', open);
+
   const handleOpen = (report?: IReport) => () => {
     setReport(report);
-    setOpen(true);
+    setIsOpen(true);
   };
 
-  const handleReject = (report: IReport) => {
-    const caller = adminRequest.rejectReport(report.id || '');
+  const handleReject = () => {
+    const caller = adminRequest.rejectReport('');
     emitter.confirm({
       content: 'Bạn có chắc khi muốn từ chối báo cáo này?',
       callback: () =>
@@ -83,11 +83,11 @@ const ReportTable = () => {
 
   const handleClose = () => {
     setReport(undefined);
-    setOpen(false);
+    setIsOpen(false);
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <Table ref={tableRef} columns={columnsWithActions} url="/Report" />
       <DialogContent>
         <ActionForm handleClose={handleClose} item={report} reload={reloadTable} />

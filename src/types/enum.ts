@@ -168,3 +168,13 @@ export enum EPaymentStatus {
   Done, // Đã phê duyệt
   Error,
 }
+
+export enum EReportReason {
+  Other = 0,
+  InappropriateContent,
+  HateSpeech,
+  Fraud,
+  FakeInfo,
+  UncompletedTask,
+  ViolationOfTerms,
+}
