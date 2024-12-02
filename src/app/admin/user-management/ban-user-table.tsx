@@ -21,55 +21,6 @@ interface IBanUserTableProps {
 }
 
 const BanUserTable = forwardRef<TableRef, IBanUserTableProps>((props, ref) => {
-  const columnsWithActions: ColumnDef<IBanUserManagement, IBanUserManagement>[] = [
-    ...banUserColumns,
-    {
-      id: 'actions',
-      cell: ({ row }) => {
-        const user = row.original;
-        const isActive = user.isActive;
-        return isActive ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="flex flex-col gap-1">
-              <DropdownMenuItem
-                onClick={() => {
-                  handleUnBan(user);
-                }}
-              >
-                Huỷ lệnh cấm
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          <></>
-        );
-      },
-    },
-  ];
-  const [user, setUser] = useState<IBanUserManagement>();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isBan, setIsBan] = useState<boolean>(false);
-  const [isBanOrUnBanForm, setIsBanOrUnBanForm] = useState<boolean>(false);
-
-  const handleUnBan = (user: IBanUserManagement) => {
-    setIsOpen(true);
-    setUser(user);
-    setIsBanOrUnBanForm(true);
-    setIsBan(false);
-  };
-
-  const handleClose = () => {
-    setIsOpen(false);
-    setUser(undefined);
-    setIsBanOrUnBanForm(false);
-    setIsBan(false);
-  };
   const handleExport = () => {
     adminRequest.adminBannedUserExport().then((res) => {
       const url = window.URL.createObjectURL(res.data);
@@ -91,20 +42,7 @@ const BanUserTable = forwardRef<TableRef, IBanUserTableProps>((props, ref) => {
     },
   ];
 
-  return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <Table columns={columnsWithActions} url="/BanUser" buttons={buttons} ref={ref} />
-      <DialogContent>
-        <ActionForm
-          handleClose={handleClose}
-          banItem={user}
-          reloadTable={props.reloadTable}
-          isBanOrUnBanForm={isBanOrUnBanForm}
-          isBan={isBan}
-        />
-      </DialogContent>
-    </Dialog>
-  );
+  return <Table columns={banUserColumns} url="/BanUser" buttons={buttons} ref={ref} />;
 });
 
 BanUserTable.displayName = 'BanUserTable';
