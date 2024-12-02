@@ -48,7 +48,8 @@ export const reofferSchema = z.object({
 export const jobLinksSchema = z.object({
   links: z.array(
     z.object({
-      value: z.string().url('Đường dẫn liên kết không hợp lệ'),
+      link: z.string().url('Đường dẫn liên kết không hợp lệ'),
+      isApprove: z.boolean().optional(),
     }),
   ),
 });
