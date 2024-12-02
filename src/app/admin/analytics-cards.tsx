@@ -18,7 +18,13 @@ const AnalyticsCards = () => {
       <Card item={data[3]} icon={<FaProjectDiagram className="text-muted-foreground" />} />
     </div>
   ) : (
-    <Skeleton className="w-full h-4 flex" />
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+      {Array(4)
+        .fill(null)
+        .map((_, index) => (
+          <Skeleton key={index} className="w-full h-4" />
+        ))}
+    </div>
   );
 };
 
