@@ -18,7 +18,7 @@ import { Input } from '@/components/ui/input';
 import { cn, constants } from '@/lib/utils';
 import { fetchRequest, offerRequest } from '@/request';
 import { JobLinksBodyType, jobLinksSchema } from '@/schema-validations/offer.schema';
-import { EJobStatus, EOfferStatus, ERole } from '@/types/enum';
+import { EJobStatus, EOfferStatus, ERole, PlatformData } from '@/types/enum';
 import IJob from '@/types/job';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Cross2Icon } from '@radix-ui/react-icons';
@@ -29,74 +29,78 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 const styles = (active: boolean, isLast = false) => {
-  return cn('relative h-20 py-2 px-8 font-semibold bg-accent opacity-50 pointer-events-none', {
-    'before:absolute before:top-0 before:right-0 before:z-1 before:translate-x-full before:border-l-[20px] before:border-y-[40px] before:border-r-0 before:border-transparent before:border-l-gray-400':
-      !isLast,
-    'after:absolute after:top-px after:right-0 after:z-1 after:translate-x-full after:border-l-[19px] after:border-y-[39px] after:border-r-0 after:border-transparent after:border-l-accent':
-      !isLast,
-    'opacity-100 pointer-events-auto': active,
-  });
+  return cn(
+    'relative flex flex-col items-center justify-center gap-2 h-24 py-2 pl-8 pr-4 font-semibold bg-accent opacity-50 pointer-events-none',
+    {
+      'before:absolute before:top-0 before:right-0 before:z-1 before:translate-x-full before:border-l-[24px] before:border-y-[48px] before:border-r-0 before:border-transparent before:border-l-gray-400':
+        !isLast,
+      'after:absolute after:top-px after:right-0 after:z-1 after:translate-x-full after:border-l-[23px] after:border-y-[47px] after:border-r-0 after:border-transparent after:border-l-accent':
+        !isLast,
+      'opacity-100 pointer-events-auto': active,
+    },
+  );
 };
 
 const JobStepper = ({ item }: { item: IJob }) => {
   const offerStatus = constants.offerStatus[item.offer.status];
+  const { data, mutate } = fetchRequest.job.links(item.id);
   const [open, setOpen] = useState(false);
 
   const handleSubmit = () => {
+    mutate();
     setOpen(false);
   };
 
-  const isFinish = [EJobStatus.Completed, EJobStatus.Failed].includes(item.status);
+  const isFinish =
+    [EJobStatus.Completed, EJobStatus.Failed].includes(item.status) ||
+    data?.filter((item) => item.isApprove).length === item.offer.quantity;
 
   return (
-    <div>
-      <div className="grid grid-cols-3">
+    <div className="grid md:grid-cols-5 items-center gap-4">
+      <div className="font-medium">{`${item.offer.quantity} ${
+        PlatformData[item.offer.platform].contentTypes[item.offer.contentType]
+      }`}</div>
+      <div className="md:col-span-4 grid grid-cols-3">
         <div className={styles(true)}>
-          <div className="flex flex-col items-center gap-2">
-            <div>1. Đề nghị</div>
-            <Badge dot invisible={item.offer.status !== EOfferStatus.Offering || item.offer.from !== ERole.Brand}>
-              <JobOffer campaign={item.campaign} offer={item.offer}>
-                <Chip size="large" className="text-sm" label={offerStatus.label} variant={offerStatus.color} />
-              </JobOffer>
-            </Badge>
-          </div>
+          <div>1. Đề nghị</div>
+          <Badge dot invisible={item.offer.status !== EOfferStatus.Offering || item.offer.from !== ERole.Brand}>
+            <JobOffer campaign={item.campaign} offer={item.offer}>
+              <Chip size="large" className="text-sm" label={offerStatus.label} variant={offerStatus.color} />
+            </JobOffer>
+          </Badge>
         </div>
         <div className={styles(item.offer.status === EOfferStatus.Done)}>
-          <div className="flex flex-col items-center gap-2">
-            <div>2. Gửi bài</div>
-            {!isFinish ? (
-              <Dialog open={open} onOpenChange={setOpen}>
-                <DialogTrigger asChild>
-                  <Button variant="outline" disabled={item.status !== EJobStatus.InProgress}>
-                    Gửi bài
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle />
-                    <DialogDescription />
-                    <LinkForm job={item} onSubmit={handleSubmit} />
-                  </DialogHeader>
-                </DialogContent>
-              </Dialog>
-            ) : (
-              <Chip label="Hoàn thành" variant="success" size="large" className="text-sm" />
-            )}
-          </div>
+          <div>2. Gửi bài</div>
+          {!isFinish ? (
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" disabled={item.status !== EJobStatus.InProgress}>
+                  Gửi bài
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle />
+                  <DialogDescription />
+                  <LinkForm job={item} onSubmit={handleSubmit} data={data} />
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          ) : (
+            <Chip label="Hoàn thành" variant="success" size="large" className="text-sm" />
+          )}
         </div>
         <div className={styles(isFinish, true)}>
-          <div className="flex flex-col items-center gap-2">
-            <div>3. Kết quả</div>
-            {item.status === EJobStatus.Completed && (
-              <Chip label="Thành công" variant="success" size="large" className="text-sm" />
-            )}
-            {item.status === EJobStatus.Failed && (
-              <Chip label="Thất bại" variant="destructive" size="large" className="text-sm" />
-            )}
-            {![EJobStatus.Completed, EJobStatus.Failed].includes(item.status) && (
-              <Chip label="Chưa có" variant="secondary" size="large" className="text-sm" />
-            )}
-          </div>
+          <div>3. Kết quả</div>
+          {item.status === EJobStatus.Completed && (
+            <Chip label="Thành công" variant="success" size="large" className="text-sm" />
+          )}
+          {item.status === EJobStatus.Failed && (
+            <Chip label="Thất bại" variant="destructive" size="large" className="text-sm" />
+          )}
+          {![EJobStatus.Completed, EJobStatus.Failed].includes(item.status) && (
+            <Chip label="Chưa có" variant="secondary" size="large" className="text-sm" />
+          )}
         </div>
       </div>
     </div>
@@ -105,12 +109,12 @@ const JobStepper = ({ item }: { item: IJob }) => {
 
 interface LinkFormProps {
   job: IJob;
+  data?: { link: string; isApprove: boolean }[];
   onSubmit?: () => void;
 }
 
-const LinkForm: FC<LinkFormProps> = ({ job, onSubmit }) => {
+const LinkForm: FC<LinkFormProps> = ({ job, data, onSubmit }) => {
   const [loading, setLoading] = useState(false);
-  const { data, mutate } = fetchRequest.job.links(job.id);
   const form = useForm<JobLinksBodyType>({
     resolver: zodResolver(jobLinksSchema),
     defaultValues: {
@@ -132,14 +136,14 @@ const LinkForm: FC<LinkFormProps> = ({ job, onSubmit }) => {
   };
 
   const handleSubmit = (values: JobLinksBodyType) => {
-    setLoading(true);
     if (!values.links.length) {
       toast.error('Vui lòng gửi ít nhất 1 link');
+      return;
     }
+    setLoading(true);
     toast.promise(offerRequest.submitLinks(job.id, values), {
       loading: 'Đang tải',
       success: () => {
-        mutate();
         onSubmit?.();
         return 'Đã gửi bài đăng thành công';
       },

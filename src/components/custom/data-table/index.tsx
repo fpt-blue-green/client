@@ -14,6 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableFilterField } from './filter-type';
 import { ButtonProps } from '@/components/ui/button';
 import { IFilterList } from '@/types/filter-list';
+import { ReloadIcon } from '@radix-ui/react-icons';
 
 interface TableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -23,6 +24,7 @@ interface TableProps<TData, TValue> {
   buttons?: ButtonProps[];
   onCheck?: (items: TData[]) => void;
   headClassName?: string;
+  hasRefresh?: boolean;
 }
 
 export interface TableRef {
@@ -31,7 +33,16 @@ export interface TableRef {
 
 // Sử dụng một hàm wrapper để khai báo generic và truyền vào `forwardRef`.
 function TableComponent<TData, TValue>(
-  { columns, url, defaultSorting, filters, buttons, onCheck, headClassName }: TableProps<TData, TValue>,
+  {
+    columns,
+    url,
+    defaultSorting,
+    filters,
+    buttons = [],
+    onCheck,
+    headClassName,
+    hasRefresh = false,
+  }: TableProps<TData, TValue>,
   ref: Ref<TableRef>,
 ) {
   const [urlQuery, setUrlQuery] = useState<string>();
@@ -84,6 +95,20 @@ function TableComponent<TData, TValue>(
     onRowChecked: onCheck,
   });
 
+  const tButtons: ButtonProps[] = useMemo(() => {
+    if (hasRefresh) {
+      return [
+        ...buttons,
+        {
+          children: <ReloadIcon />,
+          size: 'icon',
+          onClick: () => mutate((key: string) => key.startsWith(url), undefined, { revalidate: true }),
+        },
+      ];
+    }
+    return buttons;
+  }, [buttons, hasRefresh, url]);
+
   useUpdateEffect(() => {
     setUrlQuery(url + '?' + queryString);
   }, [url, queryString]);
@@ -94,7 +119,7 @@ function TableComponent<TData, TValue>(
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} filters={filters} buttons={buttons} />
+      <DataTableToolbar table={table} filters={filters} buttons={tButtons} />
       <DataTable table={table} isLoading={isLoading} headClassName={headClassName} />
       <DataTablePagination table={table} />
     </div>
