@@ -1,19 +1,9 @@
 'use client';
 import Table, { TableRef } from '@/components/custom/data-table';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { forwardRef, useState } from 'react';
+import { forwardRef } from 'react';
 import { banUserColumns } from './columns';
-import { IBanUserManagement } from '@/types/user-management';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import ActionForm from './action-form';
-import { ColumnDef } from '@tanstack/react-table';
-import { Button, ButtonProps } from '@/components/ui/button';
-import { DownloadIcon, MoreHorizontal } from 'lucide-react';
+import { ButtonProps } from '@/components/ui/button';
+import { DownloadIcon } from 'lucide-react';
 import { adminRequest } from '@/request';
 import { formats } from '@/lib/utils';
 interface IBanUserTableProps {
