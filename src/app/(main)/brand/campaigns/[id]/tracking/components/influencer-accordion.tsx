@@ -165,8 +165,8 @@ const OfferAction = ({ job, reload }: { job: IJob; reload: () => Promise<void> }
 
   if (offer.status === EOfferStatus.Done) {
     return (
-      <Button variant="outline" size="small">
-        Xem chi tiết
+      <Button variant="outline" size="small" asChild>
+        <Link href={`?tab=content&i=${job.influencerId}&j=${job.id}`}>Xem chi tiết</Link>
       </Button>
     );
   }

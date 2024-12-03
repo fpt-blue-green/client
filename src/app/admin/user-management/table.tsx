@@ -2,8 +2,8 @@
 
 import Table, { TableRef } from '@/components/custom/data-table';
 import { columns, filters } from './columns';
-import { Button, ButtonProps } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { forwardRef, useState } from 'react';
 import {
   DropdownMenu,

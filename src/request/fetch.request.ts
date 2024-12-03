@@ -110,6 +110,13 @@ const fetchRequest = {
         fetcher,
       );
     },
+    detailStatistical: (id?: string, link?: string) => {
+      const searchParams = new URLSearchParams();
+      if (link) {
+        searchParams.append('link', link);
+      }
+      return useSWR<ICampaignOverview>(id ? `/Job/${id}/JobDetailBaseData?` + searchParams : null, fetcher);
+    },
   },
   chat: {
     list: (search?: string) => {
@@ -127,6 +134,15 @@ const fetchRequest = {
     wallet: (fetch?: boolean) =>
       useSWR<{ currentAmount: number; spendAmount: number }>(fetch ? '/User/wallet' : null, fetcher),
     paymentHistory: () => useSWRImmutable<IPaymentHistory>('/User/paymentHistory', fetcher),
+    loginHistory: () =>
+      useSWRImmutable<
+        {
+          deviceOperatingSystem: string;
+          browserName: string;
+          deviceType: string;
+          lastLoginTime: string;
+        }[]
+      >('/User/loginHistory', fetcher),
   },
   settings: () => useSWRImmutable<ISystemSetting[]>('/SystemSetting', fetcher),
   payments: {

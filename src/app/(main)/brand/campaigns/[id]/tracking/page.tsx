@@ -72,7 +72,7 @@ const Tracking: FC<TrackingProps> = async ({ params, searchParams }) => {
           </DropdownMenu>
         </div>
       </div>
-      <Tabs defaultValue={searchParams.tab || 'member'}>
+      <Tabs value={searchParams.tab || 'member'}>
         <TabsList className="grid w-full md:grid-cols-3 grid-cols-2 *:flex *:max-lg:flex-col *:items-center *:gap-2">
           <TabsTrigger value="member" asChild>
             <Link href="?tab=member" className="flex items-center gap-2">

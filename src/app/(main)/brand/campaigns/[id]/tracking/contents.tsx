@@ -3,7 +3,7 @@
 import Paper from '@/components/custom/paper';
 import { fetchRequest, offerRequest } from '@/request';
 import { EJobStatus, EOfferStatus, PlatformData } from '@/types/enum';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Skeleton } from '@/components/ui/skeleton';
 import NoData from '@/components/no-data';
@@ -23,16 +23,31 @@ import Image from 'next/image';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import IJob from '@/types/job';
 import Chip from '@/components/custom/chip';
-import { emitter } from '@/lib/utils';
+import { emitter, formats } from '@/lib/utils';
+import { LuEye, LuHeart, LuMessageSquare } from 'react-icons/lu';
+import { Progress } from '@/components/ui/progress';
 
 const Contents = () => {
   const { id } = useParams<{ id: string }>();
+  const searchParams = useSearchParams();
   const { data, isLoading, mutate } = fetchRequest.campaign.members(
     id,
     [EJobStatus.Approved, EJobStatus.InProgress, EJobStatus.Failed, EJobStatus.Completed],
     [EOfferStatus.Done],
   );
   const [selectedJob, setSelectedJob] = useState<IJob>();
+  const influencerId = searchParams.get('i');
+  const jobId = searchParams.get('j');
+
+  useEffect(() => {
+    if (data && influencerId && jobId) {
+      const influencer = data.items.find((i) => i.id === influencerId);
+      if (influencer) {
+        const job = influencer.jobs.find((i) => i.id === jobId);
+        setSelectedJob(job);
+      }
+    }
+  }, [data, influencerId, jobId]);
 
   const handleReload = () => {
     mutate();
@@ -42,7 +57,7 @@ const Contents = () => {
     <div className="grid grid-cols-3 gap-4">
       <Paper className="min-h-[640px]">
         <ScrollArea>
-          <Accordion type="multiple">
+          <Accordion type="multiple" defaultValue={[influencerId || '']}>
             {isLoading
               ? Array.from({ length: 5 }).map((_, index) => <Skeleton key={index} className="h-16 mt-4" />)
               : data?.items.map((item) => (
@@ -102,6 +117,7 @@ const JobDetails = ({ item, reload }: { item: IJob; reload: () => void }) => {
   const { id } = useParams<{ id: string }>();
   const { data, mutate } = fetchRequest.job.links(item.id);
   const [link, setLink] = useState('all');
+  const { data: statistical } = fetchRequest.job.detailStatistical(item.id, link !== 'all' ? link : undefined);
 
   useEffect(() => {
     setLink('all');
@@ -114,20 +130,36 @@ const JobDetails = ({ item, reload }: { item: IJob; reload: () => void }) => {
     }
   }, [link, data]);
 
+  const progress = useMemo(() => {
+    if (link === 'all' && statistical) {
+      return (statistical.totalReaction / statistical.targetReaction) * 100;
+    }
+    return 0;
+  }, [link, statistical]);
+
   const numNotApproved = useMemo(() => {
     return data?.filter((l) => !l.isApprove).length;
   }, [data]);
 
   const handleComplete = (completed: boolean) => () => {
     if (item) {
-      const caller = completed ? offerRequest.complete(item.id) : offerRequest.fail(item.id);
-      toast.promise(caller, {
-        loading: 'Đang tải',
-        success: () => {
-          reload();
-          return 'Thành công';
+      emitter.confirm({
+        callback: () => {
+          const caller = completed ? offerRequest.complete(item.id) : offerRequest.fail(item.id);
+          toast.promise(caller, {
+            loading: 'Đang tải',
+            success: () => {
+              reload();
+              return 'Thành công';
+            },
+            error: (err) => err?.message,
+          });
         },
-        error: (err) => err?.message,
+        content: completed
+          ? progress < 100
+            ? 'Bài đăng này chưa đạt chỉ chiêu đề ra. Bạn có chắc đánh dấu nó đạt yêu cầu?'
+            : 'Bạn có chắc đánh dấu nó đạt yêu cầu?'
+          : 'Bài đăng hoặc nhà sáng tạo nội dung đã gian lận hoặc tạo ra ảnh hưởng tiêu cực cho nhãn hàng của bạn?',
       });
     }
   };
@@ -182,7 +214,7 @@ const JobDetails = ({ item, reload }: { item: IJob; reload: () => void }) => {
         )}
       </div>
       {linkObj && !linkObj.isApprove ? (
-        <div className="p-8 space-y-4 text-center">
+        <div className="p-8 space-y-6 text-center">
           <h4>Link chưa được xác nhận</h4>
           <div className="inline-flex items-center gap-2">
             <Button variant="outline">
@@ -196,14 +228,61 @@ const JobDetails = ({ item, reload }: { item: IJob; reload: () => void }) => {
           </div>
         </div>
       ) : numNotApproved !== data?.length ? (
-        <Statistical id={id} jobId={item.id} link={link === 'all' ? undefined : link} />
+        <>
+          <div className="grid grid-cols-3 gap-2 overflow-auto">
+            <Paper className="text-right p-4 shrink-0">
+              <h6
+                className="flex items-center justify-between text-lg font-semibold"
+                title={formats.bigNum(statistical?.totalView || 0)}
+              >
+                <LuEye />
+                {formats.estimate(statistical?.totalView || 0)}
+              </h6>
+              <span className="text-sm text-muted-foreground">Lượt xem</span>
+            </Paper>
+            <Paper className="text-right p-4 shrink-0">
+              <h6
+                className="flex items-center justify-between text-lg font-semibold"
+                title={formats.bigNum(statistical?.totalLike || 0)}
+              >
+                <LuHeart />
+                {formats.bigNum(statistical?.totalLike || 0)}
+              </h6>
+              <span className="text-sm text-muted-foreground">Lượt thích</span>
+            </Paper>
+            <Paper className="text-right p-4 shrink-0">
+              <h6
+                className="flex items-center justify-between text-lg font-semibold"
+                title={formats.bigNum(statistical?.totalComment || 0)}
+              >
+                <LuMessageSquare />
+                {formats.bigNum(statistical?.totalComment || 0)}
+              </h6>
+              <span className="text-sm text-muted-foreground">Bình luận</span>
+            </Paper>
+          </div>
+          {link === 'all' && statistical && (
+            <div className="flex items-center gap-4">
+              <Progress className="flex-1 h-4" value={progress} />
+              <span className="text-nowrap">{`${formats.estimate(statistical.totalReaction)} / ${formats.estimate(
+                statistical.targetReaction,
+              )}`}</span>
+            </div>
+          )}
+          <Statistical id={id} jobId={item.id} link={link === 'all' ? undefined : link} />
+        </>
       ) : (
         <NoData description="Chưa có bài đăng nào được xác thực" />
       )}
-      {item.status === EJobStatus.InProgress && data?.some((l) => l.isApprove) && (
-        <Button variant="gradient" onClick={handleComplete(true)} fullWidth>
-          Đánh dấu đạt yêu cầu
-        </Button>
+      {link === 'all' && item.status === EJobStatus.InProgress && data?.some((l) => l.isApprove) && (
+        <div className="grid grid-cols-2 gap-4">
+          <Button variant="outline" onClick={handleComplete(false)} fullWidth>
+            Đánh dấu là không đạt
+          </Button>
+          <Button variant="gradient" onClick={handleComplete(true)} fullWidth>
+            Đạt yêu cầu
+          </Button>
+        </div>
       )}
     </div>
   );

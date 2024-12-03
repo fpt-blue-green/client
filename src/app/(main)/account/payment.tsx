@@ -145,7 +145,7 @@ const DepositForm = () => {
 
   const handleDeposit = (values: DepositBodyType) => {
     paymentRequest
-      .deposit(window.location.origin + config.routes.account, values.amount)
+      .deposit(window.location.origin + config.routes.account + '?t=payment', values.amount)
       .then((res) => {
         if (res.data) router.push(res.data?.shortLink);
       })
