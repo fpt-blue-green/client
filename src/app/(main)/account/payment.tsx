@@ -1,6 +1,6 @@
 'use client';
 
-import Table from '@/components/custom/data-table';
+import Table, { TableRef } from '@/components/custom/data-table';
 import Paper from '@/components/custom/paper';
 import PriceInput from '@/components/custom/price-input';
 import Tooltip from '@/components/custom/tooltip';
@@ -16,7 +16,7 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import config from '@/config';
@@ -31,16 +31,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { ColumnDef } from '@tanstack/react-table';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { LuCheckSquare } from 'react-icons/lu';
 import { toast } from 'sonner';
 
 const Payment = () => {
   const { session } = useAuthUser();
-  const { data } = fetchRequest.user.wallet(!!session);
+  const { data, mutate } = fetchRequest.user.wallet(!!session);
   const [open, setOpen] = useState(false);
   const [openWithdraw, setOpenWithdraw] = useState(false);
+  const tableRef = useRef<TableRef>(null);
 
   const columns: ColumnDef<IPaymentHistory>[] = [
     {
@@ -95,6 +96,8 @@ const Payment = () => {
   }, []);
 
   const handleClose = () => {
+    tableRef.current?.reload();
+    mutate();
     setOpen(false);
     setOpenWithdraw(false);
   };
@@ -112,6 +115,7 @@ const Payment = () => {
         </div>
       </div>
       <Table
+        ref={tableRef}
         url="/User/paymentHistory"
         columns={columns}
         defaultSorting={[{ id: 'created', desc: true }]}
@@ -177,11 +181,11 @@ const DepositForm = () => {
 
 const WithdrawForm = ({ onClose }: { onClose: () => void }) => {
   const { data: banks, isLoading } = fetchRequest.payments.banks();
-  const { mutate } = fetchRequest.user.wallet();
   const [bank, setBank] = useState<IBank>();
   const [bankColor, setBankColor] = useState<string>();
   const [open, setOpen] = useState(true);
   const [loading, setLoading] = useState(false);
+  const { data } = fetchRequest.fee();
 
   const form = useForm<WithdrawBodyType>({
     resolver: zodResolver(withdrawSchema),
@@ -196,12 +200,11 @@ const WithdrawForm = ({ onClose }: { onClose: () => void }) => {
       toast.promise(paymentRequest.withdraw(values), {
         loading: 'Đang tải',
         success: () => {
-          mutate();
+          onClose();
           return 'Tạo yêu cầu rút thành công. Bạn có thể nhận được tiền sau 2 - 3 ngày.';
         },
         error: (err) => err?.message,
       });
-      onClose();
     };
     if (values.accountName) {
       callback();
@@ -322,6 +325,14 @@ const WithdrawForm = ({ onClose }: { onClose: () => void }) => {
                       <PriceInput {...field} placeholder="Nhập số tiền muốn rút" fullWidth />
                     </FormControl>
                     <FormMessage />
+                    {data && (
+                      <FormDescription>
+                        Phí dịch vụ là <span className="font-semibold">{data}%.</span> Số tiền thực tế nhận được{' '}
+                        <span className="font-semibold text-destructive">
+                          {formats.price((field.value * (100 - data)) / 100)}
+                        </span>
+                      </FormDescription>
+                    )}
                   </FormItem>
                 )}
               />

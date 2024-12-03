@@ -2,23 +2,29 @@
 
 import config from '@/config';
 import MenuItem from './menu-item';
-import { ModeToggle } from '@/components/mode-toggle';
 import ProfileDropdown from '@/components/profile-dropdown';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import { ChatBubbleIcon, HamburgerMenuIcon } from '@radix-ui/react-icons';
-import { useSession } from 'next-auth/react';
 import { ERole } from '@/types/enum';
 import { useLayoutEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Lobster_Two } from 'next/font/google';
+import { useAuthBrand } from '@/hooks';
+import Chip from './custom/chip';
+import { useRouter } from 'next/navigation';
 
 const lobster = Lobster_Two({ weight: ['700'], subsets: ['latin'] });
 
 const Header = () => {
-  const { data: session } = useSession();
+  const { profile, session } = useAuthBrand();
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const router = useRouter();
+
+  const navigateUpgrade = () => {
+    router.push(config.routes.brand.pricing);
+  };
 
   useLayoutEffect(() => {
     const handleScroll = () => {
@@ -68,12 +74,12 @@ const Header = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {!profile?.isPremium && <Chip label="Nâng cấp lên Premium" size="large" onClick={navigateUpgrade} />}
             <Button variant="ghost" size="icon" asChild>
               <Link href={config.routes.chats.base}>
                 <ChatBubbleIcon className="size-5" />
               </Link>
             </Button>
-            <ModeToggle />
             <ProfileDropdown />
           </div>
         </div>
