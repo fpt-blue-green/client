@@ -151,6 +151,7 @@ const fetchRequest = {
   metricTrends: () => useSWRImmutable<IMetricTrend[]>('/AdminStatistic/monthlyMetricsTrend', fetcher),
   revenue: () => useSWRImmutable<IPieChartDate[]>('/AdminStatistic/revenue', fetcher),
   campaigns: (brandId: string) => useSWRImmutable<ICampaign[]>(`/Brands/${brandId}/campaigns`, fetcher),
+  fee: () => useSWRImmutable<number>('/Utility/withDrawFee', fetcher),
 };
 
 export default fetchRequest;

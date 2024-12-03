@@ -7,6 +7,7 @@ import { paymentRequest } from '@/request';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useAuthBrand } from '@/hooks';
+import Badge from '@/components/custom/badge';
 
 interface IPackagePurchase {
   redirectUrl: string;
@@ -60,17 +61,16 @@ const BilledCards = () => {
         >
           Một Tháng
         </Button>
-        <Button
-          onClick={handleThreeMonthBilledClick}
-          size="small"
-          variant={isMonthlyBilled ? 'ghost' : 'foreground'}
-          className="h-8 rounded-2xl cursor-pointer text-base"
-        >
-          Ba Tháng
-        </Button>
-        <Button size="icon" className="text-[6px] p-2 h-4 mb-6 mr-4" variant="gradient">
-          -15%
-        </Button>
+        <Badge label="15%" size="small">
+          <Button
+            onClick={handleThreeMonthBilledClick}
+            size="small"
+            variant={isMonthlyBilled ? 'ghost' : 'foreground'}
+            className="h-8 rounded-2xl cursor-pointer text-base"
+          >
+            Ba Tháng
+          </Button>
+        </Badge>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="border border-foreground col-span-1 px-8 py-5 rounded-md bg-card">

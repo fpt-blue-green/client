@@ -22,7 +22,7 @@ const Pricing = () => {
       <BilledCards />
       <div className="max-w-4xl mx-auto text-center mt-20">
         <h1 className="text-4xl font-semibold">
-          Được bao gồm trong gói Pro
+          Được bao gồm trong gói Premium
           <br />
         </h1>
       </div>
