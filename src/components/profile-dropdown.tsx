@@ -28,12 +28,19 @@ import { useAuthBrand, useAuthInfluencer } from '@/hooks';
 import { fetchRequest } from '@/request';
 import { formats } from '@/lib/utils';
 import { GiUpgrade } from 'react-icons/gi';
+import { useTheme } from 'next-themes';
+import { MoonIcon, SunIcon } from 'lucide-react';
 
 const ProfileDropdown = () => {
   const { session, profile: influencer } = useAuthInfluencer();
   const { profile: brand } = useAuthBrand();
   const user = session?.user;
   const { data: wallet } = fetchRequest.user.wallet(!!user);
+  const { theme, setTheme } = useTheme();
+
+  const onChangeTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  };
 
   const isPremium = brand?.isPremium;
 
@@ -116,6 +123,11 @@ const ProfileDropdown = () => {
                       Yêu thích
                     </Link>
                   </DropdownMenuItem>
+                  <DropdownMenuItem onClick={onChangeTheme}>
+                    <SunIcon className="size-4 mr-2 dark:hidden" />
+                    <MoonIcon className="size-4 mr-2 dark:block hidden" />
+                    {theme === 'light' ? 'Sáng' : 'Tối'}
+                  </DropdownMenuItem>
                 </>
               )}
               <DropdownMenuSeparator />
@@ -129,10 +141,15 @@ const ProfileDropdown = () => {
             </>
           ) : (
             <>
+              <DropdownMenuItem onClick={onChangeTheme}>
+                <SunIcon className="size-4 mr-2 dark:hidden" />
+                <MoonIcon className="size-4 mr-2 dark:block hidden" />
+                {theme === 'light' ? 'Sáng' : 'Tối'}
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => signIn()}>Đăng nhập</DropdownMenuItem>
-              <DialogTrigger asChild>
-                <DropdownMenuItem>Đăng kí</DropdownMenuItem>
-              </DialogTrigger>
+              <DropdownMenuItem asChild>
+                <DialogTrigger>Đăng ký</DialogTrigger>
+              </DropdownMenuItem>
             </>
           )}
         </DropdownMenuContent>

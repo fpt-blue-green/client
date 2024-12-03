@@ -38,7 +38,7 @@ const BrandDetails: FC<BrandDetailsProps> = async ({ params }) => {
   return (
     <div className="container my-8">
       <GeneralInfo brand={brand} />
-      <Campaigns />
+      <Campaigns brand={brand} />
     </div>
   );
 };

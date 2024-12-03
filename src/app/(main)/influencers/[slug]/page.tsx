@@ -116,9 +116,11 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
             <span className="text-sm text-muted-foreground">
               {influencer.rateAverage > 0 ? `${count} đánh giá` : 'Chưa có đánh giá'}
             </span>
-            <Button variant="link" asChild className="text-foreground">
-              <Link href="#reviews">Thêm đánh giá</Link>
-            </Button>
+            {influencer.userId !== session?.user.id && (
+              <Button variant="link" asChild className="text-foreground">
+                <Link href="#reviews">Thêm đánh giá</Link>
+              </Button>
+            )}
           </div>
           <p className="text-muted-foreground text-sm">{influencer.description}</p>
           <Action influencer={influencer} />

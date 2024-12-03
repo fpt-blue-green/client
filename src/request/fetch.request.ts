@@ -70,6 +70,7 @@ const fetchRequest = {
       useSWRImmutable<{ platform: EPlatform; value: number }[]>(`/Campaigns/${id}/jobDetailBasePlatform`, fetcher),
     participants: (id: string) => useSWR<IUser[]>(`/Campaigns/${id}/participant`, fetcher),
     meetings: (id: string) => useSWRImmutable<IFilterList<IMeeting>>(`/Campaigns/${id}/meetingRoom`, fetcher),
+    listByBrand: (id: string) => useSWRImmutable<ICampaign[]>(`Brands/${id}/campaigns`, fetcher),
   },
   influencer: {
     jobs: (
@@ -109,6 +110,13 @@ const fetchRequest = {
         fetcher,
       );
     },
+    detailStatistical: (id?: string, link?: string) => {
+      const searchParams = new URLSearchParams();
+      if (link) {
+        searchParams.append('link', link);
+      }
+      return useSWR<ICampaignOverview>(id ? `/Job/${id}/JobDetailBaseData?` + searchParams : null, fetcher);
+    },
   },
   chat: {
     list: (search?: string) => {
@@ -126,6 +134,15 @@ const fetchRequest = {
     wallet: (fetch?: boolean) =>
       useSWR<{ currentAmount: number; spendAmount: number }>(fetch ? '/User/wallet' : null, fetcher),
     paymentHistory: () => useSWRImmutable<IPaymentHistory>('/User/paymentHistory', fetcher),
+    loginHistory: () =>
+      useSWRImmutable<
+        {
+          deviceOperatingSystem: string;
+          browserName: string;
+          deviceType: string;
+          lastLoginTime: string;
+        }[]
+      >('/User/loginHistory', fetcher),
   },
   settings: () => useSWRImmutable<ISystemSetting[]>('/SystemSetting', fetcher),
   payments: {
@@ -134,6 +151,7 @@ const fetchRequest = {
   metricTrends: () => useSWRImmutable<IMetricTrend[]>('/AdminStatistic/monthlyMetricsTrend', fetcher),
   revenue: () => useSWRImmutable<IPieChartDate[]>('/AdminStatistic/revenue', fetcher),
   campaigns: (brandId: string) => useSWRImmutable<ICampaign[]>(`/Brands/${brandId}/campaigns`, fetcher),
+  fee: () => useSWRImmutable<number>('/Utility/withDrawFee', fetcher),
 };
 
 export default fetchRequest;
