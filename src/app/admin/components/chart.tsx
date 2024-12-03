@@ -4,22 +4,13 @@ import { FaMoneyBill } from 'react-icons/fa6';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 import { ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { ChartLegend, ChartLegendContent } from '@/components/ui/chart';
-
+import { fetchRequest } from '@/request';
 const OverviewChart = () => {
-  const chartData = [
-    { month: 'Tháng 1', revenue: 10 },
-    { month: 'Tháng 2', revenue: 200 },
-    { month: 'Tháng 3', revenue: 120 },
-    { month: 'Tháng 4', revenue: 190 },
-    { month: 'Tháng 5', revenue: 130 },
-    { month: 'Tháng 6', revenue: 140 },
-    { month: 'Tháng 7', revenue: 80 },
-    { month: 'Tháng 8', revenue: 200 },
-    { month: 'Tháng 9', revenue: 50 },
-    { month: 'Tháng 10', revenue: 80 },
-    { month: 'Tháng 11', revenue: 120 },
-    { month: 'Tháng 12', revenue: 190 },
-  ];
+  const { data } = fetchRequest.revenue();
+  const chartData = data?.map((item) => ({
+    month: item.label,
+    revenue: item.value,
+  }));
 
   const chartConfig = {
     revenue: {

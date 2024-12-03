@@ -39,22 +39,23 @@ const UserTable = forwardRef<TableRef, IUserTableProps>((props, ref) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="flex flex-col gap-1">
-              <DropdownMenuItem asChild>
-                <DialogTrigger
+              {user.isBanned ? (
+                <DropdownMenuItem
                   onClick={() => {
-                    handleOpen(user);
+                    openBanOrUnBan(user, false);
                   }}
                 >
-                  Chỉnh sửa
-                </DialogTrigger>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  handleBan(user);
-                }}
-              >
-                Cấm
-              </DropdownMenuItem>
+                  Huỷ lệnh cấm
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem
+                  onClick={() => {
+                    openBanOrUnBan(user, true);
+                  }}
+                >
+                  Cấm
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem onClick={handleDelete(user)}>Xóa</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -62,17 +63,8 @@ const UserTable = forwardRef<TableRef, IUserTableProps>((props, ref) => {
       },
     },
   ];
-  const buttons: ButtonProps[] = [
-    {
-      children: 'Thêm',
-      onClick: () => {
-        handleOpen(undefined);
-      },
-    },
-  ];
   const [user, setUser] = useState<IUserManagement>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isBanOrUnBanForm, setIsBanOrUnBanForm] = useState<boolean>(false);
   const [isBan, setIsBan] = useState<boolean>(false);
 
   const handleDelete = (user: IUserManagement) => () => {
@@ -91,38 +83,23 @@ const UserTable = forwardRef<TableRef, IUserTableProps>((props, ref) => {
     });
   };
 
-  const handleBan = (user: IUserManagement) => {
+  const openBanOrUnBan = (user: IUserManagement, isBan: boolean) => {
+    setIsBan(isBan);
     setIsOpen(true);
     setUser(user);
-    setIsBanOrUnBanForm(true);
-    setIsBan(true);
-  };
-
-  const handleOpen = (user?: IUserManagement) => {
-    setIsOpen(true);
-    setUser(user);
-    setIsBanOrUnBanForm(false);
-    setIsBan(false);
   };
 
   const handleClose = () => {
     setIsOpen(false);
     setUser(undefined);
-    setIsBanOrUnBanForm(false);
     setIsBan(false);
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <Table columns={columnsWithActions} url="/User" filters={filters} buttons={buttons} ref={ref} />
+      <Table columns={columnsWithActions} url="/User" filters={filters} ref={ref} />
       <DialogContent>
-        <ActionForm
-          handleClose={handleClose}
-          item={user}
-          reloadTable={props.reloadTable}
-          isBanOrUnBanForm={isBanOrUnBanForm}
-          isBan={isBan}
-        />
+        <ActionForm handleClose={handleClose} item={user} reloadTable={props.reloadTable} isBan={isBan} />
       </DialogContent>
     </Dialog>
   );

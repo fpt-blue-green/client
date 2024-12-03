@@ -1,4 +1,12 @@
-import { ECampaignStatus, EJobStatus, EOfferStatus, EPaymentStatus, EPaymentType, ERole } from '@/types/enum';
+import {
+  ECampaignStatus,
+  EJobStatus,
+  EOfferStatus,
+  EPaymentStatus,
+  EPaymentType,
+  EReportStatus,
+  ERole,
+} from '@/types/enum';
 import { FaTimes } from 'react-icons/fa';
 import { FaCheck, FaHourglassHalf } from 'react-icons/fa6';
 import { IconType } from 'react-icons/lib';
@@ -190,6 +198,24 @@ export const paymentType: { [key: string]: EnumLabel } = {
   },
 };
 
+export const reportStatus: { [key: string]: EnumLabel } = {
+  [EReportStatus.Pending]: {
+    label: 'Chờ phê duyệt',
+    color: 'warning',
+    textColor: 'text-warning',
+  },
+  [EReportStatus.Rejected]: {
+    label: 'Bị từ chối',
+    color: 'destructive',
+    textColor: 'text-destructive',
+  },
+  [EReportStatus.Approved]: {
+    label: 'Được chấp thuận',
+    color: 'success',
+    textColor: 'text-success',
+  },
+};
+
 export const convertReportReason = (reason: number): string => {
   switch (reason) {
     case 0:
@@ -206,19 +232,6 @@ export const convertReportReason = (reason: number): string => {
       return 'Không hoàn thành công việc';
     case 6:
       return 'Vi phạm điều khoản hợp đồng';
-    default:
-      return 'Khác';
-  }
-};
-
-export const convertReportStatus = (status: number): string => {
-  switch (status) {
-    case 0:
-      return 'Chờ xử lí';
-    case 1:
-      return 'Bị từ chối';
-    case 2:
-      return 'Được chấp thuận';
     default:
       return 'Khác';
   }

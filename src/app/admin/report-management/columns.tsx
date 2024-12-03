@@ -1,8 +1,8 @@
 'use client';
 
 import Tooltip from '@/components/custom/tooltip';
-import { convertReportReason, convertReportStatus } from '@/lib/constants';
-import { formats } from '@/lib/utils';
+import { convertReportReason } from '@/lib/constants';
+import { cn, constants, formats } from '@/lib/utils';
 import IReport from '@/types/report';
 import { ColumnDef } from '@tanstack/react-table';
 import { MdWarning } from 'react-icons/md';
@@ -45,7 +45,10 @@ export const columns: ColumnDef<IReport, IReport>[] = [
     id: 'reportStatus',
     accessorKey: 'reportStatus',
     header: 'Trạng thái',
-    cell: ({ row }) => <div className="pl-4">{convertReportStatus(row.original.reportStatus)}</div>,
+    cell: ({ row }) => {
+      const status = constants.reportStatus[row.original.reportStatus];
+      return <div className={cn('pl-4', status.textColor)}>{status.label}</div>;
+    },
   },
   {
     id: 'createdAt',

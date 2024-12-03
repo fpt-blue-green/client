@@ -2,6 +2,7 @@
 'use client';
 
 import { fetcher } from '@/lib/http';
+import IMetricTrend, { IPieChartDate } from '@/types/analytics';
 import IBank from '@/types/bank';
 import ICampaign from '@/types/campaign';
 import { ICampaignOverview } from '@/types/campaign-tracking';
@@ -130,6 +131,9 @@ const fetchRequest = {
   payments: {
     banks: () => useSWRImmutable<{ data: IBank[] }>('https://api.httzip.com/api/bank/list', fetcher),
   },
+  metricTrends: () => useSWRImmutable<IMetricTrend[]>('/AdminStatistic/monthlyMetricsTrend', fetcher),
+  revenue: () => useSWRImmutable<IPieChartDate[]>('/AdminStatistic/revenue', fetcher),
+  campaigns: (brandId: string) => useSWRImmutable<ICampaign[]>(`/Brands/${brandId}/campaigns`, fetcher),
 };
 
 export default fetchRequest;

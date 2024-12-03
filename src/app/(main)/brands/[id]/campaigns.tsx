@@ -1,21 +1,19 @@
 'use client';
 import CampaignCard from '@/components/campaign-card';
 import NoData from '@/components/no-data';
-import { fetcher } from '@/lib/http';
-import ICampaign from '@/types/campaign';
-import { IFilterList } from '@/types/filter-list';
-
-import useSWRImmutable from 'swr/immutable';
+import { useAuthBrand } from '@/hooks';
+import { fetchRequest } from '@/request';
 
 const Campaigns = () => {
-  const { data: campaigns } = useSWRImmutable<IFilterList<ICampaign>>('/Brand/campaigns', fetcher);
+  const { profile } = useAuthBrand();
+  const { data: campaigns } = fetchRequest.campaigns(profile?.id || '');
 
   return (
     <div className="mb-10">
       <h2 className="mt-10 mb-4 text-xl font-semibold">Chiến dịch</h2>
-      {campaigns && campaigns.items.length > 0 ? (
-        <div className="grid grid-col1 md:grid-cols-3 gap-4">
-          {campaigns.items?.map((item) => (
+      {campaigns && campaigns.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {campaigns?.map((item) => (
             <CampaignCard key={item.id} data={item} />
           ))}
         </div>
