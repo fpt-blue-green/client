@@ -62,7 +62,6 @@ export async function generateMetadata({ params }: InfluencerDetailsProps): Prom
 const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
   const [influencer, session] = await Promise.all([getInfluencer(params.slug), getServerSession(config.auth)]);
   const count = influencer.rateAverage ? (await influencersRequest.countFeedback(influencer.id)).data : 0;
-
   const breadcrumbItems: IBreadcrumbItem[] = [
     {
       label: 'Trang chủ',
