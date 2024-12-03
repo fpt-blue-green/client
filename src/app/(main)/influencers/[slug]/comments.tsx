@@ -66,16 +66,18 @@ const Comments: FC<CommentsProps> = ({ influencer, user }) => {
           )}
         </div>
         {user ? (
-          <>
-            <DialogTrigger asChild>
-              <Button type="button" variant="gradient" size="large" fullWidth onClick={() => setComment(undefined)}>
-                Viết đánh giá
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <CommentForm influencer={influencer} reload={reload} data={comment} />
-            </DialogContent>
-          </>
+          user.id !== influencer.userId && (
+            <>
+              <DialogTrigger asChild>
+                <Button type="button" variant="gradient" size="large" fullWidth onClick={() => setComment(undefined)}>
+                  Viết đánh giá
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <CommentForm influencer={influencer} reload={reload} data={comment} />
+              </DialogContent>
+            </>
+          )
         ) : (
           <Button type="button" variant="gradient" size="large" fullWidth onClick={() => signIn()}>
             Viết đánh giá

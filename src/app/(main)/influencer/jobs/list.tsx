@@ -2,8 +2,6 @@
 
 import { fetchRequest } from '@/request';
 import JobCard from './job-card';
-import Paper from '@/components/custom/paper';
-import { cn, constants } from '@/lib/utils';
 import { ECampaignStatus, EJobStatus, ERole } from '@/types/enum';
 import { useLayoutEffect, useState } from 'react';
 import NoData from '@/components/no-data';
@@ -12,6 +10,7 @@ import Pagination from '@/components/custom/pagination';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FaChartSimple, FaHandshake, FaSuitcase, FaUserPlus } from 'react-icons/fa6';
 import { RiCalendarScheduleFill } from 'react-icons/ri';
+import JobChart from './job-chart';
 
 const PAGE_SIZE = 4;
 
@@ -33,7 +32,6 @@ const List = () => {
     page,
     PAGE_SIZE,
   );
-  const { data: statistical } = fetchRequest.job.statistical();
   const [pageCount, setPageCount] = useState(0);
 
   useLayoutEffect(() => {
@@ -68,16 +66,7 @@ const List = () => {
   return (
     <div className="grid lg:grid-cols-3 grid-cols-1 gap-6">
       <div className="lg:order-last">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-4">
-          {statistical?.map((item, index) => (
-            <Paper className={cn('p-0 text-center font-semibold')} key={index}>
-              <div className={cn('p-3 text-sm', constants.jobStatus[item.jobStatus].backgroundColor)}>
-                {constants.jobStatus[item.jobStatus].label}
-              </div>
-              <div className="p-3 text-xl">{item.count}</div>
-            </Paper>
-          ))}
-        </div>
+        <JobChart />
       </div>
 
       <div className="col-span-full">

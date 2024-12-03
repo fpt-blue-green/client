@@ -70,6 +70,7 @@ const fetchRequest = {
       useSWRImmutable<{ platform: EPlatform; value: number }[]>(`/Campaigns/${id}/jobDetailBasePlatform`, fetcher),
     participants: (id: string) => useSWR<IUser[]>(`/Campaigns/${id}/participant`, fetcher),
     meetings: (id: string) => useSWRImmutable<IFilterList<IMeeting>>(`/Campaigns/${id}/meetingRoom`, fetcher),
+    listByBrand: (id: string) => useSWRImmutable<ICampaign[]>(`Brands/${id}/campaigns`, fetcher),
   },
   influencer: {
     jobs: (

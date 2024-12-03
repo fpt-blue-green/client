@@ -31,7 +31,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { ColumnDef } from '@tanstack/react-table';
 import { useRouter } from 'next/navigation';
-import { useCallback, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { LuCheckSquare } from 'react-icons/lu';
 import { toast } from 'sonner';
@@ -77,7 +77,7 @@ const Payment = () => {
     },
   ];
 
-  const buttons = useCallback(() => {
+  const buttons = useMemo(() => {
     const data = [
       {
         children: 'Rút tiền',
@@ -115,7 +115,8 @@ const Payment = () => {
         url="/User/paymentHistory"
         columns={columns}
         defaultSorting={[{ id: 'created', desc: true }]}
-        buttons={buttons()}
+        buttons={buttons}
+        hasRefresh
       />
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>

@@ -50,7 +50,7 @@ const Action: FC<ActionProps> = ({ influencer }) => {
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="grid grid-cols-2 md:flex items-center gap-2">
       <Popover>
         <PopoverTrigger asChild>
           <Button variant="ghost" startIcon={<LuShare />}>
