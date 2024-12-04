@@ -123,13 +123,13 @@ const ProfileDropdown = () => {
                       Yêu thích
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={onChangeTheme}>
-                    <SunIcon className="size-4 mr-2 dark:hidden" />
-                    <MoonIcon className="size-4 mr-2 dark:block hidden" />
-                    Giao diện: {theme === 'light' ? 'Sáng' : 'Tối'}
-                  </DropdownMenuItem>
                 </>
               )}
+              <DropdownMenuItem onClick={onChangeTheme}>
+                <SunIcon className="size-4 mr-2 dark:hidden" />
+                <MoonIcon className="size-4 mr-2 dark:block hidden" />
+                Giao diện: {theme === 'light' ? 'Sáng' : 'Tối'}
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="text-destructive"
