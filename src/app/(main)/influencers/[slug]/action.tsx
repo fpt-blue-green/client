@@ -30,7 +30,7 @@ const Action: FC<ActionProps> = ({ influencer }) => {
   const [copiedUrl, setCopiedUrl] = useState(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { data: isReported, mutate: callMutation } = fetchRequest.influencers.isReported(influencer.id);
-  console.log('isReported: ', isReported);
+
   const openReportForm = () => {
     setIsOpen(true);
   };
