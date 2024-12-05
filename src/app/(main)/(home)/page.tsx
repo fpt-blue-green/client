@@ -44,7 +44,7 @@ const Home = () => {
               </p>
               <div className="flex max-lg:flex-col items-center max-lg:justify-center gap-8">
                 <Button size="large" variant="gradient" className="h-12 px-8 text-base rounded-full" asChild>
-                  <Link href={config.routes.influencer.landing}>Trở thành nhà sáng tạo</Link>
+                  <Link href={config.routes.register.influencer}>Trở thành nhà sáng tạo</Link>
                 </Button>
                 <div className="border h-0 lg:h-12 w-48 lg:w-px"></div>
                 <Button size="large" variant="gradient" className="h-12 px-8 text-base rounded-full" asChild>
