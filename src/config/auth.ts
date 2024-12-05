@@ -47,27 +47,6 @@ const auth: NextAuthOptions = {
     signIn: routes.login,
   },
   callbacks: {
-    async signIn({ user, account }) {
-      if (account?.provider === 'google') {
-        try {
-          //TODO: Call Api
-          console.log(user);
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error('Failed to send data to backend:', error);
-        }
-      }
-      if (account?.provider === 'facebook') {
-        try {
-          //TODO: Call Api
-          console.log(user);
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error('Failed to send data to backend:', error);
-        }
-      }
-      return true; // Trả về true để tiếp tục quá trình đăng nhập
-    },
     async jwt({ token, user, trigger, session }) {
       if (trigger === 'update') {
         return { ...token, ...session.user };

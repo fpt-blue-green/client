@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
+import { useMount } from '@/hooks';
 
 const LoginForm = () => {
   const [showPass, setShowPass] = useState(false);
@@ -23,6 +24,13 @@ const LoginForm = () => {
       email: '',
       password: '',
     },
+  });
+
+  useMount(() => {
+    const error = searchParams.get('e');
+    if (error === 'notRegistered') {
+      toast.error('Tài khoản này chưa được đăng ký');
+    }
   });
 
   const toggleShow = () => {
