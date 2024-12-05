@@ -96,6 +96,7 @@ const fetchRequest = {
   influencers: {
     list: (searchParams?: URLSearchParams) =>
       useSWRImmutable<IFilterList<IInfluencer>>(`/Influencers?${searchParams}`, fetcher),
+    isReported: (id: string) => useSWRImmutable<boolean>(`/Influencers/${id}/isReported`, fetcher),
   },
   job: {
     statistical: () => useSWR<{ jobStatus: EJobStatus; count: number }[]>('/Job/statistical', fetcher),

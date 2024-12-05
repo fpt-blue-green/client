@@ -74,7 +74,9 @@ const Header = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {!profile?.isPremium && <Chip label="Nâng cấp lên Premium" size="large" onClick={navigateUpgrade} />}
+            {profile && !profile.isPremium && (
+              <Chip label="Nâng cấp lên Premium" size="large" onClick={navigateUpgrade} />
+            )}
             <Button variant="ghost" size="icon" asChild>
               <Link href={config.routes.chats.base}>
                 <ChatBubbleIcon className="size-5" />

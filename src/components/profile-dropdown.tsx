@@ -123,13 +123,13 @@ const ProfileDropdown = () => {
                       Yêu thích
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={onChangeTheme}>
-                    <SunIcon className="size-4 mr-2 dark:hidden" />
-                    <MoonIcon className="size-4 mr-2 dark:block hidden" />
-                    {theme === 'light' ? 'Sáng' : 'Tối'}
-                  </DropdownMenuItem>
                 </>
               )}
+              <DropdownMenuItem onClick={onChangeTheme}>
+                <SunIcon className="size-4 mr-2 dark:hidden" />
+                <MoonIcon className="size-4 mr-2 dark:block hidden" />
+                Giao diện: {theme === 'light' ? 'Sáng' : 'Tối'}
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="text-destructive"
@@ -142,13 +142,12 @@ const ProfileDropdown = () => {
           ) : (
             <>
               <DropdownMenuItem onClick={onChangeTheme}>
-                <SunIcon className="size-4 mr-2 dark:hidden" />
-                <MoonIcon className="size-4 mr-2 dark:block hidden" />
-                {theme === 'light' ? 'Sáng' : 'Tối'}
+                Giao diện: {theme === 'light' ? 'Sáng' : 'Tối'}
               </DropdownMenuItem>
+              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => signIn()}>Đăng nhập</DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <DialogTrigger>Đăng ký</DialogTrigger>
+                <DialogTrigger className="w-full">Đăng ký</DialogTrigger>
               </DropdownMenuItem>
             </>
           )}

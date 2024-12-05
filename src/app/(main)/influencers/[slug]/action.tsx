@@ -29,10 +29,8 @@ const Action: FC<ActionProps> = ({ influencer }) => {
   const isFavorite = Boolean(data && data.some((f) => f.id === influencer.id));
   const [copiedUrl, setCopiedUrl] = useState(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  // Fake to test
-  const isReported = true;
-
+  const { data: isReported, mutate: callMutation } = fetchRequest.influencers.isReported(influencer.id);
+  console.log('isReported: ', isReported);
   const openReportForm = () => {
     setIsOpen(true);
   };
@@ -47,6 +45,7 @@ const Action: FC<ActionProps> = ({ influencer }) => {
         toast.promise(brandsRequest.cancelReportInfluencer(influencer.id), {
           loading: 'Đang tải',
           success: () => {
+            callMutation();
             return `Huỷ đề nghị tố cáo ${influencer.fullName} thành công`;
           },
           error: (err) => err?.message,
@@ -144,7 +143,7 @@ const Action: FC<ActionProps> = ({ influencer }) => {
       </Button>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent>
-          <ReportForm handleClose={closeReportForm} influencer={influencer} />
+          <ReportForm handleClose={closeReportForm} influencer={influencer} mutate={callMutation} />
         </DialogContent>
       </Dialog>
     </div>

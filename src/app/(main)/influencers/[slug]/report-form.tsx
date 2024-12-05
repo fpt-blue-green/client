@@ -17,9 +17,10 @@ import brandsRequest from '@/request/brands.request';
 interface ActionFormProps {
   influencer: IInfluencer;
   handleClose: () => void;
+  mutate: () => void;
 }
 
-const ReportForm: FC<ActionFormProps> = ({ handleClose, influencer }) => {
+const ReportForm: FC<ActionFormProps> = ({ handleClose, influencer, mutate }) => {
   const [loading, setLoading] = useState(false);
   const form = useForm<ReportInfluencerBasicBodyType>({
     resolver: zodResolver(reportInfluencerBasicSchema),
@@ -35,6 +36,7 @@ const ReportForm: FC<ActionFormProps> = ({ handleClose, influencer }) => {
       loading: 'Đang tải',
       success: () => {
         handleClose();
+        mutate();
         return `Đã tố cáo ${influencer.fullName} thành công.`;
       },
       error: (err) => err?.message || constants.sthWentWrong,

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { influencersRequest } from '@/request';
+import { fetchRequest, influencersRequest } from '@/request';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import IInfluencer from '@/types/influencer';
