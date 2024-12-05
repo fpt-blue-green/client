@@ -97,7 +97,7 @@ const ReportForm: FC<ActionFormProps> = ({ handleClose, influencer, mutate }) =>
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="ghost" type="button" loading={loading}>
+            <Button variant="ghost" type="button">
               Hủy
             </Button>
           </DialogClose>
