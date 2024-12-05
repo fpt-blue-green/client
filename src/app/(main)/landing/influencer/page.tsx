@@ -21,13 +21,9 @@ const JoinAsCreator = () => {
         <p className="mt-4 mb-9 text-muted-foreground text-sm">
           Cách đơn giản để bán, quản lí và kiếm tiền từ Instagram, TikTok, Youtube của bạn bằng cách sáng tạo nội dung
         </p>
-        <div className="w-full md:w-[65%] flex justify-between items-center py-2 px-5 border border-foreground rounded-full shadow-lg">
-          <span className="font-medium">adfusion.com/</span>
-          <input placeholder="nickname" className="w-full pr-1 outline-none" />
-          <Button className="rounded-full p-6" size="large" variant="gradient">
-            <Link href={{ pathname: config.routes.register.influencer }}> Xác Thực</Link>
-          </Button>
-        </div>
+        <Button className="rounded-full p-6 text-md" size="large" variant="gradient">
+          <Link href={{ pathname: config.routes.register.influencer }}>Trở thành nhà sáng tạo ngay</Link>
+        </Button>
       </div>
       {/* Images section*/}
       <div className="w-fit m-auto relative shadow-md">
