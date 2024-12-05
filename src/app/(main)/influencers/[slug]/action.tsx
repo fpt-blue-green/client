@@ -4,16 +4,20 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import config from '@/config';
 import { useAuthBrand, useThrottle } from '@/hooks';
-import { cn, constants } from '@/lib/utils';
+import { cn, constants, emitter } from '@/lib/utils';
 import { brandRequest, fetchRequest } from '@/request';
 import IInfluencer from '@/types/influencer';
 import { ChatBubbleIcon, HeartFilledIcon, HeartIcon, Link2Icon } from '@radix-ui/react-icons';
+import { MailWarningIcon } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 import { FaFacebook, FaWhatsapp, FaXTwitter } from 'react-icons/fa6';
 import { LuShare } from 'react-icons/lu';
 import { toast } from 'sonner';
+import ReportForm from './report-form';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import brandsRequest from '@/request/brands.request';
 
 interface ActionProps {
   influencer: IInfluencer;
@@ -24,6 +28,32 @@ const Action: FC<ActionProps> = ({ influencer }) => {
   const { data, mutate } = fetchRequest.favorites(!!profile);
   const isFavorite = Boolean(data && data.some((f) => f.id === influencer.id));
   const [copiedUrl, setCopiedUrl] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { data: isReported, mutate: callMutation } = fetchRequest.influencers.isReported(influencer.id);
+  console.log('isReported: ', isReported);
+  const openReportForm = () => {
+    setIsOpen(true);
+  };
+
+  const closeReportForm = () => {
+    setIsOpen(false);
+  };
+
+  const cancelReport = () => {
+    emitter.confirm({
+      callback: () => {
+        toast.promise(brandsRequest.cancelReportInfluencer(influencer.id), {
+          loading: 'Đang tải',
+          success: () => {
+            callMutation();
+            return `Huỷ đề nghị tố cáo ${influencer.fullName} thành công`;
+          },
+          error: (err) => err?.message,
+        });
+      },
+      content: `Bạn có chắc muốn huỷ đơn đề nghị tố cáo ${influencer.fullName}?`,
+    });
+  };
 
   const handleFavorite = useThrottle(() => {
     if (!session) {
@@ -102,6 +132,20 @@ const Action: FC<ActionProps> = ({ influencer }) => {
       <Button variant="ghost" startIcon={<ChatBubbleIcon className="size-5" />} asChild>
         <Link href={config.routes.chats.details(false, influencer.userId)}>Nhắn tin</Link>
       </Button>
+      <Button
+        onClick={() => {
+          isReported ? cancelReport() : openReportForm();
+        }}
+        variant="ghost"
+        startIcon={<MailWarningIcon className="size-5" />}
+      >
+        {isReported ? 'Huỷ tố cáo' : 'Tố cáo'}
+      </Button>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent>
+          <ReportForm handleClose={closeReportForm} influencer={influencer} mutate={callMutation} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

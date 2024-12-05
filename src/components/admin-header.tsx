@@ -1,5 +1,6 @@
 'use client';
 
+import { ModeToggle } from '@/components/mode-toggle';
 import ProfileDropdown from '@/components/profile-dropdown';
 import { Input } from './ui/input';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
@@ -21,6 +22,7 @@ const AdminHeader = () => {
             }
           />
           <div className="flex items-center gap-2">
+            <ModeToggle />
             <ProfileDropdown />
           </div>
         </div>

@@ -34,6 +34,15 @@ export const imagesSchema = z
     { path: ['cover'], message: 'Vui lòng tải lên ảnh bìa hoặc ảnh đại diện' },
   );
 
+export const reportInfluencerBasicSchema = z
+  .object({
+    reason: z.number().min(1, 'Vui lòng chọn 1 lí do'),
+    description: z.string().max(255, 'Không nhập quá 255 kí tự').optional(),
+  })
+  .strict();
+
 export type BasicBodyType = z.infer<typeof basicSchema>;
+export type ReportInfluencerBasicBodyType = z.infer<typeof reportInfluencerBasicSchema>;
+
 export type SocialBodyType = z.infer<typeof socialSchema>;
 export type ImagesBodyType = z.infer<typeof imagesSchema>;
