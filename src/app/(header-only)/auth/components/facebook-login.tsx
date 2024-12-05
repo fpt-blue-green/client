@@ -3,10 +3,11 @@
 import { Button } from '@/components/ui/button';
 import { signIn } from 'next-auth/react';
 import { FaFacebook } from 'react-icons/fa6';
+import IProviderProps from './provider-props';
 
-const FacebookLogin = () => {
+const FacebookLogin = ({ method, role }: IProviderProps) => {
   const login = () => {
-    signIn('facebook', { callbackUrl: '/' });
+    signIn('facebook', { callbackUrl: `/two-factor/${method}?p=3${role ? `&r=${role}` : ''}` });
   };
 
   return (
@@ -17,7 +18,7 @@ const FacebookLogin = () => {
       fullWidth
       onClick={login}
     >
-      Đăng nhập với Facebook
+      Đăng {method === 'sign-in' ? 'nhập' : 'ký'} với Facebook
     </Button>
   );
 };
