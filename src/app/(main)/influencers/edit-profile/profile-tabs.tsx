@@ -11,6 +11,8 @@ import useSWRImmutable from 'swr/immutable';
 import { fetcher } from '@/lib/http';
 import IInfluencer from '@/types/influencer';
 import { Skeleton } from '@/components/ui/skeleton';
+import { TagsIcon } from 'lucide-react';
+import Tags from './tags';
 
 const ProfileTabs = () => {
   const { data: influencer, isLoading } = useSWRImmutable<IInfluencer>('/Influencer', fetcher);
@@ -40,6 +42,10 @@ const ProfileTabs = () => {
             <FaBox />
             <span className="max-md:hidden ml-2">Các gói</span>
           </TabsTrigger>
+          <TabsTrigger value="tags" className="flex-1 py-3">
+            <TagsIcon />
+            <span className="max-md:hidden ml-2">Các thẻ</span>
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="details">
           <Details />
@@ -52,6 +58,9 @@ const ProfileTabs = () => {
         </TabsContent>
         <TabsContent value="packages">
           <Packages />
+        </TabsContent>
+        <TabsContent value="tags">
+          <Tags />
         </TabsContent>
       </Tabs>
     )
