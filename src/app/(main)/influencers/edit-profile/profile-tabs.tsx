@@ -30,6 +30,10 @@ const ProfileTabs = () => {
             <IdCardIcon />
             <span className="max-md:hidden ml-2">Chi tiết</span>
           </TabsTrigger>
+          <TabsTrigger value="tags" className="flex-1 py-3">
+            <TagsIcon />
+            <span className="max-md:hidden ml-2">Thẻ</span>
+          </TabsTrigger>
           <TabsTrigger value="images" className="flex-1 py-3">
             <FaRegImages />
             <span className="max-md:hidden ml-2">Thư viện ảnh</span>
@@ -41,10 +45,6 @@ const ProfileTabs = () => {
           <TabsTrigger value="packages" className="flex-1 py-3">
             <FaBox />
             <span className="max-md:hidden ml-2">Các gói</span>
-          </TabsTrigger>
-          <TabsTrigger value="tags" className="flex-1 py-3">
-            <TagsIcon />
-            <span className="max-md:hidden ml-2">Các thẻ</span>
           </TabsTrigger>
         </TabsList>
         <TabsContent value="details">

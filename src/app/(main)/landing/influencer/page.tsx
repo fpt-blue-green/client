@@ -21,8 +21,8 @@ const JoinAsCreator = () => {
         <p className="mt-4 mb-9 text-muted-foreground text-sm">
           Cách đơn giản để bán, quản lí và kiếm tiền từ Instagram, TikTok, Youtube của bạn bằng cách sáng tạo nội dung
         </p>
-        <Button className="rounded-full p-6 text-md" size="large" variant="gradient">
-          <Link href={{ pathname: config.routes.register.influencer }}>Trở thành nhà sáng tạo ngay</Link>
+        <Button size="large" variant="gradient" className="px-12 h-12" asChild>
+          <Link href={{ pathname: config.routes.register.influencer }}>Bắt đầu ngay bây giờ</Link>
         </Button>
       </div>
       {/* Images section*/}
