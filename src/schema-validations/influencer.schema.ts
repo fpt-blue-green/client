@@ -7,7 +7,14 @@ export const generalSchema = z
     fullName: z.string().min(2, 'Vui lòng nhập tên ít nhất 2 kí tự'),
     summarise: z.string().min(1, 'Vui lòng không để trống phần tóm tắt'),
     description: z.string().max(255, 'Không nhập quá 255 kí tự').optional(),
-    slug: z.string().min(1, 'Vui lòng nhập tên người dùng').regex(constants.slugRegex, 'Tên người dùng không hợp lệ'),
+    slug: z
+      .string()
+      .min(1, 'Vui lòng nhập tên người dùng')
+      .min(3, 'Vui lòng nhập ít nhất 5 kí tự')
+      .regex(
+        constants.slugRegex,
+        'Tên người dùng chỉ có thể chứa các ký tự chữ và số hoặc dấu gạch nối đơn và không thể bắt đầu hoặc kết thúc bằng dấu gạch nối.',
+      ),
     address: z.string().min(1, 'Vui lòng chọn địa chỉ của bạn'),
     gender: z.nativeEnum(EGender),
   })

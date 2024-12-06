@@ -76,7 +76,7 @@ const Step1: FC<DetailStepProps> = ({ profile, mutate }) => {
             <FormItem>
               <Label htmlFor="slug">Tên người dùng</Label>
               <FormControl>
-                <Input id="slug" placeholder="Tên người dùng" className="w-full" {...field} />
+                <Input id="slug" placeholder="Ví dụ: example-2024" className="w-full" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

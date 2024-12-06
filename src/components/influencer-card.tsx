@@ -76,62 +76,14 @@ const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer }) => {
         </div>
       )}
       <Link href={config.routes.influencers.details(data.slug)} className="text-sm">
-        {/* <div className="relative rounded-lg overflow-hidden group">
-          <div className="flex items-center transition-transform duration-300 group-hover:-translate-x-full">
-            <Image
-              src={data.images[0]?.url}
-              alt={`Ảnh đại diện của ${data.fullName}`}
-              width={400}
-              height={600}
-              className="aspect-thumbnail object-cover w-full"
-            />
-            <Image
-              src={data.images[1]?.url || data.images[0]?.url}
-              alt={`Ảnh đại diện của ${data.fullName}`}
-              width={400}
-              height={600}
-              className="aspect-thumbnail object-cover w-full"
-            />
-          </div>
-          <div className="absolute left-0 top-0 right-0 bottom-0 bg-bg-gradient-to-b from-black/5 from-75% to-black"></div>
-          <div className="absolute left-3 bottom-2 text-white">
-            <div className="flex items-center gap-1">
-              <h6 className="font-semibold text-sm">{data.fullName}</h6>
-              {data.rateAverage > 0 && (
-                <>
-                  <StarFilledIcon className="text-yellow-400" />
-                  <span>{data.rateAverage.toFixed(1)}</span>
-                </>
-              )}
-            </div>
-            <span className="text-xs">{data.address}</span>
-          </div>
-        </div>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1 text-sm">
-            {data.channels.map((c, index) => {
-              const { name, logo } = PlatformData[c.platform];
-              return <Image key={index} src={logo} alt={name} width={50} height={50} className="size-5" />;
-            })}
-          </div>
-          <span className="font-bold">{formats.price(data.averagePrice)}</span>
-        </div>
-        <div className="text-xs">{data.summarise}</div> */}
         <div className="relative group">
-          <div className="flex items-center transition-transform duration-300 group-hover:-translate-x-full">
+          <div className="overflow-hidden">
             <Image
               src={data.images[0]?.url}
               alt={`Ảnh đại diện của ${data.fullName}`}
               width={500}
               height={500}
-              className="aspect-square object-cover w-full"
-            />
-            <Image
-              src={data.images[1]?.url || data.images[0]?.url}
-              alt={`Ảnh đại diện của ${data.fullName}`}
-              width={500}
-              height={500}
-              className="aspect-square object-cover w-full"
+              className="aspect-square object-cover w-full group-hover:scale-110 transition-transform"
             />
           </div>
           <div className="absolute left-0 top-0 right-0 bottom-0 bg-bg-gradient-to-b from-black/10 from-70% to-black"></div>
