@@ -97,6 +97,13 @@ const fetchRequest = {
     list: (searchParams?: URLSearchParams) =>
       useSWRImmutable<IFilterList<IInfluencer>>(`/Influencers?${searchParams}`, fetcher),
     isReported: (id: string) => useSWRImmutable<boolean>(`/Influencers/${id}/isReported`, fetcher),
+    searchAI: (prompt: string, pageIndex = 1, pageSize = 50) => {
+      const searchParams = new URLSearchParams();
+      searchParams.append('prompt', prompt);
+      searchParams.append('pageIndex', pageIndex.toString());
+      searchParams.append('pageSize', pageSize.toString());
+      return useSWRImmutable<IFilterList<IInfluencer>>(prompt ? `/Influencers/aiSearch?${searchParams}` : '', fetcher);
+    },
   },
   job: {
     statistical: () => useSWR<{ jobStatus: EJobStatus; count: number }[]>('/Job/statistical', fetcher),

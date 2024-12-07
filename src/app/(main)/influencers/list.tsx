@@ -7,6 +7,11 @@ import { EPlatform } from '@/types/enum';
 import Pagination from '@/components/custom/pagination';
 import NoData from '@/components/no-data';
 import { fetchRequest } from '@/request';
+import { Button } from '@/components/ui/button';
+import { FaWandMagicSparkles } from 'react-icons/fa6';
+import AISearch from './ai-search';
+import { IFilterList } from '@/types/filter-list';
+import IInfluencer from '@/types/influencer';
 
 export interface FilterState {
   page: number;
@@ -18,6 +23,7 @@ export interface FilterState {
   rating: number;
   sortBy: string;
   isAscending: boolean;
+  isSearchAI: boolean;
 }
 
 const initialState: FilterState = {
@@ -30,6 +36,7 @@ const initialState: FilterState = {
   rating: 0,
   sortBy: '',
   isAscending: true,
+  isSearchAI: false,
 };
 
 export type FilterAction =
@@ -40,6 +47,7 @@ export type FilterAction =
   | { type: 'SET_PRICE_RANGE'; payload: [number, number] }
   | { type: 'SET_RATING'; payload: number }
   | { type: 'SET_SORT_BY'; payload: FilterState['sortBy'] }
+  | { type: 'SET_TYPE' }
   | { type: 'RESET_FILTER' };
 
 const filterReducer = (state: FilterState, action: FilterAction) => {
@@ -71,6 +79,8 @@ const filterReducer = (state: FilterState, action: FilterAction) => {
     case 'SET_SORT_BY':
       const isAscending = !action.payload.startsWith('-');
       return { ...state, sortBy: action.payload.substring(isAscending ? 0 : 1), isAscending };
+    case 'SET_TYPE':
+      return { ...state, isSearchAI: !state.isSearchAI };
     case 'RESET_FILTER':
       return initialState;
     default:
@@ -103,6 +113,7 @@ const List = () => {
     return searchParams;
   }, [filter]);
   const { data, isLoading } = fetchRequest.influencers.list(url);
+  const [dataByAI, setDataByAI] = useState<IFilterList<IInfluencer>>();
   const [pageCount, setPageCount] = useState(0);
 
   useLayoutEffect(() => {
@@ -122,15 +133,37 @@ const List = () => {
     dispatch({ type: 'SET_PAGE', payload: value });
   };
 
+  const handleSearchType = () => {
+    setDataByAI(undefined);
+    dispatch({ type: 'SET_TYPE' });
+  };
+
   return (
     <div className="space-y-7">
       <h1 className="text-2xl font-semibold">Nhà sáng tạo nội dung</h1>
-      <div>
-        <Filter data={filter} dispatch={dispatch} isChanged={isOptionsChange} />
+      <div className="flex items-center gap-2">
+        {filter.isSearchAI ? (
+          <AISearch
+            onClose={handleSearchType}
+            onSubmit={setDataByAI}
+            onPromptChange={() => handlePageChange(1)}
+            page={filter.page}
+            pageSize={filter.pageSize}
+          />
+        ) : (
+          <>
+            <Button variant="gradient" startIcon={<FaWandMagicSparkles />} onClick={handleSearchType}>
+              AI
+            </Button>
+            <Filter data={filter} dispatch={dispatch} isChanged={isOptionsChange} />
+          </>
+        )}
       </div>
       <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-x-6 gap-y-8">
         {isLoading ? (
           Array.from({ length: filter.pageSize }).map((_, index) => <InfluencerCardSkeleton key={index} />)
+        ) : filter.isSearchAI && dataByAI && dataByAI.items.length > 0 ? (
+          dataByAI.items.map((i) => <InfluencerCard key={i.id} data={i} />)
         ) : data && data.items.length > 0 ? (
           data.items.map((i) => <InfluencerCard key={i.id} data={i} />)
         ) : (

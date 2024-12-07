@@ -164,7 +164,11 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
           </Accordion>
         </div>
       </div>
-      <InfluencerList className="mt-16" title={`Những người tương tự với ${influencer.fullName}`} />
+      <InfluencerList
+        className="mt-16"
+        url={`/Influencers/${influencer.id}/similar`}
+        title={`Những người tương tự với ${influencer.fullName}`}
+      />
     </div>
   );
 };
