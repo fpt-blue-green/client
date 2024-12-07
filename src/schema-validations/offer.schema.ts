@@ -19,7 +19,7 @@ export const offerSchema = z
       targetReaction: z
         .number({ required_error: 'Nhập số lượt tương tác' })
         .int('Nhập giá trị nguyên')
-        .min(0, 'Nhập giá trị lớn hơn 0'),
+        .min(1, 'Nhập giá trị lớn hơn 0'),
       from: z.nativeEnum(ERole),
       price: z
         .number({ required_error: 'Nhập giá tiền' })

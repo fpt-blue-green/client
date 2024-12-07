@@ -93,7 +93,7 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
   };
 
   return (
-    <div className="flex items-center justify-between gap-6 max-md:flex-col">
+    <div className="flex-1 flex items-center justify-between gap-6 max-md:flex-col">
       {profile ? (
         <PremiumBadge invisible={profile?.isPremium}>
           <Input
