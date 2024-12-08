@@ -45,9 +45,10 @@ const mockInfluencer: IInfluencer = {
 
 interface InfluencerCardProps {
   data?: IInfluencer;
+  blank?: boolean;
 }
 
-const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer }) => {
+const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer, blank }) => {
   const { profile } = useAuthBrand();
   const { data: favorites, mutate } = fetchRequest.favorites(!!profile);
   const isFavorite = Boolean(favorites && favorites.some((f) => f.id === data.id));
@@ -75,7 +76,7 @@ const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer }) => {
           </Button>
         </div>
       )}
-      <Link href={config.routes.influencers.details(data.slug)} className="text-sm">
+      <Link href={config.routes.influencers.details(data.slug)} target={blank ? '_blank' : '_self'} className="text-sm">
         <div className="relative group">
           <div className="overflow-hidden">
             <Image

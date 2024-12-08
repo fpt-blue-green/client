@@ -167,9 +167,9 @@ const List = () => {
         {isLoading ? (
           Array.from({ length: filter.pageSize }).map((_, index) => <InfluencerCardSkeleton key={index} />)
         ) : filter.isSearchAI && dataByAI && dataByAI.items.length > 0 ? (
-          dataByAI.items.map((i) => <InfluencerCard key={i.id} data={i} />)
+          dataByAI.items.map((i) => <InfluencerCard key={i.id} data={i} blank />)
         ) : data && data.items.length > 0 ? (
-          data.items.map((i) => <InfluencerCard key={i.id} data={i} />)
+          data.items.map((i) => <InfluencerCard key={i.id} data={i} blank />)
         ) : (
           <NoData description="Không tìm thấy người sáng tạo" className="col-span-full" />
         )}
