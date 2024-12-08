@@ -25,7 +25,7 @@ export const offerSchema = z
         .number({ required_error: 'Nhập giá tiền' })
         .int('Nhập giá trị nguyên')
         .min(50000, 'Nhập giá trị lớn hơn hoặc bằng 50.000'),
-      description: z.string().optional(),
+      description: z.string().min(1, 'Vui lòng nhập lời nhắn'),
     }),
   })
   .strict();
@@ -42,7 +42,7 @@ export const reofferSchema = z.object({
     .min(50000, 'Nhập giá trị lớn hơn hoặc bằng 50.000'),
   duration: z.number().int('Nhập giá trị nguyên').min(0, 'Nhập giá trị lớn hơn 0').nullable().optional(),
   timeUnit: z.enum(['s', 'm', 'h']).optional(),
-  description: z.string().optional(),
+  description: z.string().min(1, 'Vui lòng nhập lời nhắn'),
 });
 
 export const jobLinksSchema = z.object({

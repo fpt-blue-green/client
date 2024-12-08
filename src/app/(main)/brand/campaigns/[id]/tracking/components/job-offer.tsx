@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
@@ -107,7 +107,7 @@ const ReofferForm = ({ offer, onClose }: { offer: IOffer; onClose: () => void })
       price: offer.price,
       targetReaction: offer.targetReaction,
       quantity: offer.quantity,
-      description: offer.description,
+      description: '',
       ...time,
     },
   });
@@ -217,6 +217,10 @@ const ReofferForm = ({ offer, onClose }: { offer: IOffer; onClose: () => void })
                 name="description"
                 render={({ field }) => (
                   <FormItem className="w-full">
+                    <FormDescription>
+                      <span className="font-semibold text-foreground mr-2">Lời nhắn của đối phương:</span>
+                      {offer.description}
+                    </FormDescription>
                     <FormControl>
                       <Textarea {...field} />
                     </FormControl>

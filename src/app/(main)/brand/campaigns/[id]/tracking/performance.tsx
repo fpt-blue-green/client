@@ -19,7 +19,7 @@ const Performance = () => {
   return (
     <div className="space-y-6">
       <div className="flex gap-2 overflow-auto">
-        <Paper className="text-right p-4 w-44 shrink-0">
+        <Paper className="text-right p-4 w-[193px] shrink-0">
           <h6
             className="flex items-center justify-between text-lg font-semibold"
             title={formats.bigNum(data?.totalJob || 0)}
@@ -29,7 +29,7 @@ const Performance = () => {
           </h6>
           <span className="text-sm text-muted-foreground">Công việc</span>
         </Paper>
-        <Paper className="text-right p-4 w-44 shrink-0">
+        <Paper className="text-right p-4 w-[193px] shrink-0">
           <h6
             className="flex items-center justify-between text-lg font-semibold"
             title={formats.bigNum(data?.targetReaction || 0)}
@@ -39,7 +39,7 @@ const Performance = () => {
           </h6>
           <span className="text-sm text-muted-foreground">Mục tiêu tương tác</span>
         </Paper>
-        <Paper className="text-right p-4 w-44 shrink-0">
+        <Paper className="text-right p-4 w-[193px] shrink-0">
           <h6
             className="flex items-center justify-between text-lg font-semibold"
             title={formats.bigNum(data?.totalView || 0)}
@@ -49,7 +49,7 @@ const Performance = () => {
           </h6>
           <span className="text-sm text-muted-foreground">Lượt xem</span>
         </Paper>
-        <Paper className="text-right p-4 w-44 shrink-0">
+        <Paper className="text-right p-4 w-[193px] shrink-0">
           <h6
             className="flex items-center justify-between text-lg font-semibold"
             title={formats.bigNum(data?.totalLike || 0)}
@@ -59,7 +59,7 @@ const Performance = () => {
           </h6>
           <span className="text-sm text-muted-foreground">Lượt thích</span>
         </Paper>
-        <Paper className="text-right p-4 w-44 shrink-0">
+        <Paper className="text-right p-4 w-[193px] shrink-0">
           <h6
             className="flex items-center justify-between text-lg font-semibold"
             title={formats.bigNum(data?.totalComment || 0)}
@@ -69,7 +69,7 @@ const Performance = () => {
           </h6>
           <span className="text-sm text-muted-foreground">Bình luận</span>
         </Paper>
-        <Paper className="text-right p-4 w-44 shrink-0">
+        <Paper className="text-right p-4 w-[193px] shrink-0">
           <h6
             className="flex items-center justify-between text-lg font-semibold"
             title={formats.bigNum(data?.totalReaction || 0)}
@@ -79,13 +79,13 @@ const Performance = () => {
           </h6>
           <span className="text-sm text-muted-foreground">Tổng tương tác</span>
         </Paper>
-        <Paper className="text-right p-4 w-44 shrink-0">
+        <Paper className="text-right p-4 w-[193px] shrink-0">
           <h6
             className="flex items-center justify-between text-lg font-semibold"
             title={formats.price(data?.totalFee || 0)}
           >
             <LuWallet />
-            {formats.estimate(data?.totalFee || 0)}
+            {formats.price(data?.totalFee || 0)}
           </h6>
           <span className="text-sm text-muted-foreground">Chi phí</span>
         </Paper>
