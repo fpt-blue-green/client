@@ -81,10 +81,22 @@ const Action: FC<ActionProps> = ({ influencer }) => {
 
   return (
     <div className="grid grid-cols-2 md:flex items-center gap-2">
+      <Button
+        variant="ghost"
+        startIcon={
+          isFavorite ? <HeartFilledIcon className="size-5 text-destructive" /> : <HeartIcon className="size-5" />
+        }
+        onClick={handleFavorite}
+      >
+        <span className={cn({ 'text-destructive': isFavorite })}>{isFavorite ? 'Đã yêu thích' : 'Yêu thích'}</span>
+      </Button>
+      <Button variant="ghost" startIcon={<ChatBubbleIcon className="size-5" />} asChild>
+        <Link href={config.routes.chats.details(false, influencer.userId)}>Nhắn tin</Link>
+      </Button>
       <Popover>
         <PopoverTrigger asChild>
           <Button variant="ghost" startIcon={<LuShare />}>
-            Chia Sẻ
+            <span className="lg:sr-only">Chia sẻ</span>
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-fit">
@@ -121,25 +133,13 @@ const Action: FC<ActionProps> = ({ influencer }) => {
         </PopoverContent>
       </Popover>
       <Button
-        variant="ghost"
-        startIcon={
-          isFavorite ? <HeartFilledIcon className="size-5 text-destructive" /> : <HeartIcon className="size-5" />
-        }
-        onClick={handleFavorite}
-      >
-        <span className={cn({ 'text-destructive': isFavorite })}>{isFavorite ? 'Đã yêu thích' : 'Yêu thích'}</span>
-      </Button>
-      <Button variant="ghost" startIcon={<ChatBubbleIcon className="size-5" />} asChild>
-        <Link href={config.routes.chats.details(false, influencer.userId)}>Nhắn tin</Link>
-      </Button>
-      <Button
         onClick={() => {
           isReported ? cancelReport() : openReportForm();
         }}
         variant="ghost"
         startIcon={<MailWarningIcon className="size-5" />}
       >
-        {isReported ? 'Huỷ tố cáo' : 'Tố cáo'}
+        <span className="lg:sr-only">{isReported ? 'Huỷ tố cáo' : 'Tố cáo'}</span>
       </Button>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent>

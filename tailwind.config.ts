@@ -13,6 +13,7 @@ const config = {
       lg: '992px',
       xl: '1200px',
       '2xl': '1400px',
+      '3xl': '1600px',
     },
     container: {
       center: true,
@@ -21,6 +22,7 @@ const config = {
         lg: '960px',
         xl: '1140px',
         '2xl': '1320px',
+        '3xl': '1440px',
       },
     },
     extend: {

@@ -99,13 +99,13 @@ const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer }) => {
           </h5>
         </div>
         <div className="p-4 mt-6">
-          <div className="flex justify-center items-center gap-4">
+          <div className="flex justify-center items-center gap-6">
             {data.channels.map((c) => {
               const { name, logo, followerText } = PlatformData[c.platform];
               return (
                 <div key={c.id} className="flex flex-col items-center gap-1">
                   <Image src={logo} alt={name} width={30} height={30} />
-                  <span className="font-semibold text-base">{formats.estimate(c.followersCount)}</span>
+                  <span className="font-semibold">{formats.estimate(c.followersCount)}</span>
                   <span className="text-xs text-muted-foreground">{followerText.substring(6)}</span>
                 </div>
               );

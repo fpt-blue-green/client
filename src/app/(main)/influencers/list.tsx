@@ -12,6 +12,7 @@ import { FaWandMagicSparkles } from 'react-icons/fa6';
 import AISearch from './ai-search';
 import { IFilterList } from '@/types/filter-list';
 import IInfluencer from '@/types/influencer';
+import { useAuthBrand } from '@/hooks';
 
 export interface FilterState {
   page: number;
@@ -89,6 +90,7 @@ const filterReducer = (state: FilterState, action: FilterAction) => {
 };
 
 const List = () => {
+  const { profile } = useAuthBrand();
   const [filter, dispatch] = useReducer(filterReducer, initialState);
   const url = useMemo(() => {
     const searchParams = new URLSearchParams();
@@ -152,9 +154,11 @@ const List = () => {
           />
         ) : (
           <>
-            <Button variant="gradient" startIcon={<FaWandMagicSparkles />} onClick={handleSearchType}>
-              AI
-            </Button>
+            {profile?.isPremium && (
+              <Button variant="gradient" startIcon={<FaWandMagicSparkles />} onClick={handleSearchType}>
+                AI
+              </Button>
+            )}
             <Filter data={filter} dispatch={dispatch} isChanged={isOptionsChange} />
           </>
         )}

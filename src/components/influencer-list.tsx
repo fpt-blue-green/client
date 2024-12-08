@@ -29,7 +29,7 @@ const InfluencerList: FC<InfluencerListProps> = ({ title, url, subtitle, classNa
           <CarouselNext className="static translate-y-0" />
         </div>
       </div>
-      <CarouselContent>
+      <CarouselContent className="pb-2">
         {isLoading
           ? Array.from({ length: 10 }).map((_, index) => (
               <CarouselItem key={index} className="lg:basis-1/4 md:basis-1/3 sm:basis-1/2 basis-2/3">
