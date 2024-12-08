@@ -45,9 +45,10 @@ const mockInfluencer: IInfluencer = {
 
 interface InfluencerCardProps {
   data?: IInfluencer;
+  blank?: boolean;
 }
 
-const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer }) => {
+const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer, blank }) => {
   const { profile } = useAuthBrand();
   const { data: favorites, mutate } = fetchRequest.favorites(!!profile);
   const isFavorite = Boolean(favorites && favorites.some((f) => f.id === data.id));
@@ -75,7 +76,7 @@ const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer }) => {
           </Button>
         </div>
       )}
-      <Link href={config.routes.influencers.details(data.slug)} className="text-sm">
+      <Link href={config.routes.influencers.details(data.slug)} target={blank ? '_blank' : '_self'} className="text-sm">
         <div className="relative group">
           <div className="overflow-hidden">
             <Image
@@ -99,13 +100,13 @@ const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer }) => {
           </h5>
         </div>
         <div className="p-4 mt-6">
-          <div className="flex justify-center items-center gap-4">
+          <div className="flex justify-center items-center gap-6">
             {data.channels.map((c) => {
               const { name, logo, followerText } = PlatformData[c.platform];
               return (
                 <div key={c.id} className="flex flex-col items-center gap-1">
                   <Image src={logo} alt={name} width={30} height={30} />
-                  <span className="font-semibold text-base">{formats.estimate(c.followersCount)}</span>
+                  <span className="font-semibold">{formats.estimate(c.followersCount)}</span>
                   <span className="text-xs text-muted-foreground">{followerText.substring(6)}</span>
                 </div>
               );

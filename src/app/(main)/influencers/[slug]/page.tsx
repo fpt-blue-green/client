@@ -22,6 +22,8 @@ import Comments from './comments';
 import InfluencerList from '@/components/influencer-list';
 import Tooltip from '@/components/custom/tooltip';
 import Action from './action';
+import { FaMapMarkerAlt } from 'react-icons/fa';
+import { FaPhone, FaTags } from 'react-icons/fa6';
 
 const getInfluencer = async (slug: string): Promise<IInfluencer> => {
   try {
@@ -79,30 +81,30 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
 
   return (
     <div className="container mt-8 mb-16">
-      <div className="relative grid md:grid-cols-2 gap-6">
+      <div className="relative grid lg:grid-cols-2 gap-6">
         <Breadcrumbs items={breadcrumbItems} className="col-span-full" />
-        <div className="md:sticky top-20 h-fit max-md:order-first">
+        <div className="lg:sticky top-20 h-fit max-lg:order-first">
           <ImagesCarousel influencer={influencer} />
         </div>
         <div className="py-4 space-y-6">
           <div className="flex items-center gap-4">
-            <Avatar className="size-16 md:size-20">
+            <Avatar className="size-16 lg:size-20">
               <AvatarImage src={influencer.avatar} alt={`Ảnh đại diện của ${influencer.fullName}`} />
               <AvatarFallback>{influencer.fullName[0]}</AvatarFallback>
             </Avatar>
             <div className="flex-1">
               <div className="flex items-center justify-between gap-4">
-                <h1 className="text-xl md:text-2xl font-bold mb-2">{influencer.fullName}</h1>
+                <h1 className="text-xl lg:text-2xl font-bold mb-2">{influencer.fullName}</h1>
                 {influencer.userId === session?.user.id && (
                   <>
                     <Tooltip label="Chỉnh sửa">
-                      <Button variant="ghost" size="icon" className="md:hidden" asChild>
+                      <Button variant="ghost" size="icon" className="lg:hidden" asChild>
                         <Link href={config.routes.influencers.editProfile}>
                           <LuPencil />
                         </Link>
                       </Button>
                     </Tooltip>
-                    <Button variant="ghost" startIcon={<LuPencil />} className="max-md:hidden" asChild>
+                    <Button variant="ghost" startIcon={<LuPencil />} className="max-lg:hidden" asChild>
                       <Link href={config.routes.influencers.editProfile}>Chỉnh sửa</Link>
                     </Button>
                   </>
@@ -124,10 +126,32 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
           </div>
           <p className="text-muted-foreground text-sm">{influencer.description}</p>
           <Action influencer={influencer} />
-          <Accordion type="multiple" defaultValue={['social', 'packages', 'reviews']}>
+          <Accordion type="multiple" defaultValue={['info', 'social', 'packages', 'reviews']}>
+            <AccordionItem value="info">
+              <AccordionTrigger className="text-xl font-semibold">Liên lạc</AccordionTrigger>
+              <AccordionContent className="lg:px-4 lg:text-base">
+                <ul className="space-y-2">
+                  <li className="flex items-center gap-1">
+                    <FaMapMarkerAlt />
+                    <strong>Địa chỉ:</strong> {influencer.address}
+                  </li>
+                  <li className="flex items-center gap-1">
+                    <FaPhone />
+                    <strong>Số điện thoại:</strong> {influencer.phone}
+                  </li>
+                  <li className="flex items-center gap-1">
+                    <FaTags className="flex-shrink-0" />
+                    <strong className="text-nowrap">Danh mục:</strong>
+                    <span className="truncate" title={influencer.tags.map((t) => t.name).join(', ')}>
+                      {influencer.tags.map((t) => t.name).join(', ')}
+                    </span>
+                  </li>
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
             <AccordionItem value="social">
               <AccordionTrigger className="text-xl font-semibold">Mạng xã hội</AccordionTrigger>
-              <AccordionContent className="md:px-4 md:text-base">
+              <AccordionContent className="lg:px-4 lg:text-base">
                 <ul className="space-y-2">
                   {influencer.channels.map((channel) => {
                     const { Icon, url, followerText, name } = PlatformData[channel.platform];
@@ -138,7 +162,7 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
                         <Link href={url + channel.userName} target="_blank" className="text-blue-400 hover:underline">
                           {channel.userName}
                         </Link>
-                        <span>{`(${formats.estimate(channel.followersCount)} ${followerText})`}</span>
+                        <span>{`(${formats.estimate(channel.followersCount)} ${followerText.substring(6)})`}</span>
                       </li>
                     );
                   })}
@@ -151,13 +175,13 @@ const InfluencerDetails: FC<InfluencerDetailsProps> = async ({ params }) => {
                   Gói <HowPackagesWork />
                 </div>
               </AccordionTrigger>
-              <AccordionContent className="md:px-4 md:text-base">
+              <AccordionContent className="lg:px-4 lg:text-base">
                 <Packages influencer={influencer} />
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="reviews" id="reviews">
               <AccordionTrigger className="text-xl font-semibold">Đánh giá</AccordionTrigger>
-              <AccordionContent className="md:px-4 md:text-base">
+              <AccordionContent className="lg:px-4 lg:text-base">
                 <Comments influencer={influencer} user={session?.user} />
               </AccordionContent>
             </AccordionItem>
