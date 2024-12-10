@@ -35,7 +35,7 @@ import {
 import { FilterAction, FilterState } from './list';
 import { useAuthBrand, useDebounce, useUpdateEffect } from '@/hooks';
 import { EPlatform } from '@/types/enum';
-import useSWR from 'swr';
+import useSWRImmutable from 'swr/immutable';
 import { fetcher } from '@/lib/http';
 import ITag from '@/types/tag';
 import PriceInput from '@/components/custom/price-input';
@@ -54,7 +54,7 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
   const [search, setSearch] = useState(searchTerm);
   const debouncedSearch = useDebounce(search, 500);
 
-  const { data: tags } = useSWR<ITag[]>('/Tags', fetcher);
+  const { data: tags } = useSWRImmutable<ITag[]>('/Tags', fetcher);
 
   const [price, setPrice] = useState(priceRange);
   const debouncedPrice = useDebounce(price, 500);
@@ -122,7 +122,7 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
               Bộ lọc
             </Button>
           </SheetTrigger>
-          <SheetContent className="overflow-y-scroll" hideCloseBtn>
+          <SheetContent className="overflow-y-auto" hideCloseBtn>
             <SheetHeader className="border-b">
               <SheetTitle className="flex items-center justify-between">
                 Bộ lọc
@@ -172,6 +172,7 @@ const Filter: FC<FilterProps> = ({ isChanged, data, dispatch }) => {
                       <PremiumBadge key={t.id} invisible={!t.isPremium || profile?.isPremium}>
                         <Toggle
                           variant="primary"
+                          size="small"
                           pressed={categories.includes(t.id)}
                           onPressedChange={handleToggleCategory(t.id)}
                           disabled={t.isPremium && !profile?.isPremium}
