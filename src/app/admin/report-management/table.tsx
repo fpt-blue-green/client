@@ -83,7 +83,6 @@ const ReportTable = () => {
     setReport(undefined);
     setIsOpen(false);
   };
-  console.log('report: ', report);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
