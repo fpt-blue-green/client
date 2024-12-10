@@ -45,8 +45,8 @@ const ReportTable = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="flex flex-col gap-1">
-              <DropdownMenuItem asChild>
-                <DialogTrigger onClick={() => handleOpen(report)}>Chấp thuận</DialogTrigger>
+              <DropdownMenuItem>
+                <DialogTrigger onClick={handleOpen(report)}>Chấp thuận</DialogTrigger>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleReject()}>Từ chối</DropdownMenuItem>
             </DropdownMenuContent>
@@ -58,9 +58,9 @@ const ReportTable = () => {
     },
   ];
 
-  const handleOpen = (report?: IReport) => () => {
+  const handleOpen = (report: IReport) => () => {
     setReport(report);
-    setIsOpen(true);
+    setIsOpen(false);
   };
 
   const handleReject = () => {
@@ -83,6 +83,7 @@ const ReportTable = () => {
     setReport(undefined);
     setIsOpen(false);
   };
+  console.log('report: ', report);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
