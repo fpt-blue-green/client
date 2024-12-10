@@ -72,18 +72,21 @@ const ActionForm: FC<ActionFormProps> = ({ item, reload, handleClose }) => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{'Tố cáo trong vòng'}</FormLabel>
-                <Select
-                  disabled={true}
-                  onValueChange={(value) => field.onChange(parseInt(value))}
-                  value={EBanDate.None.toString()}
-                >
+                <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value.toString()}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Chọn thời hạn tố cáo" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value={EBanDate.None.toString()}>Vô thời hạn</SelectItem>
+                    <SelectItem value={EBanDate.OneWeek.toString()}>1 Tuần</SelectItem>
+                    <SelectItem value={EBanDate.TwoWeeks.toString()}>2 Tuần</SelectItem>
+                    <SelectItem value={EBanDate.OneMonth.toString()}>1 Tháng</SelectItem>
+                    <SelectItem value={EBanDate.ThreeMonths.toString()}>3 Tháng</SelectItem>
+                    <SelectItem value={EBanDate.SixMonths.toString()}>6 Tháng</SelectItem>
+                    <SelectItem value={EBanDate.OneYear.toString()}>1 Năm</SelectItem>
+                    <SelectItem value={EBanDate.TwoYears.toString()}>2 Năm</SelectItem>
+                    <SelectItem value={EBanDate.indefinitely.toString()}>Vô thời hạn</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
