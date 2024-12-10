@@ -68,6 +68,8 @@ const fetchRequest = {
     participants: (id: string) => useSWR<IUser[]>(`/Campaigns/${id}/participant`, fetcher),
     meetings: (id: string) => useSWRImmutable<IFilterList<IMeeting>>(`/Campaigns/${id}/meetingRoom`, fetcher),
     listByBrand: (id: string) => useSWRImmutable<ICampaign[]>(`Brands/${id}/campaigns`, fetcher),
+    recommendation: (fetch: boolean) =>
+      useSWRImmutable<ICampaign[]>(fetch ? '/Campaigns/recommended' : undefined, fetcher),
   },
   influencer: {
     jobs: (

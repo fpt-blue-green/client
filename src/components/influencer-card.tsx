@@ -94,7 +94,7 @@ const InfluencerCard: FC<InfluencerCardProps> = ({ data = mockInfluencer, blank 
               <AvatarFallback>{data.fullName[0]}</AvatarFallback>
             </Avatar>
           </div>
-          <h5 className="absolute bottom-8 left-1/2 -translate-x-1/2 font-semibold text-white flex flex-col items-center">
+          <h5 className="absolute bottom-8 left-1/2 -translate-x-1/2 font-semibold text-white flex flex-col items-center text-center">
             {data.fullName}
             <Rating defaultValue={data.rateAverage} precision={0.25} readOnly size={16} />
           </h5>

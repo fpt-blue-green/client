@@ -1,4 +1,5 @@
 import List from './list';
+import Recommendation from './recommendation';
 
 const Page = () => {
   return (
@@ -6,6 +7,7 @@ const Page = () => {
       <div className="space-y-7">
         <h1 className="text-2xl font-semibold">Chiến dịch</h1>
         <List />
+        <Recommendation title="Đề xuất cho bạn" />
       </div>
     </div>
   );

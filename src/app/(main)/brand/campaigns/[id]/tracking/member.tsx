@@ -10,16 +10,17 @@ import { ECampaignStatus, EJobStatus, EOfferStatus } from '@/types/enum';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import NoData from '@/components/no-data';
+import Recommendation from './components/recommendation';
 
 const Member = () => {
-  const params = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
   const searchParams = useSearchParams();
   const status = searchParams.get('status') || 'pending';
   const [jobStatuses, setJobStatuses] = useState<EJobStatus[]>([EJobStatus.Pending]);
   const [offerStatuses, setOfferStatuses] = useState<EOfferStatus[]>([EOfferStatus.Offering]);
-  const { data: campaign } = fetchRequest.campaign.getById(params.id);
-  const { data: statistical, mutate: statisticalMutate } = fetchRequest.campaign.memberStatistical(params.id);
-  const { data, isLoading, mutate } = fetchRequest.campaign.members(params.id, jobStatuses, offerStatuses);
+  const { data: campaign } = fetchRequest.campaign.getById(id);
+  const { data: statistical, mutate: statisticalMutate } = fetchRequest.campaign.memberStatistical(id);
+  const { data, isLoading, mutate } = fetchRequest.campaign.members(id, jobStatuses, offerStatuses);
   const styles = (active = false, isLast = false) =>
     cn('relative flex flex-col gap-2 py-4 px-8 bg-muted shadow-sm hover:z-1 hover:opacity-70 transition-opacity', {
       'after:absolute after:z-5 after:size-9 after:bg-muted after:rotate-45 after:top-1/2 after:right-0 after:translate-x-1/2 after:border-8 after:border-t-background after:border-r-background after:border-l-muted after:border-b-muted':
@@ -61,7 +62,7 @@ const Member = () => {
   }, [status]);
 
   return (
-    <div>
+    <div className="space-y-8">
       <div className="grid grid-cols-5 gap-2">
         <Link href="?tab=member&status=pending" className={styles(status === 'pending')}>
           <span className="text-xl font-bold">{statistical?.[0] || 0}</span>
@@ -84,7 +85,7 @@ const Member = () => {
           <span className="text-sm">Đã hủy</span>
         </Link>
       </div>
-      <div className="mt-8">
+      <div>
         <Accordion type="multiple" className="w-full">
           {isLoading ? (
             Array(5).map((_, index) => <Skeleton key={index} className="h-12" />)
@@ -102,6 +103,7 @@ const Member = () => {
           )}
         </Accordion>
       </div>
+      <Recommendation id={id} />
     </div>
   );
 };

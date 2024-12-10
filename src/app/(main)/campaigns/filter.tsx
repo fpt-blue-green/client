@@ -179,7 +179,7 @@ const sortItems = [
     text: 'Mặc định',
   },
   {
-    value: 'CreatedAt',
+    value: '-CreatedAt',
     text: 'Mới nhất',
   },
 ];
