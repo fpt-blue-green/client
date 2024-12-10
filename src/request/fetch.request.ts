@@ -22,28 +22,7 @@ import useSWRImmutable from 'swr/immutable';
 const fetchRequest = {
   favorites: (fetch = false) => useSWRImmutable<IInfluencer[]>(fetch ? '/Brand/favorites' : null, fetcher),
   campaign: {
-    available: (
-      page = 1,
-      pageSize = 50,
-      search?: string,
-      sortBy?: string,
-      isAscending = true,
-      priceFrom = 0,
-      priceTo = 100_000_000_000,
-    ) => {
-      const searchParams = new URLSearchParams();
-      searchParams.append('PageIndex', page.toString());
-      searchParams.append('PageSize', pageSize.toString());
-      if (search) {
-        searchParams.append('Search', search);
-      }
-      if (sortBy) {
-        searchParams.append('SortBy', sortBy);
-        searchParams.append('IsAscending', isAscending.toString());
-      }
-      searchParams.append('PriceFrom', priceFrom.toString());
-      searchParams.append('PriceTo', priceTo.toString());
-
+    available: (searchParams: URLSearchParams) => {
       const swr = useSWRImmutable<IFilterList<ICampaign>>('/Campaigns?' + searchParams, fetcher);
       const mutate = () => {
         mutateGlobal<IFilterList<ICampaign>>((key: string) => key.startsWith('/Campaigns'), undefined, {
@@ -89,6 +68,8 @@ const fetchRequest = {
     participants: (id: string) => useSWR<IUser[]>(`/Campaigns/${id}/participant`, fetcher),
     meetings: (id: string) => useSWRImmutable<IFilterList<IMeeting>>(`/Campaigns/${id}/meetingRoom`, fetcher),
     listByBrand: (id: string) => useSWRImmutable<ICampaign[]>(`Brands/${id}/campaigns`, fetcher),
+    recommendation: (fetch: boolean) =>
+      useSWRImmutable<ICampaign[]>(fetch ? '/Campaigns/recommended' : undefined, fetcher),
   },
   influencer: {
     jobs: (

@@ -11,6 +11,7 @@ import Contents from './contents';
 import { RiFacebookFill, RiInstagramFill, RiLink, RiTiktokFill, RiYoutubeFill } from 'react-icons/ri';
 import config from '@/config';
 import MyJobs from './my-jobs';
+import Recommendation from './components/recommendation';
 
 const getCampaign = async (id: string): Promise<ICampaign> => {
   try {
@@ -102,6 +103,7 @@ const CampaignDetails: FC<CampaignDetailsProps> = async ({ params }) => {
             <h3 className="text-xl font-semibold mb-6">Yêu cầu nội dung</h3>
             <Contents campaign={campaign} />
           </div>
+          <Recommendation id={campaign.id} brandId={campaign.brand.id} />
         </div>
       </div>
     </div>
