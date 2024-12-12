@@ -15,7 +15,7 @@ export const constants = {
   passwordRegex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^.,])[A-Za-z\d@$!%*?&^.,]{8,}$/,
   phoneRegex: /(84|0[3|5|7|8|9])+([0-9]{8})\b/g,
   otpRegex: /[0-9]{6}\b/g,
-  slugRegex: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+  slugRegex: /^[a-z0-9]+(?:[-._][a-z0-9]+)*$/,
   yesterday: new Date(new Date().setDate(new Date().getDate() - 1)),
   campaignStatus,
   jobStatus,
