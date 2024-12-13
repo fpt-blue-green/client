@@ -30,6 +30,7 @@ import { formats } from '@/lib/utils';
 import { GiUpgrade } from 'react-icons/gi';
 import { useTheme } from 'next-themes';
 import { MoonIcon, SunIcon } from 'lucide-react';
+import Tooltip from './custom/tooltip';
 
 const ProfileDropdown = () => {
   const { session, profile: influencer } = useAuthInfluencer();
@@ -64,13 +65,15 @@ const ProfileDropdown = () => {
                 )}
               </Avatar>
               {isPremium && (
-                <Image
-                  src="https://cdn.iconscout.com/icon/free/png-256/free-premium-icon-download-in-svg-png-gif-file-formats--tag-badge-king-online-streaming-pack-multimedia-icons-1598007.png?f=webp&w=256"
-                  alt={`Icon premium của ${user.name}`}
-                  width={16}
-                  height={16}
-                  className="object-cover absolute top-0 -right-1"
-                />
+                <Tooltip label={`Premium will be expired on ${formats.date(brand?.premiumValidTo || '')}`}>
+                  <Image
+                    src="https://cdn.iconscout.com/icon/free/png-256/free-premium-icon-download-in-svg-png-gif-file-formats--tag-badge-king-online-streaming-pack-multimedia-icons-1598007.png?f=webp&w=256"
+                    alt={`Icon premium của ${user.name}`}
+                    width={16}
+                    height={16}
+                    className="object-cover absolute top-0 -right-1"
+                  />
+                </Tooltip>
               )}
             </>
           ) : (

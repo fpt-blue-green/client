@@ -14,6 +14,7 @@ interface IBrand {
   tiktokUrl?: string;
   instagramUrl?: string;
   youtubeUrl?: string;
+  premiumValidTo?: string;
 }
 
 export default IBrand;
