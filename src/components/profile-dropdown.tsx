@@ -65,7 +65,7 @@ const ProfileDropdown = () => {
                 )}
               </Avatar>
               {isPremium && (
-                <Tooltip label={`Premium will be expired on ${formats.date(brand?.premiumValidTo || '')}`}>
+                <Tooltip label={`Premium sẽ hết hạn vào ${formats.date(brand?.premiumValidTo || '')}`}>
                   <Image
                     src="https://cdn.iconscout.com/icon/free/png-256/free-premium-icon-download-in-svg-png-gif-file-formats--tag-badge-king-online-streaming-pack-multimedia-icons-1598007.png?f=webp&w=256"
                     alt={`Icon premium của ${user.name}`}
