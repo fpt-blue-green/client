@@ -142,7 +142,7 @@ export const convertMetricTrendType = (value: string): string => {
     case 'ActiveUsers':
       return 'Tài khoản đang hoạt động';
     case 'ActiveCampaigns':
-      return 'Chiến dịch đang hoạt động';
+      return 'Chiến dịch được tạo';
     default:
       return 'Khác';
   }

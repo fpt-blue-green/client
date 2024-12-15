@@ -110,7 +110,7 @@ const Payment = () => {
           <h6 className="text-xl font-semibold">{formats.price(data?.currentAmount || 0)}</h6>
         </div>
         <div className="flex-1 px-4">
-          <p className="text-muted-foreground">Tổng {session?.user.role === ERole.Brand ? 'chi' : 'thu'}</p>
+          <p className="text-muted-foreground">Tổng chi</p>
           <h6 className="text-xl font-semibold">{formats.price(data?.spendAmount || 0)}</h6>
         </div>
       </div>
