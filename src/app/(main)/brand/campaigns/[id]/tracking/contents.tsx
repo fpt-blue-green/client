@@ -117,7 +117,10 @@ const JobDetails = ({ item, reload }: { item: IJob; reload: () => void }) => {
   const { id } = useParams<{ id: string }>();
   const { data, mutate } = fetchRequest.job.links(item.id);
   const [link, setLink] = useState('all');
-  const { data: statistical } = fetchRequest.job.detailStatistical(item.id, link !== 'all' ? link : undefined);
+  const { data: statistical, mutate: mutateLink } = fetchRequest.job.detailStatistical(
+    item.id,
+    link !== 'all' ? link : undefined,
+  );
 
   useEffect(() => {
     setLink('all');
@@ -170,6 +173,7 @@ const JobDetails = ({ item, reload }: { item: IJob; reload: () => void }) => {
         toast.promise(offerRequest.approveLink(item.id, link), {
           loading: 'Đang tải',
           success: () => {
+            mutateLink();
             mutate();
             return 'Bài đăng đã được xác thực.';
           },
