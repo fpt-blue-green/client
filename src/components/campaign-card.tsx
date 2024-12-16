@@ -64,7 +64,7 @@ const CampaignCard: FC<CampaignCardProps> = ({ data, canEdit, reload }) => {
         </div>
         <div className="p-4 space-y-2 text-sm">
           <div className="flex items-center justify-between gap-4 text-base">
-            <h6 className="font-semibold">{canEdit ? data.name : data.title}</h6>
+            <h6 className="font-semibold truncate">{canEdit ? data.name : data.title}</h6>
             <Chip
               label={constants.campaignStatus[data.status].label}
               variant={constants.campaignStatus[data.status].color}
